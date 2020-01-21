@@ -28,11 +28,9 @@ print_image() {
     (( DEBUG )) && echo -n "$subject, " >&2
   }
 
-  echo '      <div class="image">'
-  echo '        <a data-fancybox="gallery" data-caption="'"$subject"'" href="'"$fullsize"'">'
-  echo '          <img src="'"$thumbnail"'" alt="">'
-  echo '        </a>'
-  echo '      </div>'
+  echo '  <a data-fancybox="gallery" data-caption="'"$subject"'" href="'"$fullsize"'">'
+  echo '    <img src="'"$thumbnail"'" alt="">'
+  echo '  </a>'
 }
 
 print_menu() {
@@ -55,23 +53,13 @@ print_menu() {
 
 print_table() {
 
-  local counter=0
+  echo '<div id="grid">'
 
   for image in *.jpg; do
-
-    (( counter == 0 )) && {
-      echo '    <div class="row">'
-    }
-
     print_image "$image"
-
-    (( counter++ ))
-    (( counter == columns_per_row )) && {
-      echo '    </div>'
-      echo
-      (( counter = 0 ))
-    }
   done
+
+  echo '</div>'
 }
 
 maker() {
@@ -117,13 +105,7 @@ maker() {
 # provided. a single index.html is produced, with the most recent images first.
 # todo
 
-# add some kind of header html that allows the user to choose how many elements
-# to fit into column
-#
 # lazy load images when they become visible
-
-export columns_per_row=4
-export column_width_percent=$(( 100 / columns_per_row - 3 ))
 
 print_head() {
 
@@ -149,21 +131,16 @@ print_style() {
 echo '
   <style>
 
-.image {
-  display: inline-block;
-  padding: 2px;
-  margin:  auto;
-  width:   '$column_width_percent'%;
+#grid {
+  display: grid;
+  grid-template-columns: repeat( auto-fit, minmax(300px, max-content));
+  justify-content: center;
+  grid-grap: 1rem;
 }
 
 img {
-  width: 100%;
-}
-
-.row::after {
-  content: "";
-  clear:   both;
-  display: table;
+  width: 300px;
+  padding: 5px;
 }
 
 body {
