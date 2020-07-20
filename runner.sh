@@ -4,6 +4,19 @@
 # images for better data usage performance
 
 
+print_switcher() {
+
+echo '
+    <a href="/timeline/index.html">
+        <h1 class="top switch">Diving Timeline</h1>
+    </a>
+    <div class="top" id="buffer"></div>
+    <a href="/gallery/index.html">
+        <h1 class="top switch">Diving Gallery</h1>
+    </a>
+'
+}
+
 print_title() {
 
   local title="$1"
@@ -17,7 +30,7 @@ print_title() {
 print_image() {
 
   local image="$1"
-  local thumbnail=imgs/"${names[$srcbase/$image]}"
+  local thumbnail=/imgs/"${names[$srcbase/$image]}"
   local fullsize="https://public.anardil.net/media/diving/$srcbase/$image"
   local subject=""
 
@@ -33,27 +46,9 @@ print_image() {
   echo '  </a>'
 }
 
-print_menu() {
-  echo '
-    <div id="mySidebar" class="sidebar">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">x</a>
-  '
-
-  while read -r num; do
-    local name="${menuitems[$num]}"
-    echo '    <a href="javascript:void(0)" onclick="jump('"'$num'"')">'"$name"'</a>'
-
-  done < <(
-    tr ' ' '\n' <<< "${!menuitems[@]}" | sort -n
-  )
-  echo '
-    </div>"
-  '
-}
-
 print_table() {
 
-  echo '<div id="grid">'
+  echo '<div class="grid">'
 
   for image in *.jpg; do
     print_image "$image"
@@ -112,6 +107,7 @@ print_head() {
   echo '
   <head>
     <title>Diving Pictures</title>
+    <link rel="stylesheet" href="/style.css"/>
   </head>
   '
 }
@@ -120,9 +116,9 @@ print_scripts() {
 
   echo '
     <!-- fancybox is excellent, this project is not commercial -->
-    <script src="jquery.min.js"></script>
-    <link rel="stylesheet" href="jquery.fancybox.min.css"/>
-    <script src="jquery.fancybox.min.js"></script>
+    <script src="/jquery.min.js"></script>
+    <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
+    <script src="/jquery.fancybox.min.js"></script>
   '
 }
 
@@ -130,6 +126,17 @@ print_style() {
 
 echo '
   <style>
+.top {
+  display: inline-block;
+  border: 1px solid white;
+  padding: 0.1em 0.5em;
+  border-radius: 0.5em;
+}
+
+#buffer {
+  width: 1em;
+  border: revert;
+}
 
 #grid {
   display: grid;
@@ -150,56 +157,6 @@ body {
 
 figcaption, h1, h4 {
   color: white;
-}
-
-.sidebar {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #111;
-  overflow-x: hidden;
-  transition: 0.5s;
-  padding-top: 60px;
-}
-
-.sidebar a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-  transition: 0.3s;
-}
-
-.sidebar a:hover {
-  color: #f1f1f1;
-}
-
-.sidebar .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
-.openbtn {
-  float: right;
-  position: fixed;
-  right: 25px;
-  font-size: 20px;
-  cursor: pointer;
-  background-color: #111;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-}
-
-.openbtn:hover {
-  background-color: #444;
 }
   </style>
 '
@@ -290,7 +247,6 @@ case $(uname) in
 esac
 
 counter=0
-declare -A menuitems
 dives=()
 DEBUG=0
 
@@ -306,11 +262,11 @@ main() {
   echo '<html>'
 
   print_head
-  print_style
+  # print_style
 
   echo '  <body>'
+  print_switcher
   print_scripts
-  echo '    <button class="openbtn" onclick="openNav()">Menu</button>'
 
   while read -r f; do
     name="$( basename "$f" | cut -d ' ' -f 2- )"
@@ -325,9 +281,8 @@ main() {
     )
     htmlhash="$( $sha < tmp.html | awk '{print $1}' )"
     dives+=( "$htmlhash".html )
-    mv tmp.html "$htmlhash".html
+    mv tmp.html timeline/"$htmlhash".html
 
-    menuitems[$counter]="$( basename "$f" )"
     (( counter++ ))
 
     (( DEBUG )) && echo >&2
@@ -338,11 +293,10 @@ main() {
     done | $tac
   )
 
-  print_menu
   echo '  </body>'
 
   javascript
   echo '</html>'
 }
 
-main "$@" > index.html
+main "$@" > timeline/index.html
