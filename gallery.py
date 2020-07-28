@@ -245,9 +245,33 @@ def compress(tree):
     return tree
 
 
+def data_to_various(tree):
+    ''' rebucket data into various
+    '''
+    assert isinstance(tree, dict), tree
+
+    for key, value in list(tree.items()):
+        if key == 'data':
+
+            if len(tree.keys()) == 1:
+                # we're alone, don't nest further
+                continue
+
+            values = tree.pop('data')
+            assert 'various' not in tree
+            tree['various'] = {'data': values}
+
+        else:
+            tree[key] = data_to_various(value)
+
+    return tree
+
+
 def go():
     ''' full pipeline '''
-    return pruner(compress(compress(make_tree(expand_names(named())))))
+    return data_to_various(
+        pruner(compress(compress(make_tree(expand_names(named())))))
+    )
 
 
 def tree_print(tree, lineage="", depth=0):
@@ -325,12 +349,9 @@ def uncategorize(name):
     return name
 
 
-def html_tree(tree, lineage=None):
-    """ html version of display
-    """
-    if not lineage:
-        lineage = []
-
+def html_title(lineage):
+    ''' html head and title section
+    '''
     title = " ".join(lineage) or "Diving Gallery"
     display = uncategorize(title).title()
 
@@ -342,15 +363,15 @@ def html_tree(tree, lineage=None):
         <link rel="stylesheet" href="/style.css"/>
         <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
       </head>
+
       <body>
       {scripts}
+      <div class="title">
     """.format(
         title=display, scripts=html_scripts
     )
 
-    # title
-    html += '<div class="title">'
-
+    # create the buttons for each part of our name lineage
     for i, parent in enumerate(lineage):
         link = "/gallery/" + " ".join(lineage[i:]) + ".html"
         link = link.replace(" ", "-")
@@ -367,6 +388,7 @@ def html_tree(tree, lineage=None):
             link=link,
         )
 
+    # only include link to timeline on the top level page
     if not lineage:
         html += """
         <a href="/timeline/index.html">
@@ -375,19 +397,29 @@ def html_tree(tree, lineage=None):
         <div class="top" id="buffer"></div>
         """
 
+    # always have a link to the top level of the gallery
     html += """
     <a href="/gallery/index.html">
         <h1 class="top switch">Diving Gallery</h1>
     </a>
+    </div>
     """
 
-    html += "</div>"
+    return html, title
 
+
+def html_tree(tree, lineage=None):
+    """ html version of display
+    """
+    if not lineage:
+        lineage = []
+
+    html, title = html_title(lineage)
     results = []
 
     has_subcategories = [1 for key in tree.keys() if key != "data"] != []
     if has_subcategories:
-        html += '<div class="grid">'
+        html += '<div class="grid first">'
 
     # categories
     for key, value in sorted(tree.items()):
@@ -423,6 +455,7 @@ def html_tree(tree, lineage=None):
 
     direct = tree.get("data", [])
     direct = sorted(direct, key=lambda x: x.path(), reverse=True)
+    assert not (direct and has_subcategories)
 
     # direct examples
     if direct:
@@ -434,8 +467,10 @@ def html_tree(tree, lineage=None):
             <br>
             <h1>More</h1>
             """
+            html += '<div class="grid">'
+        else:
+            html += '<div class="grid first">'
 
-        html += '<div class="grid">'
         for image in direct:
             identifier = tuple([image.name, image.path()])
             if identifier in seen:

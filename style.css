@@ -77,8 +77,11 @@ a:link {
   height: 5.5em;
 }
 
-.grid {
+.first {
   margin-top: 5.5em;
+}
+
+.grid {
   display: grid;
   grid-template-columns: repeat( auto-fit, minmax(300px, max-content));
   justify-content: center;
