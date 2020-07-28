@@ -98,15 +98,15 @@ maker() {
 
 # runs the index.html generation script for each directory under the path
 # provided. a single index.html is produced, with the most recent images first.
-# todo
 
+# todo
 # lazy load images when they become visible
 
 print_head() {
 
   echo '
   <head>
-    <title>Diving Pictures</title>
+    <title>Diving Timeline</title>
     <link rel="stylesheet" href="/style.css"/>
   </head>
   '
@@ -120,46 +120,6 @@ print_scripts() {
     <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
     <script src="/jquery.fancybox.min.js"></script>
   '
-}
-
-print_style() {
-
-echo '
-  <style>
-.top {
-  display: inline-block;
-  border: 1px solid white;
-  padding: 0.1em 0.5em;
-  border-radius: 0.5em;
-}
-
-#buffer {
-  width: 1em;
-  border: revert;
-}
-
-#grid {
-  display: grid;
-  grid-template-columns: repeat( auto-fit, minmax(300px, max-content));
-  justify-content: center;
-  grid-grap: 1rem;
-}
-
-img {
-  width: 300px;
-  padding: 5px;
-}
-
-body {
-  background-color: black;
-  text-align:       center;
-}
-
-figcaption, h1, h4 {
-  color: white;
-}
-  </style>
-'
 }
 
 javascript() {
@@ -262,7 +222,6 @@ main() {
   echo '<html>'
 
   print_head
-  # print_style
 
   echo '  <body>'
   print_switcher

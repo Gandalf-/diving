@@ -419,7 +419,7 @@ def html_tree(tree, lineage=None):
 
     has_subcategories = [1 for key in tree.keys() if key != "data"] != []
     if has_subcategories:
-        html += '<div class="grid first">'
+        html += '<div class="grid">'
 
     # categories
     for key, value in sorted(tree.items()):
@@ -459,17 +459,8 @@ def html_tree(tree, lineage=None):
 
     # direct examples
     if direct:
-
         seen = set()
-
-        if has_subcategories:
-            html += """
-            <br>
-            <h1>More</h1>
-            """
-            html += '<div class="grid">'
-        else:
-            html += '<div class="grid first">'
+        html += '<div class="grid">'
 
         for image in direct:
             identifier = tuple([image.name, image.path()])

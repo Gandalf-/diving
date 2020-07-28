@@ -77,13 +77,13 @@ a:link {
   height: 5.5em;
 }
 
-.first {
-  margin-top: 5.5em;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat( auto-fit, minmax(300px, max-content));
   justify-content: center;
   grid-gap: 0.75rem;
+}
+
+.title + .grid {
+  margin-top: 5.5em;
 }
