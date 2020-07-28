@@ -14,11 +14,11 @@ body {
   text-align: center;
 }
 
-figcaption, h1, h4 {
+figcaption, h1, h2, h3, h4 {
   color: white;
 }
 
-h4 {
+h3 {
   margin-top: 0px;
 }
 
@@ -29,6 +29,18 @@ h4 {
   border-radius: 0.5em;
 }
 
+.sneaky {
+  color: #000000;
+  float: left;
+  margin-left: 1em;
+}
+
+.count {
+  color: #808080;
+  float: right;
+  margin-right: 1em;
+}
+
 .switch {
   min-width: 15ch;
   border-color: rgb(56, 19, 221);
@@ -36,7 +48,7 @@ h4 {
 
 #buffer {
   width: 1em;
-  border: revert;
+  border: 1px solid black;
 }
 
 .last {
@@ -55,7 +67,18 @@ a:link {
   border: 1px solid white;
 }
 
+.title {
+  position: fixed;
+  background-color: black;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  height: 5.5em;
+}
+
 .grid {
+  margin-top: 5.5em;
   display: grid;
   grid-template-columns: repeat( auto-fit, minmax(300px, max-content));
   justify-content: center;

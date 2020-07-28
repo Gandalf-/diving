@@ -1,5 +1,10 @@
 #!/usr/bin/python3
 
+'''
+search through diving pictures to produce a 'taxonomy tree', then convert that
+tree into HTML pages for diving.anardil.net
+'''
+
 import hashlib
 import sys
 import os
@@ -7,31 +12,45 @@ import os
 from multiprocessing import Pool
 import inflect
 
+# pylint: disable=too-many-locals
+
 inflect = inflect.engine()
 
-
-def flatten(xs):
-    return [item for sublist in xs for item in sublist]
-
-
 root = "/mnt/zfs/Media/Pictures/Diving"
-fishes = (
-    "flounder",
-    "blue tang",
-    "grunt",
-    "goby",
-    "gunnel",
-    "sculpin",
-    "greenling",
-    "lingcod",
-    "sculpin",
-    "tarpon",
-    "war bonnet",
-)
-nudibranchs = ("sea lemon", "dorid")
+
+categories = {
+    "fish": (
+        "basslet",
+        "blue tang",
+        "flounder",
+        "cero",
+        "goby",
+        "greenling",
+        "grunt",
+        "gunnel",
+        "grouper",
+        "lingcod",
+        "midshipman",
+        "perch",
+        "rock beauty",
+        "sculpin",
+        "sculpin",
+        "sole",
+        "spotted drum",
+        "tarpon",
+        "tomtate",
+        "war bonnet",
+    ),
+    "crab": ("reef spider",),
+    "nudibranch": ("sea lemon", "dorid", "dendronotid"),
+    "anemone": ("zoanthid",),
+    "coral": ("sea pen", "sea whip", "sea rod"),
+}
 
 
 class Image:
+    ''' container for a diving picture '''
+
     def __init__(self, label, directory):
         self.label = label
         label, _ = os.path.splitext(label)
@@ -56,14 +75,32 @@ class Image:
         )
 
     def path(self):
+        ''' where this is on the file system
+        '''
         return os.path.join(root, self.directory, self.label)
 
     def fullsize(self):
+        ''' URI of full size image '''
         return "https://public.anardil.net/media/diving/{d}/{i}".format(
             d=self.directory, i=self.label,
         )
 
+    def hash(self):
+        ''' hash a file the same way indexer does, so we can find it's thumbnail
+        '''
+        sha1 = hashlib.sha1()
+
+        with open(self.path(), "rb") as f:
+            while True:
+                data = f.read(65536)
+                if not data:
+                    break
+                sha1.update(data)
+
+        return sha1.hexdigest()
+
     def normalized(self):
+        ''' lower case, remove plurals, split and expand '''
         # simplify name
         name = inflect.singular_noun(self.name.lower())
         name = name or self.name.lower()
@@ -77,23 +114,26 @@ class Image:
             name += "e"
 
         # split 'rockfish' to 'rock fish'
-        if (
-            name != "fish"
-            and name.endswith("fish")
-            and not name.endswith(" fish")
-        ):
-            name = name.replace("fish", " fish")
+        for split in ("fish", "coral", "ray"):
+            if (
+                name != split
+                and name.endswith(split)
+                and not name.endswith(" " + split)
+            ):
+                name = name.replace(split, " " + split)
 
         # categorization
-        for fish in fishes:
-            if name.endswith(fish):
-                name += " fish"
-
-        for nudi in nudibranchs:
-            if name.endswith(nudi):
-                name += " nudibranch"
+        for category, values in categories.items():
+            for value in values:
+                if name.endswith(value):
+                    name += " " + category
 
         return name
+
+
+def flatten(xs):
+    ''' [[a]] -> [a] '''
+    return [item for sublist in xs for item in sublist]
 
 
 def listing():
@@ -104,7 +144,9 @@ def listing():
 def delve(directory):
     """ create an Image object for each picture in a directory """
     path = os.path.join(root, directory)
-    return [Image(o, directory) for o in os.listdir(path) if o.endswith(".jpg")]
+    return [
+        Image(o, directory) for o in os.listdir(path) if o.endswith(".jpg")
+    ]
 
 
 def collect():
@@ -113,6 +155,7 @@ def collect():
 
 
 def named():
+    ''' all named images from all directories '''
     return flatten([[y for y in z if y.name] for z in collect()])
 
 
@@ -128,7 +171,7 @@ def expand_names(images):
 
             left, right = image.name.split(split)
 
-            clone = image
+            clone = Image(image.label, image.directory)
             clone.name = left
             image.name = right
             result.append(clone)
@@ -136,19 +179,6 @@ def expand_names(images):
         result.append(image)
 
     return result
-
-
-def hash(path):
-    sha1 = hashlib.sha1()
-
-    with open(path, "rb") as f:
-        while True:
-            data = f.read(65536)
-            if not data:
-                break
-            sha1.update(data)
-
-    return sha1.hexdigest()
 
 
 def make_tree(images):
@@ -171,6 +201,7 @@ def make_tree(images):
 
 
 def tree_size(tree):
+    ''' number of leaves '''
     if not isinstance(tree, dict):
         return len(tree)
 
@@ -187,6 +218,7 @@ def pruner(tree, too_few=5):
             to_remove.append(key)
 
     for remove in to_remove:
+        # print('pruned', remove)
         tree.pop(remove)
 
     return tree
@@ -195,8 +227,7 @@ def pruner(tree, too_few=5):
 def compress(tree):
     """ look for sub trees with no 'data' key, which can be squished up a level
     """
-    if not isinstance(tree, dict):
-        return
+    assert isinstance(tree, dict), tree
 
     for key, value in list(tree.items()):
 
@@ -215,10 +246,12 @@ def compress(tree):
 
 
 def go():
+    ''' full pipeline '''
     return pruner(compress(compress(make_tree(expand_names(named())))))
 
 
-def display(tree, lineage="", depth=0):
+def tree_print(tree, lineage="", depth=0):
+    ''' print the tree to stdout '''
 
     for key, value in sorted(tree.items()):
         if key == "data":
@@ -227,36 +260,77 @@ def display(tree, lineage="", depth=0):
 
         child = key + " " + lineage if lineage else key
         print(" " * depth, child)
-        display(value, lineage=child, depth=depth + 2)
+        tree_print(value, lineage=child, depth=depth + 2)
 
 
-def find_representative(tree):
+pinned = {
+    "crab": '2020-06-17 Rockaway Beach/005 - Dungeness Crab.jpg',
+    "anemone": '2019-11-12 Rockaway Beach/019 - Anemones.jpg',
+    'barnacle': '2019-12-30 Metridium/005 - Giant Acorn Barnacle.jpg',
+    'diver': '2019-10-31 Klein Bonaire M/017 - Divers.jpg',
+    'eel': '2020-07-26 Port Townsend/056 - Juvenile Wolf Eel.jpg',
+    'fish': '2020-03-01 Power Lines/017 - Juvenile Yellow Eye Rockfish',
+    'nudibranch': '2020-07-09 Rockaway Beach/005 - Alabaster Nudibranch.jpg',
+    'lobster': '2020-02-19 Sund Rock South Wall/033 - Squat Lobster.jpg',
+}
+
+
+def find_by_path(tree, needle):
+    ''' search the tree for an image with this path
+    '''
+    if not isinstance(tree, dict):
+        for image in tree:
+            if needle in image.path():
+                return image
+    else:
+        for child in tree.values():
+            found = find_by_path(child, needle)
+            if found:
+                return found
+
+    return None
+
+
+def find_representative(tree, lineage=None):
     """ grab one image to represent this tree
     """
+    if not lineage:
+        lineage = []
+
+    category = ' '.join(lineage)
+    if category in pinned:
+        found = find_by_path(tree, pinned[category])
+        if found:
+            return found
+
     if not isinstance(tree, dict):
         results = tree
     else:
-        results = (find_representative(child) for child in tree.values())
+        results = (
+            find_representative(values, lineage=[key] + lineage)
+            for (key, values) in tree.items()
+        )
 
     results = sorted(results, key=lambda x: x.path(), reverse=True)
     return results[0]
 
 
 def uncategorize(name):
-    for fish in fishes:
-        if name.endswith(" fish") and fish in name:
-            name = name.rstrip(" fish")
-
-    for nudi in nudibranchs:
-        if name.endswith(" nudibranch") and nudi in name:
-            name = name.rstrip(" fish")
+    ''' remove the special categorization labels added earlier '''
+    for category, values in categories.items():
+        for value in values:
+            if name.endswith(" " + category) and value in name:
+                name = name.rstrip(" " + category)
 
     return name
 
 
-def html_tree(tree, lineage=[]):
+def html_tree(tree, lineage=None):
     """ html version of display
     """
+    if not lineage:
+        lineage = []
+
     title = " ".join(lineage) or "Diving Gallery"
     display = uncategorize(title).title()
 
@@ -311,33 +385,41 @@ def html_tree(tree, lineage=[]):
 
     results = []
 
-    html += '<div class="grid">'
-    found_category = False
+    has_subcategories = [1 for key in tree.keys() if key != "data"] != []
+    if has_subcategories:
+        html += '<div class="grid">'
 
     # categories
     for key, value in sorted(tree.items()):
         if key == "data":
             continue
 
-        found_category = True
         child = key + " " + " ".join(lineage) if lineage else key
+        size = tree_size(value)
 
-        example = find_representative(value)
+        example = find_representative(value, [key] + lineage)
         html += """
         <div class="image">
         <a href="{link}">
             <img src="/imgs/{thumbnail}" alt="">
-            <h4>{subject}</h4>
+            <h3>
+              <span class="sneaky">{size}</span>
+              {subject}
+              <span class="count">{size}</span>
+            </h3>
         </a>
         </div>
         """.format(
             subject=key.title(),
             link="/gallery/{path}.html".format(path=child.replace(" ", "-")),
-            thumbnail=hash(example.path()),
+            thumbnail=example.hash(),
+            size='{}:{}'.format(sum(1 for k in value if k != 'data'), size),
         )
 
         results.extend(html_tree(value, lineage=[key] + lineage))
-    html += "</div>"
+
+    if has_subcategories:
+        html += "</div>"
 
     direct = tree.get("data", [])
     direct = sorted(direct, key=lambda x: x.path(), reverse=True)
@@ -347,28 +429,27 @@ def html_tree(tree, lineage=[]):
 
         seen = set()
 
-        if found_category:
+        if has_subcategories:
             html += """
             <br>
             <h1>More</h1>
-            """.format(
-                title=title
-            )
+            """
 
         html += '<div class="grid">'
         for image in direct:
             identifier = tuple([image.name, image.path()])
             if identifier in seen:
+                print(identifier)
                 continue
 
             html += """
-            <a data-fancybox="gallery" data-caption="{subject}" href="{fullsize}">
+            <a data-fancybox="gallery" data-caption="{name}" href="{fullsize}">
                 <img src="/imgs/{thumbnail}" alt="">
             </a>
             """.format(
-                subject=image.name,
+                name=image.name,
                 fullsize=image.fullsize(),
-                thumbnail=hash(image.path()),
+                thumbnail=image.hash(),
             )
 
             seen.add(identifier)
@@ -388,6 +469,7 @@ def html_tree(tree, lineage=[]):
 
 
 def pool_writer(args):
+    ''' callback for HTML writer pool '''
     title, html = args
     path = "gallery/{name}.html".format(name=title.replace(" ", "-"))
 
@@ -396,6 +478,7 @@ def pool_writer(args):
 
 
 def write_all_html():
+    ''' main '''
     pool = Pool()
 
     print("loading data... ", end="", flush=True)
