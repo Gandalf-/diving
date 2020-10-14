@@ -1,0 +1,315 @@
+# http://www.catalogueoflife.org/annual-checklist/2019/search/all
+
+Animalia:
+  Bryozoa:
+    sp: bryozoan
+    Stenolaemata:
+      Cyclostomatida:
+        Heteroporidae:
+          Heteropora:
+            pacifica: northern staghorn bryozoan
+    Gymnolaemata:
+      Cheilostomatida:
+        Membraniporoidea:
+          Membraniporidae:
+            Membranipora:
+              membranacea: kelp lace bryozoan
+        Schizoporelloidea:
+          Schizoporellidae:
+            Schizoporella:
+              unicornis: orange encrusting bryozoan
+        Buguloidea:
+          Bugulidae:
+            Dendrobeania:
+              murrayana: fan bryozoan
+  Echinodermata:
+    Holothuroidea:
+      sp: sea cucumber
+      Dendrochirotida:
+        Sclerodactylidae:
+          Eupentacta:
+            quinquesemita: stiff footed sea cucumber
+        Cucumariidae:
+          Cucumaria:
+            miniata: red sea cucumber
+      Synallactida:
+        Stichopodidae:
+          Apostichopus:
+            californicus: california sea cucumber
+    Echinoidea:
+      sp: sea urchin
+      Diadematoida:
+        Diadematidae:
+          Diadema:
+            antillarum: black sea urchin
+      Camarodonta:
+        Odontophora:
+          Strongylocentrotidae:
+            Strongylocentrotus:
+              purpuratus: purple sea urchin
+              franciscanus: red sea urchin
+              droebachiensis: green sea urchin
+  Chordata:
+    Mammalia:
+      Primates:
+        Hominoidea:
+          Hominidae:
+            Homo:
+              sapiens: diver
+    Reptilia:
+      Testudines:
+        sp: turtle
+        Cheloniidae:
+          Chelonia:
+            mydas: green sea turtle
+    Actinopterygii:
+      sp: fish
+      Perciformes:
+        Haemulidae:
+          Haemulon:
+            flavolineatum: french grunt
+            sciurus: bluestripe grunt
+        Stichaeidae:
+          Chirolophis:
+            nugator: mosshead war bonnet
+            decoratus: decorated war bonnet
+        Pholidae:
+          Apodichthys:
+            flavidus: penpoint gunnel
+          Pholis:
+            laeta: crescent gunnel
+            ornata: saddleback gunnel
+            clemensi: longfin gunnel
+        Anarhichadidae:
+          Anarrhichthys:
+            ocellatus: wolf eel
+      Scorpaeniformes:
+        Hemitripteridae:
+          Nautichthys:
+            oculofasciatus: sailfin sculpin
+        Rhamphocottidae:
+          Rhamphocottus:
+           richardsonii: grunt sculpin
+        Cottidae:
+          sp: sculpin
+          Artedius:
+            harringtoni: scalyhead sculpin
+            lateralis: smoothhead sculpin
+          Jordania:
+            zonope: longfin sculpin
+          Paricelinus:
+            hopliticus: thornback sculpin
+          Ascelichthys:
+            rhodorus: rosylip sculpin
+          Scorpaenichthys:
+            marmoratus: cabezon sculpin
+          Hemilepidotus:
+            hemilepidotus: red irish lord sculpin
+          Myoxocephalus:
+            polyacanthocephalus: great sculpin
+          Enophrys:
+            bison: buffalo sculpin
+        Sebastidae:
+          sp: rockfish
+          Sebastes:
+            ruberrimus: yellow eye rockfish
+            melanops: black rockfish
+            auriculatus: brown rockfish
+            maliger: quillback rockfish
+            caurinus: copper rockfish
+            pinniger: canary rockfish
+        Hexagrammidae:
+          sp: greenling
+          Oxylebius:
+            pictus: painted greenling
+          Hexagrammos:
+            decagrammus: kelp greenling
+          Ophiodon:
+            elongatus: lingcod
+      Tetraodontiformes:
+        Ostraciidae:
+          Lactoria:
+            cornuta: cowfish
+    Holocephali:
+      Chimaeriformes:
+        Chimaeridae:
+          Hydrolagus:
+            colliei: ratfish
+  Cnidaria:
+    Hydrozoa:
+      Anthoathecata:
+        Stylasteridae:
+          Stylaster:
+            norvegicus: pink hydrocoral
+    Anthozoa:
+      Spirularia:
+        Cerianthidae:
+          Pachycerianthus:
+            fimbriatus: tube dwelling anemone
+      Pennatulacea:
+        Halipteridae:
+          Halipteris:
+            willemoesi: sea whip
+        Pennatulidae:
+          Ptilosarcus:
+            gurneyi: sea pen
+      Alcyonacea:
+        Plexauridae:
+          Swiftia:
+            torreyi: dwarf red gorgonian coral
+      Zoantharia:
+        Epizoanthidae:
+          Epizoanthus:
+            scotinus: orange zoanthid
+      Actiniaria:
+        sp: anemone
+        Actinioidea:
+          Haloclavidae:
+            Peachia:
+              quinquecapitata: jelly dwelling anemone
+          Actiniidae:
+            Cribrinopsis:
+              fernaldi: crimson anemone
+            Anthopleura:
+              artemisia: green burrowing anemone
+            Urticina:
+              crassicornis: painted anemone
+              coriacea: stubby rose anemone
+              piscivora: fish eating anemone
+        Metridioidea:
+          Metridiidae:
+            Metridium:
+              senile: short plumose anemone
+              farcimen: metridium anemone
+  Mollusca:
+    Polyplacophora:
+      Chitonida:
+        sp: chiton
+        Mopalioidea:
+          Mopaliidae:
+            Mopalia:
+              muscosa: mossy chiton
+              lignosa: woody chiton
+              insignis: white lined chiton
+              vespertina: smooth mopalia chiton
+              spectabilis: red flecked mopalia chiton
+            Cryptochiton:
+              stelleri: gumboot chiton
+    Cephalopoda:
+      Octopoda:
+        sp: octopus
+        Octopodoidea:
+          Octopodidae:
+            Octopus:
+              rubescens: red octopus
+          Enteroctopodidae:
+            Enteroctopus:
+              dofleini: giant pacific octopus
+    Gastropoda:
+      Nudibranchia:
+        sp: nudibranch
+        Aeolidioidea:
+          Myrrhinidae:
+            Hermissenda:
+              crassicornis: opalescent nudibranch
+        Doridoidea:
+          Dorididae:
+            Doris:
+              montereyensis: monterey sea lemon
+              odhneri: white nudibranch
+          Discodorididae:
+            Peltodoris:
+              nobilis: noble sea lemon
+            Diaulula:
+              sandiegensis: leopard nudibranch
+          Cadlinidae:
+            Aldisa:
+              albomarginata: white rimmed nudibranch
+            Cadlina:
+              luteomarginata: yellow rimmed nudibranch
+        Polyceroidea:
+          Polyceridae:
+            Triopha:
+              catalinae: clown nudibranch
+        Proctonotoidea:
+          Proctonotidae:
+            Janolus:
+              fuscus: janolus fuscus nudibranch
+          Dironidae:
+            Dirona:
+              albolineata: alabaster nudibranch
+              pellucida: golden dirona nudibranch
+        Fionoidea:
+          Coryphellidae:
+            Himatina:
+              trophina: red flabellina nudibranch
+        Dendronotoidea:
+          Dendronotidae:
+            Dendronotus:
+              iris: giant nudibranch
+              rufus: red dendronotid
+              albus: multicolor dendronotid, white dendronotid
+        Onchidoridoidea:
+          Onchidorididae:
+            Acanthodoris:
+              nanimoensis: nanaimo nudibranch
+              lutea: sandalwood nudibranch
+              hudsoni: yellow margin dorid
+  Arthropoda:
+    Malacostraca:
+      Decapoda:
+        sp: crab
+        Cheiragonoidea:
+          Cheiragonidae:
+            Telmessus:
+              cheiragonus: helmet crab
+        Grapsoidea:
+          Varunidae:
+            Hemigrapsus:
+              oregonensis: green shore crab
+        Galatheoidea:
+          Porcellanidae:
+            Petrolisthes:
+              eriomerus: porcelain crab
+          Galatheidae:
+            Munida:
+              quadrispina: squat lobster
+        Paguroidea:
+          Lithodidae:
+            Acantholithodes:
+              hispidus: spiny lithoid crab
+            Rhinolithodes:
+              wosnessenskii: rhinoceros crab
+            Lopholithodes:
+              mandtii: puget sound king crab
+          Paguridae:
+            sp: hermit crab
+            Pagurus:
+              armatus: blackeyed hermit crab
+              granosimanus: grainyhand hermit crab
+              caurinus: greenmark hermit crab
+        Cancroidea:
+          Cancridae:
+            Glebocarcinus:
+              oregonesis: pygmy rock crab
+            Metacarcinus:
+              magister: dungeness crab
+            Cancer:
+              productus: red rock crab
+        Majoidea:
+          sp: decorator crab
+          Mithracidae:
+            Mithrax:
+              spinosissimus: clinging crab
+          Oregoniidae:
+            Oregonia:
+              gracilis: graceful decorator crab
+          Epialtidae:
+            Chorilia:
+              longipes: longhorn decorator crab
+            Pugettia:
+              producta: kelp crab
+            Loxorhynchus:
+              crispatus: moss crab
+            Scyra:
+              acutifrons: sharp nosed crab
