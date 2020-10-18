@@ -92,11 +92,37 @@ def find_representative(tree, lineage=None):
     return results[0]
 
 
-def html_title(lineage, where, scientific=None):
+def lineage_to_link(lineage, side, key=None):
+    ''' get a link to this page
+    '''
+    if not lineage:
+        name = key
+    else:
+        name = ' '.join(lineage)
+
+        if key and side == 'left':
+            name = key + ' ' + name
+
+        if key and side == 'right':
+            name = name + ' ' + key
+
+    return name.replace(' ', '-')
+
+
+def html_title(lineage, side, where, scientific=None):
     ''' html head and title section
     '''
     title = " ".join(lineage) or "Diving Gallery"
     display = uncategorize(title).title()
+
+    # always have a link to the top level of the gallery
+    top_level = """
+        <a href="/{where}/index.html">
+            <h1 class="top switch">Diving {title}</h1>
+        </a>
+    """.format(
+        where=where, title=where.title()
+    )
 
     html = """
     <!DOCTYPE html>
@@ -114,13 +140,20 @@ def html_title(lineage, where, scientific=None):
         title=display, scripts=html_scripts
     )
 
-    # create the buttons for each part of our name lineage
-    for i, parent in enumerate(lineage):
-        link = "/{where}/{name}.html".format(
-            where=where, name=" ".join(lineage[i:])
-        )
-        link = link.replace(" ", "-")
+    if side == 'right':
+        html += top_level
 
+    # create the buttons for each part of our name lineage
+    for i, name in enumerate(lineage):
+
+        if side == 'left':
+            partial = lineage[i:]
+        else:
+            partial = lineage[: i + 1]
+
+        link = "/{where}/{path}.html".format(
+            where=where, path=lineage_to_link(partial, side)
+        )
         last = i == len(lineage) - 1
 
         html += """
@@ -128,7 +161,7 @@ def html_title(lineage, where, scientific=None):
             <h1 class="{classes}">{title}</h1>
         </a>
         """.format(
-            title=parent.title(),
+            title=name.title(),
             classes="top" + (" last" if last else ""),
             link=link,
         )
@@ -142,17 +175,11 @@ def html_title(lineage, where, scientific=None):
         <div class="top" id="buffer"></div>
         """
 
-    # always have a link to the top level of the gallery
-    html += """
-    <a href="/{where}/index.html">
-        <h1 class="top switch">Diving {title}</h1>
-    </a>
-    """.format(
-        where=where, title=where.title()
-    )
+    if side == 'left':
+        html += top_level
 
-    # check for scientific name
-    if scientific:
+    # check for scientific name for gallery
+    if where == 'gallery':
         if lineage and lineage[-1] == 'egg':
             lineage = lineage[:-1]
 
@@ -178,19 +205,22 @@ def html_title(lineage, where, scientific=None):
 
         html += f"""
         <p class="scientific">{name}</p>
-        </div>
         """
+
+    html += "</div>"
 
     return html, title
 
 
-def html_tree(tree, where, scientific=None, lineage=None):
+def html_tree(tree, where, scientific, lineage=None):
     """ html version of display
     """
     if not lineage:
         lineage = []
 
-    html, title = html_title(lineage, where, scientific)
+    side = 'left' if where == 'gallery' else 'right'
+
+    html, title = html_title(lineage, side, where, scientific)
     results = []
 
     has_subcategories = [1 for key in tree.keys() if key != "data"] != []
@@ -202,10 +232,12 @@ def html_tree(tree, where, scientific=None, lineage=None):
         if key == "data":
             continue
 
-        child = key + " " + " ".join(lineage) if lineage else key
         size = tree_size(value)
-
         example = find_representative(value, [key] + lineage)
+
+        if side == 'right':
+            print(lineage)
+
         html += """
         <div class="image">
         <a href="{link}">
@@ -220,14 +252,19 @@ def html_tree(tree, where, scientific=None, lineage=None):
         """.format(
             subject=key.title(),
             link="/{where}/{path}.html".format(
-                where=where, path=child.replace(" ", "-")
+                where=where, path=lineage_to_link(lineage, side, key),
             ),
             thumbnail=example.hash(),
             size='{}:{}'.format(sum(1 for k in value if k != 'data'), size),
         )
 
         results.extend(
-            html_tree(value, where, scientific, lineage=[key] + lineage)
+            html_tree(
+                value,
+                where,
+                scientific,
+                lineage=[key] + lineage if side == 'left' else lineage + [key],
+            )
         )
 
     if has_subcategories:
@@ -307,7 +344,7 @@ def write_all_html():
     print("done", len(name_htmls), "pages prepared")
 
     print("walking taxia tree... ", end="", flush=True)
-    taxia_htmls = html_tree(taxia, "taxonomy", None)
+    taxia_htmls = html_tree(taxia, "taxonomy", scientific)
     print("done", len(taxia_htmls), "pages prepared")
 
     print("writing html... ", end="", flush=True)
