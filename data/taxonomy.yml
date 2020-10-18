@@ -26,6 +26,7 @@ Animalia:
     Holothuroidea:
       sp: sea cucumber
       Dendrochirotida:
+        sp: branched tentacle sea cucumber
         Sclerodactylidae:
           Eupentacta:
             quinquesemita: stiff footed sea cucumber
@@ -57,6 +58,7 @@ Animalia:
             Homo:
               sapiens: diver
     Reptilia:
+      sp: reptile
       Testudines:
         sp: turtle
         Cheloniidae:
@@ -65,6 +67,7 @@ Animalia:
     Actinopterygii:
       sp: fish
       Perciformes:
+        sp: perch-like fish
         Haemulidae:
           Haemulon:
             flavolineatum: french grunt
@@ -84,6 +87,7 @@ Animalia:
           Anarrhichthys:
             ocellatus: wolf eel
       Scorpaeniformes:
+        sp: mail-cheecked fish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin
@@ -131,6 +135,7 @@ Animalia:
           Lactoria:
             cornuta: cowfish
     Holocephali:
+      sp: cartilaginous fish
       Chimaeriformes:
         Chimaeridae:
           Hydrolagus:
@@ -147,6 +152,7 @@ Animalia:
           Pachycerianthus:
             fimbriatus: tube dwelling anemone
       Pennatulacea:
+        sp: sea pen
         Halipteridae:
           Halipteris:
             willemoesi: sea whip
@@ -154,10 +160,12 @@ Animalia:
           Ptilosarcus:
             gurneyi: sea pen
       Alcyonacea:
+        sp: soft coral
         Plexauridae:
           Swiftia:
             torreyi: dwarf red gorgonian coral
       Zoantharia:
+        sp: zoanthid
         Epizoanthidae:
           Epizoanthus:
             scotinus: orange zoanthid
@@ -260,6 +268,7 @@ Animalia:
       Decapoda:
         sp: crab
         Cheiragonoidea:
+          sp: helmet crab
           Cheiragonidae:
             Telmessus:
               cheiragonus: helmet crab

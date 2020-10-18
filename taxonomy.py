@@ -67,6 +67,9 @@ def compress(tree):
 
     for key, value in list(tree.items()):
 
+        if key == 'sp':
+            continue
+
         if isinstance(value, str):
             out[key] = value
             continue

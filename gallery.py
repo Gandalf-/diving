@@ -109,6 +109,34 @@ def lineage_to_link(lineage, side, key=None):
     return name.replace(' ', '-')
 
 
+def gallery_scientific(lineage, scientific):
+    ''' attempt to find a scientific name for this page
+    '''
+    if lineage and lineage[-1] == 'egg':
+        lineage = lineage[:-1]
+
+    def lookup(names):
+        candidate = uncategorize(' '.join(names).lower())
+        if 'rock fish' in candidate:
+            candidate = candidate.replace('rock fish', 'rockfish')
+        return scientific.get(candidate)
+
+    name = lookup(lineage)
+
+    # drop the first word
+    if not name:
+        name = lookup(lineage[1:])
+
+    # drop the first two words
+    if not name:
+        name = lookup(lineage[2:])
+
+    if not name:
+        print('no taxonomy', ' '.join(lineage))
+
+    return name or ""
+
+
 def html_title(lineage, side, where, scientific=None):
     ''' html head and title section
     '''
@@ -180,34 +208,22 @@ def html_title(lineage, side, where, scientific=None):
 
     # check for scientific name for gallery
     if where == 'gallery':
-        if lineage and lineage[-1] == 'egg':
-            lineage = lineage[:-1]
+        name = gallery_scientific(lineage, scientific)
 
-        def lookup(names):
-            candidate = uncategorize(' '.join(names).lower())
-            if 'rock fish' in candidate:
-                candidate = candidate.replace('rock fish', 'rockfish')
-            return scientific.get(candidate)
+    elif where == 'taxonomy':
+        name = ""
+        history = ' '.join(lineage).split(' ')
 
-        name = lookup(lineage)
+        while history and not name:
+            name = scientific.get(' '.join(history)) or ""
+            history = history[:-1]
 
-        # drop the first word
-        if not name:
-            name = lookup(lineage[1:])
+        name = name.title()
 
-        # drop the first two words
-        if not name:
-            name = lookup(lineage[2:])
-
-        if not name:
-            print(' '.join(lineage))
-        name = name or ""
-
-        html += f"""
-        <p class="scientific">{name}</p>
-        """
-
-    html += "</div>"
+    html += f"""
+    <p class="scientific">{name}</p>
+    </div>
+    """
 
     return html, title
 
@@ -234,9 +250,6 @@ def html_tree(tree, where, scientific, lineage=None):
 
         size = tree_size(value)
         example = find_representative(value, [key] + lineage)
-
-        if side == 'right':
-            print(lineage)
 
         html += """
         <div class="image">
@@ -282,7 +295,6 @@ def html_tree(tree, where, scientific, lineage=None):
         for image in direct:
             identifier = tuple([image.name, image.path()])
             if identifier in seen:
-                print(identifier)
                 continue
 
             html += """
@@ -344,6 +356,7 @@ def write_all_html():
     print("done", len(name_htmls), "pages prepared")
 
     print("walking taxia tree... ", end="", flush=True)
+    scientific = {v.replace(' sp', ''): k for k, v in scientific.items()}
     taxia_htmls = html_tree(taxia, "taxonomy", scientific)
     print("done", len(taxia_htmls), "pages prepared")
 
