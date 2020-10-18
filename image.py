@@ -8,7 +8,7 @@ import hashlib
 import os
 
 import inflect
-import collection
+import utility
 
 inflect = inflect.engine()
 
@@ -53,14 +53,18 @@ categories = {
         "sculpin",
         "sculpin",
         "sole",
+        "sardine",
         "spotted drum",
         "tarpon",
         "tomtate",
         "war bonnet",
     ),
+    "shrimp": ("prawn", ),
+    "algae": ("kelp", "seagrass", ),
     "crab": ("reef spider",),
     "nudibranch": ("sea lemon", "dorid", "dendronotid"),
     "anemone": ("zoanthid",),
+    "tunicate": ("sea squirt", ),
     "coral": ("sea pen", "sea whip", "sea rod"),
 }
 
@@ -68,6 +72,8 @@ categories = {
 def uncategorize(name):
     ''' remove the special categorization labels added earlier '''
     for category, values in categories.items():
+        assert isinstance(values, tuple)
+
         for value in values:
             if name.endswith(" " + category) and value in name:
                 name = name.rstrip(" " + category)
@@ -104,7 +110,7 @@ class Image:
     def path(self):
         ''' where this is on the file system
         '''
-        return os.path.join(collection.root, self.directory, self.label)
+        return os.path.join(utility.root, self.directory, self.label)
 
     def fullsize(self):
         ''' URI of full size image '''

@@ -7,10 +7,8 @@ parsing data from disk
 import os
 
 from image import Image
-from utility import flatten, tree_size
+from utility import flatten, tree_size, root
 
-
-root = "/mnt/zfs/Media/Pictures/Diving"
 
 
 def listing():
@@ -139,6 +137,27 @@ def data_to_various(tree):
             tree[key] = data_to_various(value)
 
     return tree
+
+
+def single_level(tree):
+    ''' squash the tree into a single level name to images dict
+    '''
+    assert isinstance(tree, dict), tree
+
+    def inner(where):
+        for value in where.values():
+            if isinstance(value, list):
+                yield value
+
+            else:
+                yield from inner(value)
+
+    out = {}
+    for group in inner(tree):
+        name = group[0].simplified()
+        out[name] = group
+
+    return out
 
 
 def go():

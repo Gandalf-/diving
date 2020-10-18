@@ -11,7 +11,7 @@ import multiprocessing
 import taxonomy
 import collection
 
-from image import uncategorize, splits
+from image import uncategorize, Image
 from utility import tree_size
 
 
@@ -84,11 +84,15 @@ def find_representative(tree, lineage=None):
             for (key, values) in tree.items()
         )
 
-    results = sorted(results, key=lambda x: x.path(), reverse=True)
+    def get_path(image):
+        assert isinstance(image, Image), image
+        return image.path()
+
+    results = sorted(results, key=get_path, reverse=True)
     return results[0]
 
 
-def html_title(lineage, scientific):
+def html_title(lineage, where, scientific=None):
     ''' html head and title section
     '''
     title = " ".join(lineage) or "Diving Gallery"
@@ -112,7 +116,9 @@ def html_title(lineage, scientific):
 
     # create the buttons for each part of our name lineage
     for i, parent in enumerate(lineage):
-        link = "/gallery/" + " ".join(lineage[i:]) + ".html"
+        link = "/{where}/{name}.html".format(
+            where=where, name=" ".join(lineage[i:])
+        )
         link = link.replace(" ", "-")
 
         last = i == len(lineage) - 1
@@ -138,50 +144,53 @@ def html_title(lineage, scientific):
 
     # always have a link to the top level of the gallery
     html += """
-    <a href="/gallery/index.html">
-        <h1 class="top switch">Diving Gallery</h1>
+    <a href="/{where}/index.html">
+        <h1 class="top switch">Diving {title}</h1>
     </a>
-    """
+    """.format(
+        where=where, title=where.title()
+    )
 
     # check for scientific name
-    if lineage and lineage[-1] == 'egg':
-        lineage = lineage[:-1]
+    if scientific:
+        if lineage and lineage[-1] == 'egg':
+            lineage = lineage[:-1]
 
-    def lookup(names):
-        candidate = uncategorize(' '.join(names).lower())
-        if 'rock fish' in candidate:
-            candidate = candidate.replace('rock fish', 'rockfish')
-        return scientific.get(candidate)
+        def lookup(names):
+            candidate = uncategorize(' '.join(names).lower())
+            if 'rock fish' in candidate:
+                candidate = candidate.replace('rock fish', 'rockfish')
+            return scientific.get(candidate)
 
-    name = lookup(lineage)
+        name = lookup(lineage)
 
-    # drop the first word
-    if not name:
-        name = lookup(lineage[1:])
+        # drop the first word
+        if not name:
+            name = lookup(lineage[1:])
 
-    # drop the first two words
-    if not name:
-        name = lookup(lineage[2:])
+        # drop the first two words
+        if not name:
+            name = lookup(lineage[2:])
 
-    if not name:
-        print(' '.join(lineage))
-    name = name or ""
+        if not name:
+            print(' '.join(lineage))
+        name = name or ""
 
-    html += f"""
-    <p class="scientific">{name}</p>
-    </div>
-    """
+        html += f"""
+        <p class="scientific">{name}</p>
+        </div>
+        """
 
     return html, title
 
 
-def html_tree(tree, scientific, lineage=None):
+def html_tree(tree, where, scientific=None, lineage=None):
     """ html version of display
     """
     if not lineage:
         lineage = []
 
-    html, title = html_title(lineage, scientific)
+    html, title = html_title(lineage, where, scientific)
     results = []
 
     has_subcategories = [1 for key in tree.keys() if key != "data"] != []
@@ -210,12 +219,16 @@ def html_tree(tree, scientific, lineage=None):
         </div>
         """.format(
             subject=key.title(),
-            link="/gallery/{path}.html".format(path=child.replace(" ", "-")),
+            link="/{where}/{path}.html".format(
+                where=where, path=child.replace(" ", "-")
+            ),
             thumbnail=example.hash(),
             size='{}:{}'.format(sum(1 for k in value if k != 'data'), size),
         )
 
-        results.extend(html_tree(value, scientific, lineage=[key] + lineage))
+        results.extend(
+            html_tree(value, where, scientific, lineage=[key] + lineage)
+        )
 
     if has_subcategories:
         html += "</div>"
@@ -261,10 +274,19 @@ def html_tree(tree, scientific, lineage=None):
     return results
 
 
-def pool_writer(args):
+def names_pool_writer(args):
     ''' callback for HTML writer pool '''
     title, html = args
     path = "gallery/{name}.html".format(name=title.replace(" ", "-"))
+
+    with open(path, "w+") as f:
+        print(html, file=f)
+
+
+def taxia_pool_writer(args):
+    ''' callback for HTML writer pool '''
+    title, html = args
+    path = "taxonomy/{name}.html".format(name=title.replace(" ", "-"))
 
     with open(path, "w+") as f:
         print(html, file=f)
@@ -277,14 +299,20 @@ def write_all_html():
     print("loading data... ", end="", flush=True)
     tree = collection.go()
     scientific = taxonomy.mapping()
+    taxia = taxonomy.gallery_tree(tree)
     print("done", tree_size(tree), "images loaded")
 
-    print("walking tree... ", end="", flush=True)
-    htmls = html_tree(tree, scientific)
-    print("done", len(htmls), "pages prepared")
+    print("walking name tree... ", end="", flush=True)
+    name_htmls = html_tree(tree, "gallery", scientific)
+    print("done", len(name_htmls), "pages prepared")
+
+    print("walking taxia tree... ", end="", flush=True)
+    taxia_htmls = html_tree(taxia, "taxonomy", None)
+    print("done", len(taxia_htmls), "pages prepared")
 
     print("writing html... ", end="", flush=True)
-    pool.map(pool_writer, htmls)
+    pool.map(names_pool_writer, name_htmls)
+    pool.map(taxia_pool_writer, taxia_htmls)
     print("done")
 
 

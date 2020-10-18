@@ -1,4 +1,5 @@
 reef spider
+sandalwood dorid
 california berthella nudibranch
 yellow spotted cadlina nudibranch
 squid
@@ -36,24 +37,34 @@ blue tang
 fairy basslet
 rock beauty
 shiner perch
+slipskin snailfish
+pacific sardine
 tiny orange anemone
-cloud sponge
+broadbase tunicate
+bristly tunicate
+sea vase tunicate
+sea peach tunicate
+white glove leather tunicate
+transparent sea squirt
+tunicate
+giant acorn barnacle
+barnacle
+hard gnarled clump sponge
 bristly yellow clump sponge
 clump sponge
+cloud sponge
 blue barrel sponge
 branching vase sponge
 bread crumb sponge
 yellow boring sponge
+tough yellow branching sponge
 sponge
-siphon hydroid tunicate
-tunicate
-giant acorn barnacle
-barnacle
+kincaid shrimp
 spotted cleaner shrimp
 cleaner shrimp
 sparkling shrimp
 coonstripe shrimp
-humpy shrimp
+pacific prawn
 banded coral shrimp
 shrimp
 spotted moray eel
@@ -61,33 +72,48 @@ green moray eel
 garden eel
 eel
 kelp
+seagrass
+encrusting corraline algae
+algae
+muff hydroid
+tunicate siphon hydroid
+hydroid
 atlantic lobster
 brain coral
 fire coral
 sea rod
 coral
+red trumpet calcareous tube worm
+calcareous tube worm
+prolific three section tube worm
+tube worm
 fire worm
 orange feather duster worm
 split branch feather duster worm
 feather duster worm
-red trumpet calcareous tube worm
 brittle star
 velcro star
 sunflower star
 leather star
-giant pink star
-spiny pink star
-blood star
 orange ochre star
 purple ochre star
 blue ochre star
+ochre star
+blood star
 slime star
 rose star
 feather star
 vermillion star
+giant pink star
 artic cookie star
 six rayed star
 ochre sea star
+coral bryozoan
+leaf crust bryozoan
 eagle ray
 stingray
+clam
+painted dendro chiton
 moon snail
+creeping pedal sea cucumber
+white sea urchin

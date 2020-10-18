@@ -5,6 +5,9 @@ dict and list functions
 '''
 
 
+root = "/mnt/zfs/Media/Pictures/Diving"
+
+
 def flatten(xs):
     ''' [[a]] -> [a] '''
     return [item for sublist in xs for item in sublist]

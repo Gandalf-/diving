@@ -4,10 +4,11 @@
 taxonomy related things
 '''
 
+import sys
 import pathlib
 import yaml
 
-from collection import go
+from collection import go, single_level
 from utility import extract_leaves
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
@@ -40,6 +41,45 @@ def load_known():
 
     for leaf in extract_leaves(tree):
         yield from leaf.split(', ')
+
+
+def full_compress(tree):
+    ''' keep compressing until nothing changes '''
+    old = tree
+
+    while True:
+        new = compress(old)
+        if new == old:
+            break
+        old = new
+
+    return new
+
+
+def compress(tree):
+    ''' squash levels '''
+
+    if isinstance(tree, str):
+        # hit a leaf
+        return tree
+
+    out = {}
+
+    for key, value in list(tree.items()):
+
+        if isinstance(value, str):
+            out[key] = value
+            continue
+
+        if len(value.keys()) == 1:
+            # squash
+            s = list(value.keys())[0]
+            new_key = key + ' ' + s
+            out[new_key] = compress(value[s])
+        else:
+            out[key] = compress(value)
+
+    return out
 
 
 def invert_known(tree):
@@ -85,5 +125,39 @@ def taxonomy_listing():
             fd.write(name + '\n')
 
 
-if __name__ == '__main__':
+def taxia_filler(tree, images):
+    ''' fill in the images
+    '''
+    assert isinstance(tree, dict), tree
+
+    for key, value in list(tree.items()):
+        if isinstance(value, str):
+            if value in images:
+                tree[key] = {'data': images[value]}
+
+            else:
+                print('dropping', key)
+                tree.pop(key)
+        else:
+            tree[key] = taxia_filler(value, images)
+
+    return tree
+
+
+def gallery_tree(tree=None):
+    ''' produce a tree for gallery.py to use
+    the provided tree must be from collection.go()
+    '''
+    if not tree:
+        tree = go()
+
+    images = single_level(tree)
+    taxia = full_compress(load_tree())
+
+    taxia_filler(taxia, images)
+
+    return taxia
+
+
+if not sys.flags.interactive and __name__ == '__main__':
     taxonomy_listing()
