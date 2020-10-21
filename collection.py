@@ -10,7 +10,6 @@ from image import Image
 from utility import flatten, tree_size, root
 
 
-
 def listing():
     """ a list of all dive picture folders available """
     return [d for d in os.listdir(root) if not d.startswith(".")]

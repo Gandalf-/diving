@@ -23,10 +23,50 @@ Animalia:
             Dendrobeania:
               murrayana: fan bryozoan
   Echinodermata:
+    Crinoidea:
+      Comatulida:
+        Antedonidae:
+          Florometra:
+            serratissima: feather star
+    Asteroidea:
+      sp: star
+      Velatida:
+        Pterasteridae:
+          Pteraster:
+            tesselatus: slime star
+      Forcipulatida:
+        Asteriidae:
+          Stylasterias:
+            forreri: velcro star
+          Leptasterias:
+            hexactis: six rayed star
+          Pycnopodia:
+            helianthoides: sunflower star
+          Pisaster:
+            ochraceus: ochre star
+            brevispinus: giant pink star
+      Ophiuroidea:
+        sp: brittle star
+      Valvatida:
+        Solasteridae:
+          Crossaster:
+            papposus: rose star
+        Asteropseidae:
+          Dermasterias:
+            imbricata: leather star
+        Goniasteridae:
+          Ceramaster:
+            arcticus: arctic cookie star
+          Mediaster:
+            aequalis: vermilion star
+      Spinulosida:
+        Echinasteridae:
+          Henricia:
+            leviuscula: blood star
     Holothuroidea:
       sp: sea cucumber
       Dendrochirotida:
-        sp: branched tentacle sea cucumber
+        # branched tentacle sea cucumber
         Sclerodactylidae:
           Eupentacta:
             quinquesemita: stiff footed sea cucumber
@@ -66,8 +106,16 @@ Animalia:
             mydas: green sea turtle
     Actinopterygii:
       sp: fish
+      Batrachoidiformes:
+        Porichthys sp: midshipman
       Perciformes:
-        sp: perch-like fish
+        # perch-like fish
+        Grammatidae:
+          Gramma:
+            royal: fairy basslet
+        Gobiidae:
+          Rhinogobiops:
+            nicholsii: goby
         Haemulidae:
           Haemulon:
             flavolineatum: french grunt
@@ -86,8 +134,17 @@ Animalia:
         Anarhichadidae:
           Anarrhichthys:
             ocellatus: wolf eel
+      Anguilliformes:
+        Congridae:
+          Heterocongrinae sp: garden eel
+        Muraenidae:
+          Gymnothorax:
+            moringa: spotted moray eel
+            funebris: green moray eel
       Scorpaeniformes:
-        sp: mail-cheecked fish
+        # mail-cheecked fish
+        Scorpaenidae:
+          Pterois sp: lion fish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin
@@ -114,8 +171,8 @@ Animalia:
           Enophrys:
             bison: buffalo sculpin
         Sebastidae:
-          sp: rockfish
           Sebastes:
+            sp: rockfish
             ruberrimus: yellow eye rockfish
             melanops: black rockfish
             auriculatus: brown rockfish
@@ -135,13 +192,24 @@ Animalia:
           Lactoria:
             cornuta: cowfish
     Holocephali:
-      sp: cartilaginous fish
+      # cartilaginous fish
       Chimaeriformes:
         Chimaeridae:
           Hydrolagus:
             colliei: ratfish
   Cnidaria:
     Hydrozoa:
+      Hydroidolina:
+        sp: hydroid
+        Anthoacthecata:
+          Filifera:
+            Bythotiaridae:
+              Bythotiara:
+                huntsmani: tunicate siphon hydroid
+        Leptothecata:
+          Lafoeidae:
+            Lafoea:
+              dumosa: muff hydroid
       Anthoathecata:
         Stylasteridae:
           Stylaster:
@@ -205,8 +273,8 @@ Animalia:
               stelleri: gumboot chiton
     Cephalopoda:
       Octopoda:
-        sp: octopus
         Octopodoidea:
+          sp: octopus
           Octopodidae:
             Octopus:
               rubescens: red octopus
@@ -214,6 +282,12 @@ Animalia:
             Enteroctopus:
               dofleini: giant pacific octopus
     Gastropoda:
+      Littorinimorpha:
+        sp: snail
+        Naticoidea:
+          Naticidae:
+            Nerverita:
+              lewisii: moon snail
       Nudibranchia:
         sp: nudibranch
         Aeolidioidea:
@@ -268,7 +342,6 @@ Animalia:
       Decapoda:
         sp: crab
         Cheiragonoidea:
-          sp: helmet crab
           Cheiragonidae:
             Telmessus:
               cheiragonus: helmet crab
@@ -292,8 +365,8 @@ Animalia:
             Lopholithodes:
               mandtii: puget sound king crab
           Paguridae:
-            sp: hermit crab
             Pagurus:
+              sp: hermit crab
               armatus: blackeyed hermit crab
               granosimanus: grainyhand hermit crab
               caurinus: greenmark hermit crab
@@ -322,3 +395,10 @@ Animalia:
               crispatus: moss crab
             Scyra:
               acutifrons: sharp nosed crab
+
+# Plantae:
+#   sp: algae
+#   Rhodophyta:
+#     Florideophyceae:
+#       Corallinales:
+#         sp: encrusting corraline algae

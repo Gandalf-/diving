@@ -5,13 +5,15 @@ search through diving pictures to produce a 'taxonomy tree', then convert that
 tree into HTML pages for diving.anardil.net
 '''
 
+import re
+import os
 import sys
 import multiprocessing
 
 import taxonomy
 import collection
 
-from image import uncategorize, Image
+from image import categorize, uncategorize, split, Image
 from utility import tree_size
 
 
@@ -189,7 +191,7 @@ def html_title(lineage, side, where, scientific=None):
             <h1 class="{classes}">{title}</h1>
         </a>
         """.format(
-            title=name.title(),
+            title=name.title() if where == 'gallery' else name,
             classes="top" + (" last" if last else ""),
             link=link,
         )
@@ -205,11 +207,17 @@ def html_title(lineage, side, where, scientific=None):
 
     if side == 'left':
         html += top_level
+    link = None
 
     # check for scientific name for gallery
     if where == 'gallery':
         name = gallery_scientific(lineage, scientific)
+        link = name
+        if link.endswith(' sp'):
+            link = link.replace(' sp', '')
+        link = link.replace(' ', '-')
 
+    # check for common name for taxonomy
     elif where == 'taxonomy':
         name = ""
         history = ' '.join(lineage).split(' ')
@@ -219,11 +227,21 @@ def html_title(lineage, side, where, scientific=None):
             history = history[:-1]
 
         name = name.title()
+        link = split(categorize(name.lower()))
+        link = link.replace(' ', '-')
 
-    html += f"""
-    <p class="scientific">{name}</p>
-    </div>
-    """
+    if link:
+        other = 'gallery' if where == 'taxonomy' else 'taxonomy'
+
+        html += f"""
+        <a href="/{other}/{link}.html" class="scientific crosslink">{name}</a>
+        </div>
+        """
+    else:
+        html += f"""
+        <p class="scientific">{name}</p>
+        </div>
+        """
 
     return html, title
 
@@ -366,6 +384,36 @@ def write_all_html():
     print("done")
 
 
+def find_links():
+    ''' check the html directory for internal links
+    '''
+    for directory in ('taxonomy', 'gallery'):
+        for filename in os.listdir(directory):
+            if not filename.endswith(".html"):
+                continue
+
+            path = os.path.join(directory, filename)
+            with open(path) as fd:
+                for line in fd:
+                    if 'href' not in line:
+                        continue
+
+                    for link in re.findall(r'href=\"(.+?)\"', line):
+                        if link.startswith('http'):
+                            continue
+
+                        link = link[1:]
+                        yield path, link
+
+
+def link_check():
+    ''' check the html directory for broken links
+    '''
+    for path, link in find_links():
+        if not os.path.exists(link):
+            print('broken', link, 'in', path)
+
+
 # resources
 
 html_scripts = """
@@ -380,3 +428,4 @@ if not sys.flags.interactive and __name__ == "__main__":
         root = sys.argv[1]
 
     write_all_html()
+    link_check()

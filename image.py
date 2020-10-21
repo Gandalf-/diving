@@ -69,6 +69,15 @@ categories = {
 }
 
 
+def categorize(name):
+    ''' add special categorization labels '''
+    for category, values in categories.items():
+        for value in values:
+            if name.endswith(value):
+                name += " " + category
+    return name
+
+
 def uncategorize(name):
     ''' remove the special categorization labels added earlier '''
     for category, values in categories.items():
@@ -78,6 +87,42 @@ def uncategorize(name):
             if name.endswith(" " + category) and value in name:
                 name = name.rstrip(" " + category)
 
+    return name
+
+
+def unqualify(name):
+    ''' remove qualifiers '''
+    for qualifier in qualifiers:
+        if name.startswith(qualifier):
+            name = name[len(qualifier) + 1:]
+
+    if name.endswith('egg'):
+        name, _ = name.split(' egg')
+
+    return name
+
+
+def split(name):
+    ''' add splits
+    rockfish -> rock fish
+    '''
+    for s in splits:
+        if (
+            name != s
+            and name.endswith(s)
+            and not name.endswith(" " + s)
+        ):
+            name = name.replace(s, " " + s)
+    return name
+
+
+def unsplit(name):
+    ''' remove splits
+    rock fish -> rockfish
+    '''
+    for s in splits:
+        if name != s and ' ' + s in name:
+            name = name.replace(' ' + s, s)
     return name
 
 
@@ -156,13 +201,7 @@ class Image:
     def simplified(self):
         ''' remove qualifiers from name '''
         name = self.singular().lower()
-
-        for qualifier in qualifiers:
-            if name.startswith(qualifier):
-                name = name[len(qualifier) + 1:]
-
-        if name.endswith('egg'):
-            name, _ = name.split(' egg')
+        name = unqualify(name)
 
         return name
 
@@ -170,20 +209,7 @@ class Image:
         ''' lower case, remove plurals, split and expand '''
         # simplify name
         name = self.singular()
-
-        # split 'rockfish' to 'rock fish'
-        for split in splits:
-            if (
-                name != split
-                and name.endswith(split)
-                and not name.endswith(" " + split)
-            ):
-                name = name.replace(split, " " + split)
-
-        # categorization
-        for category, values in categories.items():
-            for value in values:
-                if name.endswith(value):
-                    name += " " + category
+        name = split(name)
+        name = categorize(name)
 
         return name
