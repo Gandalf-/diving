@@ -4,6 +4,8 @@ Sanity checks
 
 import unittest
 
+import collection
+import taxonomy
 import gallery
 import image
 
@@ -11,8 +13,12 @@ import image
 class TestGallery(unittest.TestCase):
     ''' gallery.py '''
 
+    scientific = taxonomy.mapping()
+    # tree = collection.go()
+
     def test_lineage_to_link(self):
-        ''' ^ '''
+        ''' converting lineage to links between sites
+        '''
         samples = [
                 (None, False, ["a", "b", "c"], "a-b-c"),
                 (None, True, ["a", "b", "c"], "a-b-c"),
@@ -25,7 +31,18 @@ class TestGallery(unittest.TestCase):
             self.assertEqual(link, after)
 
     def test_gallery_scientific(self):
-        ''' ^ '''
+        ''' find scientific names by common name
+        '''
+        samples = [
+            (['copper', 'rock', 'fish'], 'Sebastes caurinus'),
+            (['fish'], 'Actinopterygii sp'),
+            (['fish', 'eggs'], 'Actinopterygii sp'),
+            (['juvenile yellow eye', 'rock', 'fish'], 'Sebastes ruberrimus'),
+        ]
+
+        for lineage, output in samples:
+            match = gallery.gallery_scientific(lineage, TestGallery.scientific)
+            self.assertTrue(match.endswith(output), match)
 
 
 class TestImage(unittest.TestCase):

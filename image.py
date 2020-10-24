@@ -99,6 +99,9 @@ def unqualify(name):
     if name.endswith('egg'):
         name, _ = name.split(' egg')
 
+    if name.endswith('eggs'):
+        name, _ = name.split(' eggs')
+
     return name
 
 

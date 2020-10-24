@@ -13,7 +13,7 @@ import multiprocessing
 import taxonomy
 import collection
 
-from image import categorize, uncategorize, split, Image
+from image import categorize, uncategorize, unsplit, unqualify, split, Image
 from utility import tree_size
 
 
@@ -41,12 +41,30 @@ pinned = {
     'diver': '2019-10-31 Klein Bonaire M/017 - Divers.jpg',
     'eel': '2020-07-26 Port Townsend/056 - Juvenile Wolf Eel.jpg',
     'fish': '2020-03-01 Power Lines/017 - Juvenile Yellow Eye Rockfish',
-    # 'nudibranch': '2020-07-09 Rockaway Beach/005 - Alabaster Nudibranch.jpg',
     'nudibranch': (
         '2020-09-08 Sund Rock South Wall/'
         '034 - Red Flabellina Nudibranchs.jpg'
     ),
     'lobster': '2020-02-19 Sund Rock South Wall/033 - Squat Lobster.jpg',
+    'star': '2020-03-01 Jaggy Crack/022 - Rose Star.jpg',
+    'Animalia Cnidaria': (
+        '2020-08-30 Rockaway Beach/005 - '
+        'Metridium Anemone and Orange Zoanthids.jpg'
+    ),
+    'Animalia Chordata': (
+        '2020-03-01 Power Lines/017 - Juvenile Yellow Eye Rockfish'
+    ),
+    'Animalia Mollusca': (
+        '2020-09-08 Sund Rock South Wall/'
+        '034 - Red Flabellina Nudibranchs.jpg'
+    ),
+    'Animalia Chordata Actinopterygii': (
+        '2019-12-01 Metridium/014 - Copper Rockfish.jpg'
+    ),
+    'Animalia Chordata Mammalia Primates Hominoidea Hominidae Homo sapiens': (
+        '2019-10-31 Klein Bonaire M/017 - Divers.jpg'
+    ),
+    'Animalia Echinodermata': '2020-03-01 Jaggy Crack/022 - Rose Star.jpg',
 }
 
 
@@ -72,7 +90,15 @@ def find_representative(tree, lineage=None):
     if not lineage:
         lineage = []
 
+    # forwards for gallery
     category = ' '.join(lineage)
+    if category in pinned:
+        found = find_by_path(tree, pinned[category])
+        if found:
+            return found
+
+    # backwards for taxonomy
+    category = ' '.join(lineage[::-1])
     if category in pinned:
         found = find_by_path(tree, pinned[category])
         if found:
@@ -114,13 +140,8 @@ def lineage_to_link(lineage, side, key=None):
 def gallery_scientific(lineage, scientific):
     ''' attempt to find a scientific name for this page
     '''
-    if lineage and lineage[-1] == 'egg':
-        lineage = lineage[:-1]
-
     def lookup(names):
-        candidate = uncategorize(' '.join(names).lower())
-        if 'rock fish' in candidate:
-            candidate = candidate.replace('rock fish', 'rockfish')
+        candidate = unsplit(unqualify(uncategorize(' '.join(names).lower())))
         return scientific.get(candidate)
 
     name = lookup(lineage)
