@@ -65,8 +65,9 @@ h3 {
   border: 1px solid black;
 }
 
-.last {
-  margin-right: 1em;
+.title_spacer {
+  width: 1em;
+  display: inline-block;
 }
 
 a:link {

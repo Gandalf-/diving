@@ -13,17 +13,115 @@ import image
 class TestGallery(unittest.TestCase):
     ''' gallery.py '''
 
-    scientific = taxonomy.mapping()
-    # tree = collection.go()
+    g_scientific = taxonomy.mapping()
+    t_scientific = {v.replace(' sp', ''): k for k, v in g_scientific.items()}
+
+    def test_html_title(self):
+        ''' html titles ordering
+        '''
+        samples = [
+            (
+                # gallery simple case
+                'gallery',
+                ['chiton'],
+                ['chiton.html', 'title_spacer', 'gallery/index.html'],
+            ),
+            (
+                # gallery multi level
+                'gallery',
+                ['brittle', 'star'],
+                ['brittle-star.html', 'title_spacer', 'gallery/index.html'],
+            ),
+            (
+                # taxonomy, has scientific name
+                'gallery',
+                ['giant pacific', 'octopus'],
+                [
+                    'giant-pacific.html',
+                    'octopus.html',
+                    'title_spacer',
+                    'gallery/index.html',
+                    (
+                        'Animalia-Mollusca-Cephalopoda-Octopoda-Octopodoidea-'
+                        'Enteroctopodidae-Enteroctopus-dofleini.html'
+                    ),
+                ],
+            ),
+            (
+                'taxonomy',
+                ['Animalia'],
+                ['taxonomy/index.html', 'title_spacer', 'Animalia.html'],
+            ),
+            (
+                # taxonomy, no common name
+                'taxonomy',
+                ['Animalia', 'Echinodermata'],
+                [
+                    'taxonomy/index.html',
+                    'title_spacer',
+                    'Animalia.html',
+                    'Animalia-Echinodermata.html',
+                ],
+            ),
+            (
+                # taxonomy, has common name
+                'taxonomy',
+                [
+                    'Animalia',
+                    'Mollusca',
+                    'Cephalopoda',
+                    'Octopoda',
+                    'Octopodoidea',
+                    'Enteroctopodidae',
+                    'Enteroctopus',
+                    'dofleini',
+                ],
+                [
+                    'taxonomy/index.html',
+                    'title_spacer',
+                    'Animalia.html',
+                    'Animalia-Mollusca.html',
+                    'giant-pacific-octopus.html',
+                ],
+            ),
+        ]
+        for where, lineage, elements in samples:
+
+            if where == 'gallery':
+                scientific = TestGallery.g_scientific
+            else:
+                scientific = TestGallery.t_scientific
+
+            html, title = gallery.html_title(lineage, where, scientific)
+
+            indices = [html.find(e) for e in elements]
+            self.assertEqual(indices, sorted(indices), lineage)
+            self.assertEqual(title, ' '.join(lineage))
+
+    def test_find_representative(self):
+        ''' picking the newest image to represent a tree, or a predefined
+        'pinned' image
+        '''
+        tree = collection.go()
+
+        self.assertIn('fish', tree)
+        out = gallery.find_representative(tree['fish'], lineage=['fish'])
+        self.assertEqual(out.name, 'Juvenile Yellow Eye Rockfish')
+
+        self.assertIn('barnacle', tree)
+        out = gallery.find_representative(
+            tree['barnacle'], lineage=['barnacle']
+        )
+        self.assertIsNotNone(out)
 
     def test_lineage_to_link(self):
         ''' converting lineage to links between sites
         '''
         samples = [
-                (None, False, ["a", "b", "c"], "a-b-c"),
-                (None, True, ["a", "b", "c"], "a-b-c"),
-                ("d", False, ["a", "b", "c"], "d-a-b-c"),
-                ("d", True, ["a", "b", "c"], "a-b-c-d"),
+            (None, False, ["a", "b", "c"], "a-b-c"),
+            (None, True, ["a", "b", "c"], "a-b-c"),
+            ("d", False, ["a", "b", "c"], "d-a-b-c"),
+            ("d", True, ["a", "b", "c"], "a-b-c-d"),
         ]
         for key, right_side, lineage, after in samples:
             side = 'right' if right_side else 'left'
@@ -41,7 +139,9 @@ class TestGallery(unittest.TestCase):
         ]
 
         for lineage, output in samples:
-            match = gallery.gallery_scientific(lineage, TestGallery.scientific)
+            match = gallery.gallery_scientific(
+                lineage, TestGallery.g_scientific
+            )
             self.assertTrue(match.endswith(output), match)
 
 
@@ -53,10 +153,10 @@ class TestImage(unittest.TestCase):
         presentations
         '''
         samples = [
-                ("prawn", "prawn shrimp"),
-                ("french grunt", "french grunt fish"),
-                ("kelp greenling", "kelp greenling fish"),
-                ("giant pacific octopus", "giant pacific octopus"),
+            ("prawn", "prawn shrimp"),
+            ("french grunt", "french grunt fish"),
+            ("kelp greenling", "kelp greenling fish"),
+            ("giant pacific octopus", "giant pacific octopus"),
         ]
         for before, after in samples:
             self.assertEqual(image.categorize(before), after)
@@ -65,9 +165,9 @@ class TestImage(unittest.TestCase):
     def test_unqualify(self):
         ''' remove qualifiers '''
         samples = [
-                ("juvenile red octopus egg", "red octopus"),
-                ("dead male kelp greenling", "kelp greenling"),
-                ("giant pacific octopus", "giant pacific octopus"),
+            ("juvenile red octopus egg", "red octopus"),
+            ("dead male kelp greenling", "kelp greenling"),
+            ("giant pacific octopus", "giant pacific octopus"),
         ]
         for before, after in samples:
             self.assertEqual(image.unqualify(before), after)
@@ -75,9 +175,9 @@ class TestImage(unittest.TestCase):
     def test_split(self):
         ''' some names are broken to categorize them '''
         samples = [
-                ("copper rockfish", "copper rock fish"),
-                ("eagleray", "eagle ray"),
-                ("giant pacific octopus", "giant pacific octopus"),
+            ("copper rockfish", "copper rock fish"),
+            ("eagleray", "eagle ray"),
+            ("giant pacific octopus", "giant pacific octopus"),
         ]
         for before, after in samples:
             split = image.split(before)

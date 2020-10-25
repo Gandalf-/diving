@@ -140,6 +140,7 @@ def lineage_to_link(lineage, side, key=None):
 def gallery_scientific(lineage, scientific):
     ''' attempt to find a scientific name for this page
     '''
+
     def lookup(names):
         candidate = unsplit(unqualify(uncategorize(' '.join(names).lower())))
         return scientific.get(candidate)
@@ -160,11 +161,14 @@ def gallery_scientific(lineage, scientific):
     return name or ""
 
 
-def html_title(lineage, side, where, scientific=None):
+def html_title(lineage, where, scientific=None):
     ''' html head and title section
     '''
     title = " ".join(lineage) or "Diving Gallery"
-    display = uncategorize(title).title()
+
+    display = uncategorize(title)
+    if where == 'gallery':
+        display = display.title()
 
     # always have a link to the top level of the gallery
     top_level = """
@@ -191,8 +195,12 @@ def html_title(lineage, side, where, scientific=None):
         title=display, scripts=html_scripts
     )
 
+    side = 'left' if where == 'gallery' else 'right'
     if side == 'right':
         html += top_level
+        html += """
+        <span class="title_spacer"></span>
+        """
 
     # create the buttons for each part of our name lineage
     for i, name in enumerate(lineage):
@@ -205,7 +213,6 @@ def html_title(lineage, side, where, scientific=None):
         link = "/{where}/{path}.html".format(
             where=where, path=lineage_to_link(partial, side)
         )
-        last = i == len(lineage) - 1
 
         html += """
         <a href="{link}">
@@ -213,7 +220,7 @@ def html_title(lineage, side, where, scientific=None):
         </a>
         """.format(
             title=name.title() if where == 'gallery' else name,
-            classes="top" + (" last" if last else ""),
+            classes="top",
             link=link,
         )
 
@@ -227,7 +234,11 @@ def html_title(lineage, side, where, scientific=None):
         """
 
     if side == 'left':
+        html += """
+        <span class="title_spacer"></span>
+        """
         html += top_level
+
     link = None
 
     # check for scientific name for gallery
@@ -275,7 +286,7 @@ def html_tree(tree, where, scientific, lineage=None):
 
     side = 'left' if where == 'gallery' else 'right'
 
-    html, title = html_title(lineage, side, where, scientific)
+    html, title = html_title(lineage, where, scientific)
     results = []
 
     has_subcategories = [1 for key in tree.keys() if key != "data"] != []
@@ -287,6 +298,7 @@ def html_tree(tree, where, scientific, lineage=None):
         if key == "data":
             continue
 
+        new_lineage = [key] + lineage if side == 'left' else lineage + [key]
         size = tree_size(value)
         example = find_representative(value, [key] + lineage)
 
@@ -311,12 +323,7 @@ def html_tree(tree, where, scientific, lineage=None):
         )
 
         results.extend(
-            html_tree(
-                value,
-                where,
-                scientific,
-                lineage=[key] + lineage if side == 'left' else lineage + [key],
-            )
+            html_tree(value, where, scientific, lineage=new_lineage,)
         )
 
     if has_subcategories:
