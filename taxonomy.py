@@ -14,6 +14,38 @@ from utility import extract_leaves
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 
+def simplify(name: str) -> str:
+    ''' retry to apply similar rules to simplify the lineage
+    '''
+    if ' ' not in name:
+        return name
+
+    parts = name.split(' ')
+    lefts = parts[:-1]
+    rights = parts[1:]
+
+    out = []
+    for a, b in zip(lefts, rights):
+        if similar(a, b):
+            out.append(a[0].upper() + '.')
+        else:
+            out.append(a)
+
+    out.append(parts[-1])
+
+    return ' '.join(out)
+
+
+def similar(a, b):
+    ''' determine if two words are similar, usually a super family and family,
+    or something to that effect
+    '''
+    length = sum([len(a), len(b)]) // 2
+    pivot = int(length * 0.5)
+
+    return a[:pivot] == b[:pivot]
+
+
 def ordered_simple_names(tree):
     ''' taxonomy names '''
     assert isinstance(tree, dict), tree
@@ -75,10 +107,11 @@ def compress(tree):
             continue
 
         if len(value.keys()) == 1:
+            child = list(value.keys())[0]
+
             # squash
-            s = list(value.keys())[0]
-            new_key = key + ' ' + s
-            out[new_key] = compress(value[s])
+            new_key = key + ' ' + child
+            out[new_key] = compress(value[child])
         else:
             out[key] = compress(value)
 

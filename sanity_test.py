@@ -107,15 +107,15 @@ class TestGallery(unittest.TestCase):
         html, title = gallery.html_title(
             [], 'gallery', TestGallery.g_scientific
         )
-        self.assertEqual(title, 'Diving Gallery')
-        self.assertIn('<title>Diving Gallery</title>', html)
+        self.assertEqual(title, 'Gallery')
+        self.assertIn('<title>Gallery</title>', html)
 
         # taxonomy
         html, title = gallery.html_title(
             [], 'taxonomy', TestGallery.t_scientific
         )
-        self.assertEqual(title, 'Diving Taxonomy')
-        self.assertIn('<title>Diving Taxonomy</title>', html)
+        self.assertEqual(title, 'Taxonomy')
+        self.assertIn('<title>Taxonomy</title>', html)
 
     def test_find_representative(self):
         ''' picking the newest image to represent a tree, or a predefined
@@ -162,6 +162,43 @@ class TestGallery(unittest.TestCase):
                 lineage, TestGallery.g_scientific
             )
             self.assertTrue(match.endswith(output), match)
+
+
+class TestTaxonomy(unittest.TestCase):
+    ''' taxonomy.py '''
+
+    def test_similar(self):
+        ''' can these be collapsed? '''
+        samples = [
+            (True, ('Amphinomida', 'Amphinomidae')),
+            (True, ('Aphrocallistidae', 'Aphrocallistes')),
+            (True, ('Clionaida', 'Clionaidae')),
+            (True, ('Membraniporoidea', 'Membraniporidae')),
+            (True, ('Strongylocentrotidae', 'Strongylocentrotus')),
+            (False, ('Comatulida', 'Antedonidae')),
+            (False, ('Toxopneustidae', 'Tripneustes')),
+        ]
+        for expected, (a, b) in samples:
+            self.assertEqual(expected, taxonomy.similar(a, b), [a, b])
+
+    def test_simplify(self):
+        ''' remove similar non-ambiguous names '''
+        samples = [
+            (
+                'Polyplacophora Chitonida Mopalioidea Mopaliidae',
+                'Polyplacophora Chitonida M. Mopaliidae',
+            ),
+            (
+                'Cheiragonoidea Cheiragonidae Telmessus cheiragonus',
+                'C. Cheiragonidae Telmessus cheiragonus',
+            ),
+            (
+                'Diadematoida Diadematidae Diadema antillarum',
+                'D. D. Diadema antillarum',
+            ),
+        ]
+        for before, after in samples:
+            self.assertEqual(after, taxonomy.simplify(before))
 
 
 class TestImage(unittest.TestCase):

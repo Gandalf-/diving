@@ -1,10 +1,7 @@
 reef spider
-sandalwood dorid
-california berthella nudibranch
+crab
 yellow spotted cadlina nudibranch
 squid
-snail
-goby
 spot flounder
 flounder
 gunnel
@@ -13,107 +10,39 @@ queen parrotfish
 parrotfish
 lionfish
 tomtate
-water jellyfish
-moon jellyfish
 jellyfish
 pufferfish
 longspine squirrelfish
 squirrelfish
-tarpon
 queen triggerfish
 triggerfish
 goatfish
 cero
-midshipman
 french angelfish
 angelfish
 trumpetfish
 spotted trunkfish
 smooth trunkfish
 rock sole
-tiger grouper
-spotted drum
-blue tang
-fairy basslet
-rock beauty
 shiner perch
-slipskin snailfish
-pacific sardine
 tiny orange anemone
-broadbase tunicate
-bristly tunicate
-sea vase tunicate
-sea peach tunicate
-white glove leather tunicate
-transparent sea squirt
-tunicate
 giant acorn barnacle
 barnacle
-hard gnarled clump sponge
-bristly yellow clump sponge
 clump sponge
-cloud sponge
 blue barrel sponge
-branching vase sponge
-bread crumb sponge
-yellow boring sponge
-tough yellow branching sponge
-sponge
-kincaid shrimp
-spotted cleaner shrimp
 cleaner shrimp
-sparkling shrimp
-coonstripe shrimp
-pacific prawn
-banded coral shrimp
 shrimp
-spotted moray eel
-green moray eel
-garden eel
 eel
 kelp
 seagrass
 encrusting corraline algae
 algae
-muff hydroid
-tunicate siphon hydroid
-hydroid
-atlantic lobster
-brain coral
-fire coral
 sea rod
 coral
-red trumpet calcareous tube worm
-calcareous tube worm
-prolific three section tube worm
 tube worm
-fire worm
-orange feather duster worm
-split branch feather duster worm
-feather duster worm
-brittle star
-velcro star
-sunflower star
-leather star
 orange ochre star
 purple ochre star
 blue ochre star
-ochre star
-blood star
-slime star
-rose star
-feather star
-vermillion star
-giant pink star
-artic cookie star
-six rayed star
-ochre sea star
-coral bryozoan
-leaf crust bryozoan
-eagle ray
-stingray
+fan bryozoan
+turtle
 clam
-painted dendro chiton
-moon snail
-creeping pedal sea cucumber
-white sea urchin

@@ -1,10 +1,63 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
 Animalia:
+  Porifera:
+    Hexactinellida:
+      Sceptrulophora:
+        Aphrocallistidae:
+          Aphrocallistes:
+            vastus: cloud sponge
+    Demospongiae:
+      sp: sponge
+      Clionaida:
+        Clionaidae:
+          Cliona:
+            californiana: yellow boring sponge
+      Poecilosclerida:
+        Mycalidae:
+          Mycale:
+            toporoki: bristly yellow clump sponge
+      Haplosclerida:
+        Callyspongiidae:
+          Callyspongia:
+            vaginalis: branching vase sponge
+        Petrosiidae:
+          Xestospongia:
+            hispida: hard gnarled clump sponge
+      Suberitida:
+        Halichondriidae:
+          Halichondria:
+            bowerbanki: bread crumb sponge
+        Suberitidae:
+          Homaxinella:
+            amphispicula: tough yellow branching sponge
+  Annelida:
+    Polychaeta:
+      sp: worm
+      Amphinomida:
+        Amphinomidae:
+          Hermodice:
+            carunculata: fire worm
+      Sabellida:
+        Serpulidae:
+          sp: calcareous tube worm
+          Serpula:
+            columbiana: red trumpet calcareous tube worm
+        Sabellidae:
+          Chone: orange feather duster worm
+          Schizobranchia:
+            insignis: split branch feather duster worm
+        Bispira: feather duster worm
+      Spionida:
+        Chaetopteridae:
+          Phyllochaetopterus:
+            prolifica: prolific three section tube worm
   Bryozoa:
     sp: bryozoan
     Stenolaemata:
       Cyclostomatida:
+        Lichenoporidae:
+          Lichenopora: coral bryozoan
         Heteroporidae:
           Heteropora:
             pacifica: northern staghorn bryozoan
@@ -22,6 +75,8 @@ Animalia:
           Bugulidae:
             Dendrobeania:
               murrayana: fan bryozoan
+            Dendrobeania:
+              lichenoides: leaf crust bryozoan
   Echinodermata:
     Crinoidea:
       Comatulida:
@@ -45,8 +100,7 @@ Animalia:
           Pisaster:
             ochraceus: ochre star
             brevispinus: giant pink star
-      Ophiuroidea:
-        sp: brittle star
+      Ophiuroidea: brittle star
       Valvatida:
         Solasteridae:
           Crossaster:
@@ -73,6 +127,9 @@ Animalia:
         Cucumariidae:
           Cucumaria:
             miniata: red sea cucumber
+        Psolidae:
+          Psolus:
+            chitonoides: creeping pedal sea cucumber
       Synallactida:
         Stichopodidae:
           Apostichopus:
@@ -85,12 +142,39 @@ Animalia:
             antillarum: black sea urchin
       Camarodonta:
         Odontophora:
+          Toxopneustidae:
+            Tripneustes:
+              depressus: white sea urchin
           Strongylocentrotidae:
             Strongylocentrotus:
               purpuratus: purple sea urchin
               franciscanus: red sea urchin
               droebachiensis: green sea urchin
   Chordata:
+    Elasmobranchii:
+      Dasyatidae: stingray
+      Myliobatiformes:
+        Myliobatidae: eagle ray
+    Ascidiacea:
+      sp: tunicate
+      Aplousobranchia:
+        Didemnidae:
+          Didemnum: white glove leather tunicate
+      Phlebobranchia:
+        Corellidae:
+          Corella:
+            willmeriana: transparent sea squirt
+        Cionidae:
+          Ciona:
+            savignyi: sea vase tunicate
+      Stolidobranchia:
+        Pyuridae:
+          Halocynthia:
+            aurantium: sea peach tunicate
+            igaboja: bristly tunicate
+        Styelidae:
+          Cnemidocarpa:
+            finmarkiensis: broadbase tunicate
     Mammalia:
       Primates:
         Hominoidea:
@@ -98,18 +182,37 @@ Animalia:
             Homo:
               sapiens: diver
     Reptilia:
-      sp: reptile
+      # reptile
       Testudines:
-        sp: turtle
+        # turtle
         Cheloniidae:
           Chelonia:
             mydas: green sea turtle
     Actinopterygii:
       sp: fish
+      Elopiformes:
+        Megalopidae:
+          Megalops: tarpon
+      Clupeiformes:
+        Clupeidae:
+          Sardinops:
+            sagax: pacific sardine
       Batrachoidiformes:
-        Porichthys sp: midshipman
+        Porichthys: midshipman
       Perciformes:
         # perch-like fish
+        Acanthuridae:
+          Paracanthurus:
+            hepatus: blue tang
+        Sciaenidae:
+          Equetus:
+            punctatus: spotted drum
+        Serranidae:
+          Mycteroperca:
+            tigris: tiger grouper
+        Pomacanthidae:
+          Holacanthus:
+            tricolor: rock beauty
         Grammatidae:
           Gramma:
             royal: fairy basslet
@@ -135,16 +238,20 @@ Animalia:
           Anarrhichthys:
             ocellatus: wolf eel
       Anguilliformes:
+        sp: eel
         Congridae:
-          Heterocongrinae sp: garden eel
+          Heterocongrinae: garden eel
         Muraenidae:
           Gymnothorax:
             moringa: spotted moray eel
             funebris: green moray eel
       Scorpaeniformes:
         # mail-cheecked fish
+        Liparidae:
+          Liparis:
+            fucensis: slipskin snailfish
         Scorpaenidae:
-          Pterois sp: lion fish
+          Pterois: lion fish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin
@@ -198,7 +305,15 @@ Animalia:
           Hydrolagus:
             colliei: ratfish
   Cnidaria:
+    Scyphozoa:
+      Semaeostomeae:
+        Ulmaridae:
+          Aurelia:
+            labiata: moon jellyfish
     Hydrozoa:
+      Leptothecata:
+        Aequoreidae:
+          Aequorea: water jellyfish
       Hydroidolina:
         sp: hydroid
         Anthoacthecata:
@@ -207,14 +322,20 @@ Animalia:
               Bythotiara:
                 huntsmani: tunicate siphon hydroid
         Leptothecata:
+          Sertularioidea:
+            Abietinaria: coarse sea fir hydroid
           Lafoeidae:
             Lafoea:
               dumosa: muff hydroid
       Anthoathecata:
+        Milleporidae:
+          Millepora: fire coral
         Stylasteridae:
           Stylaster:
             norvegicus: pink hydrocoral
     Anthozoa:
+      Scleractinia:
+        Mussidae: brain coral
       Spirularia:
         Cerianthidae:
           Pachycerianthus:
@@ -260,9 +381,11 @@ Animalia:
   Mollusca:
     Polyplacophora:
       Chitonida:
-        sp: chiton
         Mopalioidea:
           Mopaliidae:
+            sp: chiton
+            Dendrochiton:
+              flectens: painted dendrochiton
             Mopalia:
               muscosa: mossy chiton
               lignosa: woody chiton
@@ -288,6 +411,11 @@ Animalia:
           Naticidae:
             Nerverita:
               lewisii: moon snail
+      Pleurobranchida:
+        Pleurobranchoidea:
+          Pleurobranchidae:
+            Berthella:
+              californica: california berthella
       Nudibranchia:
         sp: nudibranch
         Aeolidioidea:
@@ -340,7 +468,28 @@ Animalia:
   Arthropoda:
     Malacostraca:
       Decapoda:
-        sp: crab
+        Nephropoidea:
+          Nephropidae:
+            Homarus:
+              americanus: atlantic lobster
+        Stenopodidae:
+          Stenopus:
+            hispidus: banded coral shrimp
+        Palaemonoidea:
+          Palaemonidae:
+            Periclimenes:
+              yucatanicus: spotted cleaner shrimp
+        Alpheoidea:
+          Hippolytidae:
+            Heptacarpus:
+              kincaidi: kincaid shrimp
+        Pandaloidea:
+          Pandalidae:
+            Pandalopsis:
+              lucidirimicola: sparkling shrimp
+            Pandalus:
+              platyceros: pacific prawn
+              stenolepis: coonstripe shrimp
         Cheiragonoidea:
           Cheiragonidae:
             Telmessus:

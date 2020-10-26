@@ -230,6 +230,7 @@ def html_taxonomy_title(lineage, scientific):
     # create the buttons for each part of our name lineage
     for i, name in enumerate(lineage):
 
+        name = taxonomy.simplify(name)
         partial = lineage[: i + 1]
         link = "/taxonomy/{path}.html".format(
             path=lineage_to_link(partial, side)
@@ -308,8 +309,8 @@ def html_title(lineage, where, scientific):
     """
 
     # check for scientific name for gallery
-    name = gallery_scientific(lineage, scientific)
-    link = name
+    link = name = gallery_scientific(lineage, scientific)
+    name = taxonomy.simplify(name)
     if link.endswith(' sp'):
         link = link.replace(' sp', '')
     link = link.replace(' ', '-')
@@ -352,6 +353,11 @@ def html_tree(tree, where, scientific, lineage=None):
         size = tree_size(value)
         example = find_representative(value, [key] + lineage)
 
+        if where == 'gallery':
+            subject = key.title()
+        else:
+            subject = taxonomy.simplify(key)
+
         html += """
         <div class="image">
         <a href="{link}">
@@ -364,7 +370,7 @@ def html_tree(tree, where, scientific, lineage=None):
         </a>
         </div>
         """.format(
-            subject=key.title() if where == 'gallery' else key,
+            subject=subject,
             link="/{where}/{path}.html".format(
                 where=where, path=lineage_to_link(lineage, side, key),
             ),

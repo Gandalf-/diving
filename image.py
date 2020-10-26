@@ -12,7 +12,7 @@ import utility
 
 inflect = inflect.engine()
 
-splits = ("fish", "coral", "ray")
+splits = ("fish", "coral", "ray", "chiton")
 
 qualifiers = (
     'juvenile',
@@ -62,7 +62,7 @@ categories = {
     "shrimp": ("prawn", ),
     "algae": ("kelp", "seagrass", ),
     "crab": ("reef spider",),
-    "nudibranch": ("sea lemon", "dorid", "dendronotid"),
+    "nudibranch": ("sea lemon", "dorid", "dendronotid", "berthella"),
     "anemone": ("zoanthid",),
     "tunicate": ("sea squirt", ),
     "coral": ("sea pen", "sea whip", "sea rod"),
