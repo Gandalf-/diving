@@ -8,11 +8,11 @@ print_switcher() {
 
 echo '
     <a href="/timeline/index.html">
-        <h1 class="top switch">Diving Timeline</h1>
+        <h1 class="top switch">Timeline</h1>
     </a>
     <div class="top" id="buffer"></div>
     <a href="/gallery/index.html">
-        <h1 class="top switch">Diving Gallery</h1>
+        <h1 class="top switch gallery">Gallery</h1>
     </a>
 '
 }

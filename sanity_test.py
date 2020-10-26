@@ -24,22 +24,22 @@ class TestGallery(unittest.TestCase):
                 # gallery simple case
                 'gallery',
                 ['chiton'],
-                ['chiton.html', 'title_spacer', 'gallery/index.html'],
+                ['chiton.html', 'buffer', 'gallery/index.html'],
             ),
             (
                 # gallery multi level
                 'gallery',
                 ['brittle', 'star'],
-                ['brittle-star.html', 'title_spacer', 'gallery/index.html'],
+                ['brittle-star.html', 'buffer', 'gallery/index.html'],
             ),
             (
-                # taxonomy, has scientific name
+                # gallery, has scientific name
                 'gallery',
                 ['giant pacific', 'octopus'],
                 [
                     'giant-pacific.html',
                     'octopus.html',
-                    'title_spacer',
+                    'buffer',
                     'gallery/index.html',
                     (
                         'Animalia-Mollusca-Cephalopoda-Octopoda-Octopodoidea-'
@@ -48,9 +48,10 @@ class TestGallery(unittest.TestCase):
                 ],
             ),
             (
+                # taxonomy, simple case
                 'taxonomy',
                 ['Animalia'],
-                ['taxonomy/index.html', 'title_spacer', 'Animalia.html'],
+                ['taxonomy/index.html', 'buffer', 'Animalia.html'],
             ),
             (
                 # taxonomy, no common name
@@ -58,7 +59,7 @@ class TestGallery(unittest.TestCase):
                 ['Animalia', 'Echinodermata'],
                 [
                     'taxonomy/index.html',
-                    'title_spacer',
+                    'buffer',
                     'Animalia.html',
                     'Animalia-Echinodermata.html',
                 ],
@@ -78,9 +79,10 @@ class TestGallery(unittest.TestCase):
                 ],
                 [
                     'taxonomy/index.html',
-                    'title_spacer',
+                    'buffer',
                     'Animalia.html',
                     'Animalia-Mollusca.html',
+                    # a ton more stuff
                     'giant-pacific-octopus.html',
                 ],
             ),
@@ -97,6 +99,23 @@ class TestGallery(unittest.TestCase):
             indices = [html.find(e) for e in elements]
             self.assertEqual(indices, sorted(indices), lineage)
             self.assertEqual(title, ' '.join(lineage))
+
+    def test_html_title_top(self):
+        ''' html titles top level
+        '''
+        # gallery
+        html, title = gallery.html_title(
+            [], 'gallery', TestGallery.g_scientific
+        )
+        self.assertEqual(title, 'Diving Gallery')
+        self.assertIn('<title>Diving Gallery</title>', html)
+
+        # taxonomy
+        html, title = gallery.html_title(
+            [], 'taxonomy', TestGallery.t_scientific
+        )
+        self.assertEqual(title, 'Diving Taxonomy')
+        self.assertIn('<title>Diving Taxonomy</title>', html)
 
     def test_find_representative(self):
         ''' picking the newest image to represent a tree, or a predefined

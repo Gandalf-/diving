@@ -161,25 +161,10 @@ def gallery_scientific(lineage, scientific):
     return name or ""
 
 
-def html_title(lineage, where, scientific=None):
-    ''' html head and title section
+def html_head(title):
+    ''' top of the document
     '''
-    title = " ".join(lineage) or "Diving Gallery"
-
-    display = uncategorize(title)
-    if where == 'gallery':
-        display = display.title()
-
-    # always have a link to the top level of the gallery
-    top_level = """
-        <a href="/{where}/index.html">
-            <h1 class="top switch">Diving {title}</h1>
-        </a>
-    """.format(
-        where=where, title=where.title()
-    )
-
-    html = """
+    return """
     <!DOCTYPE html>
     <html>
       <head>
@@ -192,26 +177,62 @@ def html_title(lineage, where, scientific=None):
       {scripts}
       <div class="title">
     """.format(
-        title=display, scripts=html_scripts
+        title=title, scripts=html_scripts
     )
 
-    side = 'left' if where == 'gallery' else 'right'
-    if side == 'right':
-        html += top_level
-        html += """
-        <span class="title_spacer"></span>
-        """
+
+def html_top_title(where):
+    ''' html top for top level pages
+    '''
+    title = f"{where.title()}"
+
+    display = uncategorize(title)
+    if where == 'gallery':
+        display = display.title()
+
+    html = html_head(display)
+    html += '''
+        <a href="/timeline/index.html">
+            <h1 class="top switch">Timeline</h1>
+        </a>
+        <div class="top" id="buffer"></div>
+        <a href="/gallery/index.html">
+            <h1 class="top switch gallery">Gallery</h1>
+        </a>
+        <div class="top" id="buffer"></div>
+        <a href="/taxonomy/index.html">
+            <h1 class="top switch taxonomy">Taxonomy</h1>
+        </a>
+        <p class="scientific"></p>
+    </div>
+    '''
+
+    return html, title
+
+
+def html_taxonomy_title(lineage, scientific):
+    ''' html head and title section
+    '''
+    assert lineage
+
+    title = ' '.join(lineage)
+    display = uncategorize(title)
+    side = 'right'
+
+    html = html_head(display)
+    html += """
+        <a href="/taxonomy/index.html">
+            <h1 class="top switch taxonomy">Taxonomy</h1>
+        </a>
+        <div class="top" id="buffer"></div>
+    """
 
     # create the buttons for each part of our name lineage
     for i, name in enumerate(lineage):
 
-        if side == 'left':
-            partial = lineage[i:]
-        else:
-            partial = lineage[: i + 1]
-
-        link = "/{where}/{path}.html".format(
-            where=where, path=lineage_to_link(partial, side)
+        partial = lineage[: i + 1]
+        link = "/taxonomy/{path}.html".format(
+            path=lineage_to_link(partial, side)
         )
 
         html += """
@@ -219,54 +240,83 @@ def html_title(lineage, where, scientific=None):
             <h1 class="{classes}">{title}</h1>
         </a>
         """.format(
-            title=name.title() if where == 'gallery' else name,
-            classes="top",
-            link=link,
+            title=name, classes="top", link=link,
         )
 
-    # only include link to timeline on the top level page
-    if not lineage:
-        html += """
-        <a href="/timeline/index.html">
-            <h1 class="top switch">Diving Timeline</h1>
-        </a>
-        <div class="top" id="buffer"></div>
-        """
-
-    if side == 'left':
-        html += """
-        <span class="title_spacer"></span>
-        """
-        html += top_level
-
-    link = None
-
-    # check for scientific name for gallery
-    if where == 'gallery':
-        name = gallery_scientific(lineage, scientific)
-        link = name
-        if link.endswith(' sp'):
-            link = link.replace(' sp', '')
-        link = link.replace(' ', '-')
-
     # check for common name for taxonomy
-    elif where == 'taxonomy':
-        name = ""
-        history = ' '.join(lineage).split(' ')
+    name = ""
+    history = ' '.join(lineage).split(' ')
 
-        while history and not name:
-            name = scientific.get(' '.join(history)) or ""
-            history = history[:-1]
+    while history and not name:
+        name = scientific.get(' '.join(history)) or ""
+        history = history[:-1]
 
-        name = name.title()
-        link = split(categorize(name.lower()))
-        link = link.replace(' ', '-')
+    name = name.title()
+    link = split(categorize(name.lower()))
+    link = link.replace(' ', '-')
 
     if link:
-        other = 'gallery' if where == 'taxonomy' else 'taxonomy'
-
         html += f"""
-        <a href="/{other}/{link}.html" class="scientific crosslink">{name}</a>
+        <a href="/gallery/{link}.html" class="scientific crosslink">{name}</a>
+        </div>
+        """
+    else:
+        html += f"""
+        <p class="scientific">{name}</p>
+        </div>
+        """
+
+    return html, title
+
+
+def html_title(lineage, where, scientific):
+    ''' html head and title section
+    '''
+    if not lineage:
+        return html_top_title(where)
+
+    if where == 'taxonomy':
+        return html_taxonomy_title(lineage, scientific)
+
+    title = ' '.join(lineage)
+    display = uncategorize(title).title()
+    side = 'left'
+    html = html_head(display)
+
+    # create the buttons for each part of our name lineage
+    for i, name in enumerate(lineage):
+
+        partial = lineage[i:]
+        link = "/gallery/{path}.html".format(
+            path=lineage_to_link(partial, side)
+        )
+
+        html += """
+        <a href="{link}">
+            <h1 class="{classes}">{title}</h1>
+        </a>
+        """.format(
+            title=name.title(), classes="top", link=link,
+        )
+
+    html += """
+        <div class="top" id="buffer"></div>
+
+        <a href="/gallery/index.html">
+            <h1 class="top switch gallery">Gallery</h1>
+        </a>
+    """
+
+    # check for scientific name for gallery
+    name = gallery_scientific(lineage, scientific)
+    link = name
+    if link.endswith(' sp'):
+        link = link.replace(' sp', '')
+    link = link.replace(' ', '-')
+
+    if link:
+        html += f"""
+        <a href="/taxonomy/{link}.html" class="scientific crosslink">{name}</a>
         </div>
         """
     else:
@@ -314,7 +364,7 @@ def html_tree(tree, where, scientific, lineage=None):
         </a>
         </div>
         """.format(
-            subject=key.title(),
+            subject=key.title() if where == 'gallery' else key,
             link="/{where}/{path}.html".format(
                 where=where, path=lineage_to_link(lineage, side, key),
             ),
@@ -323,7 +373,7 @@ def html_tree(tree, where, scientific, lineage=None):
         )
 
         results.extend(
-            html_tree(value, where, scientific, lineage=new_lineage,)
+            html_tree(value, where, scientific, lineage=new_lineage)
         )
 
     if has_subcategories:
@@ -361,11 +411,10 @@ def html_tree(tree, where, scientific, lineage=None):
     </html>
     """
 
-    if title == "Diving Gallery":
-        title = "index"
+    if title in ('Gallery', 'Taxonomy'):
+        title = 'index'
 
     results.append((title, html))
-
     return results
 
 
