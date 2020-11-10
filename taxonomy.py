@@ -15,7 +15,7 @@ root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 
 def simplify(name: str) -> str:
-    ''' retry to apply similar rules to simplify the lineage
+    ''' try to use similar() to simplify the lineage
     '''
     if ' ' not in name:
         return name

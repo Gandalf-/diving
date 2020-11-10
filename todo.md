@@ -11,15 +11,15 @@
 
 # taxonomy
 
-- [ ] header spacing
-- [ ] image pinning
+- [x] header spacing
+- [x] image pinning
 - [ ] ... sp matching in links
 - [ ] qualifier ... matching in links
-- [ ] worms
-- [ ] tunicates
-- [ ] sponges
-- [ ] barnacles
-- [ ] shrimp
+- [x] worms
+- [x] tunicates
+- [x] sponges
+- [x] barnacles
+- [x] shrimp
 - [ ] coral
-- [ ] figure out what to do with plants
+- [x] figure out what to do with plants
 - [ ] check out mobile usability

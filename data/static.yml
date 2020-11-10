@@ -1,0 +1,79 @@
+---
+
+splits:
+  - fish
+  - coral
+  - ray
+  - chiton
+
+qualifiers:
+  - juvenile
+  - dying
+  - dead
+  - female
+  - male
+  - molted
+  - fighting
+  - pregnant
+  - mating
+  - elderly
+  - wasting
+  - cleaning
+  - school of
+  - husk of
+  - swimming
+  - sleeping
+  - rebreather
+  - various
+
+categories:
+  fish:
+    - basslet
+    - blue tang
+    - flounder
+    - cero
+    - goby
+    - greenling
+    - grunt
+    - gunnel
+    - grouper
+    - lingcod
+    - midshipman
+    - perch
+    - rock beauty
+    - sculpin
+    - sole
+    - sardine
+    - spotted drum
+    - tarpon
+    - tomtate
+    - black durgon
+    - war bonnet
+  sculpin:
+    - red irish lord
+  shrimp:
+    - prawn
+  algae:
+    - sea laurel
+    - sea grape
+    - sea braid
+    - seaweed
+    - rockweed
+    - turkish towel
+    - sea lettuce
+    - kelp
+    - seagrass
+  crab:
+    - reef spider
+  nudibranch:
+    - sea lemon dorid
+    - dendronotid
+    - berthella
+  anemone:
+    - zoanthid
+  tunicate:
+    - sea squirt
+  coral:
+    - sea pen
+    - sea whip
+    - sea rod

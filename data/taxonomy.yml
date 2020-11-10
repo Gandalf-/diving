@@ -40,8 +40,8 @@ Animalia:
             carunculata: fire worm
       Sabellida:
         Serpulidae:
-          sp: calcareous tube worm
           Serpula:
+            sp: calcareous tube worm
             columbiana: red trumpet calcareous tube worm
         Sabellidae:
           Chone: orange feather duster worm
@@ -75,7 +75,6 @@ Animalia:
           Bugulidae:
             Dendrobeania:
               murrayana: fan bryozoan
-            Dendrobeania:
               lichenoides: leaf crust bryozoan
   Echinodermata:
     Crinoidea:
@@ -190,6 +189,30 @@ Animalia:
             mydas: green sea turtle
     Actinopterygii:
       sp: fish
+      Syngnathiformes:
+        Aulostomoidei:
+          Aulostomoidea:
+            Aulostomidae:
+              Aulostomus: trumpetfish
+      Beryciformes:
+        Holocentridae:
+          Myripristis:
+            jacobus: blackbar squirrelfish
+          Holocentrus:
+            rufus: longspine squirrelfish
+      Scombriformes:
+        Scombridae:
+          Scomberomorini:
+            Scomberomorus:
+              regalis: cero
+      Percomorpha:
+        Labriformes:
+          Scaridae:
+            sp: parrotfish
+            Sparisoma:
+              viride: stoplight parrotfish
+            Scarus:
+              vetula: queen parrotfish
       Elopiformes:
         Megalopidae:
           Megalops: tarpon
@@ -201,9 +224,16 @@ Animalia:
         Porichthys: midshipman
       Perciformes:
         # perch-like fish
+        Mullidae: goatfish
+        Chaetodontidae:
+          Chaetodon:
+            striatus: banded butterflyfish
         Acanthuridae:
           Paracanthurus:
             hepatus: blue tang
+        Embiotocidae:
+          Cymatogaster:
+            aggregata: shiner perch
         Sciaenidae:
           Equetus:
             punctatus: spotted drum
@@ -211,6 +241,8 @@ Animalia:
           Mycteroperca:
             tigris: tiger grouper
         Pomacanthidae:
+          Pomacanthus:
+            paru: french angelfish
           Holacanthus:
             tricolor: rock beauty
         Grammatidae:
@@ -221,6 +253,7 @@ Animalia:
             nicholsii: goby
         Haemulidae:
           Haemulon:
+            aurolineatum: tomtate grunt
             flavolineatum: french grunt
             sciurus: bluestripe grunt
         Stichaeidae:
@@ -228,6 +261,7 @@ Animalia:
             nugator: mosshead war bonnet
             decoratus: decorated war bonnet
         Pholidae:
+          sp: gunnel
           Apodichthys:
             flavidus: penpoint gunnel
           Pholis:
@@ -251,7 +285,7 @@ Animalia:
           Liparis:
             fucensis: slipskin snailfish
         Scorpaenidae:
-          Pterois: lion fish
+          Pterois: lionfish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin
@@ -295,9 +329,20 @@ Animalia:
           Ophiodon:
             elongatus: lingcod
       Tetraodontiformes:
+        Tetraodontoidei:
+          Tetraodontoidae: pufferfish
+        Balistidae:
+          sp: triggerfish
+          Melichthys:
+            niger: black triggerfish
+          Balistes:
+            vetula: queen triggerfish
         Ostraciidae:
           Lactoria:
             cornuta: cowfish
+          Lactophrys:
+            bicaudalis: spotted trunkfish
+            triqueter: smooth trunkfish
     Holocephali:
       # cartilaginous fish
       Chimaeriformes:
@@ -311,22 +356,20 @@ Animalia:
           Aurelia:
             labiata: moon jellyfish
     Hydrozoa:
+      sp: hydroid
+      Anthoacthecata:
+        Filifera:
+          Bythotiaridae:
+            Bythotiara:
+              huntsmani: tunicate siphon hydroid
       Leptothecata:
         Aequoreidae:
           Aequorea: water jellyfish
-      Hydroidolina:
-        sp: hydroid
-        Anthoacthecata:
-          Filifera:
-            Bythotiaridae:
-              Bythotiara:
-                huntsmani: tunicate siphon hydroid
-        Leptothecata:
-          Sertularioidea:
-            Abietinaria: coarse sea fir hydroid
-          Lafoeidae:
-            Lafoea:
-              dumosa: muff hydroid
+        Sertularioidea:
+          Abietinaria: coarse sea fir hydroid
+        Lafoeidae:
+          Lafoea:
+            dumosa: muff hydroid
       Anthoathecata:
         Milleporidae:
           Millepora: fire coral
@@ -360,6 +403,10 @@ Animalia:
             scotinus: orange zoanthid
       Actiniaria:
         sp: anemone
+        Actinostoloidea:
+          Actinostolidae:
+            Stomphia:
+              didemon: swimming anemone
         Actinioidea:
           Haloclavidae:
             Peachia:
@@ -374,6 +421,9 @@ Animalia:
               coriacea: stubby rose anemone
               piscivora: fish eating anemone
         Metridioidea:
+          Halcampidae:
+            Halcampa:
+              decemtentaculata: ten tentacled burrowing anemone
           Metridiidae:
             Metridium:
               senile: short plumose anemone
@@ -405,8 +455,12 @@ Animalia:
             Enteroctopus:
               dofleini: giant pacific octopus
     Gastropoda:
+      Trochida:
+        Trochoidea:
+          Tegulidae:
+            Tegula:
+              pulligo: dusky turban snail
       Littorinimorpha:
-        sp: snail
         Naticoidea:
           Naticidae:
             Nerverita:
@@ -466,6 +520,15 @@ Animalia:
               lutea: sandalwood nudibranch
               hudsoni: yellow margin dorid
   Arthropoda:
+    Maxillopoda:
+      Sessilia:
+        Balanoidea:
+          Balanidae:
+            Balanus:
+              sp: barnacle
+              glandula: common acorn barnacle
+              crenatus: crenate barnacle
+              nubilus: giant acorn barnacle
     Malacostraca:
       Decapoda:
         Nephropoidea:
@@ -544,10 +607,60 @@ Animalia:
               crispatus: moss crab
             Scyra:
               acutifrons: sharp nosed crab
-
-# Plantae:
-#   sp: algae
-#   Rhodophyta:
-#     Florideophyceae:
-#       Corallinales:
-#         sp: encrusting corraline algae
+Plantae:
+  sp: algae
+  Tracheophytes:
+    Angiosperms:
+      Monocots:
+        Alismatales:
+          Zosteraceae:
+            Zostera:
+              marina: seagrass
+  Chlorophyta:
+    # sp: green algae
+    Ulvophyceae:
+      Ulvales:
+        Ulvaceae:
+          Ulva: sea lettuce
+  Ochrophyta:
+    # sp: brown algae
+    Phaeophyceae:
+      Laminariales: kelp
+      Fucales:
+        Fucaceae:
+          Fucus:
+            gardneri: rockweed
+  Rhodophyta:
+    # sp: red algae
+    Florideophyceae:
+      Rhodymeniales:
+        Rhodymeniaceae:
+          Rhodymenia:
+            pacifica: rose seaweed
+          Botryocladia:
+            pseudodichotoma: sea grapes
+      Ceramiales:
+        sp: filamentous red seaweed
+        Ceramiaceae:
+          Microcladia:
+            coulteri: delicate sea lace
+        Wrangeliaceae:
+          Neoptilota:
+            aslpenioides: red fan seaweed
+        Rhodomelaceae:
+          Osmundea:
+            spectabilis: sea laurel seaweed
+      Gigartinales:
+        Solieriaceae:
+          Sarcodiotheca:
+            gaudichaudii: succulent seaweed
+        Gigartinaceae:
+          Chondracanthus:
+            exasperatus: turkish towel
+          Mazzaella:
+            splendens: iridescent seaweed
+      Corallinales: encrusting corraline algae
+      Plocamiales:
+        Plocamiacae:
+          Plocamiacium:
+            cartilagineum: sea braid

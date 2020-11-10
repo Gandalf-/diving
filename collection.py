@@ -154,7 +154,9 @@ def single_level(tree):
     out = {}
     for group in inner(tree):
         name = group[0].simplified()
-        out[name] = group
+
+        out.setdefault(name, [])
+        out[name] += group
 
     return out
 

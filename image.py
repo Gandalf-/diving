@@ -6,67 +6,21 @@ base class for a diving image
 
 import hashlib
 import os
+import pathlib
 
 import inflect
+import yaml
 import utility
 
 inflect = inflect.engine()
+root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
-splits = ("fish", "coral", "ray", "chiton")
+with open(root + 'data/static.yml') as fd:
+    static = yaml.load(fd)
 
-qualifiers = (
-    'juvenile',
-    'dying',
-    'dead',
-    'female',
-    'male',
-    'molted',
-    'fighting',
-    'pregnant',
-    'mating',
-    'elderly',
-    'wasting',
-    'cleaning',
-    'school of',
-    'husk of',
-    'swimming',
-    'sleeping',
-    'rebreather',
-    'various',
-)
-
-categories = {
-    "fish": (
-        "basslet",
-        "blue tang",
-        "flounder",
-        "cero",
-        "goby",
-        "greenling",
-        "grunt",
-        "gunnel",
-        "grouper",
-        "lingcod",
-        "midshipman",
-        "perch",
-        "rock beauty",
-        "sculpin",
-        "sculpin",
-        "sole",
-        "sardine",
-        "spotted drum",
-        "tarpon",
-        "tomtate",
-        "war bonnet",
-    ),
-    "shrimp": ("prawn", ),
-    "algae": ("kelp", "seagrass", ),
-    "crab": ("reef spider",),
-    "nudibranch": ("sea lemon", "dorid", "dendronotid", "berthella"),
-    "anemone": ("zoanthid",),
-    "tunicate": ("sea squirt", ),
-    "coral": ("sea pen", "sea whip", "sea rod"),
-}
+splits = static['splits']
+qualifiers = static['qualifiers']
+categories = static['categories']
 
 
 def categorize(name):
@@ -81,7 +35,7 @@ def categorize(name):
 def uncategorize(name):
     ''' remove the special categorization labels added earlier '''
     for category, values in categories.items():
-        assert isinstance(values, tuple)
+        assert isinstance(values, list)
 
         for value in values:
             if name.endswith(" " + category) and value in name:
@@ -94,7 +48,7 @@ def unqualify(name):
     ''' remove qualifiers '''
     for qualifier in qualifiers:
         if name.startswith(qualifier):
-            name = name[len(qualifier) + 1:]
+            name = name[len(qualifier) + 1 :]
 
     if name.endswith(' egg'):
         name, _ = name.split(' egg')
@@ -110,11 +64,7 @@ def split(name):
     rockfish -> rock fish
     '''
     for s in splits:
-        if (
-            name != s
-            and name.endswith(s)
-            and not name.endswith(" " + s)
-        ):
+        if name != s and name.endswith(s) and not name.endswith(" " + s):
             name = name.replace(s, " " + s)
     return name
 

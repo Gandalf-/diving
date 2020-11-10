@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# build the html for a single dive entry. this handles resizing and compressing
-# images for better data usage performance
-
+# timeline html builder. the index page lazy loads the dives in reverese
+# chronological order
 
 print_switcher() {
 
@@ -13,6 +12,10 @@ echo '
     <div class="top" id="buffer"></div>
     <a href="/gallery/index.html">
         <h1 class="top switch gallery">Gallery</h1>
+    </a>
+    <div class="top" id="buffer"></div>
+    <a href="/taxonomy/index.html">
+        <h1 class="top switch taxonomy">Taxonomy</h1>
     </a>
 '
 }

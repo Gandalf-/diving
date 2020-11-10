@@ -196,6 +196,10 @@ class TestTaxonomy(unittest.TestCase):
                 'Diadematoida Diadematidae Diadema antillarum',
                 'D. D. Diadema antillarum',
             ),
+            (
+                'Halcampidae Halcampa decemtentaculata',
+                'H. Halcampa decemtentaculata',
+            ),
         ]
         for before, after in samples:
             self.assertEqual(after, taxonomy.simplify(before))
