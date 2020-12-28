@@ -9,6 +9,7 @@ import re
 import os
 import sys
 import multiprocessing
+from datetime import datetime
 
 import taxonomy
 import collection
@@ -146,7 +147,6 @@ def gallery_scientific(lineage, scientific):
         return scientific.get(candidate)
 
     name = lookup(lineage)
-
     # drop the first word
     if not name:
         name = lookup(lineage[1:])
@@ -175,6 +175,7 @@ def html_head(title):
 
       <body>
       {scripts}
+      <div class="wrapper">
       <div class="title">
     """.format(
         title=title, scripts=html_scripts
@@ -374,7 +375,7 @@ def html_tree(tree, where, scientific, lineage=None):
             link="/{where}/{path}.html".format(
                 where=where, path=lineage_to_link(lineage, side, key),
             ),
-            thumbnail=example.hash(),
+            thumbnail=example.hash() + '.jpg',
             size='{}:{}'.format(sum(1 for k in value if k != 'data'), size),
         )
 
@@ -406,13 +407,18 @@ def html_tree(tree, where, scientific, lineage=None):
             """.format(
                 name='{} - {}'.format(image.name, image.directory),
                 fullsize=image.fullsize(),
-                thumbnail=image.hash(),
+                thumbnail=image.hash() + '.jpg',
             )
 
             seen.add(identifier)
         html += "</div>"
 
-    html += """
+    now = datetime.now()
+    html += f"""
+      </wrapper>
+      <footer>
+        <p>Copyright austin@anardil.net {now.year}</p>
+      </footer>
     </body>
     </html>
     """

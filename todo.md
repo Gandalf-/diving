@@ -13,7 +13,7 @@
 
 - [x] header spacing
 - [x] image pinning
-- [ ] ... sp matching in links
+- [x] ... sp matching in links
 - [ ] qualifier ... matching in links
 - [x] worms
 - [x] tunicates

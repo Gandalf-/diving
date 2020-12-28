@@ -49,8 +49,6 @@ categories:
     - tomtate
     - black durgon
     - war bonnet
-  sculpin:
-    - red irish lord
   shrimp:
     - prawn
   algae:
@@ -66,7 +64,8 @@ categories:
   crab:
     - reef spider
   nudibranch:
-    - sea lemon dorid
+    - sea lemon
+    - dorid
     - dendronotid
     - berthella
   anemone:

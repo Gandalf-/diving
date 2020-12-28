@@ -39,9 +39,9 @@ Animalia:
           Hermodice:
             carunculata: fire worm
       Sabellida:
+        sp: tube worm
         Serpulidae:
           Serpula:
-            sp: calcareous tube worm
             columbiana: red trumpet calcareous tube worm
         Sabellidae:
           Chone: orange feather duster worm
@@ -306,7 +306,7 @@ Animalia:
           Scorpaenichthys:
             marmoratus: cabezon sculpin
           Hemilepidotus:
-            hemilepidotus: red irish lord sculpin
+            hemilepidotus: red irish lord
           Myoxocephalus:
             polyacanthocephalus: great sculpin
           Enophrys:

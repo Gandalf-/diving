@@ -75,12 +75,14 @@ maker() {
   mkdir -p "$imgbase"
 
   for image in *.jpg; do
-      local name; name="$( $sha "$image" | awk '{print $1}' )"
+      local name; name="$( $sha "$image" | awk '{print $1}' ).jpg"
 
       [[ -f "$imgbase"/"$name" ]] || {
         {
           convert \
-            -resize 400 \
+            -strip \
+            -interlace plane \
+            -resize 350 \
             -quality 60% \
             "$image" \
             "$imgbase"/"$name"

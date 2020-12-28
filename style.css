@@ -9,6 +9,17 @@ img {
   display: table;
 }
 
+.wrapper {
+  min-height: calc(100vh - 70px);
+}
+
+footer {
+  height: 20px;
+  text-align: right;
+  margin-right: 1em;
+  margin-bottom: 0.75em;
+}
+
 body {
   background-color: black;
   text-align: center;
