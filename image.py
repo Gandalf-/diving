@@ -39,7 +39,7 @@ def uncategorize(name):
 
         for value in values:
             if name.endswith(" " + category) and value in name:
-                name = name.rstrip(" " + category)
+                name = name[:-len(' ' + category)]
 
     return name
 

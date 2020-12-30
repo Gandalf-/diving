@@ -155,6 +155,7 @@ class TestGallery(unittest.TestCase):
             (['fish'], 'Actinopterygii sp'),
             (['fish', 'eggs'], 'Actinopterygii sp'),
             (['juvenile yellow eye', 'rock', 'fish'], 'Sebastes ruberrimus'),
+            (['noble', 'sea lemon', 'nudibranch'], 'Peltodoris nobilis'),
         ]
 
         for lineage, output in samples:
@@ -217,6 +218,7 @@ class TestImage(unittest.TestCase):
             ("french grunt", "french grunt fish"),
             ("kelp greenling", "kelp greenling fish"),
             ("giant pacific octopus", "giant pacific octopus"),
+            ("noble sea lemon", "noble sea lemon nudibranch"),
         ]
         for before, after in samples:
             self.assertEqual(image.categorize(before), after)

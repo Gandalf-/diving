@@ -306,7 +306,7 @@ Animalia:
           Scorpaenichthys:
             marmoratus: cabezon sculpin
           Hemilepidotus:
-            hemilepidotus: red irish lord
+            hemilepidotus: red irish lord sculpin
           Myoxocephalus:
             polyacanthocephalus: great sculpin
           Enophrys:
@@ -638,7 +638,7 @@ Plantae:
           Rhodymenia:
             pacifica: rose seaweed
           Botryocladia:
-            pseudodichotoma: sea grapes
+            pseudodichotoma: sea grape
       Ceramiales:
         sp: filamentous red seaweed
         Ceramiaceae:

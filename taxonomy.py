@@ -145,19 +145,12 @@ def mapping():
 
 def taxonomy_listing():
     ''' write out the names to a file '''
-    seen = set()
-    known = set(load_known())
+    have = set(load_known())
+    everything = set(ordered_simple_names(go()))
+    need = everything - have
 
     with open(root + 'data/taxonomy.txt', 'w+') as fd:
-        for name in ordered_simple_names(go()):
-            if name in seen:
-                continue
-            seen.add(name)
-
-            if name in known:
-                print(name, 'done')
-                continue
-
+        for name in sorted(need):
             fd.write(name + '\n')
 
 
