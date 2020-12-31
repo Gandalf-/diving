@@ -8,13 +8,16 @@ import collection
 import taxonomy
 import gallery
 import image
+import utility
+
+from taxonomy import MappingType
 
 
 class TestGallery(unittest.TestCase):
     ''' gallery.py '''
 
     g_scientific = taxonomy.mapping()
-    t_scientific = {v.replace(' sp', ''): k for k, v in g_scientific.items()}
+    t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
     def test_html_title(self):
         ''' html titles ordering
@@ -156,6 +159,7 @@ class TestGallery(unittest.TestCase):
             (['fish', 'eggs'], 'Actinopterygii sp'),
             (['juvenile yellow eye', 'rock', 'fish'], 'Sebastes ruberrimus'),
             (['noble', 'sea lemon', 'nudibranch'], 'Peltodoris nobilis'),
+            (['brain', 'coral'], 'Scleractinia Mussidae'),
         ]
 
         for lineage, output in samples:
@@ -219,6 +223,7 @@ class TestImage(unittest.TestCase):
             ("kelp greenling", "kelp greenling fish"),
             ("giant pacific octopus", "giant pacific octopus"),
             ("noble sea lemon", "noble sea lemon nudibranch"),
+            ('brain coral', 'brain coral'),
         ]
         for before, after in samples:
             self.assertEqual(image.categorize(before), after)
@@ -245,6 +250,15 @@ class TestImage(unittest.TestCase):
             split = image.split(before)
             self.assertEqual(split, after)
             self.assertEqual(image.unsplit(split), before)
+
+
+class TestUtility(unittest.TestCase):
+    ''' utility.py '''
+
+    def test_hmap(self):
+        ''' fold-ish thing '''
+        out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5)
+        self.assertEqual(out, 5)
 
 
 if __name__ == '__main__':

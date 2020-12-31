@@ -213,6 +213,7 @@ Animalia:
               viride: stoplight parrotfish
             Scarus:
               vetula: queen parrotfish
+              guacamaia: rainbow parrotfish
       Elopiformes:
         Megalopidae:
           Megalops: tarpon
@@ -224,6 +225,9 @@ Animalia:
         Porichthys: midshipman
       Perciformes:
         # perch-like fish
+        Labridae:
+          Lachnolaimus:
+            maximus: hogfish
         Mullidae: goatfish
         Chaetodontidae:
           Chaetodon:
@@ -363,6 +367,8 @@ Animalia:
             Bythotiara:
               huntsmani: tunicate siphon hydroid
       Leptothecata:
+        Campanulariidae:
+          Orthopyxis: spider web hydroid
         Aequoreidae:
           Aequorea: water jellyfish
         Sertularioidea:
@@ -372,13 +378,21 @@ Animalia:
             dumosa: muff hydroid
       Anthoathecata:
         Milleporidae:
-          Millepora: fire coral
+          Millepora:
+            complanata: blade coral
+            tenera: fire coral
         Stylasteridae:
           Stylaster:
             norvegicus: pink hydrocoral
     Anthozoa:
       Scleractinia:
         Mussidae: brain coral
+        NA:
+          Solenastrea:
+            bournoni: smooth star coral
+        Acroporidae:
+          Acropora:
+            cervicornis: staghorn coral
       Spirularia:
         Cerianthidae:
           Pachycerianthus:
@@ -392,7 +406,7 @@ Animalia:
           Ptilosarcus:
             gurneyi: sea pen
       Alcyonacea:
-        sp: soft coral
+        # soft coral
         Plexauridae:
           Swiftia:
             torreyi: dwarf red gorgonian coral
@@ -520,6 +534,10 @@ Animalia:
               lutea: sandalwood nudibranch
               hudsoni: yellow margin dorid
   Arthropoda:
+    Pantopoda:
+      Chelicerata:
+        Pycnogonida:
+          Pantopoda: reef spider
     Maxillopoda:
       Sessilia:
         Balanoidea:
@@ -576,6 +594,8 @@ Animalia:
               wosnessenskii: rhinoceros crab
             Lopholithodes:
               mandtii: puget sound king crab
+            Placetron:
+              wosnessenskii: scaled crab
           Paguridae:
             Pagurus:
               sp: hermit crab

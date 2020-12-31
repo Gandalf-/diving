@@ -4,6 +4,7 @@
 taxonomy related things
 '''
 
+import enum
 import sys
 import pathlib
 import yaml
@@ -138,9 +139,17 @@ def invert_known(tree):
     return result
 
 
-def mapping():
+MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
+
+
+def mapping(where=MappingType.Gallery):
     ''' simplified to scientific '''
-    return invert_known(load_tree())
+    tree = invert_known(load_tree())
+
+    if where == MappingType.Gallery:
+        return tree
+
+    return {v.replace(' sp', ''): k for k, v in tree.items()}
 
 
 def taxonomy_listing():

@@ -21,6 +21,7 @@ with open(root + 'data/static.yml') as fd:
 splits = static['splits']
 qualifiers = static['qualifiers']
 categories = static['categories']
+pinned = static['pinned']
 
 
 def categorize(name):

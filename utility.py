@@ -30,3 +30,12 @@ def extract_leaves(tree):
             yield from extract_leaves(value)
         else:
             yield value
+
+
+def hmap(arg, *fns):
+    ''' apply all the functions provided to the argument, kind of like a fold
+    '''
+    out = arg
+    for fn in fns:
+        out = fn(out)
+    return out

@@ -14,59 +14,20 @@ from datetime import datetime
 import taxonomy
 import collection
 
-from image import categorize, uncategorize, unsplit, unqualify, split, Image
-from utility import tree_size
+from image import (
+    categorize,
+    uncategorize,
+    split,
+    unsplit,
+    unqualify,
+    Image,
+    pinned,
+)
+from utility import tree_size, hmap
 
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long
-
-
-def tree_print(tree, lineage="", depth=0):
-    ''' print the tree to stdout '''
-
-    for key, value in sorted(tree.items()):
-        if key == "data":
-            print(" " * depth, len(tree["data"]), "direct pictures")
-            continue
-
-        child = key + " " + lineage if lineage else key
-        print(" " * depth, child)
-        tree_print(value, lineage=child, depth=depth + 2)
-
-
-pinned = {
-    "crab": '2020-06-17 Rockaway Beach/005 - Dungeness Crab.jpg',
-    "anemone": '2019-11-12 Rockaway Beach/019 - Anemones.jpg',
-    'barnacle': '2019-12-30 Metridium/005 - Giant Acorn Barnacle.jpg',
-    'diver': '2019-10-31 Klein Bonaire M/017 - Divers.jpg',
-    'eel': '2020-07-26 Port Townsend/056 - Juvenile Wolf Eel.jpg',
-    'fish': '2020-03-01 Power Lines/017 - Juvenile Yellow Eye Rockfish',
-    'nudibranch': (
-        '2020-09-08 Sund Rock South Wall/'
-        '034 - Red Flabellina Nudibranchs.jpg'
-    ),
-    'lobster': '2020-02-19 Sund Rock South Wall/033 - Squat Lobster.jpg',
-    'star': '2020-03-01 Jaggy Crack/022 - Rose Star.jpg',
-    'Animalia Cnidaria': (
-        '2020-08-30 Rockaway Beach/005 - '
-        'Metridium Anemone and Orange Zoanthids.jpg'
-    ),
-    'Animalia Chordata': (
-        '2020-03-01 Power Lines/017 - Juvenile Yellow Eye Rockfish'
-    ),
-    'Animalia Mollusca': (
-        '2020-09-08 Sund Rock South Wall/'
-        '034 - Red Flabellina Nudibranchs.jpg'
-    ),
-    'Animalia Chordata Actinopterygii': (
-        '2019-12-01 Metridium/014 - Copper Rockfish.jpg'
-    ),
-    'Animalia Chordata Mammalia Primates Hominoidea Hominidae Homo sapiens': (
-        '2019-10-31 Klein Bonaire M/017 - Divers.jpg'
-    ),
-    'Animalia Echinodermata': '2020-03-01 Jaggy Crack/022 - Rose Star.jpg',
-}
 
 
 def find_by_path(tree, needle):
@@ -138,24 +99,27 @@ def lineage_to_link(lineage, side, key=None):
     return name.replace(' ', '-')
 
 
-def gallery_scientific(lineage, scientific):
+def gallery_scientific(lineage, scientific, debug=True):
     ''' attempt to find a scientific name for this page
     '''
-
-    def lookup(names):
-        candidate = unsplit(unqualify(uncategorize(' '.join(names).lower())))
+    def lookup(names, *fns):
+        base = ' '.join(names).lower()
+        candidate = hmap(base, *fns)
         return scientific.get(candidate)
 
-    name = lookup(lineage)
-    # drop the first word
-    if not name:
-        name = lookup(lineage[1:])
+    attempts = [
+        (lineage, [uncategorize, unqualify, unsplit]),
+        (lineage[1:], [uncategorize, unqualify, unsplit]),
+        (lineage[2:], [uncategorize, unqualify, unsplit]),
+        (lineage, [uncategorize, unqualify]),
+    ]
 
-    # drop the first two words
-    if not name:
-        name = lookup(lineage[2:])
+    for ln, fns in attempts:
+        name = lookup(ln, *fns)
+        if name:
+            break
 
-    if not name:
+    if not name and debug:
         print('no taxonomy', ' '.join(lineage))
 
     return name or ""
