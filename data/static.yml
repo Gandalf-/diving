@@ -5,6 +5,7 @@ splits:
   - coral
   - ray
   - chiton
+  - snail
 
 qualifiers:
   - juvenile

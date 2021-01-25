@@ -131,6 +131,7 @@ javascript() {
 
   local first="${dives[0]}"
   local second="${dives[1]}"
+  local third="${dives[2]}"
 
   # shellcheck disable=SC2016
   echo '
@@ -166,9 +167,10 @@ javascript() {
       return true;
     }
 
-    // preload two groups to fill the screen
+    // preload three groups to fill the screen
     $("#0").load("'"$first"'").addClass("isloaded");
     $("#1").load("'"$second"'").addClass("isloaded");
+    $("#2").load("'"$third"'").addClass("isloaded");
 
     $(window).scroll(function() {
   '

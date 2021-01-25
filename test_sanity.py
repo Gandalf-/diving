@@ -160,6 +160,7 @@ class TestGallery(unittest.TestCase):
             (['juvenile yellow eye', 'rock', 'fish'], 'Sebastes ruberrimus'),
             (['noble', 'sea lemon', 'nudibranch'], 'Peltodoris nobilis'),
             (['brain', 'coral'], 'Scleractinia Mussidae'),
+            (['multicolor', 'dendronotid', 'nudibranch'], 'albus'),
         ]
 
         for lineage, output in samples:

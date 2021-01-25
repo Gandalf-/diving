@@ -129,7 +129,8 @@ def invert_known(tree):
             lineage = []
 
         if isinstance(tree, str):
-            out[tree] = ' '.join(lineage)
+            for part in tree.split(', '):
+                out[part] = ' '.join(lineage)
 
         else:
             for key, value in tree.items():

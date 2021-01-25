@@ -7,6 +7,7 @@ tree into HTML pages for diving.anardil.net
 
 import re
 import os
+import json
 import sys
 import multiprocessing
 from datetime import datetime
@@ -102,6 +103,7 @@ def lineage_to_link(lineage, side, key=None):
 def gallery_scientific(lineage, scientific, debug=True):
     ''' attempt to find a scientific name for this page
     '''
+
     def lookup(names, *fns):
         base = ' '.join(names).lower()
         candidate = hmap(base, *fns)
@@ -412,6 +414,18 @@ def taxia_pool_writer(args):
         print(html, file=f)
 
 
+def manifest(htmls, where):
+    ''' extract titles
+    '''
+    for (title, _) in htmls:
+        if 'various' in title:
+            continue
+        yield {
+            'title': title.title(),
+            'link': where + '/' + title.replace(' ', '-'),
+        }
+
+
 def write_all_html():
     ''' main '''
     pool = multiprocessing.Pool()
@@ -430,6 +444,14 @@ def write_all_html():
     scientific = {v.replace(' sp', ''): k for k, v in scientific.items()}
     taxia_htmls = html_tree(taxia, "taxonomy", scientific)
     print("done", len(taxia_htmls), "pages prepared")
+
+    print('writing manifest...', end="", flush=True)
+    data = list(manifest(name_htmls, 'gallery'))
+
+    with open('manifest.js', 'w+') as fd:
+        print('const list = ', file=fd)
+        print(json.dumps(data), file=fd)
+    print('done')
 
     print("writing html... ", end="", flush=True)
     pool.map(names_pool_writer, name_htmls)

@@ -1,6 +1,12 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
 Animalia:
+  Nemertea:
+    Palaeonemertea:
+      NA:
+        Tubulanidae:
+          Tubulanus:
+            sexlineatus: six lined ribbon worm
   Porifera:
     Hexactinellida:
       Sceptrulophora:
@@ -9,6 +15,10 @@ Animalia:
             vastus: cloud sponge
     Demospongiae:
       sp: sponge
+      Polymastiida:
+        Polymastiidae:
+          Polymastia:
+            pachymastia: aggregated nipple sponge
       Clionaida:
         Clionaidae:
           Cliona:
@@ -34,6 +44,10 @@ Animalia:
   Annelida:
     Polychaeta:
       sp: worm
+      Terebellida:
+        Terebellidae:
+          Thelepus:
+            crispus: curlyhead spaghetti worm
       Amphinomida:
         Amphinomidae:
           Hermodice:
@@ -44,12 +58,17 @@ Animalia:
           Serpula:
             columbiana: red trumpet calcareous tube worm
         Sabellidae:
+          sp: feather duster worm
+          Eudistylia:
+            vancouveri: vancouver feather duster worm
           Chone: orange feather duster worm
           Schizobranchia:
             insignis: split branch feather duster worm
-        Bispira: feather duster worm
+        Bispira: bristle worm
       Spionida:
         Chaetopteridae:
+          Spiochaetopterus:
+            costarum: jointed three section tube worm
           Phyllochaetopterus:
             prolifica: prolific three section tube worm
   Bryozoa:
@@ -104,6 +123,8 @@ Animalia:
         Solasteridae:
           Crossaster:
             papposus: rose star
+          Solaster:
+            dawsoni: morning sun star
         Asteropseidae:
           Dermasterias:
             imbricata: leather star
@@ -189,6 +210,10 @@ Animalia:
             mydas: green sea turtle
     Actinopterygii:
       sp: fish
+      Gasterosteiformes:
+        Aulorhynchidae:
+          Aulorhynchus:
+            flavidus: tubesnout fish
       Syngnathiformes:
         Aulostomoidei:
           Aulostomoidea:
@@ -417,6 +442,9 @@ Animalia:
             scotinus: orange zoanthid
       Actiniaria:
         sp: anemone
+        Edwardsioidea:
+          Edwardsiidae:
+            Edwardsia: white crowned burrowing anemone
         Actinostoloidea:
           Actinostolidae:
             Stomphia:
@@ -443,6 +471,12 @@ Animalia:
               senile: short plumose anemone
               farcimen: metridium anemone
   Mollusca:
+    Bivalvia:
+      Adapedonta:
+        Hiatelloidea:
+          Hiatellidae:
+            Panopea:
+              generosa: geoduck clam
     Polyplacophora:
       Chitonida:
         Mopalioidea:
@@ -469,6 +503,10 @@ Animalia:
             Enteroctopus:
               dofleini: giant pacific octopus
     Gastropoda:
+      Neogastropoda:
+        Muricoidea:
+          Muricdae:
+            Nucella: dogwinkle snail
       Trochida:
         Trochoidea:
           Tegulidae:
@@ -487,6 +525,9 @@ Animalia:
       Nudibranchia:
         sp: nudibranch
         Aeolidioidea:
+          Aeolidiidae:
+            Aeolidia:
+              papillosa: shaggy mouse nudibranch
           Myrrhinidae:
             Hermissenda:
               crassicornis: opalescent nudibranch
@@ -507,6 +548,8 @@ Animalia:
               luteomarginata: yellow rimmed nudibranch
         Polyceroidea:
           Polyceridae:
+            Limacia:
+              cockerelli: cockerells nudibranch
             Triopha:
               catalinae: clown nudibranch
         Proctonotoidea:
@@ -518,7 +561,15 @@ Animalia:
               albolineata: alabaster nudibranch
               pellucida: golden dirona nudibranch
         Fionoidea:
+          Paracoryphellidae:
+            Ziminella:
+              japonica: pearly nudibranch
+          Apataidae:
+            Apata:
+              pricei: prices aeolid nudibranch
           Coryphellidae:
+            Orienthella:
+              trilineata: three lined nudibranch
             Himatina:
               trophina: red flabellina nudibranch
         Dendronotoidea:
@@ -529,6 +580,10 @@ Animalia:
               albus: multicolor dendronotid, white dendronotid
         Onchidoridoidea:
           Onchidorididae:
+            Onchidoris:
+              bilamellata: barnacle eating nudibranch
+            Adalaria:
+              proxima: white adalaria nudibranch
             Acanthodoris:
               nanimoensis: nanaimo nudibranch
               lutea: sandalwood nudibranch
@@ -549,6 +604,10 @@ Animalia:
               nubilus: giant acorn barnacle
     Malacostraca:
       Decapoda:
+        Crangonoidea:
+          Crangonidae:
+            Mesocrangon:
+              munitella: minature spinyhead shrimp
         Nephropoidea:
           Nephropidae:
             Homarus:
@@ -562,8 +621,11 @@ Animalia:
               yucatanicus: spotted cleaner shrimp
         Alpheoidea:
           Hippolytidae:
+            Spirontocaris:
+              lamellicornis: deep blade shrimp
             Heptacarpus:
               kincaidi: kincaid shrimp
+              decorus: elegant coastal shrimp
         Pandaloidea:
           Pandalidae:
             Pandalopsis:
@@ -596,6 +658,8 @@ Animalia:
               mandtii: puget sound king crab
             Placetron:
               wosnessenskii: scaled crab
+            Cryptolithodes:
+              sitchensis: umbrella crab
           Paguridae:
             Pagurus:
               sp: hermit crab
