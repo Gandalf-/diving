@@ -8,8 +8,6 @@
         <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
         <script src="/detective/data.js"></script>
         <script src="/detective/game.js"></script>
-        <style>
-        </style>
     </head>
     <body>
         <a href="/gallery/index.html">
@@ -25,10 +23,33 @@
         </a>
         <p class="scientific"></p>
 
-        <div class="config">
-            <h4>Difficulty</h4>
-            <input type="range" min="0" max="4" value="2" id="difficulty">
+        <h4 id="score"></h4>
+        <h4 id="difficulty_label"></h4>
+        <input type="range" min="0" max="4" value="1" id="difficulty">
+
+        <h2 id="correct"></h2>
+
+        <div class="grid" id="thumbnails">
+            <div class="image" id="img0"> </div>
+            <div class="image" id="img1"> </div>
+            <div class="image" id="img2"> </div>
+            <div class="image" id="img3"> </div>
+            <div class="image" id="img4"> </div>
+            <div class="image" id="img5"> </div>
+            <div class="image" id="img6"> </div>
+            <div class="image" id="img7"> </div>
         </div>
 
+    <script>
+byId('difficulty').oninput = function()
+{
+    update_difficulty();
+    choose_game();
+}
+
+update_difficulty();
+choose_game();
+
+    </script>
     </body>
 </html>

@@ -9,6 +9,41 @@ function choose_correct()
     return random(names.length);
 }
 
+function success()
+{
+    correct++;
+    choose_game();
+}
+
+function failure(where)
+{
+    incorrect++;
+    where.style.border = "1px solid red";
+    update_score();
+}
+
+function choose_game()
+{
+    update_score();
+    reset_thumbnails();
+    image_game();
+}
+
+function set_thumbnail(where, what, correct)
+{
+    var thumb = thumbs[what][random(thumbs[what].length)];
+    var html = '<img src="/imgs/' + thumb + '.jpg" alt=""';
+
+    if (correct) {
+        html += 'onclick="success();"'
+    } else {
+        html += 'onclick="failure(this);"'
+    }
+    html += '>';
+
+    byId(where).innerHTML = html;
+}
+
 function find_similar(target, limit, required)
 {
     var start = random(names.length);
@@ -53,10 +88,41 @@ function find_similar(target, limit, required)
     return found;
 }
 
+function reset_thumbnails()
+{
+    byId('thumbnails').innerHTML = '';
+}
+
 function image_game()
 {
     var correct = choose_correct();
     console.log(names[correct]);
+
+    var difficulty = get_difficulty();
+    var limit_table = [0, 15, 30, 40, 80];
+    var count_table = [2, 2, 4, 6, 8];
+
+    var limit = limit_table[difficulty];
+    var count = count_table[difficulty];
+    var options = find_similar(correct, limit, count - 1);
+
+    byId('correct').innerHTML = 'Select the ' + names[correct];
+    var actual = random(count - 1);
+
+    for (i = 0, w = 0; i < count; i++) {
+
+        var child = document.createElement('div');
+        child.setAttribute('class', 'image');
+        child.setAttribute('id', 'img' + i);
+        byId('thumbnails').appendChild(child);
+
+        if (i == actual) {
+            set_thumbnail('img' + i, correct, true);
+        } else {
+            set_thumbnail('img' + i, options[w], false);
+            w++;
+        }
+    }
 }
 
 function name_game()
@@ -65,26 +131,34 @@ function name_game()
 
 /* helpers */
 
-function score()
+function update_score()
 {
     var total = correct + incorrect;
-    if (total == 0) {
-        return 0;
+    var score = 0;
+
+    if (total != 0) {
+        score = Math.floor(correct / total * 100);
     }
-    return correct / total;
+
+    byId('score').innerHTML =
+        score + '% (' + correct + '/' + total + ')';
 }
 
-function difficulty()
+function get_difficulty()
+{
+    return parseInt(byId('difficulty').value);
+}
+
+function update_difficulty()
 {
     const labels = [
-        "very easy",
-        "easy",
-        "moderate",
-        "hard",
-        "very hard",
+        "Very Easy",
+        "Easy",
+        "Moderate",
+        "Hard",
+        "Very Hard",
     ];
-    var value = parseInt(byId('difficulty').value);
-    return labels[value];
+    byId("difficulty_label").innerHTML = labels[get_difficulty()];
 }
 
 /* utility */
