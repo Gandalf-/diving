@@ -6,7 +6,7 @@ parsing data from disk
 
 import os
 
-from image import Image
+from image import Image, categorize, split
 from utility import flatten, tree_size, root
 
 
@@ -19,7 +19,9 @@ def delve(directory):
     """ create an Image object for each picture in a directory """
     path = os.path.join(root, directory)
     return [
-        Image(o, directory) for o in os.listdir(path) if o.endswith(".jpg")
+        Image(o, directory)
+        for o in os.listdir(path)
+        if o.endswith(".jpg") and '-' in o
     ]
 
 
@@ -33,26 +35,43 @@ def named():
     return flatten([[y for y in z if y.name] for z in collect()])
 
 
-def expand_names(images):
-    """ split out `a and b` into separate elements """
-    result = []
+def find_vague_names():
+    ''' find names that could be more specific
 
-    for image in images:
-        for split in (" with ", " and "):
+    import collections
+    collections.Counter(i.simplified() for i in find_vague_names())
+    '''
+    everything = {
+        (categorize(split(i.simplified())), i)
+        for i in expand_names(named())
+    }
 
-            if split not in image.name:
+    names = {n for (n, _) in everything}
+
+    for (name, image) in everything:
+        for other in names:
+            if name == other:
                 continue
 
-            left, right = image.name.split(split)
+            if other.endswith(name):
+                yield image
+
+
+def expand_names(images):
+    """ split out `a and b` into separate elements """
+    for image in images:
+        for part in (" with ", " and "):
+            if part not in image.name:
+                continue
+
+            left, right = image.name.split(part)
 
             clone = Image(image.label, image.directory)
             clone.name = left
             image.name = right
-            result.append(clone)
+            yield clone
 
-        result.append(image)
-
-    return result
+        yield image
 
 
 def make_tree(images):
