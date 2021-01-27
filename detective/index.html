@@ -23,22 +23,35 @@
         </a>
         <p class="scientific"></p>
 
-        <h4 id="score"></h4>
-        <h4 id="difficulty_label"></h4>
-        <input type="range" min="0" max="4" value="1" id="difficulty">
-
-        <h2 id="correct"></h2>
-
-        <div class="grid" id="thumbnails">
-            <div class="image" id="img0"> </div>
-            <div class="image" id="img1"> </div>
-            <div class="image" id="img2"> </div>
-            <div class="image" id="img3"> </div>
-            <div class="image" id="img4"> </div>
-            <div class="image" id="img5"> </div>
-            <div class="image" id="img6"> </div>
-            <div class="image" id="img7"> </div>
+        <div id="control">
+            <select id="game" onchange="choose_game();">
+                <option value="images">Images</option>
+                <option value="names">Names</option>
+            </select>
+            <h4 id="score"></h4>
+            <h4 id="difficulty_label"></h4>
+            <input type="range" min="0" max="4" value="1" id="difficulty">
         </div>
+
+        <div id="correct_outer">
+            <h2 id="correct"></h2>
+        </div>
+
+        <div class="grid" id="options">
+            <div class="image" id="option0"> </div>
+            <div class="image" id="option1"> </div>
+            <div class="image" id="option2"> </div>
+            <div class="image" id="option3"> </div>
+            <div class="image" id="option4"> </div>
+            <div class="image" id="option5"> </div>
+            <div class="image" id="option6"> </div>
+            <div class="image" id="option7"> </div>
+
+            <div class="top switch skip" onclick="choose_game();">
+                <h4>Skip</h4>
+            </div>
+        </div>
+
 
     <script>
 byId('difficulty').oninput = function()

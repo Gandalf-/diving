@@ -2,7 +2,6 @@ img {
   width: 100%;
   display: inline-block;
 }
-
 .row::after {
   content: "";
   clear: both;
@@ -41,6 +40,10 @@ h3 {
   margin-block-end: 0em;
   margin-block-start: 0em;
   margin-bottom: 0.2em;
+}
+
+.top:hover {
+  border: 1px solid white;
 }
 
 .scientific {
@@ -105,6 +108,30 @@ a:link {
   padding: 0.2em 0em;
 }
 
+.correct_name {
+  justify-content: center;
+  height: 100%;
+  min-height: 350px;
+}
+
+select {
+  border-radius: 0.5em;
+  color: white;
+  background-color: black;
+  height: 3em;
+}
+
+#difficulty {
+  height: 3em;
+}
+
+#control {
+  display: grid;
+  grid-template-columns: repeat( auto-fit, minmax(15ch, max-content));
+  justify-content: center;
+  grid-gap: 0.75rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat( auto-fit, minmax(300px, max-content));
@@ -122,4 +149,16 @@ a:link {
 
 .detective {
   border-color: red;
+}
+
+div.skip {
+  border-color: gray;
+  display: table;
+  height: 100%;
+  overflow: hidden;
+}
+
+h4.skip {
+  display: table-cell;
+  vertical-align: middle;
 }

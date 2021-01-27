@@ -68,9 +68,30 @@ def load_tree():
         return yaml.load(fd)
 
 
-def load_known():
+def filter_exact(tree):
+    ''' remove all sp entries
+    '''
+    assert isinstance(tree, dict), tree
+
+    out = {}
+    for key, value in tree.items():
+        if key == 'sp':
+            continue
+
+        if isinstance(value, dict):
+            out[key] = filter_exact(value)
+        else:
+            out[key] = value
+
+    return out
+
+
+def load_known(exact_only=False):
     ''' load taxonomy.yml '''
+
     tree = load_tree()
+    if exact_only:
+        tree = filter_exact(tree)
 
     for leaf in extract_leaves(tree):
         yield from leaf.split(', ')

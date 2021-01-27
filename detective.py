@@ -8,6 +8,7 @@ import subprocess
 
 from apocrypha.client import Client
 
+from image import unqualify
 import collection
 import taxonomy
 
@@ -112,24 +113,57 @@ def similarity_table(names):
     return similarity
 
 
-def table_builder():
-    ''' build the tables!
+def filter_images(images):
+    ''' strip out images that are poor fits for the game
+    - multiple subjects
+    - vague, like "sponge"
+    - no taxonomy, suggesting things like "dive site"
     '''
-    # reversing so we get newer things first
-    images = reversed(list(collection.expand_names(collection.named())))
-    knowns = set(taxonomy.load_known())
-
+    knowns = set(taxonomy.load_known(exact_only=True))
     all_names = []
     new_images = []
 
     for image in images:
-        simple = image.simplified()
-        if simple not in knowns:
+
+        # skip old pictures until cleaned up
+        if image.directory.startswith('2019-09'):
             continue
+        if image.directory.startswith('2017'):
+            continue
+
+        # skip bonaire until cleaned up
+        if 'Bonaire' in image.directory:
+            continue
+
+        # take the first subject when there are multiple
+        for part in (" with ", " and "):
+            if part in image.name:
+                left, _ = image.name.split(part)
+                image.name = left
+
+        # no qualified subjects: fish eggs, juvenile rock fish
+        simple = image.singular().lower()
+        if unqualify(simple) != simple:
+            print(simple, 'has qualifiers')
+            continue
+
+        if simple not in knowns:
+            print(simple, 'no taxonomy')
+            continue
+
         all_names.append(simple)
         new_images.append(image)
 
-    images = new_images
+    return all_names, new_images
+
+
+def table_builder():
+    ''' build the tables!
+    '''
+    # reversing so we get newer things first
+    images = reversed(list(collection.named()))
+    all_names, images = filter_images(images)
+
     hashes = list(cache_hash(images))
 
     # names array
