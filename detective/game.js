@@ -4,6 +4,7 @@ var g_incorrect = 0;
 
 const g_limit_table = [0, 15, 30, 40, 80];
 const g_count_table = [2, 2, 4, 6, 8];
+const g_sample_table = [2, 2, 2, 1, 1];
 
 /* game logic */
 
@@ -21,9 +22,7 @@ function image_game()
     var count = g_count_table[difficulty];
     var options = find_similar(correct, limit, count - 1);
 
-    byId('correct_outer').setAttribute('class', '');
-    byId('correct').setAttribute('class', '');
-    byId('correct').innerHTML = 'Select the ' + names[correct];
+    set_correct_image(correct);
 
     var actual = random(count);
     for (i = 0, w = 0; i < count; i++) {
@@ -57,9 +56,7 @@ function name_game()
     var count = g_count_table[difficulty];
     var options = find_similar(correct, limit, count - 1);
 
-    byId('correct_outer').setAttribute('class', 'grid correct_name');
-    byId('correct').setAttribute('class', 'image');
-    set_thumbnail('correct', correct, null);
+    set_correct_name(correct, difficulty);
 
     var actual = random(count);
     for (i = 0, w = 0; i < count; i++) {
@@ -112,9 +109,11 @@ function set_text(where, what, onclick)
     option.appendChild(child);
 }
 
-function set_thumbnail(where, what, onclick)
+function set_thumbnail(where, what, onclick, thumb)
 {
-    var thumb = thumbs[what][random(thumbs[what].length)];
+    if (!thumb) {
+        thumb = thumbs[what][random(thumbs[what].length)];
+    }
     var html = '<img src="/imgs/' + thumb + '.jpg" alt=""';
 
     if (onclick) {
@@ -166,6 +165,39 @@ function failure(where)
 function reset_options()
 {
     byId('options').innerHTML = '';
+}
+
+function set_correct_image(correct)
+{
+    var outer = byId('correct_outer');
+    outer.setAttribute('class', '');
+    outer.innerHTML = '';
+
+    var child = document.createElement('h2');
+    child.innerHTML = 'Select the ' + names[correct];
+    outer.appendChild(child);
+}
+
+function set_correct_name(correct, difficulty)
+{
+    var outer = byId('correct_outer');
+    outer.setAttribute('class', 'grid correct_name');
+    outer.innerHTML = '';
+
+    var images = thumbs[correct].slice();
+    shuffle(images);
+
+    var samples = g_sample_table[difficulty];
+    samples = Math.min(samples, images.length);
+
+    for (i = 0; i < samples; i++) {
+        var child = document.createElement('div');
+        child.setAttribute('class', 'image');
+        child.setAttribute('id', 'correct' + i);
+        outer.appendChild(child);
+
+        set_thumbnail('correct' + i, correct, null, images[i]);
+    }
 }
 
 

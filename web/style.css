@@ -98,6 +98,10 @@ a:link {
   border: 1px solid white;
 }
 
+.correct_name > .image:hover {
+  border: 1px solid black;
+}
+
 .title {
   position: sticky;
   background-color: black;
@@ -154,11 +158,60 @@ select {
 div.skip {
   border-color: gray;
   display: table;
-  height: 100%;
   overflow: hidden;
 }
 
+/*
 h4.skip {
   display: table-cell;
   vertical-align: middle;
+}
+*/
+
+@media (max-width: 480px) {
+    html {
+        font-size: 12px;
+    }
+    h1 {
+        font-size: 1.75em;
+    }
+    #buffer {
+      width: 0.1em;
+      border: 1px solid black;
+    }
+    .correct_name {
+      justify-content: center;
+      height: 100%;
+      min-height: 150px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(48%, max-content));
+      justify-content: center;
+      grid-gap: 0.75rem;
+    }
+}
+
+@media (min-width: 480px) {
+    html {
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 992px) {
+    html {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    html {
+        font-size: 16px;
+    }
 }
