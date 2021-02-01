@@ -6,16 +6,16 @@
 print_switcher() {
 
 echo '
+    <a href="/taxonomy/index.html">
+        <h1 class="top switch taxonomy">Taxonomy</h1>
+    </a>
+    <div class="top" id="buffer"></div>
     <a href="/timeline/index.html">
         <h1 class="top switch">Timeline</h1>
     </a>
     <div class="top" id="buffer"></div>
     <a href="/gallery/index.html">
         <h1 class="top switch gallery">Gallery</h1>
-    </a>
-    <div class="top" id="buffer"></div>
-    <a href="/taxonomy/index.html">
-        <h1 class="top switch taxonomy">Taxonomy</h1>
     </a>
 '
 }
@@ -60,6 +60,24 @@ print_table() {
   echo '</div>'
 }
 
+hasher() {
+  local directory="$1"
+  local image="$2"
+
+  local label="${image%% *}"
+  label="${label%%.*}"
+  label="$directory:$label"
+
+  local out; out="$( d diving cache-hash "$label" < /dev/null )"
+
+  if [[ $out ]]; then
+    echo "$out"
+  else
+    echo "hashing $directory/$image" >&2
+    $sha "$image" | awk '{print $1}'
+  fi
+}
+
 maker() {
 
   [[ $1 && $2 && $3 ]] || {
@@ -75,7 +93,7 @@ maker() {
   mkdir -p "$imgbase"
 
   for image in *.jpg; do
-      local name; name="$( $sha "$image" | awk '{print $1}' ).jpg"
+      local name; name="$( hasher "$srcbase" "$image" ).jpg"
 
       [[ -f "$imgbase"/"$name" ]] || {
         {

@@ -33,7 +33,6 @@ def simplify(name: str) -> str:
             out.append(a)
 
     out.append(parts[-1])
-
     return ' '.join(out)
 
 

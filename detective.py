@@ -43,7 +43,7 @@ def cache_hash(images):
     labels = []
 
     for image in images:
-        label = image.directory + ':' + image.number
+        label = image.identifier()
         sha1 = client.get('diving', 'cache-hash', label)
 
         if not sha1:

@@ -157,19 +157,44 @@ def html_top_title(where):
     if where == 'gallery':
         display = display.title()
 
-    html = html_head(display)
-    html += '''
+    timeline = '''
         <a href="/timeline/index.html">
             <h1 class="top switch">Timeline</h1>
         </a>
-        <div class="top" id="buffer"></div>
+    '''
+    gallery = '''
         <a href="/gallery/index.html">
             <h1 class="top switch gallery">Gallery</h1>
         </a>
-        <div class="top" id="buffer"></div>
+    '''
+    _taxonomy = '''
         <a href="/taxonomy/index.html">
             <h1 class="top switch taxonomy">Taxonomy</h1>
         </a>
+    '''
+    detective = '''
+        <a href="/detective/index.html">
+            <h1 class="top switch detective">Detective</h1>
+        </a>
+    '''
+    spacer = '<div class="top" id="buffer"></div>\n'
+
+    html = html_head(display)
+    if where == 'gallery':
+        parts = [
+            timeline.replace('h1', 'h2'),
+            gallery,
+            detective.replace('h1', 'h2'),
+        ]
+    else:
+        parts = [
+            detective.replace('h1', 'h2'),
+            _taxonomy,
+            timeline.replace('h1', 'h2'),
+        ]
+
+    html += spacer.join(parts)
+    html += '''
         <p class="scientific"></p>
     </div>
     '''
@@ -462,6 +487,21 @@ def write_all_html():
 def find_links():
     ''' check the html directory for internal links
     '''
+
+    def extract_from(fd):
+        ''' get links from a file
+        '''
+        for line in fd:
+            if 'href' not in line:
+                continue
+
+            for link in re.findall(r'href=\"(.+?)\"', line):
+                if link.startswith('http'):
+                    continue
+
+                link = link[1:]
+                yield path, link
+
     for directory in ('taxonomy', 'gallery'):
         for filename in os.listdir(directory):
             if not filename.endswith(".html"):
@@ -469,20 +509,12 @@ def find_links():
 
             path = os.path.join(directory, filename)
             with open(path) as fd:
-                for line in fd:
-                    if 'href' not in line:
-                        continue
-
-                    for link in re.findall(r'href=\"(.+?)\"', line):
-                        if link.startswith('http'):
-                            continue
-
-                        link = link[1:]
-                        yield path, link
+                yield from extract_from(fd)
 
 
 def link_check():
-    ''' check the html directory for broken links
+    ''' check the html directory for broken links by extracting all the
+    internal links from the written files and looking for those as paths
     '''
     for path, link in find_links():
         if not os.path.exists(link):

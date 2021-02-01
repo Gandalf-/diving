@@ -10,8 +10,11 @@ import pathlib
 
 import inflect
 import yaml
+from apocrypha.client import Client
+
 import utility
 
+database = Client()
 inflect = inflect.engine()
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
@@ -106,6 +109,11 @@ class Image:
             ]
         )
 
+    def identifier(self):
+        ''' unique ID
+        '''
+        return self.directory + ':' + self.number
+
     def path(self):
         ''' where this is on the file system
         '''
@@ -120,6 +128,10 @@ class Image:
     def hash(self):
         ''' hash a file the same way indexer does, so we can find it's thumbnail
         '''
+        digest = database.get('diving', 'cache-hash', self.identifier())
+        if digest:
+            return digest
+
         sha1 = hashlib.sha1()
 
         with open(self.path(), "rb") as f:
@@ -129,7 +141,9 @@ class Image:
                     break
                 sha1.update(data)
 
-        return sha1.hexdigest()
+        digest = sha1.hexdigest()
+        database.set('diving', 'cache-hash', self.identifier(), value=digest)
+        return digest
 
     def singular(self):
         ''' return singular version '''

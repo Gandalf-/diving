@@ -261,6 +261,18 @@ class TestUtility(unittest.TestCase):
         out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5)
         self.assertEqual(out, 5)
 
+    def test_tree_size(self):
+        ''' how many leaves are in this tree '''
+        tree = {'a': {'b': [3, 3]}, 'c': [4, 4, 4]}
+        self.assertEqual(utility.tree_size(tree), 5)
+
+    def test_extract_leaves(self):
+        ''' grab the leaves for this tree '''
+        tree = {'a': {'b': 3}, 'c': 4}
+        leaves = list(utility.extract_leaves(tree))
+        wanted = [3, 4]
+        self.assertEqual(sorted(leaves), sorted(wanted))
+
 
 if __name__ == '__main__':
     unittest.main()

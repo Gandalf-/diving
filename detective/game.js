@@ -2,7 +2,7 @@
 var g_correct = 0;
 var g_incorrect = 0;
 
-const g_limit_table = [0, 15, 30, 40, 80];
+const g_limit_table = [0, 15, 25, 40, 80];
 const g_count_table = [2, 2, 4, 6, 8];
 const g_sample_table = [2, 2, 2, 1, 1];
 
