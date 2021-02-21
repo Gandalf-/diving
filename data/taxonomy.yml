@@ -57,6 +57,8 @@ Animalia:
         Serpulidae:
           Serpula:
             columbiana: red trumpet calcareous tube worm
+          Protula:
+            pacifica: white crown calcareous tube worm
         Sabellidae:
           sp: feather duster worm
           Eudistylia:
@@ -64,6 +66,8 @@ Animalia:
           Chone: orange feather duster worm
           Schizobranchia:
             insignis: split branch feather duster worm
+          Myxicola:
+            infundibulum: slime tube feather duster worm
         Bispira: bristle worm
       Spionida:
         Chaetopteridae:
@@ -82,6 +86,10 @@ Animalia:
             pacifica: northern staghorn bryozoan
     Gymnolaemata:
       Cheilostomatida:
+        Microporoidea:
+          Microporidae:
+            Microporina:
+              articulata: stick bryozoan
         Membraniporoidea:
           Membraniporidae:
             Membranipora:
@@ -472,6 +480,11 @@ Animalia:
               farcimen: metridium anemone
   Mollusca:
     Bivalvia:
+      Pectinida:
+        Pectinoidea:
+          Pectinidae:
+            Chlamys:
+              rubida: smooth pink scallop
       Adapedonta:
         Hiatelloidea:
           Hiatellidae:
@@ -503,6 +516,11 @@ Animalia:
             Enteroctopus:
               dofleini: giant pacific octopus
     Gastropoda:
+      Lepetellida:
+        Fissurelloidea:
+          Fissurellidae:
+            Diodora:
+              aspera: rough keyhole limpet
       Neogastropoda:
         Muricoidea:
           Muricdae:
