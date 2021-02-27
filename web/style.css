@@ -22,6 +22,11 @@ footer {
 body {
   background-color: black;
   text-align: center;
+
+  /* max width without messing up centering! */
+  max-width: 1080px;
+  margin: 0 auto !important;
+  float: none !important;
 }
 
 figcaption, h1, h2, h3, h4, p {
@@ -125,10 +130,6 @@ select {
   height: 3em;
 }
 
-#difficulty {
-  height: 3em;
-}
-
 #control {
   display: grid;
   grid-template-columns: repeat( auto-fit, minmax(15ch, max-content));
@@ -169,6 +170,7 @@ h4.skip {
 */
 
 @media (max-width: 480px) {
+    /* typical phones */
     html {
         font-size: 12px;
     }
@@ -189,6 +191,23 @@ h4.skip {
       grid-template-columns: repeat(auto-fit, minmax(48%, max-content));
       justify-content: center;
       grid-gap: 0.75rem;
+    }
+    select {
+      height: 2em;
+    }
+}
+
+@media (max-width: 380px) {
+    /* iphones have tiny width */
+    h1 {
+        font-size: 1.40em;
+    }
+    h2 {
+        font-size: 1em;
+    }
+    #buffer {
+      width: 0.05em;
+      border: 1px solid black;
     }
 }
 

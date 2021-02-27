@@ -30,8 +30,13 @@
                 <option value="names">Names</option>
             </select>
             <h4 id="score"></h4>
-            <h4 id="difficulty_label"></h4>
-            <input type="range" min="0" max="4" value="1" id="difficulty">
+            <select id="difficulty" onchange="choose_game();">
+                <option value=0>Very Easy</option>
+                <option value=1>Easy</option>
+                <option value=2>Moderate</option>
+                <option value=3>Hard</option>
+                <option value=4>Very Hard</option>
+            </select>
         </div>
 
         <div id="correct_outer">
@@ -55,15 +60,7 @@
 
 
     <script>
-byId('difficulty').oninput = function()
-{
-    update_difficulty();
-    choose_game();
-}
-
-update_difficulty();
 choose_game();
-
     </script>
     </body>
 </html>

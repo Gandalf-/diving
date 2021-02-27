@@ -137,18 +137,6 @@ function update_score()
         score + '% (' + g_correct + '/' + total + ')';
 }
 
-function update_difficulty()
-{
-    const labels = [
-        "Very Easy",
-        "Easy",
-        "Moderate",
-        "Hard",
-        "Very Hard",
-    ];
-    byId("difficulty_label").innerHTML = labels[get_difficulty()];
-}
-
 function success()
 {
     g_correct++;
@@ -217,7 +205,7 @@ function add_skip()
 
 function get_difficulty()
 {
-    return parseInt(byId('difficulty').value);
+    return byId('difficulty').value;
 }
 
 function choose_correct()
