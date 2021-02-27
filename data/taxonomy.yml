@@ -1,6 +1,13 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
 Animalia:
+  Platyhelminthes:
+    Rhabditophora:
+      Polycladida:
+        Stylochoidea:
+          Callioplanidae:
+            Kaburakia:
+              excelsa: giant flat worm
   Nemertea:
     Palaeonemertea:
       NA:
@@ -44,6 +51,12 @@ Animalia:
   Annelida:
     Polychaeta:
       sp: worm
+      Eunicida:
+        Eunicidae:
+          Leodice: bobbit worm
+      Ophelliidae:
+        Travisiidae:
+          Travisia: utility worm
       Terebellida:
         Terebellidae:
           Thelepus:
@@ -84,6 +97,7 @@ Animalia:
         Heteroporidae:
           Heteropora:
             pacifica: northern staghorn bryozoan
+            alaskensis: delicate staghorn bryozoan
     Gymnolaemata:
       Cheilostomatida:
         Microporoidea:
@@ -155,6 +169,8 @@ Animalia:
         Cucumariidae:
           Cucumaria:
             miniata: red sea cucumber
+            piperata: salt and pepper sea cucumber
+            pallida: pale sea cucumber
         Psolidae:
           Psolus:
             chitonoides: creeping pedal sea cucumber
@@ -557,6 +573,7 @@ Animalia:
           Discodorididae:
             Peltodoris:
               nobilis: noble sea lemon
+              lentignosa: freckled pale sea lemon
             Diaulula:
               sandiegensis: leopard nudibranch
           Cadlinidae:
@@ -590,6 +607,7 @@ Animalia:
               trilineata: three lined nudibranch
             Himatina:
               trophina: red flabellina nudibranch
+              verrucosa: red gilled nudibranch
         Dendronotoidea:
           Dendronotidae:
             Dendronotus:
@@ -684,6 +702,7 @@ Animalia:
               armatus: blackeyed hermit crab
               granosimanus: grainyhand hermit crab
               caurinus: greenmark hermit crab
+              beringanus: bering hermit crab
         Cancroidea:
           Cancridae:
             Glebocarcinus:
