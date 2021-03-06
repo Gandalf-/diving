@@ -9,6 +9,16 @@
         <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
         <script src="/detective/data.js"></script>
         <script src="/detective/game.js"></script>
+<style>
+body {
+  /* max width without messing up centering! */
+  max-width: 1080px;
+  /* margin: 0 auto !important; */
+  margin-left: auto;
+  margin-right: auto;
+  float: none !important;
+}
+</style>
     </head>
     <body>
         <a href="/gallery/index.html">
@@ -32,7 +42,7 @@
             <h4 id="score"></h4>
             <select id="difficulty" onchange="choose_game();">
                 <option value=0>Very Easy</option>
-                <option value=1>Easy</option>
+                <option value=1 selected>Easy</option>
                 <option value=2>Moderate</option>
                 <option value=3>Hard</option>
                 <option value=4>Very Hard</option>

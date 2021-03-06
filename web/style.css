@@ -1,3 +1,37 @@
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.info {
+  max-width: 800px;
+  margin: 0 auto !important;
+  float: none !important;
+  text-align: justify;
+  /* text-justify: inter-word; */
+}
+
 img {
   width: 100%;
   display: inline-block;
@@ -22,11 +56,7 @@ footer {
 body {
   background-color: black;
   text-align: center;
-
-  /* max width without messing up centering! */
-  max-width: 1080px;
-  margin: 0 auto !important;
-  float: none !important;
+  font-family: Georgia, serif;
 }
 
 figcaption, h1, h2, h3, h4, p {
@@ -63,16 +93,26 @@ h3 {
   color: white;
 }
 
+.info a {
+  text-decoration: underline !important;
+  color: white;
+}
+
 .sneaky {
   color: #000000;
   float: left;
-  margin-left: 1em;
+  margin-left: 0.5em;
 }
 
 .count {
   color: #808080;
   float: right;
-  margin-right: 1em;
+  margin-right: 0.5em;
+}
+
+.ref {
+  text-align: right;
+  font-style: italic;
 }
 
 .switch {

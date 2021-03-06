@@ -12,6 +12,7 @@ import sys
 import multiprocessing
 from datetime import datetime
 
+import information
 import taxonomy
 import collection
 
@@ -135,6 +136,7 @@ def html_head(title):
     <html>
       <head>
         <title>{title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="/style.css"/>
         <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
       </head>
@@ -321,6 +323,27 @@ def html_title(lineage, where, scientific):
     return html, title
 
 
+def get_info(where, lineage):
+    ''' wikipedia information if available
+    '''
+    if where == 'gallery':
+        return ''
+
+    htmls = []
+    seen = set()
+
+    for part in information.lineage_to_names(lineage):
+        html, url = information.html(part)
+
+        if url in seen:
+            continue
+        seen.add(url)
+
+        htmls.append(html)
+
+    return '<br>'.join(htmls)
+
+
 def html_tree(tree, where, scientific, lineage=None):
     """ html version of display
     """
@@ -404,9 +427,13 @@ def html_tree(tree, where, scientific, lineage=None):
             seen.add(identifier)
         html += "</div>"
 
+    # wikipedia info
+    info = get_info(where, lineage)
     now = datetime.now()
+
     html += f"""
       </wrapper>
+      {info}
       <footer>
         <p>Copyright austin@anardil.net {now.year}</p>
       </footer>

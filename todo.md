@@ -26,3 +26,9 @@
 
 
 Link with https://www.eopugetsound.org/species/oregonia-gracilis ?
+
+
+Wikipedia
+- some point to the wrong thing, barnacle Balanoidea is also part of the name
+  for a snail
+- when a page has multiple names, show them in order

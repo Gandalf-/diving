@@ -54,7 +54,7 @@ Animalia:
       Eunicida:
         Eunicidae:
           Leodice: bobbit worm
-      Ophelliidae:
+      Opheliidae:
         Travisiidae:
           Travisia: utility worm
       Terebellida:
@@ -410,7 +410,7 @@ Animalia:
             labiata: moon jellyfish
     Hydrozoa:
       sp: hydroid
-      Anthoacthecata:
+      Anthoathecata:
         Filifera:
           Bythotiaridae:
             Bythotiara:
@@ -549,7 +549,7 @@ Animalia:
       Littorinimorpha:
         Naticoidea:
           Naticidae:
-            Nerverita:
+            Neverita:
               lewisii: moon snail
       Pleurobranchida:
         Pleurobranchoidea:
@@ -621,7 +621,7 @@ Animalia:
             Adalaria:
               proxima: white adalaria nudibranch
             Acanthodoris:
-              nanimoensis: nanaimo nudibranch
+              nanaimoensis: nanaimo nudibranch
               lutea: sandalwood nudibranch
               hudsoni: yellow margin dorid
   Arthropoda:
@@ -769,7 +769,7 @@ Plantae:
           Neoptilota:
             aslpenioides: red fan seaweed
         Rhodomelaceae:
-          Osmundea:
+          Osmunda:
             spectabilis: sea laurel seaweed
       Gigartinales:
         Solieriaceae:

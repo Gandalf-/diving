@@ -32,6 +32,16 @@ def extract_leaves(tree):
             yield value
 
 
+def extract_branches(tree):
+    ''' get everything but the leaves '''
+    assert isinstance(tree, dict), tree
+
+    for key, value in tree.items():
+        yield key
+        if isinstance(value, dict):
+            yield from extract_branches(value)
+
+
 def hmap(arg, *fns):
     ''' apply all the functions provided to the argument, kind of like a fold
     '''
