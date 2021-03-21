@@ -38,13 +38,13 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def fetch(subject: str) -> str:
+def fetch(subject: str, suggest=True):
     ''' get summary from wikipedia
     '''
     now = datetime.now().timestamp()
     try:
         print('fetching', subject)
-        page = wikipedia.page(subject)
+        page = wikipedia.page(subject, auto_suggest=suggest)
 
     except wikipedia.exceptions.PageError:
         print(subject, 'not found')
@@ -171,7 +171,9 @@ def lineage_to_names(lineage):
     if parts[-1].islower():
         if len(parts) == 1 and len(lineage) > 1:
             # species
-            parts = [lineage[-2], lineage[-1]]
+            parents = lineage[-2].split(' ')
+            parts = [parents[-1] + ' ' + lineage[-1]]
+
         elif len(parts) > 1:
             # genus species
             parts[-2] = parts[-2] + ' ' + parts[-1]
@@ -183,19 +185,25 @@ def lineage_to_names(lineage):
 def html(name: str) -> (str, str):
     ''' html fit for use by gallery.py
     '''
+    reasonable_number_of_characters = 400
+
     entry = lookup(name, False)
     if not entry:
         return '', ''
 
-    text = (
-        paragraphs(entry['summary'], 1)[0]
-        .encode('ascii', 'xmlcharrefreplace')
-        .decode('ascii')
-    )
+    pgs = paragraphs(entry['summary'], 3)
+    text = ''
+
+    for paragraph in pgs:
+        m = paragraph.encode('ascii', 'xmlcharrefreplace').decode('ascii')
+        text += f'<p>{m}</p>'
+        if len(text) > reasonable_number_of_characters:
+            break
+
     ref = reference(entry)
 
     return f'''<div class="info">
-    <p>{text}</p>
+    {text}
     <p class="ref">{ref}</p>
     </div>''', entry['url']
 
@@ -263,3 +271,17 @@ def updater(*missings):
                 key = mapped
             database.delete(*db_root, 'valid', key)
             print('removed')
+
+
+def link(subject, title):
+    ''' manually link a subject name (taxonomy) to a page
+    '''
+    subject = subject.lower()
+    title = title.lower()
+    fetch(title, False)
+
+    if subject != title:
+        print('linking', subject, 'to', title)
+        database.set(*db_root, 'maps', subject, value=title)
+
+    database.remove(*db_root, 'invalid', value=subject)

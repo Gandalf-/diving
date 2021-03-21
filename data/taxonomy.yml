@@ -1,6 +1,13 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
 Animalia:
+  Brachiopoda:
+    Rhynchonellata:
+      Terebratulida:
+        Laqueoidea:
+          Terebrataliidae:
+            Terebratalia:
+              transversa: transverse lamp shell
   Platyhelminthes:
     Rhabditophora:
       Polycladida:
@@ -10,10 +17,9 @@ Animalia:
               excelsa: giant flat worm
   Nemertea:
     Palaeonemertea:
-      NA:
-        Tubulanidae:
-          Tubulanus:
-            sexlineatus: six lined ribbon worm
+      Tubulanidae:
+        Tubulanus:
+          sexlineatus: six lined ribbon worm
   Porifera:
     Hexactinellida:
       Sceptrulophora:
@@ -51,6 +57,9 @@ Animalia:
   Annelida:
     Polychaeta:
       sp: worm
+      Phyllodocida:
+        Nereididae:
+          Nereis: sea nymph
       Eunicida:
         Eunicidae:
           Leodice: bobbit worm
@@ -68,6 +77,8 @@ Animalia:
       Sabellida:
         sp: tube worm
         Serpulidae:
+          Crucigera:
+            zygophora: yolk bearer calcareous tube worm
           Serpula:
             columbiana: red trumpet calcareous tube worm
           Protula:
@@ -81,7 +92,8 @@ Animalia:
             insignis: split branch feather duster worm
           Myxicola:
             infundibulum: slime tube feather duster worm
-        Bispira: bristle worm
+          Bispira:
+            crassicornis: twin eyed feather duster worm
       Spionida:
         Chaetopteridae:
           Spiochaetopterus:
@@ -169,11 +181,13 @@ Animalia:
         Cucumariidae:
           Cucumaria:
             miniata: red sea cucumber
-            piperata: salt and pepper sea cucumber
+            piperata: salt pepper sea cucumber
             pallida: pale sea cucumber
+            frondosa: giant black sea cucumber
         Psolidae:
           Psolus:
-            chitonoides: creeping pedal sea cucumber
+            chitonoides: red creeping pedal sea cucumber
+            squamatus: white creeping pedal sea cucumber
       Synallactida:
         Stichopodidae:
           Apostichopus:
@@ -310,6 +324,8 @@ Animalia:
             flavolineatum: french grunt
             sciurus: bluestripe grunt
         Stichaeidae:
+          Lumpenus:
+            sagitta: snake prickleback
           Chirolophis:
             nugator: mosshead war bonnet
             decoratus: decorated war bonnet
@@ -334,6 +350,9 @@ Animalia:
             funebris: green moray eel
       Scorpaeniformes:
         # mail-cheecked fish
+        Agonidae:
+          Bathyagonus:
+            alascanus: gray starsnout
         Liparidae:
           Liparis:
             fucensis: slipskin snailfish
@@ -347,6 +366,8 @@ Animalia:
            richardsonii: grunt sculpin
         Cottidae:
           sp: sculpin
+          Chitonotus:
+            pugetensis: roughback sculpin
           Artedius:
             harringtoni: scalyhead sculpin
             lateralis: smoothhead sculpin
@@ -436,9 +457,8 @@ Animalia:
     Anthozoa:
       Scleractinia:
         Mussidae: brain coral
-        NA:
-          Solenastrea:
-            bournoni: smooth star coral
+        Solenastrea:
+          bournoni: smooth star coral
         Acroporidae:
           Acropora:
             cervicornis: staghorn coral
@@ -460,7 +480,6 @@ Animalia:
           Swiftia:
             torreyi: dwarf red gorgonian coral
       Zoantharia:
-        sp: zoanthid
         Epizoanthidae:
           Epizoanthus:
             scotinus: orange zoanthid
@@ -496,9 +515,17 @@ Animalia:
               farcimen: metridium anemone
   Mollusca:
     Bivalvia:
+      Myida:
+        Pholadoidea:
+          Pholadidae:
+            Zirfaea:
+              pilsbryi: rough piddock clam
       Pectinida:
         Pectinoidea:
           Pectinidae:
+            sp: scallop
+            Crassadoma:
+              gigantea: rock scallop
             Chlamys:
               rubida: smooth pink scallop
       Adapedonta:
@@ -538,6 +565,10 @@ Animalia:
             Diodora:
               aspera: rough keyhole limpet
       Neogastropoda:
+        Buccinoidea:
+          Nassariidae:
+            Nassarius:
+              fossatus: channelled nassa snail
         Muricoidea:
           Muricdae:
             Nucella: dogwinkle snail
@@ -579,6 +610,7 @@ Animalia:
           Cadlinidae:
             Aldisa:
               albomarginata: white rimmed nudibranch
+              cooperi: coopers dorid
             Cadlina:
               luteomarginata: yellow rimmed nudibranch
         Polyceroidea:
@@ -642,6 +674,11 @@ Animalia:
       Decapoda:
         Crangonoidea:
           Crangonidae:
+            Crangon:
+              handi: squat bay shrimp
+              franciscorum: california bay shrimp
+            Metacrangon:
+              munita: coastal spinyhead shrimp
             Mesocrangon:
               munitella: minature spinyhead shrimp
         Nephropoidea:

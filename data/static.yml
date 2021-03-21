@@ -29,6 +29,7 @@ qualifiers:
 
 categories:
   fish:
+    - prickleback
     - basslet
     - blue tang
     - flounder
@@ -48,6 +49,7 @@ categories:
     - spotted drum
     - tarpon
     - tomtate
+    - poacher
     - black durgon
     - war bonnet
   shrimp:
@@ -77,6 +79,12 @@ categories:
     - sea pen
     - sea whip
     - sea rod
+  mollusc:
+    - lamp shell
+    - scallop
+    - clam
+  worm:
+    - sea nymph
 
 pinned:
     crab:

@@ -432,8 +432,8 @@ def html_tree(tree, where, scientific, lineage=None):
     now = datetime.now()
 
     html += f"""
-      </wrapper>
       {info}
+      </div>
       <footer>
         <p>Copyright austin@anardil.net {now.year}</p>
       </footer>

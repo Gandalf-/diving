@@ -44,11 +44,15 @@ img {
 
 .wrapper {
   min-height: calc(100vh - 70px);
+  padding-bottom: 2.5rem;
 }
 
 footer {
-  height: 20px;
+  height: 2.5rem;
   text-align: right;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
   margin-right: 1em;
   margin-bottom: 0.75em;
 }
@@ -56,7 +60,8 @@ footer {
 body {
   background-color: black;
   text-align: center;
-  font-family: Georgia, serif;
+  /* font-family: Georgia, serif; */
+  position: relative;
 }
 
 figcaption, h1, h2, h3, h4, p {
