@@ -35,6 +35,17 @@ def named():
     return flatten([[y for y in z if y.name] for z in collect()])
 
 
+def all_names():
+    ''' all simplified, split names
+    '''
+    everything = {
+        (categorize(split(i.simplified())), i)
+        for i in expand_names(named())
+    }
+
+    return {n for (n, _) in everything}
+
+
 def find_vague_names():
     ''' find names that could be more specific
 

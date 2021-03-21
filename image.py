@@ -78,7 +78,7 @@ def unsplit(name):
     rock fish -> rockfish
     '''
     for s in splits:
-        if name != s and ' ' + s in name:
+        if name != s and name.endswith(' ' + s):
             name = name.replace(' ' + s, s)
     return name
 

@@ -151,6 +151,10 @@ class TestGallery(unittest.TestCase):
             link = gallery.lineage_to_link(lineage, side, key)
             self.assertEqual(link, after)
 
+
+class TestTaxonomy(unittest.TestCase):
+    ''' taxonomy.py '''
+
     def test_gallery_scientific(self):
         ''' find scientific names by common name
         '''
@@ -162,17 +166,15 @@ class TestGallery(unittest.TestCase):
             (['noble', 'sea lemon', 'nudibranch'], 'Peltodoris nobilis'),
             (['brain', 'coral'], 'Scleractinia Mussidae'),
             (['multicolor', 'dendronotid', 'nudibranch'], 'albus'),
+            (['six rayed', 'star'], 'hexactis'),
+            (['mossy', 'chiton'], 'muscosa'),
         ]
 
         for lineage, output in samples:
-            match = gallery.gallery_scientific(
+            match = taxonomy.gallery_scientific(
                 lineage, TestGallery.g_scientific
             )
             self.assertTrue(match.endswith(output), match)
-
-
-class TestTaxonomy(unittest.TestCase):
-    ''' taxonomy.py '''
 
     def test_similar(self):
         ''' can these be collapsed? '''
@@ -246,6 +248,7 @@ class TestImage(unittest.TestCase):
         samples = [
             ("copper rockfish", "copper rock fish"),
             ("eagleray", "eagle ray"),
+            ("six rayed star", "six rayed star"),
             ("giant pacific octopus", "giant pacific octopus"),
         ]
         for before, after in samples:

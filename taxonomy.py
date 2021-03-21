@@ -9,10 +9,55 @@ import sys
 import pathlib
 import yaml
 
-from collection import go, single_level
-from utility import extract_leaves
+from collection import go, single_level, all_names
+from utility import extract_leaves, hmap
+from image import uncategorize, unqualify, unsplit
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
+
+
+def find_imprecise():
+    ''' find names with classifications that could be more specific
+    '''
+    names = all_names()
+    m = mapping()
+
+    for name in names:
+        c = to_classification(name, m)
+        if ' sp' in c:
+            yield name
+
+
+def to_classification(name, mappings):
+    ''' find a suitable classification for this common name
+    '''
+    return gallery_scientific(name.split(' '), mappings)
+
+
+def gallery_scientific(lineage, scientific, debug=True):
+    ''' attempt to find a scientific name for this page
+    '''
+    def lookup(names, *fns):
+        base = ' '.join(names).lower()
+        candidate = hmap(base, *fns)
+        return scientific.get(candidate)
+
+    attempts = [
+        (lineage, [uncategorize, unqualify]),
+        (lineage, [uncategorize, unqualify, unsplit]),
+        (lineage[1:], [uncategorize, unqualify, unsplit]),
+        (lineage[2:], [uncategorize, unqualify, unsplit]),
+    ]
+
+    for ln, fns in attempts:
+        name = lookup(ln, *fns)
+        if name:
+            break
+
+    if not name and debug:
+        print('no taxonomy', ' '.join(lineage))
+
+    return name or ""
 
 
 def simplify(name: str) -> str:

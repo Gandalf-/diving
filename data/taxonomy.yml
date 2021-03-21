@@ -671,6 +671,10 @@ Animalia:
               crenatus: crenate barnacle
               nubilus: giant acorn barnacle
     Malacostraca:
+      Amphipoda:
+        Phronimoidea:
+          Hyperiidae:
+            Hyperia: hitchhiking amphipod
       Decapoda:
         Crangonoidea:
           Crangonidae:

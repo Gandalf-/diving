@@ -20,12 +20,10 @@ from image import (
     categorize,
     uncategorize,
     split,
-    unsplit,
-    unqualify,
     Image,
     pinned,
 )
-from utility import tree_size, hmap
+from utility import tree_size
 
 
 # pylint: disable=too-many-locals
@@ -99,33 +97,6 @@ def lineage_to_link(lineage, side, key=None):
             name = name + ' ' + key
 
     return name.replace(' ', '-')
-
-
-def gallery_scientific(lineage, scientific, debug=True):
-    ''' attempt to find a scientific name for this page
-    '''
-
-    def lookup(names, *fns):
-        base = ' '.join(names).lower()
-        candidate = hmap(base, *fns)
-        return scientific.get(candidate)
-
-    attempts = [
-        (lineage, [uncategorize, unqualify, unsplit]),
-        (lineage[1:], [uncategorize, unqualify, unsplit]),
-        (lineage[2:], [uncategorize, unqualify, unsplit]),
-        (lineage, [uncategorize, unqualify]),
-    ]
-
-    for ln, fns in attempts:
-        name = lookup(ln, *fns)
-        if name:
-            break
-
-    if not name and debug:
-        print('no taxonomy', ' '.join(lineage))
-
-    return name or ""
 
 
 def html_head(title):
@@ -303,7 +274,7 @@ def html_title(lineage, where, scientific):
     """
 
     # check for scientific name for gallery
-    link = name = gallery_scientific(lineage, scientific)
+    link = name = taxonomy.gallery_scientific(lineage, scientific)
     name = taxonomy.simplify(name)
     if link.endswith(' sp'):
         link = link.replace(' sp', '')
