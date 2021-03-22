@@ -4,8 +4,11 @@
 dict and list functions
 '''
 
+import os
 
 root = "/mnt/zfs/Media/Pictures/Diving"
+if os.name == 'nt':
+    root = "Z:/Media/Pictures/Diving"
 
 
 def flatten(xs):

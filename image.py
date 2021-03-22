@@ -19,7 +19,7 @@ inflect = inflect.engine()
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 with open(root + 'data/static.yml') as fd:
-    static = yaml.load(fd)
+    static = yaml.safe_load(fd)
 
 splits = static['splits']
 qualifiers = static['qualifiers']

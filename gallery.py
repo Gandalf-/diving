@@ -15,6 +15,7 @@ from datetime import datetime
 import information
 import taxonomy
 import collection
+from detective import javascript as game
 
 from image import (
     categorize,
@@ -479,6 +480,10 @@ def write_all_html():
     print("writing html... ", end="", flush=True)
     pool.map(names_pool_writer, name_htmls)
     pool.map(taxia_pool_writer, taxia_htmls)
+    print("done")
+
+    print("writing game... ", end="", flush=True)
+    game(False)
     print("done")
 
 

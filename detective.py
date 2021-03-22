@@ -4,11 +4,14 @@
 identification game
 '''
 
+import shutil
+import os
 import subprocess
+import yaml
 
 from apocrypha.client import Client
 
-from image import unqualify
+from image import unqualify, categorize, split
 import collection
 import taxonomy
 
@@ -38,7 +41,7 @@ def distance(a, b, tree=None):
 def cache_hash(images):
     ''' cache in a database
     '''
-    client = Client()
+    client = Client('elm.anardil.net')
     needed = []
     labels = []
 
@@ -113,7 +116,7 @@ def similarity_table(names):
     return similarity
 
 
-def filter_images(images):
+def filter_images(images, debug=True):
     ''' strip out images that are poor fits for the game
     - multiple subjects
     - vague, like "sponge"
@@ -144,11 +147,13 @@ def filter_images(images):
         # no qualified subjects: fish eggs, juvenile rock fish
         simple = image.singular().lower()
         if unqualify(simple) != simple:
-            print(simple, 'has qualifiers')
+            if debug:
+                print(simple, 'has qualifiers')
             continue
 
         if simple not in knowns:
-            print(simple, 'no taxonomy')
+            if debug:
+                print(simple, 'no taxonomy')
             continue
 
         all_names.append(simple)
@@ -157,12 +162,39 @@ def filter_images(images):
     return all_names, new_images
 
 
-def table_builder():
+def difficulties(names):
+    ''' get difficulty overrides
+    '''
+    with open('data/static.yml') as fd:
+        data = yaml.safe_load(fd)['difficulty']
+
+    lookup = {
+        'very easy': 0,
+        'easy': 0,
+        'moderate': 2,
+        'hard': 3,
+        'very hard': 4,
+    }
+
+    mapping = {}
+    for key, values in data.items():
+        for value in values:
+            mapping[value] = lookup[key]
+
+    out = []
+    for name in names:
+        name = name.lower()
+        name = split(categorize(name)).split(' ')[-1]
+        out.append(mapping.get(name, 0))
+    return out
+
+
+def table_builder(debug=True):
     ''' build the tables!
     '''
     # reversing so we get newer things first
     images = reversed(list(collection.named()))
-    all_names, images = filter_images(images)
+    all_names, images = filter_images(images, debug)
 
     hashes = list(cache_hash(images))
 
@@ -181,16 +213,40 @@ def table_builder():
 
     similarity = similarity_table(names)
     names = [n.title() for n in names]
+    diffs = difficulties(names)
 
-    return names, thumbs, similarity
+    return names, thumbs, similarity, diffs
 
 
-def javascript():
+def inspect_choices():
+    ''' build a directory tree of chosen thumbnails for visual inspection
+    '''
+    ns, ts, _, _ = table_builder(False)
+    root = '/mnt/zfs/working'
+    source = os.path.join(root, 'object-publish/diving-web/imgs')
+    output = os.path.join(root, 'tmp/detective')
+    root = 3489204839483
+
+    if os.path.exists(output):
+        shutil.rmtree(output)
+    os.mkdir(output)
+
+    for i, name in enumerate(ns):
+        os.mkdir(os.path.join(output, name))
+
+        for j, thumb in enumerate(ts[i]):
+            src = os.path.join(source, thumb + '.jpg')
+            dst = os.path.join(output, name, f'{j:02} ' + thumb + '.jpg')
+            os.link(src, dst)
+
+
+def javascript(debug=True):
     ''' write out the tables to a file
     '''
-    ns, ts, ss = table_builder()
+    ns, ts, ss, ds = table_builder(debug)
 
     with open('detective/data.js', 'w+') as fd:
         print('var names =', ns, file=fd)
         print('var thumbs =', ts, file=fd)
         print('var similarities =', ss, file=fd)
+        print('var difficulties =', ds, file=fd)

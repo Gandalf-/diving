@@ -2,7 +2,8 @@
 var g_correct = 0;
 var g_incorrect = 0;
 
-const g_limit_table = [0, 15, 25, 40, 80];
+const g_lower_bound_table = [0, 15, 25, 40, 80];
+const g_upper_bound_table = [10, 25, 35, 40, 100];
 const g_count_table = [2, 2, 4, 6, 8];
 const g_sample_table = [2, 2, 2, 1, 1];
 
@@ -14,13 +15,15 @@ const g_sample_table = [2, 2, 2, 1, 1];
  */
 function image_game()
 {
-    var correct = choose_correct();
+    var difficulty = get_difficulty();
+
+    var correct = choose_correct(difficulty);
     console.log(names[correct]);
 
-    var difficulty = get_difficulty();
-    var limit = g_limit_table[difficulty];
+    var lower_bound = g_lower_bound_table[difficulty];
+    var upper_bound = g_upper_bound_table[difficulty];
     var count = g_count_table[difficulty];
-    var options = find_similar(correct, limit, count - 1);
+    var options = find_similar(correct, lower_bound, upper_bound, count - 1);
 
     set_correct_image(correct);
 
@@ -48,13 +51,15 @@ function image_game()
  */
 function name_game()
 {
-    var correct = choose_correct();
+    var difficulty = get_difficulty();
+
+    var correct = choose_correct(difficulty);
     console.log(names[correct]);
 
-    var difficulty = get_difficulty();
-    var limit = g_limit_table[difficulty];
+    var lower_bound = g_lower_bound_table[difficulty];
+    var upper_bound = g_upper_bound_table[difficulty];
     var count = g_count_table[difficulty];
-    var options = find_similar(correct, limit, count - 1);
+    var options = find_similar(correct, lower_bound, upper_bound, count - 1);
 
     set_correct_name(correct, difficulty);
 
@@ -208,52 +213,90 @@ function get_difficulty()
     return byId('difficulty').value;
 }
 
-function choose_correct()
+function choose_correct(difficulty)
 {
-    return random(names.length);
+    const attempts = 10;
+    var candidate = random(names.length);
+
+    if (typeof variable !== 'undefined') {
+        // in case we have cache mismatches between data.js and game.js
+        return candidate;
+    }
+
+    for (i = 0; i < attempts; i++) {
+        candidate = random(names.length);
+        if (difficulties[candidate] <= difficulty) {
+            break;
+        }
+        console.log(names[candidate], 'too difficult')
+    }
+    return candidate;
 }
 
-function find_similar(target, limit, required)
+/**
+ * Find similar creatures as the provided target
+ *
+ * The bounds restrict which creatures are valid candidates. A high minimum
+ * simliarity means only very similar creatures will be found. Likewise, a high
+ * maximum similiarity will make less similar creatures more likely
+ *
+ * Both bounds will be relaxed if no candidates can be found until eventually
+ * every creature will be considered
+ *
+ * @param   target          index of the creature to find similar creatures for
+ * @param   lower_bound     minimum starting similarity
+ * @param   upper_bound     maximum starting similarity
+ * @param   required        how many creatures to find
+ * @returns                 array of creature indicies
+ */
+function find_similar(target, lower_bound, upper_bound, required)
 {
     var index = 0;
     var found = [];
 
+    /* create a mirror of the names array; we shuffle the indices so we can
+     * leave the actual names array alone
+     */
     var indicies = [];
     for (i = 0; i < names.length; i++) {
         indicies[i] = i;
     }
     shuffle(indicies);
+    console.log("search limits", lower_bound, upper_bound);
 
     while (found.length < required) {
 
+        /* a candidate is valid if it's not what we're looking for and hasn't
+         * already been chosen
+         */
         var candidate = indicies[index];
         var valid = true;
         valid &= candidate != target;
         valid &= !found.includes(candidate);
 
         if (valid) {
-
             var i = Math.max(candidate, target);
             var j = Math.min(candidate, target);
             score = similarities[i][j];
 
-            if (score >= limit) {
+            if (score >= lower_bound && score <= upper_bound) {
                 found.push(candidate);
             }
         }
 
         index = (index + 1) % names.length;
         if (index == 0) {
-            if (limit < 0) {
+            if (lower_bound <= 0 && upper_bound >= 100) {
                 console.log(
                     "error: couldn't satisfy the requirement",
-                    target, limit, required);
+                    target, lower_bound, required);
                 break;
             }
 
-            // we've looped through
-            limit -= 10;
-            console.log("new limit", limit);
+            // we've looped through, relax the constraints
+            lower_bound = Math.max(0, lower_bound - 5);
+            upper_bound = Math.min(100, upper_bound + 5);
+            console.log("new limits", lower_bound, upper_bound);
         }
     }
 

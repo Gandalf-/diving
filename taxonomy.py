@@ -109,7 +109,7 @@ def ordered_simple_names(tree):
 def load_tree():
     ''' yaml load '''
     with open(root + 'data/taxonomy.yml') as fd:
-        return yaml.load(fd)
+        return yaml.safe_load(fd)
 
 
 def filter_exact(tree):

@@ -46,6 +46,7 @@ categories:
     - sculpin
     - sole
     - sardine
+    - starsnout
     - spotted drum
     - tarpon
     - tomtate
@@ -80,10 +81,6 @@ categories:
     - sea pen
     - sea whip
     - sea rod
-  mollusc:
-    - lamp shell
-    - scallop
-    - clam
   worm:
     - sea nymph
 
@@ -118,3 +115,22 @@ pinned:
       '2019-10-31 Klein Bonaire M/017 - Divers.jpg'
     Animalia Echinodermata:
       '2020-03-01 Jaggy Crack/022 - Rose Star.jpg'
+
+difficulty:
+  easy:
+    - octopus
+  moderate:
+    - chiton
+    - scallop
+    - shrimp
+    - sponge
+    - snail
+    - worm
+    - algae
+    - cucumber
+  hard:
+    - tunicate
+    - bryozoan
+    - hydroid
+    - barnacle
+    - limpet
