@@ -13,8 +13,7 @@ const g_sample_table = [2, 2, 2, 1, 1];
  * the player is given a name and must choose it's image from the
  * options below
  */
-function image_game()
-{
+function image_game() {
     var difficulty = get_difficulty();
 
     var correct = choose_correct(difficulty);
@@ -49,8 +48,7 @@ function image_game()
  * the player is given a single image and must choose it's name from the
  * options below
  */
-function name_game()
-{
+function name_game() {
     var difficulty = get_difficulty();
 
     var correct = choose_correct(difficulty);
@@ -83,8 +81,7 @@ function name_game()
 
 /* HTML modifying utilities */
 
-function choose_game()
-{
+function choose_game() {
     update_score();
     reset_options();
 
@@ -98,8 +95,7 @@ function choose_game()
     }
 }
 
-function set_text(where, what, onclick)
-{
+function set_text(where, what, onclick) {
     var option = byId(where);
     var name = names[what];
 
@@ -114,8 +110,7 @@ function set_text(where, what, onclick)
     option.appendChild(child);
 }
 
-function set_thumbnail(where, what, onclick, thumb)
-{
+function set_thumbnail(where, what, onclick, thumb) {
     if (!thumb) {
         thumb = thumbs[what][random(thumbs[what].length)];
     }
@@ -129,8 +124,7 @@ function set_thumbnail(where, what, onclick, thumb)
     byId(where).innerHTML = html;
 }
 
-function update_score()
-{
+function update_score() {
     var total = g_correct + g_incorrect;
     var score = 0;
 
@@ -142,26 +136,22 @@ function update_score()
         score + '% (' + g_correct + '/' + total + ')';
 }
 
-function success()
-{
+function success() {
     g_correct++;
     choose_game();
 }
 
-function failure(where)
-{
+function failure(where) {
     g_incorrect++;
     where.style.border = "1px solid red";
     update_score();
 }
 
-function reset_options()
-{
+function reset_options() {
     byId('options').innerHTML = '';
 }
 
-function set_correct_image(correct)
-{
+function set_correct_image(correct) {
     var outer = byId('correct_outer');
     outer.setAttribute('class', '');
     outer.innerHTML = '';
@@ -171,8 +161,7 @@ function set_correct_image(correct)
     outer.appendChild(child);
 }
 
-function set_correct_name(correct, difficulty)
-{
+function set_correct_name(correct, difficulty) {
     var outer = byId('correct_outer');
     outer.setAttribute('class', 'grid correct_name');
     outer.innerHTML = '';
@@ -196,8 +185,7 @@ function set_correct_name(correct, difficulty)
 
 /* helpers */
 
-function add_skip()
-{
+function add_skip() {
     var options = byId('options');
 
     var child = document.createElement('div');
@@ -208,13 +196,11 @@ function add_skip()
     options.appendChild(child);
 }
 
-function get_difficulty()
-{
+function get_difficulty() {
     return byId('difficulty').value;
 }
 
-function choose_correct(difficulty)
-{
+function choose_correct(difficulty) {
     const attempts = 10;
     var candidate = random(names.length);
 
@@ -249,8 +235,7 @@ function choose_correct(difficulty)
  * @param   required        how many creatures to find
  * @returns                 array of creature indicies
  */
-function find_similar(target, lower_bound, upper_bound, required)
-{
+function find_similar(target, lower_bound, upper_bound, required) {
     var index = 0;
     var found = [];
 
@@ -310,13 +295,11 @@ function find_similar(target, lower_bound, upper_bound, required)
 
 /* other utilities */
 
-function random(maximum)
-{
+function random(maximum) {
     return Math.floor(Math.random() * 10 ** 5) % maximum
 }
 
-function byId(label)
-{
+function byId(label) {
     return document.getElementById(label);
 }
 
