@@ -7,7 +7,6 @@ tree into HTML pages for diving.anardil.net
 
 import re
 import os
-import json
 import sys
 import multiprocessing
 from datetime import datetime
@@ -32,8 +31,7 @@ from utility import tree_size
 
 
 def find_by_path(tree, needle):
-    ''' search the tree for an image with this path
-    '''
+    """search the tree for an image with this path"""
     if not isinstance(tree, dict):
         for image in tree:
             if needle in image.path():
@@ -48,8 +46,7 @@ def find_by_path(tree, needle):
 
 
 def find_representative(tree, lineage=None):
-    """ grab one image to represent this tree
-    """
+    """grab one image to represent this tree"""
     if not lineage:
         lineage = []
 
@@ -84,8 +81,7 @@ def find_representative(tree, lineage=None):
 
 
 def lineage_to_link(lineage, side, key=None):
-    ''' get a link to this page
-    '''
+    """get a link to this page"""
     if not lineage:
         name = key
     else:
@@ -101,30 +97,42 @@ def lineage_to_link(lineage, side, key=None):
 
 
 def html_head(title):
-    ''' top of the document
-    '''
-    return """
+    """top of the document"""
+    if title.endswith('Gallery'):
+        desc = (
+            'Scuba diving pictures organized into a tree structure by '
+            'subject\'s common names. Such as anemone, fish, '
+            'nudibranch, octopus, sponge.'
+        )
+    elif title.endswith('Taxonomy'):
+        desc = (
+            'Scuba diving pictures organized into a tree structure by '
+            'subject\'s scientific classification. Such as Athropoda, '
+            'Cnidaria, Mollusca.'
+        )
+    else:
+        desc = f'Scuba diving pictures related to {title}'
+
+    return f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
       <head>
         <title>{title}</title>
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name=description content="{desc}">
         <link rel="stylesheet" href="/style.css"/>
         <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
       </head>
 
       <body>
-      {scripts}
       <div class="wrapper">
       <div class="title">
-    """.format(
-        title=title, scripts=html_scripts
-    )
+    """
 
 
 def html_top_title(where):
-    ''' html top for top level pages
-    '''
+    """html top for top level pages"""
     title = f"{where.title()}"
 
     display = uncategorize(title)
@@ -177,8 +185,7 @@ def html_top_title(where):
 
 
 def html_taxonomy_title(lineage, scientific):
-    ''' html head and title section
-    '''
+    """html head and title section"""
     assert lineage
 
     title = ' '.join(lineage)
@@ -207,7 +214,9 @@ def html_taxonomy_title(lineage, scientific):
             <h1 class="{classes}">{title}</h1>
         </a>
         """.format(
-            title=name, classes="top", link=link,
+            title=name,
+            classes="top",
+            link=link,
         )
 
     # check for common name for taxonomy
@@ -237,8 +246,7 @@ def html_taxonomy_title(lineage, scientific):
 
 
 def html_title(lineage, where, scientific):
-    ''' html head and title section
-    '''
+    """html head and title section"""
     if not lineage:
         return html_top_title(where)
 
@@ -263,7 +271,9 @@ def html_title(lineage, where, scientific):
             <h1 class="{classes}">{title}</h1>
         </a>
         """.format(
-            title=name.title(), classes="top", link=link,
+            title=name.title(),
+            classes="top",
+            link=link,
         )
 
     html += """
@@ -296,8 +306,7 @@ def html_title(lineage, where, scientific):
 
 
 def get_info(where, lineage):
-    ''' wikipedia information if available
-    '''
+    """wikipedia information if available"""
     if where == 'gallery':
         return ''
 
@@ -317,8 +326,7 @@ def get_info(where, lineage):
 
 
 def html_tree(tree, where, scientific, lineage=None):
-    """ html version of display
-    """
+    """html version of display"""
     if not lineage:
         lineage = []
 
@@ -348,7 +356,7 @@ def html_tree(tree, where, scientific, lineage=None):
         html += """
         <div class="image">
         <a href="{link}">
-            <img src="/imgs/{thumbnail}" alt="">
+            <img width=300 loading="lazy" src="/imgs/{thumbnail}">
             <h3>
               <span class="sneaky">{size}</span>
               {subject}
@@ -359,7 +367,8 @@ def html_tree(tree, where, scientific, lineage=None):
         """.format(
             subject=subject,
             link="/{where}/{path}.html".format(
-                where=where, path=lineage_to_link(lineage, side, key),
+                where=where,
+                path=lineage_to_link(lineage, side, key),
             ),
             thumbnail=example.hash() + '.jpg',
             size='{}:{}'.format(sum(1 for k in value if k != 'data'), size),
@@ -388,7 +397,7 @@ def html_tree(tree, where, scientific, lineage=None):
 
             html += """
             <a data-fancybox="gallery" data-caption="{name}" href="{fullsize}">
-                <img src="/imgs/{thumbnail}" alt="">
+              <img width=300 loading="lazy" src="/imgs/{thumbnail}">
             </a>
             """.format(
                 name='{} - {}'.format(image.name, image.directory),
@@ -409,6 +418,7 @@ def html_tree(tree, where, scientific, lineage=None):
       <footer>
         <p>Copyright austin@anardil.net {now.year}</p>
       </footer>
+      {html_scripts}
     </body>
     </html>
     """
@@ -439,8 +449,7 @@ def taxia_pool_writer(args):
 
 
 def manifest(htmls, where):
-    ''' extract titles
-    '''
+    """extract titles"""
     for (title, _) in htmls:
         if 'various' in title:
             continue
@@ -469,14 +478,6 @@ def write_all_html():
     taxia_htmls = html_tree(taxia, "taxonomy", scientific)
     print("done", len(taxia_htmls), "pages prepared")
 
-    print('writing manifest...', end="", flush=True)
-    data = list(manifest(name_htmls, 'gallery'))
-
-    with open('manifest.js', 'w+') as fd:
-        print('const list = ', file=fd)
-        print(json.dumps(data), file=fd)
-    print('done')
-
     print("writing html... ", end="", flush=True)
     pool.map(names_pool_writer, name_htmls)
     pool.map(taxia_pool_writer, taxia_htmls)
@@ -488,12 +489,10 @@ def write_all_html():
 
 
 def find_links():
-    ''' check the html directory for internal links
-    '''
+    """check the html directory for internal links"""
 
     def extract_from(fd):
-        ''' get links from a file
-        '''
+        """get links from a file"""
         for line in fd:
             if 'href' not in line:
                 continue
@@ -516,9 +515,9 @@ def find_links():
 
 
 def link_check():
-    ''' check the html directory for broken links by extracting all the
+    """check the html directory for broken links by extracting all the
     internal links from the written files and looking for those as paths
-    '''
+    """
     for path, link in find_links():
         if not os.path.exists(link):
             print('broken', link, 'in', path)
@@ -528,7 +527,7 @@ def link_check():
 
 html_scripts = """
     <!-- fancybox is excellent, this project is not commercial -->
-    <script src="/jquery.min.js"></script>
+    <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
 """
 

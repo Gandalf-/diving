@@ -5,38 +5,48 @@ what="$1"
 
 mkdir -p /tmp/cache-check
 
-{
-  echo -n 'local        '
-  sha1sum "$what"
-} > /tmp/cache-check/1 &
+check() {
+  {
+    time "$@" | sha1sum
+  } 2>&1 \
+    | head -n 3 \
+    | grep -v '^$' \
+    | paste -d ' ' - - \
+    | awk '{print $1, $2, $4}'
+}
 
-{
-  echo -n 'space        '
-  curl --silent https://diving.sfo2.digitaloceanspaces.com/"$what" \
-    | sha1sum
-} > /tmp/cache-check/2 &
+run() {
+  {
+    echo -n 'local        '
+    sha1sum "$what" | awk '{print $1}'
+  } > /tmp/cache-check/1 &
 
-{
-  echo -n 'local-to-cdn '
-  curl --silent https://diving.sfo2.cdn.digitaloceanspaces.com/"$what" \
-    | sha1sum
-} > /tmp/cache-check/3 &
+  {
+    echo -n 'space        '
+    check curl --silent https://diving.sfo2.digitaloceanspaces.com/"$what"
+  } > /tmp/cache-check/2 &
 
-{
-  echo -n 'birch-to-cdn '
-  ssh birch \
-    curl --silent https://diving.sfo2.cdn.digitaloceanspaces.com/"$what" \
-    | sha1sum
-} > /tmp/cache-check/4 &
+  {
+    echo -n 'local-to-cdn '
+    check curl --silent https://diving.sfo2.cdn.digitaloceanspaces.com/"$what"
+  } > /tmp/cache-check/3 &
 
-{
-  echo -n 'alpine       '
-  curl --silent --insecure \
-    --connect-to diving.anardil.net:443:alpine.anardil.net:443 \
-    https://diving.anardil.net/"$what" \
-    | sha1sum
-} > /tmp/cache-check/5 &
+  {
+    echo -n 'birch-to-cdn '
+    check ssh birch \
+      curl --silent https://diving.sfo2.cdn.digitaloceanspaces.com/"$what"
+  } > /tmp/cache-check/4 &
 
-wait
+  {
+    echo -n 'alpine       '
+    check curl --silent --insecure \
+      --connect-to diving.anardil.net:443:alpine.anardil.net:443 \
+      https://diving.anardil.net/"$what"
+  } > /tmp/cache-check/5 &
 
-cat /tmp/cache-check/*
+  wait
+  cat /tmp/cache-check/*
+}
+
+run
+# check curl --silent https://diving.sfo2.cdn.digitaloceanspaces.com/"$what"

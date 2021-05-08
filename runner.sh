@@ -45,7 +45,7 @@ print_image() {
   }
 
   echo '  <a data-fancybox="gallery" data-caption="'"$subject"'" href="'"$fullsize"'">'
-  echo '    <img src="'"$thumbnail"'" alt="">'
+  echo '    <img width=300 loading="lazy" src="'"$thumbnail"'" alt="">'
   echo '  </a>'
 }
 
@@ -74,7 +74,9 @@ hasher() {
     echo "$out"
   else
     echo "hashing $directory/$image" >&2
-    $sha "$image" | awk '{print $1}'
+    result="$( $sha "$image" | awk '{print $1}' )"
+    d diving cache-hash "$label" = "$result" </dev/null
+    echo "$result"
   fi
 }
 
@@ -131,6 +133,7 @@ print_head() {
   <head>
     <title>Diving Timeline</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Scuba diving pictures organized into a timeline and by location">
     <link rel="stylesheet" href="/style.css"/>
   </head>
   '

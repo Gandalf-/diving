@@ -6,6 +6,7 @@ identification game
 
 import shutil
 import os
+import pathlib
 import subprocess
 import yaml
 
@@ -14,6 +15,9 @@ from apocrypha.client import Client
 from image import unqualify, categorize, split
 import collection
 import taxonomy
+
+
+root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 
 def distance(a, b, tree=None):
@@ -165,7 +169,7 @@ def filter_images(images, debug=True):
 def difficulties(names):
     ''' get difficulty overrides
     '''
-    with open('data/static.yml') as fd:
+    with open(root + 'data/static.yml') as fd:
         data = yaml.safe_load(fd)['difficulty']
 
     lookup = {

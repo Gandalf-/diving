@@ -1,6 +1,7 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
 Animalia:
+  Ctenophora: comb jelly
   Brachiopoda:
     Rhynchonellata:
       Terebratulida:
@@ -58,6 +59,9 @@ Animalia:
     Polychaeta:
       sp: worm
       Phyllodocida:
+        Goniadidae:
+          Glycinde:
+            polygnatha: many jawed worm
         Nereididae:
           Nereis: sea nymph
       Eunicida:
@@ -622,12 +626,18 @@ Animalia:
         Proctonotoidea:
           Proctonotidae:
             Janolus:
-              fuscus: janolus fuscus nudibranch
+              fuscus: bicolor nudibranch
           Dironidae:
             Dirona:
               albolineata: alabaster nudibranch
               pellucida: golden dirona nudibranch
         Fionoidea:
+          Trinchesiidae:
+            Zelentia:
+              pustulata: pustulate aeolid nudibranch
+          Eubranchidae:
+            Eubranchus:
+              sanjuanensis: san juan aeolid nudibranch
           Paracoryphellidae:
             Ziminella:
               japonica: pearly nudibranch
@@ -672,9 +682,14 @@ Animalia:
               nubilus: giant acorn barnacle
     Malacostraca:
       Amphipoda:
+        sp: amphipod
         Phronimoidea:
           Hyperiidae:
             Hyperia: hitchhiking amphipod
+        Caprelloidea:
+          Caprellidae:
+            Caprella:
+              alaskana: alaskan skeleton shrimp
       Decapoda:
         Crangonoidea:
           Crangonidae:

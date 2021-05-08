@@ -258,6 +258,14 @@ def updater(*missings):
         if not entry:
             continue
 
+        if missing.lower() not in database.keys(*db_root, 'maps'):
+            print('not mapped, continuing')
+            continue
+
+        if missing.lower() in entry['summary'].lower():
+            print('mapped, but contains the subject')
+            continue
+
         print(paragraphs(entry['summary'], 1)[0])
         print('? ', end='')
         i = input()
