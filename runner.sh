@@ -256,30 +256,42 @@ main() {
   print_switcher
   print_scripts
 
-  while read -r f; do
-    name="$( basename "$f" | cut -d ' ' -f 2- | sed -e 's/^[[:digit:]]\s\+//' )"
-    date="$( basename "$f" | cut -d ' ' -f 1  )"
-    (( DEBUG )) && echo "$name: " >&2
+  mapfile -t dives < <(
 
-    echo "    <div id='$counter'></div>"
+    while read -r f; do
+      name="$( basename "$f" | cut -d ' ' -f 2- | sed -e 's/^[[:digit:]]\s\+//' )"
+      date="$( basename "$f" | cut -d ' ' -f 1  )"
+      (( DEBUG )) && echo "$name: " >&2
 
-    (
-      # subshell because we're changing directories
-      maker "$f" "$name" "$date" > tmp.html
+      {
+        out="$counter".html
+        (
+          # subshell because we're changing directories
+          maker "$f" "$name" "$date" > "$out"
+        )
+        echo "$( $sha < "$out" | awk '{print $1}' ).html"
+      } &
+
+      # 25 at a time seems reasonable
+      (( counter++ ))
+      (( counter % 25 == 0 )) && wait
+
+    done < <(
+      for z in "$target"/*; do
+        echo "$z"
+      done | $tac
     )
-    htmlhash="$( $sha < tmp.html | awk '{print $1}' )"
-    dives+=( "$htmlhash".html )
-    mv tmp.html timeline/"$htmlhash".html
 
-    (( counter++ ))
-
-    (( DEBUG )) && echo >&2
-    (( DEBUG )) && echo >&2
-  done < <(
-    for z in "$target"/*; do
-      echo "$z"
-    done | $tac
+    wait
   )
+
+  for (( counter=0; counter < ${#dives[@]}; counter++ )); do
+      (( DEBUG )) &&
+        echo "$counter -> timeline/${dives[$counter]}" >&2
+
+      mv "$counter".html timeline/"${dives[$counter]}"
+      echo "    <div id='$counter'></div>"
+  done
 
   echo '  </body>'
 

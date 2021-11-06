@@ -5,35 +5,29 @@ search through diving pictures to produce a 'taxonomy tree', then convert that
 tree into HTML pages for diving.anardil.net
 '''
 
-import enum
 import re
 import os
 import sys
 import multiprocessing
 from datetime import datetime
 
+import hypertext
 import information
 import taxonomy
 import collection
-from detective import javascript as game
-
-from image import (
-    categorize,
-    uncategorize,
-    split,
-    Image,
-)
 import static
+
+from detective import javascript as game
+from hypertext import Where
+from image import Image
 from utility import tree_size
 
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long
 
-Where = enum.Enum('Where', 'Gallery Taxonomy')
 
-
-def find_by_path(tree, needle):
+def _find_by_path(tree, needle):
     """search the tree for an image with this path"""
     if not isinstance(tree, dict):
         for image in tree:
@@ -41,7 +35,7 @@ def find_by_path(tree, needle):
                 return image
     else:
         for child in tree.values():
-            found = find_by_path(child, needle)
+            found = _find_by_path(child, needle)
             if found:
                 return found
 
@@ -56,14 +50,14 @@ def find_representative(tree, lineage=None):
     # forwards for gallery
     category = ' '.join(lineage)
     if category in static.pinned:
-        found = find_by_path(tree, static.pinned[category])
+        found = _find_by_path(tree, static.pinned[category])
         if found:
             return found
 
     # backwards for taxonomy
     category = ' '.join(lineage[::-1])
     if category in static.pinned:
-        found = find_by_path(tree, static.pinned[category])
+        found = _find_by_path(tree, static.pinned[category])
         if found:
             return found
 
@@ -84,230 +78,9 @@ def find_representative(tree, lineage=None):
     return results[0]
 
 
-def lineage_to_link(lineage, side, key=None):
-    """get a link to this page"""
-    if not lineage:
-        name = key
-    else:
-        name = ' '.join(lineage)
-
-        if key and side == 'left':
-            name = key + ' ' + name
-
-        if key and side == 'right':
-            name = name + ' ' + key
-
-    return name.replace(' ', '-')
-
-
-def html_head(title):
-    """top of the document"""
-    if title.endswith('Gallery'):
-        desc = (
-            'Scuba diving pictures organized into a tree structure by '
-            'subject\'s common names. Such as anemone, fish, '
-            'nudibranch, octopus, sponge.'
-        )
-    elif title.endswith('Taxonomy'):
-        desc = (
-            'Scuba diving pictures organized into a tree structure by '
-            'subject\'s scientific classification. Such as Athropoda, '
-            'Cnidaria, Mollusca.'
-        )
-    else:
-        desc = f'Scuba diving pictures related to {title}'
-
-    return f"""
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <title>{title}</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name=description content="{desc}">
-        <link rel="stylesheet" href="/style.css"/>
-        <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
-      </head>
-
-      <body>
-      <div class="wrapper">
-      <div class="title">
-    """
-
-
-def html_top_title(where):
-    """html top for top level pages"""
-    title = f"{where.title()}"
-
-    display = uncategorize(title)
-    if where == 'gallery':
-        display = display.title()
-
-    timeline = '''
-        <a href="/timeline/index.html">
-            <h1 class="top switch">Timeline</h1>
-        </a>
-    '''
-    gallery = '''
-        <a href="/gallery/index.html">
-            <h1 class="top switch gallery">Gallery</h1>
-        </a>
-    '''
-    _taxonomy = '''
-        <a href="/taxonomy/index.html">
-            <h1 class="top switch taxonomy">Taxonomy</h1>
-        </a>
-    '''
-    detective = '''
-        <a href="/detective/index.html">
-            <h1 class="top switch detective">Detective</h1>
-        </a>
-    '''
-    spacer = '<div class="top" id="buffer"></div>\n'
-
-    html = html_head(display)
-    if where == 'gallery':
-        parts = [
-            timeline.replace('h1', 'h2'),
-            gallery,
-            detective.replace('h1', 'h2'),
-        ]
-    else:
-        parts = [
-            detective.replace('h1', 'h2'),
-            _taxonomy,
-            timeline.replace('h1', 'h2'),
-        ]
-
-    html += spacer.join(parts)
-    html += '''
-        <p class="scientific"></p>
-    </div>
-    '''
-
-    return html, title
-
-
-def html_taxonomy_title(lineage, scientific):
-    """html head and title section"""
-    assert lineage
-
-    title = ' '.join(lineage)
-    display = uncategorize(title)
-    side = 'right'
-
-    html = html_head(display)
-    html += """
-        <a href="/taxonomy/index.html">
-            <h1 class="top switch taxonomy">Taxonomy</h1>
-        </a>
-        <div class="top" id="buffer"></div>
-    """
-
-    # create the buttons for each part of our name lineage
-    for i, name in enumerate(lineage):
-
-        name = taxonomy.simplify(name)
-        partial = lineage[: i + 1]
-        link = "/taxonomy/{path}.html".format(
-            path=lineage_to_link(partial, side)
-        )
-
-        html += """
-        <a href="{link}">
-            <h1 class="{classes}">{title}</h1>
-        </a>
-        """.format(
-            title=name, classes="top", link=link,
-        )
-
-    # check for common name for taxonomy
-    name = ""
-    history = ' '.join(lineage).split(' ')
-
-    while history and not name:
-        name = scientific.get(' '.join(history)) or ""
-        history = history[:-1]
-
-    name = name.title()
-    link = split(categorize(name.lower()))
-    link = link.replace(' ', '-')
-
-    if link:
-        html += f"""
-        <a href="/gallery/{link}.html" class="scientific crosslink">{name}</a>
-        </div>
-        """
-    else:
-        html += f"""
-        <p class="scientific">{name}</p>
-        </div>
-        """
-
-    return html, title
-
-
-def html_title(lineage, where, scientific):
-    """html head and title section"""
-    if not lineage:
-        return html_top_title(where)
-
-    if where == 'taxonomy':
-        return html_taxonomy_title(lineage, scientific)
-
-    title = ' '.join(lineage)
-    display = uncategorize(title).title()
-    side = 'left'
-    html = html_head(display)
-
-    # create the buttons for each part of our name lineage
-    for i, name in enumerate(lineage):
-
-        partial = lineage[i:]
-        link = "/gallery/{path}.html".format(
-            path=lineage_to_link(partial, side)
-        )
-
-        html += """
-        <a href="{link}">
-            <h1 class="{classes}">{title}</h1>
-        </a>
-        """.format(
-            title=name.title(), classes="top", link=link,
-        )
-
-    html += """
-        <div class="top" id="buffer"></div>
-
-        <a href="/gallery/index.html">
-            <h1 class="top switch gallery">Gallery</h1>
-        </a>
-    """
-
-    # check for scientific name for gallery
-    link = name = taxonomy.gallery_scientific(lineage, scientific)
-    name = taxonomy.simplify(name)
-    if link.endswith(' sp'):
-        link = link.replace(' sp', '')
-    link = link.replace(' ', '-')
-
-    if link:
-        html += f"""
-        <a href="/taxonomy/{link}.html" class="scientific crosslink">{name}</a>
-        </div>
-        """
-    else:
-        html += f"""
-        <p class="scientific">{name}</p>
-        </div>
-        """
-
-    return html, title
-
-
 def get_info(where, lineage):
     """wikipedia information if available"""
-    if where == 'gallery':
+    if where == Where.Gallery:
         return ''
 
     htmls = []
@@ -330,9 +103,9 @@ def html_tree(tree, where, scientific, lineage=None):
     if not lineage:
         lineage = []
 
-    side = 'left' if where == 'gallery' else 'right'
+    side = 'left' if where == Where.Gallery else 'right'
 
-    html, title = html_title(lineage, where, scientific)
+    html, title = hypertext.title(lineage, where, scientific)
     results = []
 
     has_subcategories = [1 for key in tree.keys() if key != "data"] != []
@@ -348,7 +121,7 @@ def html_tree(tree, where, scientific, lineage=None):
         size = tree_size(value)
         example = find_representative(value, [key] + lineage)
 
-        if where == 'gallery':
+        if where == Where.Gallery:
             subject = key.title()
         else:
             subject = taxonomy.simplify(key)
@@ -367,7 +140,8 @@ def html_tree(tree, where, scientific, lineage=None):
         """.format(
             subject=subject,
             link="/{where}/{path}.html".format(
-                where=where, path=lineage_to_link(lineage, side, key),
+                where=where.name.lower(),
+                path=hypertext.lineage_to_link(lineage, side, key),
             ),
             thumbnail=example.thumbnail(),
             size='{}:{}'.format(
@@ -460,12 +234,12 @@ def write_all_html():
     print("done", tree_size(tree), "images loaded")
 
     print("walking name tree... ", end="", flush=True)
-    name_htmls = html_tree(tree, "gallery", scientific)
+    name_htmls = html_tree(tree, Where.Gallery, scientific)
     print("done", len(name_htmls), "pages prepared")
 
     print("walking taxia tree... ", end="", flush=True)
     scientific = {v.replace(' sp', ''): k for k, v in scientific.items()}
-    taxia_htmls = html_tree(taxia, "taxonomy", scientific)
+    taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
     print("done", len(taxia_htmls), "pages prepared")
 
     print("writing html... ", end="", flush=True)

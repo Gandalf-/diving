@@ -7,38 +7,51 @@ import unittest
 import collection
 import taxonomy
 import gallery
+import hypertext
 import image
 import utility
 import information
 
+from hypertext import Where
 from taxonomy import MappingType
 
 
-class TestGallery(unittest.TestCase):
-    ''' gallery.py '''
+class TestHypertext(unittest.TestCase):
+    ''' hypertext.py '''
 
-    g_scientific = taxonomy.mapping()
-    t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
+    def test_lineage_to_link(self):
+        ''' converting lineage to links between sites
+        '''
+        samples = [
+            (None, False, ["a", "b", "c"], "a-b-c"),
+            (None, True, ["a", "b", "c"], "a-b-c"),
+            ("d", False, ["a", "b", "c"], "d-a-b-c"),
+            ("d", True, ["a", "b", "c"], "a-b-c-d"),
+        ]
+        for key, right_side, lineage, after in samples:
+            side = 'right' if right_side else 'left'
+            link = hypertext.lineage_to_link(lineage, side, key)
+            self.assertEqual(link, after)
 
-    def test_html_title(self):
+    def test_title_ordering(self):
         ''' html titles ordering
         '''
         samples = [
             (
                 # gallery simple case
-                'gallery',
+                Where.Gallery,
                 ['chiton'],
                 ['chiton.html', 'buffer', 'gallery/index.html'],
             ),
             (
                 # gallery multi level
-                'gallery',
+                Where.Gallery,
                 ['brittle', 'star'],
                 ['brittle-star.html', 'buffer', 'gallery/index.html'],
             ),
             (
                 # gallery, has scientific name
-                'gallery',
+                Where.Gallery,
                 ['giant pacific', 'octopus'],
                 [
                     'giant-pacific.html',
@@ -53,13 +66,13 @@ class TestGallery(unittest.TestCase):
             ),
             (
                 # taxonomy, simple case
-                'taxonomy',
+                Where.Taxonomy,
                 ['Animalia'],
                 ['taxonomy/index.html', 'buffer', 'Animalia.html'],
             ),
             (
                 # taxonomy, no common name
-                'taxonomy',
+                Where.Taxonomy,
                 ['Animalia', 'Echinodermata'],
                 [
                     'taxonomy/index.html',
@@ -70,7 +83,7 @@ class TestGallery(unittest.TestCase):
             ),
             (
                 # taxonomy, has common name
-                'taxonomy',
+                Where.Taxonomy,
                 [
                     'Animalia',
                     'Mollusca',
@@ -93,33 +106,40 @@ class TestGallery(unittest.TestCase):
         ]
         for where, lineage, elements in samples:
 
-            if where == 'gallery':
+            if where == Where.Gallery:
                 scientific = TestGallery.g_scientific
             else:
                 scientific = TestGallery.t_scientific
 
-            html, title = gallery.html_title(lineage, where, scientific)
+            html, title = hypertext.title(lineage, where, scientific)
 
             indices = [html.find(e) for e in elements]
             self.assertEqual(indices, sorted(indices), lineage)
             self.assertEqual(title, ' '.join(lineage))
 
-    def test_html_title_top(self):
+    def test_title_names(self):
         ''' html titles top level
         '''
         # gallery
-        html, title = gallery.html_title(
-            [], 'gallery', TestGallery.g_scientific
+        html, title = hypertext.title(
+            [], Where.Gallery, TestGallery.g_scientific
         )
         self.assertEqual(title, 'Gallery')
         self.assertIn('<title>Gallery</title>', html)
 
         # taxonomy
-        html, title = gallery.html_title(
-            [], 'taxonomy', TestGallery.t_scientific
+        html, title = hypertext.title(
+            [], Where.Taxonomy, TestGallery.t_scientific
         )
         self.assertEqual(title, 'Taxonomy')
         self.assertIn('<title>Taxonomy</title>', html)
+
+
+class TestGallery(unittest.TestCase):
+    ''' gallery.py '''
+
+    g_scientific = taxonomy.mapping()
+    t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
     def test_find_representative(self):
         ''' picking the newest image to represent a tree, or a predefined
@@ -136,20 +156,6 @@ class TestGallery(unittest.TestCase):
             tree['barnacle'], lineage=['barnacle']
         )
         self.assertIsNotNone(out)
-
-    def test_lineage_to_link(self):
-        ''' converting lineage to links between sites
-        '''
-        samples = [
-            (None, False, ["a", "b", "c"], "a-b-c"),
-            (None, True, ["a", "b", "c"], "a-b-c"),
-            ("d", False, ["a", "b", "c"], "d-a-b-c"),
-            ("d", True, ["a", "b", "c"], "a-b-c-d"),
-        ]
-        for key, right_side, lineage, after in samples:
-            side = 'right' if right_side else 'left'
-            link = gallery.lineage_to_link(lineage, side, key)
-            self.assertEqual(link, after)
 
 
 class TestTaxonomy(unittest.TestCase):
