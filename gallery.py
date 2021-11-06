@@ -21,8 +21,8 @@ from image import (
     uncategorize,
     split,
     Image,
-    pinned,
 )
+import static
 from utility import tree_size
 
 
@@ -52,15 +52,15 @@ def find_representative(tree, lineage=None):
 
     # forwards for gallery
     category = ' '.join(lineage)
-    if category in pinned:
-        found = find_by_path(tree, pinned[category])
+    if category in static.pinned:
+        found = find_by_path(tree, static.pinned[category])
         if found:
             return found
 
     # backwards for taxonomy
     category = ' '.join(lineage[::-1])
-    if category in pinned:
-        found = find_by_path(tree, pinned[category])
+    if category in static.pinned:
+        found = find_by_path(tree, static.pinned[category])
         if found:
             return found
 
@@ -77,6 +77,7 @@ def find_representative(tree, lineage=None):
         return image.path()
 
     results = sorted(results, key=get_path, reverse=True)
+    assert results, (tree, lineage)
     return results[0]
 
 
@@ -214,9 +215,7 @@ def html_taxonomy_title(lineage, scientific):
             <h1 class="{classes}">{title}</h1>
         </a>
         """.format(
-            title=name,
-            classes="top",
-            link=link,
+            title=name, classes="top", link=link,
         )
 
     # check for common name for taxonomy
@@ -271,9 +270,7 @@ def html_title(lineage, where, scientific):
             <h1 class="{classes}">{title}</h1>
         </a>
         """.format(
-            title=name.title(),
-            classes="top",
-            link=link,
+            title=name.title(), classes="top", link=link,
         )
 
     html += """
@@ -367,11 +364,12 @@ def html_tree(tree, where, scientific, lineage=None):
         """.format(
             subject=subject,
             link="/{where}/{path}.html".format(
-                where=where,
-                path=lineage_to_link(lineage, side, key),
+                where=where, path=lineage_to_link(lineage, side, key),
             ),
             thumbnail=example.hash() + '.jpg',
-            size='{}:{}'.format(sum(1 for k in value if k != 'data'), size),
+            size='{}:{}'.format(
+                sum(1 for k in value if k != 'data') or '', size
+            ),
         )
 
         results.extend(
@@ -400,7 +398,7 @@ def html_tree(tree, where, scientific, lineage=None):
               <img width=300 loading="lazy" src="/imgs/{thumbnail}">
             </a>
             """.format(
-                name='{} - {}'.format(image.name, image.directory),
+                name='{} - {}'.format(image.name, image.location()),
                 fullsize=image.fullsize(),
                 thumbnail=image.hash() + '.jpg',
             )

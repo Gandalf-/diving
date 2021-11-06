@@ -2,6 +2,19 @@
 
 '''
 collect information on subjects from wikipedia
+
+we query based on scientific names, but many wikipedia articles are for common
+names. a mapping is kept to translate between the two
+
+articles are fuzzy matched on wikipedia's side and might be complete nonsense,
+more specific than we asked (genus + species when asking for genus), less
+specific (genus when asking for genus + species).
+
+rejected mappings are added to an invalid list in the database that you (the
+user) could reconsider at a later time or manually fix with link()
+
+since the content of the article may contain non-ascii characters (greek
+letters, etc), the data is base64 encoded before inserted into the database
 '''
 
 # pylint: disable=too-few-public-methods
@@ -238,7 +251,8 @@ def missing_list():
 
 
 def check() -> bool:
-    ''' should we stop?  '''
+    ''' should we stop?
+    '''
     print('? ', end='')
     i = input()
     if i and i in 'nN':
@@ -248,6 +262,14 @@ def check() -> bool:
 
 def updater(*missings):
     ''' interactive update
+
+    attempts to do as much as possible automatically. unclear cases will stop
+    and ask for confirmation. the ordering is by number of instances available
+    in the pictures. ie a missing item with 50 pictures will be fetched before
+    another with 5
+
+    so you can run this as long as your interest holds, get the largest impact
+    for your time, and continue later
     '''
     if not missings:
         missings = missing_list()

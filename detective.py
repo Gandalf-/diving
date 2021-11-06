@@ -8,13 +8,13 @@ import shutil
 import os
 import pathlib
 import subprocess
-import yaml
 
 from apocrypha.client import Client
 
 from image import unqualify, categorize, split
 import collection
 import taxonomy
+import static
 
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
@@ -169,9 +169,6 @@ def filter_images(images, debug=True):
 def difficulties(names):
     ''' get difficulty overrides
     '''
-    with open(root + 'data/static.yml') as fd:
-        data = yaml.safe_load(fd)['difficulty']
-
     lookup = {
         'very easy': 0,
         'easy': 0,
@@ -181,7 +178,7 @@ def difficulties(names):
     }
 
     mapping = {}
-    for key, values in data.items():
+    for key, values in static.difficulty.items():
         for value in values:
             mapping[value] = lookup[key]
 
@@ -226,10 +223,11 @@ def inspect_choices():
     ''' build a directory tree of chosen thumbnails for visual inspection
     '''
     ns, ts, _, _ = table_builder(False)
-    root = '/mnt/zfs/working'
-    source = os.path.join(root, 'object-publish/diving-web/imgs')
-    output = os.path.join(root, 'tmp/detective')
-    root = 3489204839483
+
+    oroot = '/mnt/zfs/working'
+    source = os.path.join(oroot, 'object-publish/diving-web/imgs')
+    output = os.path.join(oroot, 'tmp/detective')
+    oroot = 3489204839483
 
     if os.path.exists(output):
         shutil.rmtree(output)

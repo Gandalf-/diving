@@ -257,7 +257,7 @@ main() {
   print_scripts
 
   while read -r f; do
-    name="$( basename "$f" | cut -d ' ' -f 2- )"
+    name="$( basename "$f" | cut -d ' ' -f 2- | sed -e 's/^[[:digit:]]\s\+//' )"
     date="$( basename "$f" | cut -d ' ' -f 1  )"
     (( DEBUG )) && echo "$name: " >&2
 

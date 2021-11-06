@@ -6,30 +6,20 @@ base class for a diving image
 
 import hashlib
 import os
-import pathlib
 
 import inflect
-import yaml
 from apocrypha.client import Client
 
 import utility
+import static
 
 database = Client()
 inflect = inflect.engine()
-root = str(pathlib.Path(__file__).parent.absolute()) + '/'
-
-with open(root + 'data/static.yml') as fd:
-    static = yaml.safe_load(fd)
-
-splits = static['splits']
-qualifiers = static['qualifiers']
-categories = static['categories']
-pinned = static['pinned']
 
 
 def categorize(name):
     ''' add special categorization labels '''
-    for category, values in categories.items():
+    for category, values in static.categories.items():
         for value in values:
             if name.endswith(value):
                 name += " " + category
@@ -38,7 +28,7 @@ def categorize(name):
 
 def uncategorize(name):
     ''' remove the special categorization labels added earlier '''
-    for category, values in categories.items():
+    for category, values in static.categories.items():
         assert isinstance(values, list)
 
         for value in values:
@@ -50,7 +40,7 @@ def uncategorize(name):
 
 def unqualify(name):
     ''' remove qualifiers '''
-    for qualifier in qualifiers:
+    for qualifier in static.qualifiers:
         if name.startswith(qualifier):
             name = name[len(qualifier) + 1 :]
 
@@ -67,7 +57,7 @@ def split(name):
     ''' add splits
     rockfish -> rock fish
     '''
-    for s in splits:
+    for s in static.splits:
         if name != s and name.endswith(s) and not name.endswith(" " + s):
             name = name.replace(s, " " + s)
     return name
@@ -77,7 +67,7 @@ def unsplit(name):
     ''' remove splits
     rock fish -> rockfish
     '''
-    for s in splits:
+    for s in static.splits:
         if name != s and name.endswith(' ' + s):
             name = name.replace(' ' + s, s)
     return name
@@ -108,6 +98,18 @@ class Image:
                 # self.directory
             ]
         )
+
+    def location(self):
+        ''' directory minus numbering
+        '''
+        when, where = self.directory.split(' ', 1)
+
+        i = 0
+        for i, l in enumerate(where):
+            if l in '0123456789 ':
+                continue
+            break
+        return when + ' ' + where[i:]
 
     def identifier(self):
         ''' unique ID
@@ -151,8 +153,10 @@ class Image:
         name = name or self.name.lower()
 
         # fix inflect's mistakes
-        for tofix in ("octopu", "gras", "fuscu"):
-            if tofix in name and tofix + "s" not in name:
+        for tofix in ("octopu", "gras", "fuscu", "dori"):
+            if tofix + "s" in name:
+                continue
+            if name.endswith(tofix) or tofix + " " in name:
                 name = name.replace(tofix, tofix + "s")
 
         if name.endswith("alga"):

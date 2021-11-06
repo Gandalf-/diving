@@ -3,3 +3,4 @@ __pycache__
 detective/data.js
 tags
 node_modules
+*.pyc
