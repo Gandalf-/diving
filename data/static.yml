@@ -1,11 +1,17 @@
 ---
 
+ignore:
+  - pier
+  - rock
+  - reef
+
 splits:
   - fish
   - coral
   - ray
   - chiton
   - snail
+  - worm
 
 qualifiers:
   - juvenile
@@ -15,7 +21,7 @@ qualifiers:
   - male
   - molted
   - fighting
-  - pregnant
+  - gravid
   - mating
   - elderly
   - wasting
@@ -31,9 +37,11 @@ categories:
   fish:
     - prickleback
     - basslet
+    - bass
     - blue tang
     - flounder
     - cero
+    - serrano
     - goby
     - greenling
     - grunt
@@ -53,6 +61,10 @@ categories:
     - poacher
     - black durgon
     - war bonnet
+    - seahorse
+    - idol
+    - blenny
+    - jack
   shrimp:
     - prawn
     - amphipod
@@ -72,6 +84,7 @@ categories:
   nudibranch:
     - sea lemon
     - dorid
+    - doris
     - dendronotid
     - berthella
   anemone:
@@ -84,6 +97,8 @@ categories:
     - sea rod
   worm:
     - sea nymph
+  urchin:
+    - sand dollar
 
 pinned:
     crab:
