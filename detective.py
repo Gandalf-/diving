@@ -20,28 +20,6 @@ import static
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 
-def distance(a, b, tree=None):
-    ''' similarity score, higher means more different
-
-    difflib.SequenceMatcher and jellyfish were all junk
-    '''
-    if not tree:
-        tree = taxonomy.invert_known(taxonomy.load_tree())
-
-    at = tree[a].split(' ')
-    bt = tree[b].split(' ')
-
-    total = 0
-    match = 0
-
-    for (x, y) in zip(at, bt):
-        total += 1
-        if x == y:
-            match += 1
-
-    return match / total
-
-
 def cache_hash(images):
     ''' cache in a database
     '''
@@ -96,31 +74,96 @@ def hasher(images, size=250):
         images = images[size:]
 
 
-def similarity_table(names):
-    ''' how alike is every name pair
+def table_builder(debug=True):
+    ''' build the tables!
     '''
-    tree = taxonomy.invert_known(taxonomy.load_tree())
-    similarity = [[] for _ in names]
+    # reversing so we get newer things first
+    images = reversed(list(collection.named()))
+    all_names, images = _filter_images(images, debug)
 
-    for i, name in enumerate(names):
-        for j, other in enumerate(names):
+    hashes = list(cache_hash(images))
 
-            if i == j:
-                similarity[i].append(0)
-                continue
+    # names array
+    names = sorted(list(set(all_names)))
 
-            if j > i:
-                # should already be done
-                continue
+    # thumbnail table
+    thumbs = [[] for _ in names]
+    for i, name in enumerate(all_names):
+        where = names.index(name)
 
-            d = distance(name, other, tree)
-            d = int(d * 100)
-            similarity[i].append(d)
+        if len(thumbs[where]) > 25:
+            continue
 
-    return similarity
+        thumbs[where].append(hashes[i])
+
+    similarity = _similarity_table(names)
+    names = [n.title() for n in names]
+    diffs = _difficulties(names)
+
+    return names, thumbs, similarity, diffs
 
 
-def filter_images(images, debug=True):
+def javascript(debug=True):
+    ''' write out the tables to a file
+    '''
+    ns, ts, ss, ds = table_builder(debug)
+
+    with open('detective/data.js', 'w+') as fd:
+        print('var names =', ns, file=fd)
+        print('var thumbs =', ts, file=fd)
+        print('var similarities =', ss, file=fd)
+        print('var difficulties =', ds, file=fd)
+
+
+# PRIVATE
+
+def _distance(a, b, tree=None):
+    ''' similarity score, higher means more different
+
+    difflib.SequenceMatcher and jellyfish were all junk
+    '''
+    if not tree:
+        tree = taxonomy.mapping()
+
+    at = tree[a].split(' ')
+    bt = tree[b].split(' ')
+
+    total = 0
+    match = 0
+
+    for (x, y) in zip(at, bt):
+        total += 1
+        if x == y:
+            match += 1
+
+    return match / total
+
+
+def _difficulties(names):
+    ''' get difficulty overrides
+    '''
+    lookup = {
+        'very easy': 0,
+        'easy': 0,
+        'moderate': 2,
+        'hard': 3,
+        'very hard': 4,
+    }
+
+    mapping = {}
+    for key, values in static.difficulty.items():
+        for value in values:
+            mapping[value] = lookup[key]
+
+    out = []
+    for name in names:
+        name = name.lower()
+        name = split(categorize(name)).split(' ')[-1]
+        out.append(mapping.get(name, 0))
+    return out
+
+
+def _filter_images(images, debug=True):
     ''' strip out images that are poor fits for the game
     - multiple subjects
     - vague, like "sponge"
@@ -166,60 +209,33 @@ def filter_images(images, debug=True):
     return all_names, new_images
 
 
-def difficulties(names):
-    ''' get difficulty overrides
+def _similarity_table(names):
+    ''' how alike is every name pair
     '''
-    lookup = {
-        'very easy': 0,
-        'easy': 0,
-        'moderate': 2,
-        'hard': 3,
-        'very hard': 4,
-    }
+    tree = taxonomy.mapping()
+    similarity = [[] for _ in names]
 
-    mapping = {}
-    for key, values in static.difficulty.items():
-        for value in values:
-            mapping[value] = lookup[key]
+    for i, name in enumerate(names):
+        for j, other in enumerate(names):
 
-    out = []
-    for name in names:
-        name = name.lower()
-        name = split(categorize(name)).split(' ')[-1]
-        out.append(mapping.get(name, 0))
-    return out
+            if i == j:
+                similarity[i].append(0)
+                continue
 
+            if j > i:
+                # should already be done
+                continue
 
-def table_builder(debug=True):
-    ''' build the tables!
-    '''
-    # reversing so we get newer things first
-    images = reversed(list(collection.named()))
-    all_names, images = filter_images(images, debug)
+            d = _distance(name, other, tree)
+            d = int(d * 100)
+            similarity[i].append(d)
 
-    hashes = list(cache_hash(images))
-
-    # names array
-    names = sorted(list(set(all_names)))
-
-    # thumbnail table
-    thumbs = [[] for _ in names]
-    for i, name in enumerate(all_names):
-        where = names.index(name)
-
-        if len(thumbs[where]) > 25:
-            continue
-
-        thumbs[where].append(hashes[i])
-
-    similarity = similarity_table(names)
-    names = [n.title() for n in names]
-    diffs = difficulties(names)
-
-    return names, thumbs, similarity, diffs
+    return similarity
 
 
-def inspect_choices():
+# INFORMATIONAL
+
+def _inspect_choices():
     ''' build a directory tree of chosen thumbnails for visual inspection
     '''
     ns, ts, _, _ = table_builder(False)
@@ -227,7 +243,6 @@ def inspect_choices():
     oroot = '/mnt/zfs/working'
     source = os.path.join(oroot, 'object-publish/diving-web/imgs')
     output = os.path.join(oroot, 'tmp/detective')
-    oroot = 3489204839483
 
     if os.path.exists(output):
         shutil.rmtree(output)
@@ -240,15 +255,3 @@ def inspect_choices():
             src = os.path.join(source, thumb + '.jpg')
             dst = os.path.join(output, name, f'{j:02} ' + thumb + '.jpg')
             os.link(src, dst)
-
-
-def javascript(debug=True):
-    ''' write out the tables to a file
-    '''
-    ns, ts, ss, ds = table_builder(debug)
-
-    with open('detective/data.js', 'w+') as fd:
-        print('var names =', ns, file=fd)
-        print('var thumbs =', ts, file=fd)
-        print('var similarities =', ss, file=fd)
-        print('var difficulties =', ds, file=fd)

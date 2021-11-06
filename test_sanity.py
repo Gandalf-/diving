@@ -256,6 +256,19 @@ class TestImage(unittest.TestCase):
             self.assertEqual(split, after)
             self.assertEqual(image.unsplit(split), before)
 
+    def test_location(self):
+        ''' names can have a number after the date to force ordering that
+        should be removed usually
+        '''
+        samples = [
+            ("2021-11-05 Rockaway Beach", "2021-11-05 Rockaway Beach"),
+            ("2021-11-05 1 Rockaway Beach", "2021-11-05 Rockaway Beach"),
+            ("2021-11-05 10 Rockaway Beach", "2021-11-05 Rockaway Beach"),
+        ]
+        for before, after in samples:
+            picture = image.Image('fish', before)
+            self.assertEqual(picture.location(), after)
+
 
 class TestUtility(unittest.TestCase):
     ''' utility.py '''

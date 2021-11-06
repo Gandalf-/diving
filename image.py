@@ -121,31 +121,16 @@ class Image:
         '''
         return os.path.join(utility.root, self.directory, self.label)
 
+    def thumbnail(self):
+        ''' what's the name of the thumbnail for this image?
+        '''
+        return self._hash() + '.jpg'
+
     def fullsize(self):
         ''' URI of full size image '''
         return "https://public.anardil.net/media/diving/{d}/{i}".format(
             d=self.directory, i=self.label,
         )
-
-    def hash(self):
-        ''' hash a file the same way indexer does, so we can find it's thumbnail
-        '''
-        digest = database.get('diving', 'cache-hash', self.identifier())
-        if digest:
-            return digest
-
-        sha1 = hashlib.sha1()
-
-        with open(self.path(), "rb") as f:
-            while True:
-                data = f.read(65536)
-                if not data:
-                    break
-                sha1.update(data)
-
-        digest = sha1.hexdigest()
-        database.set('diving', 'cache-hash', self.identifier(), value=digest)
-        return digest
 
     def singular(self):
         ''' return singular version '''
@@ -185,3 +170,23 @@ class Image:
         name = categorize(name)
 
         return name
+
+    def _hash(self):
+        ''' hash a file the same way indexer does, so we can find it's thumbnail
+        '''
+        digest = database.get('diving', 'cache-hash', self.identifier())
+        if digest:
+            return digest
+
+        sha1 = hashlib.sha1()
+
+        with open(self.path(), "rb") as f:
+            while True:
+                data = f.read(65536)
+                if not data:
+                    break
+                sha1.update(data)
+
+        digest = sha1.hexdigest()
+        database.set('diving', 'cache-hash', self.identifier(), value=digest)
+        return digest

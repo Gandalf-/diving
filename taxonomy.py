@@ -2,6 +2,11 @@
 
 '''
 taxonomy related things
+
+- parsing and dealing with taxonomy.yml
+- updating taxonomy.txt so it's clear what's missing
+- searching the classification tree for fuzzy matches to common names
+- simplification of full classification into reasonable abbreviations
 '''
 
 import enum
@@ -14,24 +19,6 @@ from utility import extract_leaves, hmap
 from image import uncategorize, unqualify, unsplit
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
-
-
-def find_imprecise():
-    ''' find names with classifications that could be more specific
-    '''
-    names = all_names()
-    m = mapping()
-
-    for name in names:
-        c = to_classification(name, m)
-        if ' sp' in c:
-            yield name
-
-
-def to_classification(name, mappings):
-    ''' find a suitable classification for this common name
-    '''
-    return gallery_scientific(name.split(' '), mappings)
 
 
 def gallery_scientific(lineage, scientific, debug=True):
@@ -61,7 +48,12 @@ def gallery_scientific(lineage, scientific, debug=True):
 
 
 def simplify(name: str) -> str:
-    ''' try to use similar() to simplify the lineage
+    ''' try to use similar() to simplify the lineage by looking for repeated
+    prefixes and abbreviating them
+
+    Diadematoida Diadematidae Diadema antillarum
+        to
+    D. D. Diadema antillarum
     '''
     if ' ' not in name:
         return name
@@ -91,13 +83,66 @@ def similar(a, b):
     return a[:pivot] == b[:pivot]
 
 
-def ordered_simple_names(tree):
+def load_tree():
+    ''' yaml load '''
+    with open(root + 'data/taxonomy.yml') as fd:
+        return yaml.safe_load(fd)
+
+
+def load_known(exact_only=False):
+    ''' load taxonomy.yml '''
+
+    tree = load_tree()
+    if exact_only:
+        tree = _filter_exact(tree)
+
+    for leaf in extract_leaves(tree):
+        yield from leaf.split(', ')
+
+
+MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
+
+
+def mapping(where=MappingType.Gallery):
+    ''' simplified to scientific '''
+    tree = _invert_known(load_tree())
+
+    if where == MappingType.Gallery:
+        return tree
+
+    return {v.replace(' sp', ''): k for k, v in tree.items()}
+
+
+def gallery_tree(tree=None):
+    ''' produce a tree for gallery.py to use
+    the provided tree must be from collection.go()
+    '''
+    if not tree:
+        tree = go()
+
+    images = single_level(tree)
+    taxia = _full_compress(load_tree())
+
+    _taxia_filler(taxia, images)
+
+    return taxia
+
+
+# PRIVATE
+
+def _to_classification(name, mappings):
+    ''' find a suitable classification for this common name
+    '''
+    return gallery_scientific(name.split(' '), mappings)
+
+
+def _ordered_simple_names(tree):
     ''' taxonomy names '''
     assert isinstance(tree, dict), tree
 
     for value in tree.values():
         if isinstance(value, dict):
-            yield from ordered_simple_names(value)
+            yield from _ordered_simple_names(value)
 
         elif isinstance(value, list):
             yield value[0].simplified()
@@ -106,13 +151,7 @@ def ordered_simple_names(tree):
             assert False, value
 
 
-def load_tree():
-    ''' yaml load '''
-    with open(root + 'data/taxonomy.yml') as fd:
-        return yaml.safe_load(fd)
-
-
-def filter_exact(tree):
+def _filter_exact(tree):
     ''' remove all sp entries
     '''
     assert isinstance(tree, dict), tree
@@ -123,40 +162,16 @@ def filter_exact(tree):
             continue
 
         if isinstance(value, dict):
-            out[key] = filter_exact(value)
+            out[key] = _filter_exact(value)
         else:
             out[key] = value
 
     return out
 
 
-def load_known(exact_only=False):
-    ''' load taxonomy.yml '''
-
-    tree = load_tree()
-    if exact_only:
-        tree = filter_exact(tree)
-
-    for leaf in extract_leaves(tree):
-        yield from leaf.split(', ')
-
-
-def full_compress(tree):
-    ''' keep compressing until nothing changes '''
-    old = tree
-
-    while True:
-        new = compress(old)
-        if new == old:
-            break
-        old = new
-
-    return new
-
-
-def compress(tree):
-    ''' squash levels '''
-
+def _compress(tree):
+    ''' squash levels
+    '''
     if isinstance(tree, str):
         # hit a leaf
         return tree
@@ -177,14 +192,46 @@ def compress(tree):
 
             # squash
             new_key = key + ' ' + child
-            out[new_key] = compress(value[child])
+            out[new_key] = _compress(value[child])
         else:
-            out[key] = compress(value)
+            out[key] = _compress(value)
 
     return out
 
 
-def invert_known(tree):
+def _full_compress(tree):
+    ''' keep compressing until nothing changes '''
+    old = tree
+
+    while True:
+        new = _compress(old)
+        if new == old:
+            break
+        old = new
+
+    return new
+
+
+def _taxia_filler(tree, images):
+    ''' fill in the images
+    '''
+    assert isinstance(tree, dict), tree
+
+    for key, value in list(tree.items()):
+        if isinstance(value, str):
+            if value in images:
+                tree[key] = {'data': images[value]}
+
+            else:
+                print('dropping', key)
+                tree.pop(key)
+        else:
+            tree[key] = _taxia_filler(value, images)
+
+    return tree
+
+
+def _invert_known(tree):
     ''' leaves become roots '''
 
     result = {}
@@ -205,23 +252,12 @@ def invert_known(tree):
     return result
 
 
-MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
+# INFORMATIONAL
 
-
-def mapping(where=MappingType.Gallery):
-    ''' simplified to scientific '''
-    tree = invert_known(load_tree())
-
-    if where == MappingType.Gallery:
-        return tree
-
-    return {v.replace(' sp', ''): k for k, v in tree.items()}
-
-
-def taxonomy_listing():
+def _taxonomy_listing():
     ''' write out the names to a file '''
     have = set(load_known())
-    everything = set(ordered_simple_names(go()))
+    everything = set(_ordered_simple_names(go()))
     need = everything - have
 
     with open(root + 'data/taxonomy.txt', 'w+') as fd:
@@ -229,39 +265,17 @@ def taxonomy_listing():
             fd.write(name + '\n')
 
 
-def taxia_filler(tree, images):
-    ''' fill in the images
+def _find_imprecise():
+    ''' find names with classifications that could be more specific
     '''
-    assert isinstance(tree, dict), tree
+    names = all_names()
+    m = mapping()
 
-    for key, value in list(tree.items()):
-        if isinstance(value, str):
-            if value in images:
-                tree[key] = {'data': images[value]}
-
-            else:
-                print('dropping', key)
-                tree.pop(key)
-        else:
-            tree[key] = taxia_filler(value, images)
-
-    return tree
-
-
-def gallery_tree(tree=None):
-    ''' produce a tree for gallery.py to use
-    the provided tree must be from collection.go()
-    '''
-    if not tree:
-        tree = go()
-
-    images = single_level(tree)
-    taxia = full_compress(load_tree())
-
-    taxia_filler(taxia, images)
-
-    return taxia
+    for name in names:
+        c = _to_classification(name, m)
+        if ' sp' in c:
+            yield name
 
 
 if not sys.flags.interactive and __name__ == '__main__':
-    taxonomy_listing()
+    _taxonomy_listing()

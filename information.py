@@ -224,7 +224,7 @@ def html(name: str) -> (str, str):
 def missing_list():
     ''' what subjects are we missing?
     '''
-    names = set(taxonomy.invert_known(taxonomy.load_tree()).values())
+    names = set(taxonomy.mapping().values())
     out = []
 
     complete = set()

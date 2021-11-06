@@ -5,6 +5,7 @@ search through diving pictures to produce a 'taxonomy tree', then convert that
 tree into HTML pages for diving.anardil.net
 '''
 
+import enum
 import re
 import os
 import sys
@@ -28,6 +29,8 @@ from utility import tree_size
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long
+
+Where = enum.Enum('Where', 'Gallery Taxonomy')
 
 
 def find_by_path(tree, needle):
@@ -366,7 +369,7 @@ def html_tree(tree, where, scientific, lineage=None):
             link="/{where}/{path}.html".format(
                 where=where, path=lineage_to_link(lineage, side, key),
             ),
-            thumbnail=example.hash() + '.jpg',
+            thumbnail=example.thumbnail(),
             size='{}:{}'.format(
                 sum(1 for k in value if k != 'data') or '', size
             ),
@@ -400,7 +403,7 @@ def html_tree(tree, where, scientific, lineage=None):
             """.format(
                 name='{} - {}'.format(image.name, image.location()),
                 fullsize=image.fullsize(),
-                thumbnail=image.hash() + '.jpg',
+                thumbnail=image.thumbnail(),
             )
 
             seen.add(identifier)
@@ -446,17 +449,6 @@ def taxia_pool_writer(args):
         print(html, file=f)
 
 
-def manifest(htmls, where):
-    """extract titles"""
-    for (title, _) in htmls:
-        if 'various' in title:
-            continue
-        yield {
-            'title': title.title(),
-            'link': where + '/' + title.replace(' ', '-'),
-        }
-
-
 def write_all_html():
     ''' main '''
     pool = multiprocessing.Pool()
@@ -486,7 +478,7 @@ def write_all_html():
     print("done")
 
 
-def find_links():
+def _find_links():
     """check the html directory for internal links"""
 
     def extract_from(fd):
@@ -512,11 +504,13 @@ def find_links():
                 yield from extract_from(fd)
 
 
+# INFORMATIONAL
+
 def link_check():
     """check the html directory for broken links by extracting all the
     internal links from the written files and looking for those as paths
     """
-    for path, link in find_links():
+    for path, link in _find_links():
         if not os.path.exists(link):
             print('broken', link, 'in', path)
 
