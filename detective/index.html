@@ -1,80 +1,81 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Diving Detective</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description"
+              content="Scuba diving picture identification game, identify a picture or choose the image for a name">
+        <link rel="stylesheet" href="/style.css" />
+        <link rel="stylesheet" href="/jquery.fancybox.min.css" />
+        <script src="/detective/data.js"></script>
+        <script src="/detective/game.js"></script>
+        <style>
+body {
+    /* max width without messing up centering! */
+    max-width: 1080px;
+    /* margin: 0 auto !important; */
+    margin-left: auto;
+    margin-right: auto;
+    float: none !important;
+}
+        </style>
+    </head>
 
-<head>
-    <title>
-        Diving Detective
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description"
-        content="Scuba diving picture identification game, identify a picture or choose the image for a name">
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="stylesheet" href="/jquery.fancybox.min.css" />
-    <script src="/detective/data.js"></script>
-    <script src="/detective/game.js"></script>
-    <style>
-        body {
-            /* max width without messing up centering! */
-            max-width: 1080px;
-            /* margin: 0 auto !important; */
-            margin-left: auto;
-            margin-right: auto;
-            float: none !important;
-        }
-    </style>
-</head>
+    <body>
+        <div class="wrapper">
+            <div class="title">
+                <a href="/gallery/index.html">
+                    <h2 class="top switch gallery">Gallery</h2>
+                </a>
+                <div class="top" id="buffer"></div>
+                <a href="/detective/index.html">
+                    <h1 class="top switch detective">Detective</h1>
+                </a>
+                <div class="top" id="buffer"></div>
+                <a href="/sites/index.html">
+                    <h2 class="top switch sites">Sites</h2>
+                </a>
+                <p class="scientific"></p>
+            </div>
 
-<body>
-    <a href="/gallery/index.html">
-        <h2 class="top switch gallery">Gallery</h2>
-    </a>
-    <div class="top" id="buffer"></div>
-    <a href="/detective/index.html">
-        <h1 class="top switch detective">Detective</h1>
-    </a>
-    <div class="top" id="buffer"></div>
-    <a href="/taxonomy/index.html">
-        <h2 class="top switch taxonomy">Taxonomy</h2>
-    </a>
-    <p class="scientific"></p>
+            <div id="control">
+                <select id="game" onchange="choose_game();">
+                    <option value="images">Images</option>
+                    <option value="names">Names</option>
+                </select>
+                <h4 id="score"></h4>
+                <select id="difficulty" onchange="choose_game();">
+                    <option value=0>Very Easy</option>
+                    <option value=1 selected>Easy</option>
+                    <option value=2>Moderate</option>
+                    <option value=3>Hard</option>
+                    <option value=4>Very Hard</option>
+                </select>
+            </div>
 
-    <div id="control">
-        <select id="game" onchange="choose_game();">
-            <option value="images">Images</option>
-            <option value="names">Names</option>
-        </select>
-        <h4 id="score"></h4>
-        <select id="difficulty" onchange="choose_game();">
-            <option value=0>Very Easy</option>
-            <option value=1 selected>Easy</option>
-            <option value=2>Moderate</option>
-            <option value=3>Hard</option>
-            <option value=4>Very Hard</option>
-        </select>
-    </div>
+            <div id="correct_outer">
+                <h2 id="correct"></h2>
+            </div>
 
-    <div id="correct_outer">
-        <h2 id="correct"></h2>
-    </div>
+            <div class="grid" id="options">
+                <div class="image" id="option0"> </div>
+                <div class="image" id="option1"> </div>
+                <div class="image" id="option2"> </div>
+                <div class="image" id="option3"> </div>
+                <div class="image" id="option4"> </div>
+                <div class="image" id="option5"> </div>
+                <div class="image" id="option6"> </div>
+                <div class="image" id="option7"> </div>
 
-    <div class="grid" id="options">
-        <div class="image" id="option0"> </div>
-        <div class="image" id="option1"> </div>
-        <div class="image" id="option2"> </div>
-        <div class="image" id="option3"> </div>
-        <div class="image" id="option4"> </div>
-        <div class="image" id="option5"> </div>
-        <div class="image" id="option6"> </div>
-        <div class="image" id="option7"> </div>
-
-        <div class="top switch skip" onclick="choose_game();">
-            <h4>Skip</h4>
+                <div class="top switch skip" onclick="choose_game();">
+                    <h4>Skip</h4>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <script>
-        choose_game();
-    </script>
-</body>
-
+        <script>
+            choose_game();
+        </script>
+    </body>
 </html>

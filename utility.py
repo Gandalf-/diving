@@ -4,6 +4,7 @@
 dict and list functions
 '''
 
+import datetime
 import os
 
 root = "/mnt/zfs/Media/Pictures/Diving"
@@ -52,3 +53,34 @@ def hmap(arg, *fns):
     for fn in fns:
         out = fn(out)
     return out
+
+
+def is_date(x):
+    ''' is this a date?
+    '''
+    try:
+        d = datetime.datetime.strptime(x, '%Y-%m-%d')
+        assert d or True  # pylint please
+        return True
+    except TypeError:
+        return False
+    except ValueError:
+        return False
+
+
+def strip_date(site):
+    ''' remove the date from a string, unless it's only a date
+    '''
+    if ' ' not in site:
+        return site
+
+    *rest, last = site.split(' ')
+    rest = ' '.join(rest)
+
+    try:
+        d = datetime.datetime.strptime(last, '%Y-%m-%d')
+        assert d or True  # pylint please
+    except ValueError:
+        return site
+
+    return rest

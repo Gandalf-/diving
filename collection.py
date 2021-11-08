@@ -55,8 +55,15 @@ def go():
     name (after processing) from right to left. if there's another split under
     this one, the value is another dictionary, otherwise, it's a list of Images
     '''
+    return pipeline(_make_tree(_expand_names(named())))
+
+
+def pipeline(tree, reverse=True):
+    ''' intermediate steps!
+    '''
     return _data_to_various(
-        _pruner(_compress(_compress(_make_tree(_expand_names(named())))))
+        _pruner(
+            _compress(_compress(_compress(tree, reverse), reverse), reverse))
     )
 
 
@@ -160,7 +167,7 @@ def _pruner(tree, too_few=5):
     return tree
 
 
-def _compress(tree):
+def _compress(tree, reverse=True):
     """ look for sub trees with no 'data' key, which can be squished up a level
     """
     assert isinstance(tree, dict), tree
@@ -173,10 +180,15 @@ def _compress(tree):
         if "data" not in value and len(value.keys()) == 1:
             v = tree.pop(key)
             s = list(v.keys())[0]
-            new_key = s + " " + key
-            tree[new_key] = _compress(v[s])
+
+            if reverse:
+                new_key = s + " " + key
+            else:
+                new_key = key + " " + s
+
+            tree[new_key] = _compress(v[s], reverse)
         else:
-            tree[key] = _compress(value)
+            tree[key] = _compress(value, reverse)
 
     return tree
 

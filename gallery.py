@@ -13,33 +13,19 @@ from datetime import datetime
 
 import hypertext
 import information
+import locations
 import taxonomy
 import collection
 import static
 
 from detective import javascript as game
-from hypertext import Where
+from hypertext import Where, Side
 from image import Image
-from utility import tree_size
+from utility import tree_size, is_date, strip_date
 
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long
-
-
-def _find_by_path(tree, needle):
-    """search the tree for an image with this path"""
-    if not isinstance(tree, dict):
-        for image in tree:
-            if needle in image.path():
-                return image
-    else:
-        for child in tree.values():
-            found = _find_by_path(child, needle)
-            if found:
-                return found
-
-    return None
 
 
 def find_representative(tree, lineage=None):
@@ -80,7 +66,7 @@ def find_representative(tree, lineage=None):
 
 def get_info(where, lineage):
     """wikipedia information if available"""
-    if where == Where.Gallery:
+    if where != Where.Taxonomy:
         return ''
 
     htmls = []
@@ -103,7 +89,7 @@ def html_tree(tree, where, scientific, lineage=None):
     if not lineage:
         lineage = []
 
-    side = 'left' if where == Where.Gallery else 'right'
+    side = Side.Left if where == Where.Gallery else Side.Right
 
     html, title = hypertext.title(lineage, where, scientific)
     results = []
@@ -113,23 +99,28 @@ def html_tree(tree, where, scientific, lineage=None):
         html += '<div class="grid">'
 
     # categories
-    for key, value in sorted(tree.items()):
+    flip = where == Where.Sites and any(is_date(v) for v in tree.keys())
+    for key, value in sorted(tree.items(), reverse=flip):
         if key == "data":
             continue
 
-        new_lineage = [key] + lineage if side == 'left' else lineage + [key]
+        new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
         size = tree_size(value)
         example = find_representative(value, [key] + lineage)
 
         if where == Where.Gallery:
             subject = key.title()
+
+        elif where == Where.Sites:
+            subject = strip_date(key).title().replace("'S", "'s")
+
         else:
             subject = taxonomy.simplify(key)
 
         html += """
         <div class="image">
         <a href="{link}">
-            <img width=300 loading="lazy" src="/imgs/{thumbnail}">
+            <img width=300 loading="lazy" alt="{alt}" src="/imgs/{thumbnail}">
             <h3>
               <span class="sneaky">{size}</span>
               {subject}
@@ -138,6 +129,7 @@ def html_tree(tree, where, scientific, lineage=None):
         </a>
         </div>
         """.format(
+            alt=example.simplified(),
             subject=subject,
             link="/{where}/{path}.html".format(
                 where=where.name.lower(),
@@ -193,12 +185,12 @@ def html_tree(tree, where, scientific, lineage=None):
       <footer>
         <p>Copyright austin@anardil.net {now.year}</p>
       </footer>
-      {html_scripts}
+      {hypertext.scripts}
     </body>
     </html>
     """
 
-    if title in ('Gallery', 'Taxonomy'):
+    if title in ('Gallery', 'Taxonomy', 'Sites'):
         title = 'index'
 
     results.append((title, html))
@@ -209,6 +201,17 @@ def names_pool_writer(args):
     ''' callback for HTML writer pool '''
     title, html = args
     path = "gallery/{name}.html".format(name=title.replace(" ", "-"))
+
+    with open(path, "w+") as f:
+        print(html, file=f)
+
+
+def sites_pool_writer(args):
+    ''' callback for HTML writer pool '''
+    title, html = args
+    path = "sites/{name}.html".format(
+        name=title.replace(" ", "-").replace("'", '')
+    )
 
     with open(path, "w+") as f:
         print(html, file=f)
@@ -237,6 +240,11 @@ def write_all_html():
     name_htmls = html_tree(tree, Where.Gallery, scientific)
     print("done", len(name_htmls), "pages prepared")
 
+    print("walking sites tree... ", end="", flush=True)
+    sites = locations.sites()
+    sites_htmls = html_tree(sites, Where.Sites, scientific)
+    print("done", len(sites_htmls), "pages prepared")
+
     print("walking taxia tree... ", end="", flush=True)
     scientific = {v.replace(' sp', ''): k for k, v in scientific.items()}
     taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
@@ -244,12 +252,28 @@ def write_all_html():
 
     print("writing html... ", end="", flush=True)
     pool.map(names_pool_writer, name_htmls)
+    pool.map(sites_pool_writer, sites_htmls)
     pool.map(taxia_pool_writer, taxia_htmls)
     print("done")
 
     print("writing game... ", end="", flush=True)
     game(False)
     print("done")
+
+
+def _find_by_path(tree, needle):
+    """search the tree for an image with this path"""
+    if not isinstance(tree, dict):
+        for image in tree:
+            if needle in image.path():
+                return image
+    else:
+        for child in tree.values():
+            found = _find_by_path(child, needle)
+            if found:
+                return found
+
+    return None
 
 
 def _find_links():
@@ -287,15 +311,6 @@ def link_check():
     for path, link in _find_links():
         if not os.path.exists(link):
             print('broken', link, 'in', path)
-
-
-# resources
-
-html_scripts = """
-    <!-- fancybox is excellent, this project is not commercial -->
-    <script src="/jquery-3.6.0.min.js"></script>
-    <script src="/jquery.fancybox.min.js"></script>
-"""
 
 
 if not sys.flags.interactive and __name__ == "__main__":

@@ -5,6 +5,7 @@ html generation
 '''
 
 import enum
+import datetime
 
 import taxonomy
 from image import (
@@ -12,9 +13,17 @@ from image import (
     uncategorize,
     split,
 )
+from utility import strip_date
 
 
-Where = enum.Enum('Where', 'Gallery Taxonomy')
+Where = enum.Enum('Where', 'Gallery Taxonomy Sites')
+Side = enum.Enum('Side', 'Left Right')
+
+scripts = """
+    <!-- fancybox is excellent, this project is not commercial -->
+    <script src="/jquery-3.6.0.min.js"></script>
+    <script src="/jquery.fancybox.min.js"></script>
+"""
 
 
 def title(lineage, where, scientific):
@@ -28,6 +37,9 @@ def title(lineage, where, scientific):
     if where == Where.Gallery:
         return _gallery_title(lineage, scientific)
 
+    if where == Where.Sites:
+        return _sites_title(lineage)
+
     return '', ''
 
 
@@ -38,14 +50,16 @@ def lineage_to_link(lineage, side, key=None):
     else:
         name = ' '.join(lineage)
 
-        if key and side == 'left':
+        if key and side == Side.Left:
             name = key + ' ' + name
 
-        if key and side == 'right':
+        if key and side == Side.Right:
             name = name + ' ' + key
 
-    return name.replace(' ', '-')
+    return name.replace(' ', '-').replace("'", '')
 
+
+# PRIVATE
 
 def _head(_title):
     """top of the document"""
@@ -58,10 +72,16 @@ def _head(_title):
     elif _title.endswith('Taxonomy'):
         desc = (
             'Scuba diving pictures organized into a tree structure by '
-            'subject\'s scientific classification. Such as Athropoda, '
+            'subject\'s scientific classification. Such as Arthropoda, '
             'Cnidaria, Mollusca.'
         )
+    elif _title.endswith('Sites'):
+        desc = (
+            'Scuba diving pictures from Bonaire, Galapagos, British Columbia, '
+            'and Washington organized into a tree structure by dive site.'
+        )
     else:
+        _title = strip_date(_title)
         desc = f'Scuba diving pictures related to {_title}'
 
     return f"""
@@ -89,7 +109,7 @@ def _gallery_title(lineage, scientific):
 
     _title = ' '.join(lineage)
     display = uncategorize(_title).title()
-    side = 'left'
+    side = Side.Left
     html = _head(display)
 
     # create the buttons for each part of our name lineage
@@ -144,7 +164,7 @@ def _taxonomy_title(lineage, scientific):
 
     _title = ' '.join(lineage)
     display = uncategorize(_title)
-    side = 'right'
+    side = Side.Right
 
     html = _head(display)
     html += """
@@ -197,6 +217,64 @@ def _taxonomy_title(lineage, scientific):
     return html, _title
 
 
+def _sites_title(lineage):
+    ''' html head and title section for sites pages
+    '''
+    assert lineage
+
+    display = _title = ' '.join(lineage)
+    side = Side.Right
+
+    html = _head(display)
+    html += """
+        <a href="/sites/index.html">
+            <h1 class="top switch sites">Sites</h1>
+        </a>
+        <div class="top" id="buffer"></div>
+    """
+
+    # create the buttons for each part of our name lineage
+    name = ""
+    try:
+        last = lineage[-1]
+        if ' ' in last:
+            *rest, last = last.split(' ')
+            rest = ' '.join(rest)
+        else:
+            rest = None
+
+        d = datetime.datetime.strptime(last, '%Y-%m-%d')
+        assert d or True  # pylint please
+
+        name = last
+        if rest:
+            lineage = lineage[:-1] + [rest]
+    except ValueError:
+        pass
+
+    for i, _name in enumerate(lineage):
+        partial = lineage[: i + 1]
+        link = "/sites/{path}.html".format(
+            path=lineage_to_link(partial, side)
+        )
+
+        html += """
+        <a href="{link}">
+            <h1 class="{classes}">{title}</h1>
+        </a>
+        """.format(
+            title=_name, classes="top", link=link,
+        )
+
+    # ???
+    html += f"""
+    <p class="scientific">{name}</p>
+    </div>
+    """
+
+    return html, _title
+
+
 def _top_title(where):
     """html top for top level pages"""
     # title = 'Gallery' if where == Where.Gallery else 'Taxonomy'
@@ -226,6 +304,11 @@ def _top_title(where):
             <h1 class="top switch detective">Detective</h1>
         </a>
     '''
+    _sites = '''
+        <a href="/sites/index.html">
+            <h1 class="top switch sites">Sites</h1>
+        </a>
+    '''
     spacer = '<div class="top" id="buffer"></div>\n'
 
     html = _head(display)
@@ -235,11 +318,17 @@ def _top_title(where):
             _gallery,
             _detective.replace('h1', 'h2'),
         ]
-    else:
+    elif where == Where.Taxonomy:
         parts = [
-            _detective.replace('h1', 'h2'),
+            _sites.replace('h1', 'h2'),
             _taxonomy,
             _timeline.replace('h1', 'h2'),
+        ]
+    elif where == Where.Sites:
+        parts = [
+            _detective.replace('h1', 'h2'),
+            _sites,
+            _taxonomy.replace('h1', 'h2'),
         ]
 
     html += spacer.join(parts)

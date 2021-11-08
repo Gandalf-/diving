@@ -11,8 +11,9 @@ import hypertext
 import image
 import utility
 import information
+import locations
 
-from hypertext import Where
+from hypertext import Where, Side
 from taxonomy import MappingType
 
 
@@ -29,7 +30,7 @@ class TestHypertext(unittest.TestCase):
             ("d", True, ["a", "b", "c"], "a-b-c-d"),
         ]
         for key, right_side, lineage, after in samples:
-            side = 'right' if right_side else 'left'
+            side = Side.Right if right_side else Side.Left
             link = hypertext.lineage_to_link(lineage, side, key)
             self.assertEqual(link, after)
 
@@ -333,6 +334,26 @@ class TestInformation(unittest.TestCase):
         for lineage, after in samples:
             parts = information.lineage_to_names(lineage)
             self.assertEqual(parts, after)
+
+
+class TestLocations(unittest.TestCase):
+    ''' locations.py '''
+
+    def test_add_context(self):
+        ''' add_context
+        '''
+        samples = [
+            ('Edmonds', 'Washington Edmonds'),
+            ('Bonaire Oil Slick', 'Bonaire Oil Slick'),
+            ('Klein Bonaire M', 'Bonaire Klein Bonaire M'),
+            ('Rockaway Stretch Reef', 'Washington Rockaway Stretch Reef'),
+        ]
+        for before, after in samples:
+            self.assertEqual(locations.add_context(before), after)
+
+    def test_strip_date(self):
+        ''' strip_date
+        '''
 
 
 if __name__ == '__main__':

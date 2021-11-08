@@ -18,7 +18,6 @@ g unknown
 gorgonian fan coral
 h unknown
 limpet
-lobed compound tunicate
 moray eel
 orange encrusting sponge
 purple sponge
@@ -36,6 +35,5 @@ spaghetti worm
 spot flounder
 squid
 tiny orange anemone
-white glover leather tunicate
 white urchin
 zoanthid

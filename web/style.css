@@ -204,6 +204,10 @@ select {
   border-color: yellow;
 }
 
+.sites {
+  border-color: #fe5a1d;
+}
+
 .detective {
   border-color: red;
 }
@@ -221,7 +225,7 @@ h4.skip {
 }
 */
 
-@media (max-width: 480px) {
+@media (max-width: 520px) {
 
   /* typical phones */
   html {

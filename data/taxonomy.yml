@@ -67,6 +67,8 @@ Animalia:
         Suberitidae:
           Homaxinella:
             amphispicula: tough yellow branching sponge
+          Pseudosuberites:
+            montiniger: peach ball sponge
   Annelida:
     Polychaeta:
       sp: worm
@@ -284,9 +286,10 @@ Animalia:
             Toxopneustes:
               roseus: flower sea urchin
             Tripneustes:
-              depressus: white sea urchin
+              depressus: white urchin
           Strongylocentrotidae:
             Strongylocentrotus:
+              pallidus: white sea urchin
               purpuratus: purple sea urchin
               franciscanus: red sea urchin
               droebachiensis: green sea urchin
@@ -782,6 +785,11 @@ Animalia:
             Enteroctopus:
               dofleini: giant pacific octopus
     Gastropoda:
+      Cephalaspidea:
+        Philinoidea:
+          Gastropteridae:
+            Gastropteron:
+              pacificum: winged sea slug
       Lepetellida:
         Fissurelloidea:
           Fissurellidae:

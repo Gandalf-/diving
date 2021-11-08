@@ -1,5 +1,42 @@
 ---
 
+locations:
+  Washington:
+    - Blakely Harbor
+    - Dalco Wall
+    - Deception Pass
+    - Edmonds
+    - Gazzam Lake
+    - Keystone
+    - Point Defiance Wall
+    - Point Whitney
+    - Port Townsend
+    - Rockaway
+    - Metridium
+    - Marine Park
+    - Leiker's Reef
+    - Larrabee
+    - Sund Rock
+    - Tacoma North Wall
+    - Zees Reef
+  British Columbia:
+    - Argonaut Point
+    - Captain Island Light
+    - Nemo's Leap
+    - Jaggy Crack
+    - Jervis Point
+    - Power Lines
+  Galapagos:
+    - Baltra
+    - Cousin's Rock
+    - Darwin
+    - Fernandina
+    - Isabella
+    - Seymour Norte
+    - Wolf
+  Bonaire:
+    - Klein
+
 ignore:
   - pier
   - rock
@@ -86,6 +123,8 @@ categories:
     - dorid
     - doris
     - dendronotid
+    # not really :(
+    - sea slug
     - berthella
   anemone:
     - zoanthid
@@ -131,6 +170,16 @@ pinned:
       '2019-10-31 Klein Bonaire M/017 - Divers.jpg'
     Animalia Echinodermata:
       '2020-03-01 Jaggy Crack/022 - Rose Star.jpg'
+    Galapagos:
+      '2021-08-28 2 Fernandina Iguanas/008 - Marine Iguana.jpg'
+    British Columbia:
+      '2020-03-01 Power Lines/017 - Juvenile Yellow Eye Rockfish'
+    British Columbia Power Lines:
+      '2020-03-01 Power Lines/017 - Juvenile Yellow Eye Rockfish'
+    Washington:
+      '2020-06-17 Rockaway Beach/005 - Dungeness Crab.jpg'
+    Bonaire:
+      '2019-11-01 Bonaire Wayaka/025 - Green Moray Eel.jpg'
 
 difficulty:
   easy:
