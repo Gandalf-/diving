@@ -21,10 +21,16 @@ Animalia:
             Kaburakia:
               excelsa: giant flat worm
   Nemertea:
+    Pilidiophora:
+      Heteronemertea:
+        Lineidae:
+          Cerebratulus:
+            montgomery: rose ribbon worm
     Palaeonemertea:
       Tubulanidae:
         Tubulanus:
           sexlineatus: six lined ribbon worm
+          polymorphus: orange ribbon worm
   Porifera:
     Hexactinellida:
       Sceptrulophora:
@@ -112,6 +118,9 @@ Animalia:
             columbiana: red trumpet calcareous tube worm
           Protula:
             pacifica: white crown calcareous tube worm
+        Sabellariidae:
+          Neosabellaria:
+            cementarium: cemented sandmason tube worm
         Sabellidae:
           sp: feather duster worm
           Eudistylia:
@@ -295,6 +304,7 @@ Animalia:
               droebachiensis: green sea urchin
   Chordata:
     Chondrichthyes:
+      # cartilaginous fish
       Carcharhiniformes:
         sp: shark
         Carcharhinidae:
@@ -305,22 +315,30 @@ Animalia:
             galapagensis: galapagos shark
         Sphyrnidae:
           Sphyrna: hammerhead shark
-    Elasmobranchii:
-      Orectolobiformes:
-        Rhincodontidae:
-          Rhincodon:
-            typus: whale shark
-      Hexanchiformes:
-        Hexanchidae:
-          Hexanchus:
-            griseus: bluntnose sixgill shark
-      Dasyatidae: stingray
-      Myliobatiformes:
-        Myliobatidae: eagle ray
+      Elasmobranchii:
+        Orectolobiformes:
+          Rhincodontidae:
+            Rhincodon:
+              typus: whale shark
+        Hexanchiformes:
+          Hexanchidae:
+            Hexanchus:
+              griseus: bluntnose sixgill shark
+        Dasyatidae: stingray
+        Myliobatiformes:
+          Myliobatidae: eagle ray
+      Holocephali:
+        Chimaeriformes:
+          Chimaeridae:
+            Hydrolagus:
+              colliei: ratfish
     Ascidiacea:
       sp: tunicate
       Aplousobranchia:
         sp: compound tunicate
+        Polyclinidae:
+          Aplidium:
+            californicum: california sea pork tunicate
         Polycitoridae:
           Cystodytes:
             lobatus: lobed compound tunicate
@@ -387,9 +405,10 @@ Animalia:
             flavidus: tubesnout fish
       Syngnathiformes:
         Syngnathidae:
-          Hippocampinae:
-            Hippocampus:
-              ingens: pacific seahorse
+          Syngnathus:
+            leptorhynchus: bay pipefish
+          Hippocampus:
+            ingens: pacific seahorse
         Aulostomoidei:
           Aulostomoidea:
             Aulostomidae:
@@ -528,6 +547,9 @@ Animalia:
             funebris: green moray eel
       Scorpaeniformes:
         # mail-cheecked fish
+        Cyclopteridae:
+          Eumicrotremus:
+            orbis: spiny lumpsucker
         Agonidae:
           Agonopsis:
             vulsa: northern spearnose poacher
@@ -551,6 +573,8 @@ Animalia:
            richardsonii: grunt sculpin
         Cottidae:
           sp: sculpin
+          Leptocottus:
+            armatus: pacific staghorn sculpin
           Chitonotus:
             pugetensis: roughback sculpin
           Artedius:
@@ -606,12 +630,6 @@ Animalia:
           Lactophrys:
             bicaudalis: spotted trunkfish
             triqueter: smooth trunkfish
-    Holocephali:
-      # cartilaginous fish
-      Chimaeriformes:
-        Chimaeridae:
-          Hydrolagus:
-            colliei: ratfish
   Cnidaria:
     Scyphozoa:
       Semaeostomeae:
@@ -888,6 +906,9 @@ Animalia:
               verrucosa: red gilled nudibranch
         Dendronotoidea:
           Dendronotidae:
+            Tethydidae:
+              Melibe:
+                leonina: hooded nudibranch
             Dendronotus:
               iris: giant nudibranch
               rufus: red dendronotid
@@ -895,6 +916,8 @@ Animalia:
               diversicolor: multicolor dendronotid
         Onchidoridoidea:
           Onchidorididae:
+            Diaphorodoris:
+              lirulatocauda: porcupine dorid
             Onchidoris:
               bilamellata: barnacle eating nudibranch
             Adalaria:
@@ -960,6 +983,7 @@ Animalia:
             Heptacarpus:
               kincaidi: kincaid shrimp
               decorus: elegant coastal shrimp
+              stylus: stiletto shrimp
         Pandaloidea:
           Pandalidae:
             Pandalopsis:
@@ -998,12 +1022,17 @@ Animalia:
             Cryptolithodes:
               sitchensis: umbrella crab
           Paguridae:
+            sp: hermit crab
+            Elassochirus:
+              tenuimanus: widehand hermit crab
+            Parapagurodes:
+              hartae: brilliant hermit crab
             Pagurus:
-              sp: hermit crab
               armatus: blackeyed hermit crab
               granosimanus: grainyhand hermit crab
               caurinus: greenmark hermit crab
               beringanus: bering hermit crab
+              stevensae: stevens hermit crab
         Cancroidea:
           Cancridae:
             Glebocarcinus:
@@ -1027,7 +1056,8 @@ Animalia:
             Chorilia:
               longipes: longhorn decorator crab
             Pugettia:
-              producta: kelp crab
+              producta: northern kelp crab
+              richii: cryptic kelp crab
             Loxorhynchus:
               crispatus: moss crab
             Scyra:

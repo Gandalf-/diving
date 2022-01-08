@@ -42,7 +42,8 @@ def gallery_scientific(lineage, scientific, debug=True):
             break
 
     if not name and debug:
-        print('no taxonomy', ' '.join(lineage))
+        if 'various' not in lineage and 'egg' not in lineage:
+            print('no taxonomy', ' '.join(lineage))
 
     return name or ""
 

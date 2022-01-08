@@ -84,6 +84,48 @@ def get_info(where, lineage):
     return '<br>'.join(htmls)
 
 
+def _key_to_subject(key, where):
+    ''' helper!
+    '''
+    if where == Where.Gallery:
+        subject = key.title()
+    elif where == Where.Sites:
+        subject = strip_date(key).title().replace("'S", "'s")
+    else:
+        subject = taxonomy.simplify(key)
+    return subject
+
+
+def _image_to_name_html(image, where):
+    ''' create the html gallery link, entry, or nothing for this image
+    '''
+    if where in (Where.Gallery, Where.Taxonomy):
+        return ''
+
+    name_url = hypertext.image_to_gallery_link(image)
+    if name_url:
+        name_html = f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
+    else:
+        name_html = f'<p class="top elem nolink">{image.name}</p>'
+
+    return name_html
+
+
+def _image_to_site_html(image, where):
+    ''' create the html site link, entry, or nothing for this image
+    '''
+    if where == Where.Sites:
+        return ''
+
+    site_url = hypertext.image_to_sites_link(image)
+    if site_url:
+        site_html = f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
+    else:
+        site_html = f'<p class="top elem nolink">{image.site()}</p>'
+
+    return site_html
+
+
 def html_tree(tree, where, scientific, lineage=None):
     """html version of display"""
     if not lineage:
@@ -107,15 +149,7 @@ def html_tree(tree, where, scientific, lineage=None):
         new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
         size = tree_size(value)
         example = find_representative(value, [key] + lineage)
-
-        if where == Where.Gallery:
-            subject = key.title()
-
-        elif where == Where.Sites:
-            subject = strip_date(key).title().replace("'S", "'s")
-
-        else:
-            subject = taxonomy.simplify(key)
+        subject = _key_to_subject(key, where)
 
         html += """
         <div class="image">
@@ -162,12 +196,28 @@ def html_tree(tree, where, scientific, lineage=None):
             if identifier in seen:
                 continue
 
+            name_html = _image_to_name_html(image, where)
+            site_html = _image_to_site_html(image, where)
+
             html += """
-            <a data-fancybox="gallery" data-caption="{name}" href="{fullsize}">
-              <img width=300 loading="lazy" src="/imgs/{thumbnail}">
-            </a>
+            <div class="card" onclick="flip(this);">
+              <div class="card_face card_face-front">
+                <img width=300 loading="lazy" src="/imgs/{thumbnail}">
+              </div>
+              <div class="card_face card_face-back">
+                {name_html}
+                {site_html}
+                <a class="top elem timeline" data-fancybox="gallery" data-caption="{name} - {location}" href="{fullsize}">
+                Fullsize Image
+                </a>
+                <p class="top elem">Close</p>
+              </div>
+            </div>
             """.format(
-                name='{} - {}'.format(image.name, image.location()),
+                name=image.name,
+                name_html=name_html,
+                site_html=site_html,
+                location=image.location(),
                 fullsize=image.fullsize(),
                 thumbnail=image.thumbnail(),
             )
@@ -292,7 +342,7 @@ def _find_links():
                 link = link[1:]
                 yield path, link
 
-    for directory in ('taxonomy', 'gallery'):
+    for directory in ('taxonomy', 'gallery', 'sites'):
         for filename in os.listdir(directory):
             if not filename.endswith(".html"):
                 continue

@@ -111,6 +111,12 @@ class Image:
             break
         return when + ' ' + where[i:]
 
+    def site(self):
+        ''' directory minus numbering and date
+        '''
+        _, where = self.location().split(' ', 1)
+        return where
+
     def identifier(self):
         ''' unique ID
         '''

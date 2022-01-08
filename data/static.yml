@@ -19,6 +19,10 @@ locations:
     - Sund Rock
     - Tacoma North Wall
     - Zees Reef
+    - Fort Worden
+    - Fort Ward
+    - Saltwater State Park
+    - Redondo
   British Columbia:
     - Argonaut Point
     - Captain Island Light
@@ -73,6 +77,7 @@ qualifiers:
 categories:
   fish:
     - prickleback
+    - cabrilla
     - basslet
     - bass
     - blue tang
@@ -102,14 +107,19 @@ categories:
     - idol
     - blenny
     - jack
+    - lumpsucker
+    - barracuda
+    - mola
   shrimp:
     - prawn
     - amphipod
+    - isopod
     - sea flea
   algae:
     - sea laurel
     - sea grape
     - sea braid
+    - grass
     - seaweed
     - rockweed
     - turkish towel

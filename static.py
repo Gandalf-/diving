@@ -19,3 +19,16 @@ categories = _static['categories']
 pinned = _static['pinned']
 difficulty = _static['difficulty']
 locations = _static['locations']
+
+
+def _invert(tree):
+    ''' map locations to full location names
+    '''
+    out = {}
+    for area, places in tree.items():
+        for place in places:
+            out[place] = ' '.join([area, place])
+    return out
+
+
+location_map = _invert(locations)

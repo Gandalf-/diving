@@ -4,6 +4,8 @@
 html generation
 '''
 
+import os
+import copy
 import enum
 import datetime
 
@@ -14,6 +16,7 @@ from image import (
     split,
 )
 from utility import strip_date
+import locations
 
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites')
@@ -21,8 +24,23 @@ Side = enum.Enum('Side', 'Left Right')
 
 scripts = """
     <!-- fancybox is excellent, this project is not commercial -->
-    <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
+    <script>
+    function flip(elem) {
+        const label = 'is-flipped';
+        if (elem.classList.contains(label)) {
+            elem.classList.remove(label);
+        } else {
+            const seconds = 10;
+            elem.classList.add(label);
+            setTimeout(function () {
+                if (elem.classList.contains(label)) {
+                    elem.classList.remove(label);
+                }
+            }, 1000 * seconds);
+        }
+    }
+    </script>
 """
 
 
@@ -57,6 +75,39 @@ def lineage_to_link(lineage, side, key=None):
             name = name + ' ' + key
 
     return name.replace(' ', '-').replace("'", '')
+
+
+def image_to_gallery_link(image):
+    """ get the /gallery link
+
+    there could be mulitple subjects in this image, just take the first for now
+    """
+    clone = copy.deepcopy(image)
+    for _split in (' with ', ' and '):
+        if _split in clone.name:
+            clone.name, _ = clone.name.split(_split)
+
+    name = clone.normalized().replace(' ', '-').replace("'", '')
+    url = f'gallery/{name}.html'
+
+    if os.path.exists(url):
+        return f'/{url}'
+
+    return None
+
+
+def image_to_sites_link(image):
+    """ get the /sites/ link
+    """
+    when, where = image.location().split(' ', 1)
+    site = locations.add_context(where)
+    site = site.replace(' ', '-').replace("'", '')
+    url = f'sites/{site}-{when}.html'
+
+    if os.path.exists(url):
+        return f'/{url}'
+
+    return None
 
 
 # PRIVATE
@@ -257,6 +308,13 @@ def _sites_title(lineage):
         link = "/sites/{path}.html".format(
             path=lineage_to_link(partial, side)
         )
+
+        # it's possible that this is the only date available for this location,
+        # in which case we want the name to include the location and trim the
+        # lineage on more value
+        if not os.path.exists(link[1:]):
+            name = _name + ' ' + name
+            continue
 
         html += """
         <a href="{link}">
