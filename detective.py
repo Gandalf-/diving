@@ -14,7 +14,7 @@ from apocrypha.client import Client
 from image import unqualify, categorize, split
 import collection
 import taxonomy
-import static
+import util.static as static
 
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'

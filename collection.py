@@ -9,7 +9,7 @@ import os
 
 from image import Image, categorize, split
 from util.common import flatten, tree_size, root
-import static
+import util.static as static
 
 
 def named():

@@ -17,7 +17,7 @@ import locations
 import taxonomy
 import timeline
 import collection
-import static
+import util.static as static
 
 from detective import javascript as game
 from hypertext import Where, Side

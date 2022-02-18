@@ -11,7 +11,7 @@ import inflect
 from apocrypha.client import Client
 
 import util.common as utility
-import static
+import util.static as static
 
 database = Client()
 inflect = inflect.engine()

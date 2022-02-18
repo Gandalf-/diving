@@ -5,7 +5,7 @@ collecting dive locations
 '''
 
 import collection
-import static
+import util.static as static
 
 
 def add_context(site):

@@ -9,7 +9,7 @@ import yaml
 
 _root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
-with open(_root + 'data/static.yml') as fd:
+with open(_root + '../data/static.yml') as fd:
     _static = yaml.safe_load(fd)
 
 ignore = _static['ignore']
