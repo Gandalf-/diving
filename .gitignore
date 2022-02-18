@@ -1,6 +1,6 @@
 .vscode
 __pycache__
-detective/data.js
+web/detective/data.js
 tags
 node_modules
 *.pyc
