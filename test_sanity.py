@@ -12,7 +12,7 @@ import hypertext
 import image
 import utility
 import information
-import sites.locations as locations
+import locations
 
 from hypertext import Where, Side
 from taxonomy import MappingType

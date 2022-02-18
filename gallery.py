@@ -13,7 +13,7 @@ from datetime import datetime
 
 import hypertext
 import information
-import sites.locations as locations
+import locations
 import taxonomy
 import timeline
 import collection

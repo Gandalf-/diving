@@ -16,7 +16,7 @@ from image import (
     split,
 )
 from utility import strip_date, fast_exists
-import sites.locations as locations
+import locations
 
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites')
