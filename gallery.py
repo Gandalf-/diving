@@ -22,7 +22,7 @@ import static
 from detective import javascript as game
 from hypertext import Where, Side
 from image import Image
-from utility import tree_size, is_date, strip_date
+from util.common import tree_size, is_date, strip_date
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long

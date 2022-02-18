@@ -8,7 +8,7 @@ import difflib
 import os
 
 from image import Image, categorize, split
-from utility import flatten, tree_size, root
+from util.common import flatten, tree_size, root
 import static
 
 

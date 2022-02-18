@@ -10,7 +10,7 @@ import taxonomy
 import gallery
 import hypertext
 import image
-import utility
+import util.common as utility
 import information
 import locations
 

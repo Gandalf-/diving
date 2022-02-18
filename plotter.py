@@ -9,8 +9,8 @@ import taxonomy
 import detective
 import collection
 
-from utility import flatten, tree_size
-from plot_utility import BubbleChart
+from util.common import flatten, tree_size
+from util.plotting import BubbleChart
 
 
 m.rcParams['figure.dpi'] = 175

@@ -10,7 +10,7 @@ import os
 import inflect
 from apocrypha.client import Client
 
-import utility
+import util.common as utility
 import static
 
 database = Client()

@@ -10,7 +10,7 @@ import operator
 import collection
 import hypertext
 from hypertext import Where
-import utility
+import util.common as utility
 
 
 _html_head = '''\

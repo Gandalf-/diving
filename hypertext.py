@@ -15,7 +15,7 @@ from image import (
     uncategorize,
     split,
 )
-from utility import strip_date, fast_exists
+from util.common import strip_date, fast_exists
 import locations
 
 
