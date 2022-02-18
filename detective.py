@@ -29,7 +29,7 @@ def cache_hash(images):
 
     for image in images:
         label = image.identifier()
-        sha1 = client.get('diving', 'cache-hash', label)
+        sha1 = client.get('diving', 'cache', label, 'hash')
 
         if not sha1:
             needed.append(image)
@@ -39,7 +39,7 @@ def cache_hash(images):
         if needed:
             bulk = hasher(needed)
             for (l, h) in zip(labels, bulk):
-                client.set('diving', 'cache-hash', l, value=h)
+                client.set('diving', 'cache', l, 'hash', value=h)
 
             needed = []
             labels = []
@@ -49,7 +49,7 @@ def cache_hash(images):
 
     bulk = hasher(needed)
     for (l, h) in zip(labels, bulk):
-        client.set('diving', 'cache-hash', l, value=h)
+        client.set('diving', 'cache', l, 'hash', value=h)
 
     yield from bulk
 

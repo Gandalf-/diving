@@ -13,8 +13,9 @@ from datetime import datetime
 
 import hypertext
 import information
-import locations
+import sites.locations as locations
 import taxonomy
+import timeline
 import collection
 import static
 
@@ -22,7 +23,6 @@ from detective import javascript as game
 from hypertext import Where, Side
 from image import Image
 from utility import tree_size, is_date, strip_date
-
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long
@@ -88,42 +88,18 @@ def _key_to_subject(key, where):
     ''' helper!
     '''
     if where == Where.Gallery:
-        subject = key.title()
+        subject = taxonomy.is_scientific_name(key)
+        if not subject:
+            subject = key.title()
+        else:
+            subject = f'<em>{subject}</em>'
+
     elif where == Where.Sites:
         subject = strip_date(key).title().replace("'S", "'s")
     else:
         subject = taxonomy.simplify(key)
+
     return subject
-
-
-def _image_to_name_html(image, where):
-    ''' create the html gallery link, entry, or nothing for this image
-    '''
-    if where in (Where.Gallery, Where.Taxonomy):
-        return ''
-
-    name_url = hypertext.image_to_gallery_link(image)
-    if name_url:
-        name_html = f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
-    else:
-        name_html = f'<p class="top elem nolink">{image.name}</p>'
-
-    return name_html
-
-
-def _image_to_site_html(image, where):
-    ''' create the html site link, entry, or nothing for this image
-    '''
-    if where == Where.Sites:
-        return ''
-
-    site_url = hypertext.image_to_sites_link(image)
-    if site_url:
-        site_html = f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
-    else:
-        site_html = f'<p class="top elem nolink">{image.site()}</p>'
-
-    return site_html
 
 
 def html_tree(tree, where, scientific, lineage=None):
@@ -196,8 +172,8 @@ def html_tree(tree, where, scientific, lineage=None):
             if identifier in seen:
                 continue
 
-            name_html = _image_to_name_html(image, where)
-            site_html = _image_to_site_html(image, where)
+            name_html = hypertext.image_to_name_html(image, where)
+            site_html = hypertext.image_to_site_html(image, where)
 
             html += """
             <div class="card" onclick="flip(this);">
@@ -251,7 +227,6 @@ def names_pool_writer(args):
     ''' callback for HTML writer pool '''
     title, html = args
     path = "gallery/{name}.html".format(name=title.replace(" ", "-"))
-
     with open(path, "w+") as f:
         print(html, file=f)
 
@@ -262,7 +237,6 @@ def sites_pool_writer(args):
     path = "sites/{name}.html".format(
         name=title.replace(" ", "-").replace("'", '')
     )
-
     with open(path, "w+") as f:
         print(html, file=f)
 
@@ -271,7 +245,14 @@ def taxia_pool_writer(args):
     ''' callback for HTML writer pool '''
     title, html = args
     path = "taxonomy/{name}.html".format(name=title.replace(" ", "-"))
+    with open(path, "w+") as f:
+        print(html, file=f)
 
+
+def times_pool_writer(args):
+    ''' callback for HTML writer pool '''
+    title, html = args
+    path = f"timeline/{title}"
     with open(path, "w+") as f:
         print(html, file=f)
 
@@ -300,10 +281,15 @@ def write_all_html():
     taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
     print("done", len(taxia_htmls), "pages prepared")
 
+    print("walking timeline...   ", end="", flush=True)
+    times_htmls = timeline.timeline()
+    print("done", len(times_htmls), "pages prepared")
+
     print("writing html... ", end="", flush=True)
     pool.map(names_pool_writer, name_htmls)
     pool.map(sites_pool_writer, sites_htmls)
     pool.map(taxia_pool_writer, taxia_htmls)
+    pool.map(times_pool_writer, times_htmls)
     print("done")
 
     print("writing game... ", end="", flush=True)

@@ -4,6 +4,7 @@
 parsing data from the file system to construct trees of images
 '''
 
+import difflib
 import os
 
 from image import Image, categorize, split
@@ -89,14 +90,48 @@ def find_vague_names():
                 yield image
 
 
-# PRIVATE
+def find_wrong_name_order(tree):
+    ''' look for swapped words
+    '''
+    if not isinstance(tree, dict):
+        return
 
-def _listing():
-    """ a list of all dive picture folders available """
-    return [d for d in os.listdir(root) if not d.startswith(".")]
+    conflicts = []
+    seen = {}
+
+    for key in tree.keys():
+        flattened = ' '.join(sorted(key.split(' ')))
+
+        if flattened in seen:
+            conflicts.append((seen[flattened], key,))
+        else:
+            seen[flattened] = key
+
+    yield from conflicts
+    for value in tree.values():
+        yield from find_wrong_name_order(value)
 
 
-def _delve(directory):
+def find_misspelled_names():
+    ''' look for edit distance
+
+    prune based on taxonomy.load_known()
+    '''
+    everything = {
+        (categorize(split(i.simplified())), i)
+        for i in _expand_names(named())
+    }
+
+    names = list({n for (n, _) in everything if 'unknown' not in n})
+    while names:
+        name = names.pop()
+        items = difflib.get_close_matches(name, names, cutoff=0.8)
+        items = [item for item in items if item not in name]
+        if items:
+            yield (name, items)
+
+
+def delve(directory):
     """ create an Image object for each picture in a directory """
     path = os.path.join(root, directory)
     return [
@@ -106,9 +141,16 @@ def _delve(directory):
     ]
 
 
+# PRIVATE
+
+def _listing():
+    """ a list of all dive picture folders available """
+    return [d for d in os.listdir(root) if not d.startswith(".")]
+
+
 def _collect():
     """ run delve on all dive picture folders """
-    return [_delve(d) for d in _listing()]
+    return [delve(d) for d in _listing()]
 
 
 def _expand_names(images):

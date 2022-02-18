@@ -12,6 +12,18 @@ if os.name == 'nt':
     root = "Z:/Media/Pictures/Diving"
 
 
+def take(xs, n):
+    ''' pull n items from xs '''
+    out = []
+    count = 0
+    for x in xs:
+        if count == n:
+            break
+        count += 1
+        out.append(x)
+    return out
+
+
 def flatten(xs):
     ''' [[a]] -> [a] '''
     return [item for sublist in xs for item in sublist]
@@ -84,3 +96,17 @@ def strip_date(site):
         return site
 
     return rest
+
+
+_EXISTS = dict()
+
+
+def fast_exists(path):
+    ''' cached os.path.exists
+    '''
+    if path in _EXISTS:
+        return _EXISTS[path]
+
+    exists = os.path.exists(path)
+    _EXISTS[path] = exists
+    return exists

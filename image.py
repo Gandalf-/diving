@@ -180,7 +180,7 @@ class Image:
     def _hash(self):
         ''' hash a file the same way indexer does, so we can find it's thumbnail
         '''
-        digest = database.get('diving', 'cache-hash', self.identifier())
+        digest = database.get('diving', 'cache', self.identifier(), 'hash')
         if digest:
             return digest
 
@@ -194,5 +194,5 @@ class Image:
                 sha1.update(data)
 
         digest = sha1.hexdigest()
-        database.set('diving', 'cache-hash', self.identifier(), value=digest)
+        database.set('diving', 'cache', self.identifier(), 'hash', value=digest)
         return digest

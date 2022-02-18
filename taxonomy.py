@@ -21,7 +21,7 @@ from image import uncategorize, unqualify, unsplit
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 
-def gallery_scientific(lineage, scientific, debug=True):
+def gallery_scientific(lineage, scientific, debug=False):
     ''' attempt to find a scientific name for this page
     '''
     def lookup(names, *fns):
@@ -42,7 +42,10 @@ def gallery_scientific(lineage, scientific, debug=True):
             break
 
     if not name and debug:
-        if 'various' not in lineage and 'egg' not in lineage:
+        for skip in ('various', 'egg', 'unknown', 'wreck'):
+            if skip in lineage:
+                break
+        else:
             print('no taxonomy', ' '.join(lineage))
 
     return name or ""
@@ -129,7 +132,37 @@ def gallery_tree(tree=None):
     return taxia
 
 
+def binomial_names(tree=None, parent=None):
+    ''' scientific binomial names
+    '''
+    if not tree:
+        tree = load_tree()
+
+    if not isinstance(tree, dict):
+        return
+
+    for key, value in tree.items():
+        if key.islower() and key != 'sp':
+            assert parent, key
+            yield f'{parent} {key}'
+        else:
+            yield from binomial_names(value, parent=key)
+
+
+def is_scientific_name(name):
+    ''' cached lookup
+    '''
+    if not _NAMES_CACHE:
+        for bname in binomial_names():
+            _NAMES_CACHE[bname.lower()] = bname
+
+    return _NAMES_CACHE.get(name.lower())
+
+
 # PRIVATE
+
+_NAMES_CACHE = dict()
+
 
 def _to_classification(name, mappings):
     ''' find a suitable classification for this common name

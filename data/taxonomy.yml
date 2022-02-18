@@ -93,7 +93,7 @@ Animalia:
             polygnatha: many jawed worm
         Nereididae:
           Nereis:
-            sp: sea nymph
+            # sp: sea nymph
             vexillosa: banner sea nymph
       Eunicida:
         Eunicidae:
@@ -168,6 +168,15 @@ Animalia:
               murrayana: fan bryozoan
               lichenoides: leaf crust bryozoan
   Echinodermata:
+    Ophiuroidea:
+      # sp: brittle star
+      Amphilepidida:
+        Ophiactoidea:
+          Ophiotrichidae:
+            Ophiothrix:
+              spiculata: glass spined brittle star
+            Ophiothela:
+              mirabilis: epizoic brittle star
     Crinoidea:
       Comatulida:
         Antedonidae:
@@ -200,15 +209,6 @@ Animalia:
           Pisaster:
             ochraceus: ochre star
             brevispinus: giant pink star
-      Ophiuroidea:
-        sp: brittle star
-        Amphilepidida:
-          Ophiactoidea:
-            Ophiotrichidae:
-              Ophiothrix:
-                spiculata: glass spined brittle star
-              Ophiothela:
-                mirabilis: epizoic brittle star
       Valvatida:
         Mithrodiidae:
           Mithrodia:
@@ -558,13 +558,10 @@ Animalia:
         Liparidae:
           Liparis:
             fucensis: slipskin snailfish
-        Synanceiidae:
-          Synanceia: stonefish
         Scorpaenidae:
           Pterois: lionfish
           Scorpaena:
-            plumieri-mystes:
-              stone fish
+            plumieri-mystes: stone fish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin
@@ -573,6 +570,8 @@ Animalia:
            richardsonii: grunt sculpin
         Cottidae:
           sp: sculpin
+          Oligocottus:
+            maculosus: tidepool sculpin
           Leptocottus:
             armatus: pacific staghorn sculpin
           Chitonotus:
@@ -614,7 +613,7 @@ Animalia:
       Tetraodontiformes:
         Tetraodontoidei:
           Tetraodontoidae:
-            sp: pufferfish
+            # sp: pufferfish
             Arothron:
               meleagris: guineafowl pufferfish
         Balistidae:
@@ -681,21 +680,34 @@ Animalia:
           Lafoea:
             dumosa: muff hydroid
     Anthozoa:
+      Antipatharia:
+        Antipathidae:
+          Antipathes:
+            galapagensis: antipathes galapagensis coral
       Veretillidae:
         Cavernulina:
-          darwini: darwini coral
+          darwini: cavernulina darwini coral
       Scleractinia:
+        Pocilloporidae:
+          Pocillopora: pocillopora coral
+        Poritidae:
+          Porites:
+            lobata: porites lobata coral
         Dendrophylliidae:
           Rhizopsammia:
-            wellingtoni: wellingtoni coral
+            wellingtoni: rhizopsammia wellingtoni coral
           Tubastraea:
-            coccinea: coccinea coral
+            coccinea: tubastraea coccinea coral
         Agariciidae:
           Pavona:
+            sp: pavona coral
+            gigantea: pavona gigantea coral
             chiriquiensis: chiriquiensis coral
         Mussidae: brain coral
         Solenastrea:
           bournoni: smooth star coral
+        Pocillopora:
+          meandrina: pocillopora meandrina coral
         Acroporidae:
           Acropora:
             cervicornis: staghorn coral
@@ -713,7 +725,11 @@ Animalia:
             gurneyi: gurneyi sea pen
             undulatus: undulatus sea pen
       Alcyonacea:
+        sp: fan coral
         # soft coral
+        Gorgoniidae:
+          Pacifigorgia:
+            darwinii: pacifigorgia darwinii fan coral
         Plexauridae:
           Swiftia:
             torreyi: dwarf red gorgonian coral
@@ -852,7 +868,7 @@ Animalia:
         Doridoidea:
           Chromodorididae:
             Felimare:
-              lapislazuli: starry night nudibranch
+              lapislazuli: blue spotted doris
           Dorididae:
             Doris:
               montereyensis: monterey sea lemon
@@ -1056,6 +1072,7 @@ Animalia:
             Chorilia:
               longipes: longhorn decorator crab
             Pugettia:
+              sp: kelp crab
               producta: northern kelp crab
               richii: cryptic kelp crab
             Loxorhynchus:
@@ -1081,7 +1098,7 @@ Plantae:
     # sp: brown algae
     Phaeophyceae:
       Laminariales:
-        sp: kelp
+        # sp: kelp
         Laminariaceae:
           Nereocystis:
             luetkeana: bull kelp

@@ -2,6 +2,7 @@
 Sanity checks
 '''
 
+import copy
 import unittest
 
 import collection
@@ -11,7 +12,7 @@ import hypertext
 import image
 import utility
 import information
-import locations
+import sites.locations as locations
 
 from hypertext import Where, Side
 from taxonomy import MappingType
@@ -118,6 +119,36 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(indices, sorted(indices), lineage)
             self.assertEqual(title, ' '.join(lineage))
 
+    def test_title_ordinary(self):
+        ''' typical common name
+        '''
+        # gallery
+        html, title = hypertext.title(
+            ['heart', 'crab'],
+            Where.Gallery,
+            TestGallery.g_scientific
+        )
+        self.assertEqual(title, 'heart crab')
+        self.assertIn('<title>Heart Crab</title>', html)
+        self.assertIn('"top">Heart<', html)
+        self.assertIn('"top">Crab<', html)
+        self.assertNotIn('<em>', html)
+
+    def test_title_scientific_common_name(self):
+        ''' some gallery entries may use scientific names when there isn't a
+        common name available
+        '''
+        # gallery
+        html, title = hypertext.title(
+            ['tubastraea coccinea', 'coral'],
+            Where.Gallery,
+            TestGallery.g_scientific
+        )
+        self.assertEqual(title, 'tubastraea coccinea coral')
+        self.assertIn('<title>Tubastraea coccinea Coral</title>', html)
+        self.assertIn('"top"><em>Tubastraea coccinea</em><', html)
+        self.assertNotIn('Coccinea', html)
+
     def test_title_names(self):
         ''' html titles top level
         '''
@@ -141,22 +172,39 @@ class TestGallery(unittest.TestCase):
 
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
+    tree = collection.go()
 
     def test_find_representative(self):
         ''' picking the newest image to represent a tree, or a predefined
         'pinned' image
         '''
-        tree = collection.go()
-
-        self.assertIn('fish', tree)
-        out = gallery.find_representative(tree['fish'], lineage=['fish'])
+        self.assertIn('fish', TestGallery.tree)
+        out = gallery.find_representative(
+            TestGallery.tree['fish'], lineage=['fish']
+        )
         self.assertEqual(out.name, 'Juvenile Yellow Eye Rockfish')
 
-        self.assertIn('barnacle', tree)
+        self.assertIn('barnacle', TestGallery.tree)
         out = gallery.find_representative(
-            tree['barnacle'], lineage=['barnacle']
+            TestGallery.tree['barnacle'], lineage=['barnacle']
         )
         self.assertIsNotNone(out)
+
+    def test_html_tree_gallery(self):
+        ''' basics
+        '''
+        sub_tree = TestGallery.tree['coral']
+        htmls = gallery.html_tree(
+            sub_tree, Where.Gallery, TestGallery.g_scientific, ['coral']
+        )
+
+        self.assertNotEqual(htmls, [])
+        (title, html) = htmls[-1]
+
+        self.assertEqual(title, 'coral')
+        self.assertRegex(html, r'(?s)<head>.*<title>.*Coral.*</title>.*</head>')
+        self.assertRegex(html, r'(?s)<h3>.*Fan.*</h3>')
+        self.assertRegex(html, r'(?s)<h3>.*Rhizopsammia wellingtoni.*</h3>')
 
 
 class TestTaxonomy(unittest.TestCase):
@@ -219,6 +267,24 @@ class TestTaxonomy(unittest.TestCase):
         ]
         for before, after in samples:
             self.assertEqual(after, taxonomy.simplify(before))
+
+    def test_title_scientific_name(self):
+        ''' cached helper
+        '''
+        for example in ('crab', 'fish', 'giant pacific octopus'):
+            self.assertIsNone(taxonomy.is_scientific_name(example), example)
+
+        for example in ('acanthodoris hudsoni', 'antipathes galapagensis'):
+            self.assertIsNotNone(taxonomy.is_scientific_name(example), example)
+
+    def test_binomial_names(self):
+        ''' parse binomial names from taxonomy.yml
+        '''
+        names = list(taxonomy.binomial_names())
+        self.assertNotEqual(names, [])
+
+        self.assertNotIn('Acanthodoris', names)
+        self.assertIn('Acanthodoris hudsoni', names)
 
 
 class TestImage(unittest.TestCase):
@@ -354,6 +420,56 @@ class TestLocations(unittest.TestCase):
     def test_strip_date(self):
         ''' strip_date
         '''
+
+
+class TestCollection(unittest.TestCase):
+    ''' collection.py '''
+
+    def build_swapped_tree(self):
+        ''' swapped words
+        '''
+        tree = copy.deepcopy(TestGallery.tree)
+        nudi = tree['nudibranch']['sea lemon']['freckled pale']['data'].pop()
+        nudi.name = 'Pale Freckled Sea Lemon'
+
+        tree['nudibranch']['sea lemon']['pale freckled'] = {
+            'data': [nudi]
+        }
+
+        self.assertIn('pale freckled', tree['nudibranch']['sea lemon'].keys())
+        self.assertIn('freckled pale', tree['nudibranch']['sea lemon'].keys())
+
+        return tree
+
+    def test_detect_wrong_name_order(self):
+        ''' pale freckled sea lemon vs freckled pale sea lemon
+        '''
+        tree = self.build_swapped_tree()
+
+        wrong = list(collection.find_wrong_name_order(tree))
+        self.assertNotEqual(wrong, [])
+
+    def test_repair_wrong_name_order(self):
+        ''' pale freckled sea lemon vs freckled pale sea lemon
+        '''
+        self.assertEqual(1, 1)
+
+    def test_detect_misspelling(self):
+        ''' curlyhead spaghetti worm vs curlyheaded spaghetti worm
+        '''
+        tree = copy.deepcopy(TestGallery.tree)
+        worm = tree['worm']['spaghetti']['curlyhead']['data'].pop()
+        worm.name = 'Curlyheaded Spaghetti Worm'
+
+        tree['worm']['spaghetti']['curlyheaded'] = {
+            'data': [worm],
+        }
+
+        self.assertIn('curlyheaded', tree['worm']['spaghetti'].keys())
+        self.assertIn('curlyhead', tree['worm']['spaghetti'].keys())
+
+        wrong = list(collection.find_misspelled_names())
+        self.assertNotEqual(wrong, [])
 
 
 if __name__ == '__main__':

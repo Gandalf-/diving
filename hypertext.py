@@ -15,8 +15,8 @@ from image import (
     uncategorize,
     split,
 )
-from utility import strip_date
-import locations
+from utility import strip_date, fast_exists
+import sites.locations as locations
 
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites')
@@ -24,6 +24,7 @@ Side = enum.Enum('Side', 'Left Right')
 
 scripts = """
     <!-- fancybox is excellent, this project is not commercial -->
+    <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
     <script>
     function flip(elem) {
@@ -77,7 +78,7 @@ def lineage_to_link(lineage, side, key=None):
     return name.replace(' ', '-').replace("'", '')
 
 
-def image_to_gallery_link(image):
+def _image_to_gallery_link(image):
     """ get the /gallery link
 
     there could be mulitple subjects in this image, just take the first for now
@@ -90,13 +91,13 @@ def image_to_gallery_link(image):
     name = clone.normalized().replace(' ', '-').replace("'", '')
     url = f'gallery/{name}.html'
 
-    if os.path.exists(url):
+    if fast_exists(url):
         return f'/{url}'
 
     return None
 
 
-def image_to_sites_link(image):
+def _image_to_sites_link(image):
     """ get the /sites/ link
     """
     when, where = image.location().split(' ', 1)
@@ -104,13 +105,14 @@ def image_to_sites_link(image):
     site = site.replace(' ', '-').replace("'", '')
     url = f'sites/{site}-{when}.html'
 
-    if os.path.exists(url):
+    if fast_exists(url):
         return f'/{url}'
 
     return None
 
 
 # PRIVATE
+
 
 def _head(_title):
     """top of the document"""
@@ -157,27 +159,44 @@ def _gallery_title(lineage, scientific):
     ''' html head and title section for gallery pages
     '''
     assert lineage
+    side = Side.Left
+
+    # check for scientific name for gallery
+    slink = sname = taxonomy.gallery_scientific(lineage, scientific)
+    sname = taxonomy.simplify(sname)
+    if slink.endswith(' sp'):
+        slink = slink.replace(' sp', '')
+
+    scientific_common_name = slink.lower().endswith(lineage[0].lower())
+
+    if scientific_common_name:
+        lineage = [slink[-len(lineage[0]) :]] + [
+            e.title() for e in lineage[1:]
+        ]
+    else:
+        lineage = [e.title() for e in lineage]
 
     _title = ' '.join(lineage)
-    display = uncategorize(_title).title()
-    side = Side.Left
+    display = uncategorize(_title)
+
+    slink = slink.replace(' ', '-')
     html = _head(display)
 
     # create the buttons for each part of our name lineage
     for i, name in enumerate(lineage):
+        if i == 0 and scientific_common_name:
+            name = f'<em>{name}</em>'
 
         partial = lineage[i:]
-        link = "/gallery/{path}.html".format(
+        _link = "/gallery/{path}.html".format(
             path=lineage_to_link(partial, side)
-        )
+        ).lower()
 
-        html += """
-        <a href="{link}">
-            <h1 class="{classes}">{title}</h1>
+        html += f"""
+        <a href="{_link}">
+            <h1 class="top">{name}</h1>
         </a>
-        """.format(
-            title=name.title(), classes="top", link=link,
-        )
+        """
 
     html += """
         <div class="top" id="buffer"></div>
@@ -187,25 +206,18 @@ def _gallery_title(lineage, scientific):
         </a>
     """
 
-    # check for scientific name for gallery
-    link = name = taxonomy.gallery_scientific(lineage, scientific)
-    name = taxonomy.simplify(name)
-    if link.endswith(' sp'):
-        link = link.replace(' sp', '')
-    link = link.replace(' ', '-')
-
-    if link:
+    if slink:
         html += f"""
-        <a href="/taxonomy/{link}.html" class="scientific crosslink">{name}</a>
+        <a href="/taxonomy/{slink}.html" class="scientific crosslink">{sname}</a>
         </div>
         """
     else:
         html += f"""
-        <p class="scientific">{name}</p>
+        <p class="scientific">{sname}</p>
         </div>
         """
 
-    return html, _title
+    return html, _title.lower()
 
 
 def _taxonomy_title(lineage, scientific):
@@ -305,9 +317,7 @@ def _sites_title(lineage):
 
     for i, _name in enumerate(lineage):
         partial = lineage[: i + 1]
-        link = "/sites/{path}.html".format(
-            path=lineage_to_link(partial, side)
-        )
+        link = "/sites/{path}.html".format(path=lineage_to_link(partial, side))
 
         # it's possible that this is the only date available for this location,
         # in which case we want the name to include the location and trim the
@@ -331,6 +341,40 @@ def _sites_title(lineage):
     """
 
     return html, _title
+
+
+def image_to_name_html(image, where):
+    ''' create the html gallery link, entry, or nothing for this image
+    '''
+    if where in (Where.Gallery, Where.Taxonomy):
+        return ''
+
+    name_url = _image_to_gallery_link(image)
+    if name_url:
+        name_html = (
+            f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
+        )
+    else:
+        name_html = f'<p class="top elem nolink">{image.name}</p>'
+
+    return name_html
+
+
+def image_to_site_html(image, where):
+    ''' create the html site link, entry, or nothing for this image
+    '''
+    if where == Where.Sites:
+        return ''
+
+    site_url = _image_to_sites_link(image)
+    if site_url:
+        site_html = (
+            f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
+        )
+    else:
+        site_html = f'<p class="top elem nolink">{image.site()}</p>'
+
+    return site_html
 
 
 def _top_title(where):
