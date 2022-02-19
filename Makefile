@@ -9,3 +9,7 @@ test:
 lint:
 	pylint **/*.py
 	flake8 **/*.py
+
+.PHONY: format
+format:
+	black -l 79 -S **/*.py

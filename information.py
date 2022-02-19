@@ -215,10 +215,13 @@ def html(name: str) -> (str, str):
 
     ref = reference(entry)
 
-    return f'''<div class="info">
+    return (
+        f'''<div class="info">
     {text}
     <p class="ref">{ref}</p>
-    </div>''', entry['url']
+    </div>''',
+        entry['url'],
+    )
 
 
 def missing_list():

@@ -21,8 +21,7 @@ def all_names():
     ''' all simplified, split names
     '''
     everything = {
-        (categorize(split(i.simplified())), i)
-        for i in _expand_names(named())
+        (categorize(split(i.simplified())), i) for i in _expand_names(named())
     }
 
     return {n for (n, _) in everything}
@@ -64,7 +63,8 @@ def pipeline(tree, reverse=True):
     '''
     return _data_to_various(
         _pruner(
-            _compress(_compress(_compress(tree, reverse), reverse), reverse))
+            _compress(_compress(_compress(tree, reverse), reverse), reverse)
+        )
     )
 
 
@@ -75,8 +75,7 @@ def find_vague_names():
     collections.Counter(i.simplified() for i in find_vague_names())
     '''
     everything = {
-        (categorize(split(i.simplified())), i)
-        for i in _expand_names(named())
+        (categorize(split(i.simplified())), i) for i in _expand_names(named())
     }
 
     names = {n for (n, _) in everything}
@@ -118,8 +117,7 @@ def find_misspelled_names():
     prune based on taxonomy.load_known()
     '''
     everything = {
-        (categorize(split(i.simplified())), i)
-        for i in _expand_names(named())
+        (categorize(split(i.simplified())), i) for i in _expand_names(named())
     }
 
     names = list({n for (n, _) in everything if 'unknown' not in n})
@@ -142,6 +140,7 @@ def delve(directory):
 
 
 # PRIVATE
+
 
 def _listing():
     """ a list of all dive picture folders available """

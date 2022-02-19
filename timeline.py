@@ -66,7 +66,8 @@ def timeline():
     ''' generate all the timeline html
     '''
     dives = [
-        d for d in sorted(os.listdir(utility.root), reverse=True)
+        d
+        for d in sorted(os.listdir(utility.root), reverse=True)
         if d.startswith('20')
     ]
     results = []
@@ -77,16 +78,18 @@ def timeline():
     paths = [path for (path, _) in results]
     divs = '\n'.join(f"    <div id='{i}'></div>" for i, _ in enumerate(dives))
 
-    html = '\n'.join([
-        _html_head,
-        '  <body>',
-        _html_switcher,
-        _html_scripts,
-        divs,
-        '  </body>',
-        _javascript(paths),
-        '</html>',
-    ])
+    html = '\n'.join(
+        [
+            _html_head,
+            '  <body>',
+            _html_switcher,
+            _html_scripts,
+            divs,
+            '  </body>',
+            _javascript(paths),
+            '</html>',
+        ]
+    )
 
     results.append(('index.html', html))
     return results

@@ -36,8 +36,8 @@ class BubbleChart:
         length = np.ceil(np.sqrt(len(self.bubbles)))
         grid = np.arange(length) * self.maxstep
         gx, gy = np.meshgrid(grid, grid)
-        self.bubbles[:, 0] = gx.flatten()[:len(self.bubbles)]
-        self.bubbles[:, 1] = gy.flatten()[:len(self.bubbles)]
+        self.bubbles[:, 0] = gx.flatten()[: len(self.bubbles)]
+        self.bubbles[:, 1] = gy.flatten()[: len(self.bubbles)]
 
         self.com = self.center_of_mass()
 
@@ -47,13 +47,13 @@ class BubbleChart:
         )
 
     def center_distance(self, bubble, bubbles):
-        return np.hypot(bubble[0] - bubbles[:, 0],
-                        bubble[1] - bubbles[:, 1])
+        return np.hypot(bubble[0] - bubbles[:, 0], bubble[1] - bubbles[:, 1])
 
     def outline_distance(self, bubble, bubbles):
         center_distance = self.center_distance(bubble, bubbles)
-        return center_distance - bubble[2] - \
-            bubbles[:, 2] - self.bubble_spacing
+        return (
+            center_distance - bubble[2] - bubbles[:, 2] - self.bubble_spacing
+        )
 
     def check_collisions(self, bubble, bubbles):
         distance = self.outline_distance(bubble, bubbles)
@@ -103,12 +103,18 @@ class BubbleChart:
                         # calculate orthogonal vector
                         orth = np.array([dir_vec[1], -dir_vec[0]])
                         # test which direction to go
-                        new_point1 = (self.bubbles[i, :2] + orth * self.step_dist)
-                        new_point2 = (self.bubbles[i, :2] - orth * self.step_dist)
+                        new_point1 = (
+                            self.bubbles[i, :2] + orth * self.step_dist
+                        )
+                        new_point2 = (
+                            self.bubbles[i, :2] - orth * self.step_dist
+                        )
                         dist1 = self.center_distance(
-                            self.com, np.array([new_point1]))
+                            self.com, np.array([new_point1])
+                        )
                         dist2 = self.center_distance(
-                            self.com, np.array([new_point2]))
+                            self.com, np.array([new_point2])
+                        )
                         new_point = new_point1 if dist1 < dist2 else new_point2
                         new_bubble = np.append(new_point, self.bubbles[i, 2:4])
                         if not self.check_collisions(new_bubble, rest_bub):
@@ -134,14 +140,17 @@ class BubbleChart:
         for i in range(len(self.bubbles)):
             if colors:
                 circ = plt.Circle(
-                    self.bubbles[i, :2], self.bubbles[i, 2], color=colors[i])
+                    self.bubbles[i, :2], self.bubbles[i, 2], color=colors[i]
+                )
             else:
-                circ = plt.Circle(
-                    self.bubbles[i, :2], self.bubbles[i, 2])
+                circ = plt.Circle(self.bubbles[i, :2], self.bubbles[i, 2])
             ax.add_patch(circ)
             texts.append(
                 plt.text(
-                    *self.bubbles[i, :2], labels[i],
+                    *self.bubbles[i, :2],
+                    labels[i],
                     horizontalalignment='center',
-                    verticalalignment='center'))
+                    verticalalignment='center'
+                )
+            )
         return texts

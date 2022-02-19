@@ -33,7 +33,7 @@ def uncategorize(name):
 
         for value in values:
             if name.endswith(" " + category) and value in name:
-                name = name[:-len(' ' + category)]
+                name = name[: -len(' ' + category)]
 
     return name
 
@@ -194,5 +194,7 @@ class Image:
                 sha1.update(data)
 
         digest = sha1.hexdigest()
-        database.set('diving', 'cache', self.identifier(), 'hash', value=digest)
+        database.set(
+            'diving', 'cache', self.identifier(), 'hash', value=digest
+        )
         return digest

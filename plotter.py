@@ -120,8 +120,7 @@ for k, v in list(sizes.items()):
     del sizes[k]
 
 sizes = {
-    k.title().replace(' ', '\n') + f'\n{v}': 2 * v
-    for k, v in sizes.items()
+    k.title().replace(' ', '\n') + f'\n{v}': 2 * v for k, v in sizes.items()
 }
 
 names, counts = list(zip(*sizes.items()))

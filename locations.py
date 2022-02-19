@@ -30,6 +30,7 @@ def sites():
 
 # PRIVATE
 
+
 def _make_tree():
     ''' images organized into a nested dictionary where keys are locations
     '''

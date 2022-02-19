@@ -117,6 +117,7 @@ def javascript(debug=True):
 
 # PRIVATE
 
+
 def _distance(a, b, tree=None):
     ''' similarity score, higher means more different
 
@@ -234,6 +235,7 @@ def _similarity_table(names):
 
 
 # INFORMATIONAL
+
 
 def _inspect_choices():
     ''' build a directory tree of chosen thumbnails for visual inspection

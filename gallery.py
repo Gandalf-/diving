@@ -340,6 +340,7 @@ def _find_links():
 
 # INFORMATIONAL
 
+
 def link_check():
     """check the html directory for broken links by extracting all the
     internal links from the written files and looking for those as paths

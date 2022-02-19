@@ -124,9 +124,7 @@ class TestHypertext(unittest.TestCase):
         '''
         # gallery
         html, title = hypertext.title(
-            ['heart', 'crab'],
-            Where.Gallery,
-            TestGallery.g_scientific
+            ['heart', 'crab'], Where.Gallery, TestGallery.g_scientific
         )
         self.assertEqual(title, 'heart crab')
         self.assertIn('<title>Heart Crab</title>', html)
@@ -142,7 +140,7 @@ class TestHypertext(unittest.TestCase):
         html, title = hypertext.title(
             ['tubastraea coccinea', 'coral'],
             Where.Gallery,
-            TestGallery.g_scientific
+            TestGallery.g_scientific,
         )
         self.assertEqual(title, 'tubastraea coccinea coral')
         self.assertIn('<title>Tubastraea coccinea Coral</title>', html)
@@ -202,7 +200,9 @@ class TestGallery(unittest.TestCase):
         (title, html) = htmls[-1]
 
         self.assertEqual(title, 'coral')
-        self.assertRegex(html, r'(?s)<head>.*<title>.*Coral.*</title>.*</head>')
+        self.assertRegex(
+            html, r'(?s)<head>.*<title>.*Coral.*</title>.*</head>'
+        )
         self.assertRegex(html, r'(?s)<h3>.*Fan.*</h3>')
         self.assertRegex(html, r'(?s)<h3>.*Rhizopsammia wellingtoni.*</h3>')
 
@@ -432,9 +432,7 @@ class TestCollection(unittest.TestCase):
         nudi = tree['nudibranch']['sea lemon']['freckled pale']['data'].pop()
         nudi.name = 'Pale Freckled Sea Lemon'
 
-        tree['nudibranch']['sea lemon']['pale freckled'] = {
-            'data': [nudi]
-        }
+        tree['nudibranch']['sea lemon']['pale freckled'] = {'data': [nudi]}
 
         self.assertIn('pale freckled', tree['nudibranch']['sea lemon'].keys())
         self.assertIn('freckled pale', tree['nudibranch']['sea lemon'].keys())

@@ -24,6 +24,7 @@ root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 def gallery_scientific(lineage, scientific, debug=False):
     ''' attempt to find a scientific name for this page
     '''
+
     def lookup(names, *fns):
         base = ' '.join(names).lower()
         candidate = hmap(base, *fns)
@@ -287,6 +288,7 @@ def _invert_known(tree):
 
 
 # INFORMATIONAL
+
 
 def _taxonomy_listing():
     ''' write out the names to a file '''
