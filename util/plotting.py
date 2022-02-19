@@ -103,10 +103,8 @@ class BubbleChart:
                         # calculate orthogonal vector
                         orth = np.array([dir_vec[1], -dir_vec[0]])
                         # test which direction to go
-                        new_point1 = (self.bubbles[i, :2] + orth *
-                                      self.step_dist)
-                        new_point2 = (self.bubbles[i, :2] - orth *
-                                      self.step_dist)
+                        new_point1 = (self.bubbles[i, :2] + orth * self.step_dist)
+                        new_point2 = (self.bubbles[i, :2] - orth * self.step_dist)
                         dist1 = self.center_distance(
                             self.com, np.array([new_point1]))
                         dist2 = self.center_distance(
