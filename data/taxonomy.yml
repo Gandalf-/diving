@@ -491,7 +491,7 @@ Animalia:
           Equetus:
             punctatus: spotted drum
         Serranidae:
-          sp: sea bass
+          # sp: sea bass
           Epinephelus:
             labriformis: flag cabrilla
           Serranus:
@@ -561,7 +561,8 @@ Animalia:
         Scorpaenidae:
           Pterois: lionfish
           Scorpaena:
-            plumieri-mystes: stone fish
+            plumieri:
+              mystes: stonefish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin

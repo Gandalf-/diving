@@ -287,8 +287,5 @@ def _find_by_path(tree, needle):
 
 
 if not sys.flags.interactive and __name__ == "__main__":
-    if len(sys.argv) == 2:
-        root = sys.argv[1]
-
     write_all_html()
-    verify.link_check()
+    verify.advisory_checks()

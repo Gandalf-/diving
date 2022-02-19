@@ -181,7 +181,7 @@ class TestGallery(unittest.TestCase):
         out = gallery.find_representative(
             TestGallery.tree['fish'], lineage=['fish']
         )
-        self.assertEqual(out.name, 'Juvenile Yellow Eye Rockfish')
+        self.assertEqual(out.name, 'Yellow Eye Rockfish')
 
         self.assertIn('barnacle', TestGallery.tree)
         out = gallery.find_representative(
@@ -224,6 +224,8 @@ class TestTaxonomy(unittest.TestCase):
             (['multicolor', 'dendronotid', 'nudibranch'], 'diversicolor'),
             (['six rayed', 'star'], 'hexactis'),
             (['mossy', 'chiton'], 'muscosa'),
+            (['mossy', 'chiton'], 'muscosa'),
+            (['stone', 'fish'], 'plumieri mystes'),
         ]
 
         for lineage, output in samples:

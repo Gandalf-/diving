@@ -4,6 +4,7 @@ tags: *.py */*.py
 .PHONY: test
 test:
 	python3 test_sanity.py
+	bash test_integration.sh
 
 .PHONY: lint
 lint:
