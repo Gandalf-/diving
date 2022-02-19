@@ -1,4 +1,4 @@
-tags: *.py
+tags: *.py */*.py
 	ctags -R --fields=+l --languages=python --python-kinds=-i
 
 .PHONY: test
@@ -7,9 +7,9 @@ test:
 
 .PHONY: lint
 lint:
-	pylint **/*.py
-	flake8 **/*.py
+	pylint -j 0 --score n *.py **/*.py
+	flake8 *.py */*.py
 
 .PHONY: format
 format:
-	black -l 79 -S **/*.py
+	black -l 79 -S *.py */*.py
