@@ -11,8 +11,8 @@ import subprocess
 
 from apocrypha.client import Client
 
-import collection
 import taxonomy
+import util.collection as collection
 import util.static as static
 from util.image import unqualify, categorize, split
 

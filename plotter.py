@@ -7,8 +7,8 @@ import numpy as np
 
 import taxonomy
 import detective
-import collection
 
+import util.collection as collection
 from util.common import flatten, tree_size
 from util.plotting import BubbleChart
 

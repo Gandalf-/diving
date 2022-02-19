@@ -7,9 +7,9 @@ Python implementation of runner.sh
 import os
 import operator
 
-import collection
 import hypertext
 from hypertext import Where
+import util.collection as collection
 import util.common as utility
 
 

@@ -4,7 +4,7 @@
 collecting dive locations
 '''
 
-import collection
+import util.collection as collection
 import util.static as static
 
 

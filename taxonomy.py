@@ -14,7 +14,7 @@ import sys
 import pathlib
 import yaml
 
-from collection import go, single_level, all_names
+from util.collection import go, single_level, all_names
 from util.common import extract_leaves, hmap
 from util.image import uncategorize, unqualify, unsplit
 

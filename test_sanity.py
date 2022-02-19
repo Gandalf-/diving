@@ -5,12 +5,13 @@ Sanity checks
 import copy
 import unittest
 
-import collection
 import taxonomy
 import gallery
 import hypertext
 import information
 import locations
+
+import util.collection as collection
 import util.image as image
 import util.common as utility
 

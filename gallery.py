@@ -16,7 +16,7 @@ import information
 import locations
 import taxonomy
 import timeline
-import collection
+import util.collection as collection
 import util.static as static
 
 from detective import javascript as game
