@@ -108,7 +108,7 @@ def javascript(debug=True):
     '''
     ns, ts, ss, ds = table_builder(debug)
 
-    with open('web/detective/data.js', 'w+') as fd:
+    with open('detective/data.js', 'w+') as fd:
         print('var names =', ns, file=fd)
         print('var thumbs =', ts, file=fd)
         print('var similarities =', ss, file=fd)

@@ -198,9 +198,9 @@ class TestGallery(unittest.TestCase):
         )
 
         self.assertNotEqual(htmls, [])
-        (title, html) = htmls[-1]
+        (path, html) = htmls[-1]
 
-        self.assertEqual(title, 'coral')
+        self.assertEqual(path, 'coral.html')
         self.assertRegex(
             html, r'(?s)<head>.*<title>.*Coral.*</title>.*</head>'
         )
@@ -346,6 +346,12 @@ class TestImage(unittest.TestCase):
 
 class TestUtility(unittest.TestCase):
     ''' utility.py '''
+
+    def test_prefix_tuples(self):
+        ''' it works '''
+        out = utility.prefix_tuples(1, [(2, 3), (3, 4), (4, 5)])
+        out = list(out)
+        self.assertEqual(out, [(1, 2, 3), (1, 3, 4), (1, 4, 5)])
 
     def test_hmap(self):
         ''' fold-ish thing '''

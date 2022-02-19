@@ -21,7 +21,7 @@ import util.verify as verify
 from detective import javascript as game
 from hypertext import Where, Side
 from util.image import Image
-from util.common import tree_size, is_date, strip_date
+from util.common import tree_size, is_date, strip_date, prefix_tuples
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long
@@ -218,42 +218,9 @@ def html_tree(tree, where, scientific, lineage=None):
     if title in ('Gallery', 'Taxonomy', 'Sites'):
         title = 'index'
 
-    results.append((title, html))
+    path = title.replace(' ', '-').replace("'", "") + '.html'
+    results.append((path, html))
     return results
-
-
-def names_pool_writer(args):
-    ''' callback for HTML writer pool '''
-    title, html = args
-    path = "gallery/{name}.html".format(name=title.replace(" ", "-"))
-    with open(path, "w+") as f:
-        print(html, file=f)
-
-
-def sites_pool_writer(args):
-    ''' callback for HTML writer pool '''
-    title, html = args
-    path = "sites/{name}.html".format(
-        name=title.replace(" ", "-").replace("'", '')
-    )
-    with open(path, "w+") as f:
-        print(html, file=f)
-
-
-def taxia_pool_writer(args):
-    ''' callback for HTML writer pool '''
-    title, html = args
-    path = "taxonomy/{name}.html".format(name=title.replace(" ", "-"))
-    with open(path, "w+") as f:
-        print(html, file=f)
-
-
-def times_pool_writer(args):
-    ''' callback for HTML writer pool '''
-    title, html = args
-    path = f"timeline/{title}"
-    with open(path, "w+") as f:
-        print(html, file=f)
 
 
 def write_all_html():
@@ -285,15 +252,23 @@ def write_all_html():
     print("done", len(times_htmls), "pages prepared")
 
     print("writing html... ", end="", flush=True)
-    pool.map(names_pool_writer, name_htmls)
-    pool.map(sites_pool_writer, sites_htmls)
-    pool.map(taxia_pool_writer, taxia_htmls)
-    pool.map(times_pool_writer, times_htmls)
+    pool.map(_pool_writer, prefix_tuples('gallery', name_htmls))
+    pool.map(_pool_writer, prefix_tuples('sites', sites_htmls))
+    pool.map(_pool_writer, prefix_tuples('taxonomy', taxia_htmls))
+    pool.map(_pool_writer, prefix_tuples('timeline', times_htmls))
     print("done")
 
     print("writing game... ", end="", flush=True)
     game(False)
     print("done")
+
+
+def _pool_writer(args):
+    ''' callback for HTML writer pool '''
+    where, title, html = args
+    path = f"{where}/{title}"
+    with open(path, "w+") as f:
+        print(html, file=f)
 
 
 def _find_by_path(tree, needle):

@@ -12,6 +12,12 @@ if os.name == 'nt':
     root = "Z:/Media/Pictures/Diving"
 
 
+def prefix_tuples(first, ts):
+    ''' add a value to the beginning of each tuple in a list'''
+    for (a, b) in ts:
+        yield (first, a, b)
+
+
 def take(xs, n):
     ''' pull n items from xs '''
     out = []
