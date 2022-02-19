@@ -9,10 +9,10 @@ import collection
 import taxonomy
 import gallery
 import hypertext
-import image
-import util.common as utility
 import information
 import locations
+import util.image as image
+import util.common as utility
 
 from hypertext import Where, Side
 from taxonomy import MappingType

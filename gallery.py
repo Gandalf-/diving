@@ -21,7 +21,7 @@ import util.static as static
 
 from detective import javascript as game
 from hypertext import Where, Side
-from image import Image
+from util.image import Image
 from util.common import tree_size, is_date, strip_date
 
 # pylint: disable=too-many-locals

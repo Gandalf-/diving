@@ -16,7 +16,7 @@ import yaml
 
 from collection import go, single_level, all_names
 from util.common import extract_leaves, hmap
-from image import uncategorize, unqualify, unsplit
+from util.image import uncategorize, unqualify, unsplit
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 

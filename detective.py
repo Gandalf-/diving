@@ -11,10 +11,10 @@ import subprocess
 
 from apocrypha.client import Client
 
-from image import unqualify, categorize, split
 import collection
 import taxonomy
 import util.static as static
+from util.image import unqualify, categorize, split
 
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'

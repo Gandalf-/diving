@@ -7,7 +7,7 @@ parsing data from the file system to construct trees of images
 import difflib
 import os
 
-from image import Image, categorize, split
+from util.image import Image, categorize, split
 from util.common import flatten, tree_size, root
 import util.static as static
 

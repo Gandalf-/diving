@@ -10,7 +10,7 @@ import enum
 import datetime
 
 import taxonomy
-from image import (
+from util.image import (
     categorize,
     uncategorize,
     split,
