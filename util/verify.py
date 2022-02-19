@@ -29,7 +29,9 @@ def _important_files_exist():
     ''' basic sanity '''
     required = ['index.html', 'style.css', 'favicon.ico', 'imgs']
     required += [
-        'jquery-fancybox.min.css', 'jquery-fancybox.min.js', 'jquery.min.js',
+        'jquery.fancybox.min.css',
+        'jquery.fancybox.min.js',
+        'jquery.min.js',
     ]
     required += [
         f'{site}/index.html'

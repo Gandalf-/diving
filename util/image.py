@@ -6,6 +6,7 @@ base class for a diving image
 
 import hashlib
 import os
+import urllib.parse
 
 import inflect
 from apocrypha.client import Client
@@ -134,8 +135,10 @@ class Image:
 
     def fullsize(self):
         ''' URI of full size image '''
-        return "https://public.anardil.net/media/diving/{d}/{i}".format(
-            d=self.directory, i=self.label,
+        return urllib.parse.quote(
+            "https://public.anardil.net/media/diving/{d}/{i}".format(
+                d=self.directory, i=self.label,
+            )
         )
 
     def singular(self):
