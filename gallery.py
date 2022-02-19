@@ -227,39 +227,39 @@ def write_all_html():
     ''' main '''
     pool = multiprocessing.Pool()
 
-    print("loading data... ", end="", flush=True)
+    print("loading images...              ", end="", flush=True)
     tree = collection.go()
     scientific = taxonomy.mapping()
     taxia = taxonomy.gallery_tree(tree)
     print("done", tree_size(tree), "images loaded")
 
-    print("walking name tree... ", end="", flush=True)
+    print("building /gallery...           ", end="", flush=True)
     name_htmls = html_tree(tree, Where.Gallery, scientific)
     print("done", len(name_htmls), "pages prepared")
 
-    print("walking sites tree... ", end="", flush=True)
+    print("building /sites...             ", end="", flush=True)
     sites = locations.sites()
     sites_htmls = html_tree(sites, Where.Sites, scientific)
     print("done", len(sites_htmls), "pages prepared")
 
-    print("walking taxia tree... ", end="", flush=True)
+    print("building /taxonomy...          ", end="", flush=True)
     scientific = {v.replace(' sp', ''): k for k, v in scientific.items()}
     taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
     print("done", len(taxia_htmls), "pages prepared")
 
-    print("walking timeline...   ", end="", flush=True)
+    print("building /timeline...          ", end="", flush=True)
     times_htmls = timeline.timeline()
     print("done", len(times_htmls), "pages prepared")
 
-    print("writing html... ", end="", flush=True)
+    print("building /detective/data.js... ", end="", flush=True)
+    game(False)
+    print("done")
+
+    print("writing html...                ", end="", flush=True)
     pool.map(_pool_writer, prefix_tuples('gallery', name_htmls))
     pool.map(_pool_writer, prefix_tuples('sites', sites_htmls))
     pool.map(_pool_writer, prefix_tuples('taxonomy', taxia_htmls))
     pool.map(_pool_writer, prefix_tuples('timeline', times_htmls))
-    print("done")
-
-    print("writing game... ", end="", flush=True)
-    game(False)
     print("done")
 
 
@@ -288,4 +288,7 @@ def _find_by_path(tree, needle):
 
 if not sys.flags.interactive and __name__ == "__main__":
     write_all_html()
+
+    print("verifying html...              ", end="", flush=True)
     verify.advisory_checks()
+    print("done")

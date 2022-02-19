@@ -256,9 +256,7 @@ def _taxia_filler(tree, images):
         if isinstance(value, str):
             if value in images:
                 tree[key] = {'data': images[value]}
-
             else:
-                print('dropping', key)
                 tree.pop(key)
         else:
             tree[key] = _taxia_filler(value, images)
