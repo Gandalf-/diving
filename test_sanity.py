@@ -5,18 +5,18 @@ Sanity checks
 import copy
 import unittest
 
-import taxonomy
 import gallery
 import hypertext
 import information
 import locations
 
 import util.collection as collection
-import util.image as image
 import util.common as utility
+import util.image as image
+import util.taxonomy as taxonomy
 
 from hypertext import Where, Side
-from taxonomy import MappingType
+from util.taxonomy import MappingType
 
 
 class TestHypertext(unittest.TestCase):

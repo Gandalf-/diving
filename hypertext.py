@@ -9,14 +9,15 @@ import copy
 import enum
 import datetime
 
-import taxonomy
+import locations
+
+from util.common import strip_date, fast_exists
 from util.image import (
     categorize,
     uncategorize,
     split,
 )
-from util.common import strip_date, fast_exists
-import locations
+import util.taxonomy as taxonomy
 
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites')

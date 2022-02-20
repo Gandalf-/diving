@@ -5,10 +5,11 @@ from apocrypha.client import Client
 import matplotlib.pyplot as m
 import numpy as np
 
-import taxonomy
 import detective
 
 import util.collection as collection
+import util.taxonomy as taxonomy
+
 from util.common import flatten, tree_size
 from util.plotting import BubbleChart
 

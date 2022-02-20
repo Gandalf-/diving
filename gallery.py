@@ -12,10 +12,11 @@ from datetime import datetime
 import hypertext
 import information
 import locations
-import taxonomy
 import timeline
+
 import util.collection as collection
 import util.static as static
+import util.taxonomy as taxonomy
 import util.verify as verify
 
 from detective import javascript as game

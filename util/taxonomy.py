@@ -18,7 +18,7 @@ from util.collection import go, single_level, all_names
 from util.common import extract_leaves, hmap
 from util.image import uncategorize, unqualify, unsplit
 
-root = str(pathlib.Path(__file__).parent.absolute()) + '/'
+root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
 
 def gallery_scientific(lineage, scientific, debug=False):

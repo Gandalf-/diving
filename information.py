@@ -27,7 +27,7 @@ from collections import Counter
 import wikipedia
 from apocrypha.client import Client
 
-import taxonomy
+import util.taxonomy as taxonomy
 
 db_root = (
     'diving',
