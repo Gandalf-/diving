@@ -122,7 +122,7 @@ h3 {
   border-color: rgb(56, 19, 221);
 }
 
-#buffer {
+.buffer {
   width: 1em;
   border: 1px solid black;
 }
@@ -276,7 +276,7 @@ div.skip {
     font-size: 1.75em;
   }
 
-  #buffer {
+  .buffer {
     width: 0.1em;
     border: 1px solid black;
   }
@@ -310,7 +310,7 @@ div.skip {
     font-size: 1em;
   }
 
-  #buffer {
+  .buffer {
     width: 0.05em;
     border: 1px solid black;
   }

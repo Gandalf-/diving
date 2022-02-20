@@ -28,11 +28,11 @@ _html_switcher = '''\
     <a href="/taxonomy/index.html">
         <h2 class="top switch taxonomy">Taxonomy</h2>
     </a>
-    <div class="top" id="buffer"></div>
+    <div class="top buffer"></div>
     <a href="/timeline/index.html">
         <h1 class="top switch">Timeline</h1>
     </a>
-    <div class="top" id="buffer"></div>
+    <div class="top buffer"></div>
     <a href="/gallery/index.html">
         <h2 class="top switch gallery">Gallery</h2>
     </a>

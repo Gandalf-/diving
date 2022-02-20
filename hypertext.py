@@ -199,7 +199,7 @@ def _gallery_title(lineage, scientific):
         """
 
     html += """
-        <div class="top" id="buffer"></div>
+        <div class="top buffer"></div>
 
         <a href="/gallery/index.html">
             <h1 class="top switch gallery">Gallery</h1>
@@ -234,7 +234,7 @@ def _taxonomy_title(lineage, scientific):
         <a href="/taxonomy/index.html">
             <h1 class="top switch taxonomy">Taxonomy</h1>
         </a>
-        <div class="top" id="buffer"></div>
+        <div class="top buffer"></div>
     """
 
     # create the buttons for each part of our name lineage
@@ -293,7 +293,7 @@ def _sites_title(lineage):
         <a href="/sites/index.html">
             <h1 class="top switch sites">Sites</h1>
         </a>
-        <div class="top" id="buffer"></div>
+        <div class="top buffer"></div>
     """
 
     # create the buttons for each part of our name lineage
@@ -411,7 +411,7 @@ def _top_title(where):
             <h1 class="top switch sites">Sites</h1>
         </a>
     '''
-    spacer = '<div class="top" id="buffer"></div>\n'
+    spacer = '<div class="top buffer"></div>\n'
 
     html = _head(display)
     if where == Where.Gallery:
