@@ -177,7 +177,7 @@ def html_tree(tree, where, scientific, lineage=None):
             html += """
             <div class="card" onclick="flip(this);">
               <div class="card_face card_face-front">
-                <img width=300 loading="lazy" src="/imgs/{thumbnail}">
+                <img width=300 loading="lazy" alt="{name}" src="/imgs/{thumbnail}">
               </div>
               <div class="card_face card_face-back">
                 {name_html}

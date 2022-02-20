@@ -3,6 +3,9 @@
 set -e
 
 cd ~/working/tmp/diving/
+
+find gallery sites taxonomy timeline -name '*.html' -delete
+
 python3 ~/google_drive/code/python/diving/gallery.py
 
 tidy -q -e \

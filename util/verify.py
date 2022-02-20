@@ -58,8 +58,7 @@ def _link_check():
     internal links from the written files and looking for those as paths
     """
     for path, link in _find_links():
-        if not os.path.exists(link):
-            print('broken', link, 'in', path)
+        assert os.path.exists(link), f'broken {link} in {path}'
 
 
 def _find_links():

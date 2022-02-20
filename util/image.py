@@ -135,11 +135,8 @@ class Image:
 
     def fullsize(self):
         ''' URI of full size image '''
-        return urllib.parse.quote(
-            "https://public.anardil.net/media/diving/{d}/{i}".format(
-                d=self.directory, i=self.label,
-            )
-        )
+        resource = urllib.parse.quote(f'{self.directory}/{self.label}')
+        return f'https://public.anardil.net/media/diving/{resource}'
 
     def singular(self):
         ''' return singular version '''
