@@ -209,6 +209,9 @@ def html(name: str) -> (str, str):
 
     for paragraph in pgs:
         m = paragraph.encode('ascii', 'xmlcharrefreplace').decode('ascii')
+        if not m:
+            continue
+
         text += f'<p>{m}</p>'
         if len(text) > reasonable_number_of_characters:
             break

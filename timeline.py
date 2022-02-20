@@ -85,8 +85,8 @@ def timeline():
             _html_switcher,
             _html_scripts,
             divs,
-            '  </body>',
             _javascript(paths),
+            '  </body>',
             '</html>',
         ]
     )
@@ -108,7 +108,7 @@ def _image_html(image):
     return f'''
   <div class="card" onclick="flip(this);">
     <div class="card_face card_face-front">
-      <img width=300 loading="lazy" src="{thumbnail}">
+      <img width=300 alt="{subject}" loading="lazy" src="{thumbnail}">
     </div>
     <div class="card_face card_face-back">
       {name_html}
