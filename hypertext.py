@@ -165,8 +165,8 @@ def _gallery_title(lineage, scientific):
     # check for scientific name for gallery
     slink = sname = taxonomy.gallery_scientific(lineage, scientific)
     sname = taxonomy.simplify(sname)
-    if slink.endswith(' sp'):
-        slink = slink.replace(' sp', '')
+    if slink.endswith(' sp.'):
+        slink = slink.replace(' sp.', '')
 
     scientific_common_name = slink.lower().endswith(lineage[0].lower())
 
@@ -227,10 +227,9 @@ def _taxonomy_title(lineage, scientific):
     assert lineage
 
     _title = ' '.join(lineage)
-    display = uncategorize(_title)
     side = Side.Right
 
-    html = _head(display)
+    html = _head(' '.join(lineage[-2:]))
     html += """
         <a href="/taxonomy/index.html">
             <h1 class="top switch taxonomy">Taxonomy</h1>

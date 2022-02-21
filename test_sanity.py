@@ -151,6 +151,21 @@ class TestHypertext(unittest.TestCase):
         self.assertIn('"top"><em>Tubastraea coccinea</em><', html)
         self.assertNotIn('Coccinea', html)
 
+    def test_title_scientific_sp(self):
+        ''' it works
+        '''
+        # taxonomy
+        html, title = hypertext.title(
+            ['Animalia', 'Cnidaria', 'Anthozoa', 'Actiniaria', 'sp.'],
+            Where.Taxonomy,
+            TestGallery.t_scientific,
+        )
+        self.assertTrue(title.startswith('Animalia Cnidaria Anthozoa'), title)
+        self.assertTrue(title.endswith('Actiniaria sp.'), title)
+
+        self.assertIn('<title>Actiniaria sp.</title>', html)
+        self.assertIn('>Anemone<', html)
+
     def test_title_names(self):
         ''' html titles top level
         '''
@@ -214,13 +229,22 @@ class TestGallery(unittest.TestCase):
 class TestTaxonomy(unittest.TestCase):
     ''' taxonomy.py '''
 
+    def test_filter_exact(self):
+        ''' remove sp. entries
+        '''
+        tree = {'Actiniaria': {'sp.': 1, 'Actinioidea': 2, 'Metridioidea': 3}}
+        tree = taxonomy._filter_exact(tree)
+        self.assertEqual(
+            tree, {'Actiniaria': {'Actinioidea': 2, 'Metridioidea': 3}}
+        )
+
     def test_gallery_scientific(self):
         ''' find scientific names by common name
         '''
         samples = [
             (['copper', 'rock', 'fish'], 'Sebastes caurinus'),
-            (['fish'], 'Actinopterygii sp'),
-            (['fish', 'eggs'], 'Actinopterygii sp'),
+            (['fish'], 'Actinopterygii sp.'),
+            (['fish', 'eggs'], 'Actinopterygii sp.'),
             (['juvenile yellow eye', 'rock', 'fish'], 'Sebastes ruberrimus'),
             (['noble', 'sea lemon', 'nudibranch'], 'Peltodoris nobilis'),
             (['brain', 'coral'], 'Scleractinia Mussidae'),
@@ -289,6 +313,7 @@ class TestTaxonomy(unittest.TestCase):
         names = list(taxonomy.binomial_names())
         self.assertNotEqual(names, [])
 
+        self.assertNotIn('crab', names)
         self.assertNotIn('Acanthodoris', names)
         self.assertIn('Acanthodoris hudsoni', names)
 

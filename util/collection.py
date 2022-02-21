@@ -19,9 +19,7 @@ def named():
 def all_names():
     ''' all simplified, split names
     '''
-    return {
-        categorize(split(i.simplified())) for i in _expand_names(named())
-    }
+    return {categorize(split(i.simplified())) for i in _expand_names(named())}
 
 
 def single_level(tree):
@@ -72,7 +70,7 @@ def find_vague_names():
     '''
     names = all_names()
 
-    for (name, image) in everything:
+    for (name, image) in names:
         for other in names:
             if name == other:
                 continue

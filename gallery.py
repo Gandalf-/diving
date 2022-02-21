@@ -245,7 +245,7 @@ def write_all_html():
     print("done", len(sites_htmls), "pages prepared")
 
     print("building /taxonomy...          ", end="", flush=True)
-    scientific = {v.replace(' sp', ''): k for k, v in scientific.items()}
+    scientific = {v: k for k, v in scientific.items()}
     taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
     print("done", len(taxia_htmls), "pages prepared")
 

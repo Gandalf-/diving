@@ -115,7 +115,7 @@ def mapping(where=MappingType.Gallery):
     if where == MappingType.Gallery:
         return tree
 
-    return {v.replace(' sp', ''): k for k, v in tree.items()}
+    return {v: k for k, v in tree.items()}
 
 
 def gallery_tree(tree=None):
@@ -143,7 +143,7 @@ def binomial_names(tree=None, parent=None):
         return
 
     for key, value in tree.items():
-        if key.islower() and key != 'sp':
+        if key.islower() and key != 'sp.':
             assert parent, key
             yield f'{parent} {key}'
         else:
@@ -171,29 +171,14 @@ def _to_classification(name, mappings):
     return gallery_scientific(name.split(' '), mappings)
 
 
-def _ordered_simple_names(tree):
-    ''' taxonomy names '''
-    assert isinstance(tree, dict), tree
-
-    for value in tree.values():
-        if isinstance(value, dict):
-            yield from _ordered_simple_names(value)
-
-        elif isinstance(value, list):
-            yield value[0].simplified()
-
-        else:
-            assert False, value
-
-
 def _filter_exact(tree):
-    ''' remove all sp entries
+    ''' remove all sp. entries
     '''
     assert isinstance(tree, dict), tree
 
     out = {}
     for key, value in tree.items():
-        if key == 'sp':
+        if key == 'sp.':
             continue
 
         if isinstance(value, dict):
@@ -214,9 +199,6 @@ def _compress(tree):
     out = {}
 
     for key, value in list(tree.items()):
-
-        if key == 'sp':
-            continue
 
         if isinstance(value, str):
             out[key] = value
@@ -276,7 +258,6 @@ def _invert_known(tree):
         if isinstance(tree, str):
             for part in tree.split(', '):
                 out[part] = ' '.join(lineage)
-
         else:
             for key, value in tree.items():
                 inner(value, out, lineage + [key])
@@ -286,6 +267,21 @@ def _invert_known(tree):
 
 
 # INFORMATIONAL
+
+
+def _ordered_simple_names(tree):
+    ''' taxonomy names '''
+    assert isinstance(tree, dict), tree
+
+    for value in tree.values():
+        if isinstance(value, dict):
+            yield from _ordered_simple_names(value)
+
+        elif isinstance(value, list):
+            yield value[0].simplified()
+
+        else:
+            assert False, value
 
 
 def _taxonomy_listing():
@@ -307,7 +303,7 @@ def _find_imprecise():
 
     for name in names:
         c = _to_classification(name, m)
-        if ' sp' in c:
+        if ' sp.' in c:
             yield name
 
 

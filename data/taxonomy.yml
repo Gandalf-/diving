@@ -13,7 +13,7 @@ Animalia:
     Rhabditophora:
       Polycladida:
         Stylochoidea:
-          sp: flatworm
+          sp.: flatworm
           Stylochoidae:
             Stylochus:
               californiensis: california flatworm
@@ -38,7 +38,7 @@ Animalia:
           Aphrocallistes:
             vastus: cloud sponge
     Demospongiae:
-      sp: sponge
+      sp.: sponge
       Polymastiida:
         Polymastiidae:
           Polymastia:
@@ -48,7 +48,7 @@ Animalia:
           Cliona:
             californiana: yellow boring sponge
       Poecilosclerida:
-        sp: encrusting sponge
+        sp.: encrusting sponge
         Esperiopsidae:
           Amphilectus:
             digitatus: glove sponge
@@ -78,7 +78,7 @@ Animalia:
             montiniger: peach ball sponge
   Annelida:
     Polychaeta:
-      sp: worm
+      sp.: worm
       Phyllodocida:
         Eunicida:
           Onuphidae:
@@ -94,7 +94,7 @@ Animalia:
             polygnatha: many jawed worm
         Nereididae:
           Nereis:
-            # sp: sea nymph
+            # sp.: sea nymph
             vexillosa: banner sea nymph
       Eunicida:
         Eunicidae:
@@ -111,7 +111,7 @@ Animalia:
           Hermodice:
             carunculata: fire worm
       Sabellida:
-        sp: tube worm
+        sp.: tube worm
         Serpulidae:
           Crucigera:
             zygophora: yolk bearer calcareous tube worm
@@ -123,7 +123,7 @@ Animalia:
           Neosabellaria:
             cementarium: cemented sandmason tube worm
         Sabellidae:
-          sp: feather duster worm
+          sp.: feather duster worm
           Eudistylia:
             vancouveri: vancouver feather duster worm
           Chone: orange feather duster worm
@@ -140,7 +140,7 @@ Animalia:
           Phyllochaetopterus:
             prolifica: prolific three section tube worm
   Bryozoa:
-    sp: bryozoan
+    sp.: bryozoan
     Stenolaemata:
       Cyclostomatida:
         Lichenoporidae:
@@ -170,7 +170,7 @@ Animalia:
               lichenoides: leaf crust bryozoan
   Echinodermata:
     Ophiuroidea:
-      # sp: brittle star
+      # sp.: brittle star
       Amphilepidida:
         Ophiactoidea:
           Ophiotrichidae:
@@ -184,7 +184,7 @@ Animalia:
           Florometra:
             serratissima: feather star
     Asteroidea:
-      sp: star
+      sp.: star
       Paxillosida:
         Luidiidae:
           Luidia:
@@ -242,7 +242,7 @@ Animalia:
           Henricia:
             leviuscula: blood star
     Holothuroidea:
-      sp: sea cucumber
+      sp.: sea cucumber
       Holothuriida:
         Holothuriidae:
           Halodeima:
@@ -272,7 +272,7 @@ Animalia:
           Apostichopus:
             californicus: california sea cucumber
     Echinoidea:
-      sp: urchin
+      sp.: urchin
       Clypeasteroida: sand dollar
       Cidaroida:
         Cidaroidea:
@@ -288,7 +288,7 @@ Animalia:
             mexicanum: hatpin urchin
       Camarodonta:
         Odontophora:
-          sp: sea urchin
+          sp.: sea urchin
           Echinometridae:
             Caenocentrotus:
               gibbosus: brown sea urchin
@@ -307,7 +307,7 @@ Animalia:
     Chondrichthyes:
       # cartilaginous fish
       Carcharhiniformes:
-        sp: shark
+        sp.: shark
         Carcharhinidae:
           Triaenodon:
             obesus: white tipped reef shark
@@ -334,9 +334,9 @@ Animalia:
             Hydrolagus:
               colliei: ratfish
     Ascidiacea:
-      sp: tunicate
+      sp.: tunicate
       Aplousobranchia:
-        sp: compound tunicate
+        sp.: compound tunicate
         Polyclinidae:
           Aplidium:
             californicum: california sea pork tunicate
@@ -385,13 +385,13 @@ Animalia:
       Testudines:
         # turtle
         Cheloniidae:
-          sp: sea turtle
+          sp.: sea turtle
           Eretmochelys:
             imbricata: hawksbill sea turtle
           Chelonia:
             mydas: green sea turtle
     Actinopterygii:
-      sp: fish
+      sp.: fish
       Lophiiformes:
         Ogcocephalidae:
           Ogcocephalus:
@@ -429,7 +429,7 @@ Animalia:
       Percomorpha:
         Labriformes:
           Scaridae:
-            sp: parrotfish
+            sp.: parrotfish
             Sparisoma:
               viride: stoplight parrotfish
             Scarus:
@@ -492,7 +492,7 @@ Animalia:
           Equetus:
             punctatus: spotted drum
         Serranidae:
-          # sp: sea bass
+          # sp.: sea bass
           Epinephelus:
             labriformis: flag cabrilla
           Serranus:
@@ -528,7 +528,7 @@ Animalia:
             nugator: mosshead war bonnet
             decoratus: decorated war bonnet
         Pholidae:
-          sp: gunnel
+          sp.: gunnel
           Apodichthys:
             flavidus: penpoint gunnel
           Pholis:
@@ -539,7 +539,7 @@ Animalia:
           Anarrhichthys:
             ocellatus: wolf eel
       Anguilliformes:
-        sp: eel
+        sp.: eel
         Congridae:
           Heterocongrinae: garden eel
         Muraenidae:
@@ -571,7 +571,7 @@ Animalia:
           Rhamphocottus:
            richardsonii: grunt sculpin
         Cottidae:
-          sp: sculpin
+          sp.: sculpin
           Oligocottus:
             maculosus: tidepool sculpin
           Leptocottus:
@@ -597,7 +597,7 @@ Animalia:
             bison: buffalo sculpin
         Sebastidae:
           Sebastes:
-            sp: rockfish
+            sp.: rockfish
             ruberrimus: yellow eye rockfish
             melanops: black rockfish
             auriculatus: brown rockfish
@@ -605,7 +605,7 @@ Animalia:
             caurinus: copper rockfish
             pinniger: canary rockfish
         Hexagrammidae:
-          sp: greenling
+          sp.: greenling
           Oxylebius:
             pictus: painted greenling
           Hexagrammos:
@@ -615,11 +615,11 @@ Animalia:
       Tetraodontiformes:
         Tetraodontoidei:
           Tetraodontoidae:
-            # sp: pufferfish
+            # sp.: pufferfish
             Arothron:
               meleagris: guineafowl pufferfish
         Balistidae:
-          sp: triggerfish
+          sp.: triggerfish
           Melichthys:
             niger: black triggerfish
           Balistes:
@@ -634,7 +634,7 @@ Animalia:
   Cnidaria:
     Scyphozoa:
       Semaeostomeae:
-        sp: jelly
+        sp.: jelly
         Phacellophoridae:
           Phacellophora:
             camtschatica: egg yolk jelly
@@ -642,7 +642,7 @@ Animalia:
           Aurelia:
             labiata: moon jelly
     Hydrozoa:
-      sp: hydroid
+      sp.: hydroid
       Anthoathecata:
         Pennariidae:
           Pennaria:
@@ -702,7 +702,7 @@ Animalia:
             coccinea: tubastraea coccinea coral
         Agariciidae:
           Pavona:
-            sp: pavona coral
+            sp.: pavona coral
             gigantea: pavona gigantea coral
             chiriquiensis: chiriquiensis coral
         Mussidae: brain coral
@@ -718,7 +718,7 @@ Animalia:
           Pachycerianthus:
             fimbriatus: tube dwelling anemone
       Pennatulacea:
-        sp: sea pen
+        sp.: sea pen
         Halipteridae:
           Halipteris:
             willemoesi: sea whip
@@ -727,11 +727,11 @@ Animalia:
             gurneyi: gurneyi sea pen
             undulatus: undulatus sea pen
       Alcyonacea:
-        sp: fan coral
+        sp.: fan coral
         # soft coral
         Gorgoniidae:
           Pacifigorgia:
-            sp: pacifigorgia fan coral
+            sp.: pacifigorgia fan coral
             darwinii: pacifigorgia darwinii fan coral
         Plexauridae:
           Swiftia:
@@ -741,7 +741,7 @@ Animalia:
           Epizoanthus:
             scotinus: orange zoanthid
       Actiniaria:
-        sp: anemone
+        sp.: anemone
         Edwardsioidea:
           Edwardsiidae:
             Edwardsia: white crowned burrowing anemone
@@ -783,7 +783,7 @@ Animalia:
       Pectinida:
         Pectinoidea:
           Pectinidae:
-            sp: scallop
+            sp.: scallop
             Nodipecten:
               magnificus: magnificent scallop
             Crassadoma:
@@ -799,7 +799,7 @@ Animalia:
       Chitonida:
         Mopalioidea:
           Mopaliidae:
-            sp: chiton
+            sp.: chiton
             Dendrochiton:
               flectens: painted dendrochiton
             Mopalia:
@@ -813,7 +813,7 @@ Animalia:
     Cephalopoda:
       Octopoda:
         Octopodoidea:
-          sp: octopus
+          sp.: octopus
           Octopodidae:
             Octopus:
               rubescens: red octopus
@@ -860,7 +860,7 @@ Animalia:
             Berthella:
               californica: california berthella
       Nudibranchia:
-        sp: nudibranch
+        sp.: nudibranch
         Aeolidioidea:
           Aeolidiidae:
             Aeolidia:
@@ -956,14 +956,14 @@ Animalia:
         Balanoidea:
           Balanidae:
             Balanus:
-              sp: barnacle
+              sp.: barnacle
               glandula: common acorn barnacle
               crenatus: crenate barnacle
               nubilus: giant acorn barnacle
     Malacostraca:
       Isopoda: isopod
       Amphipoda:
-        sp: amphipod
+        sp.: amphipod
         Phronimoidea:
           Hyperiidae:
             Hyperia: hitchhiking amphipod
@@ -1042,7 +1042,7 @@ Animalia:
             Cryptolithodes:
               sitchensis: umbrella crab
           Paguridae:
-            sp: hermit crab
+            sp.: hermit crab
             Elassochirus:
               tenuimanus: widehand hermit crab
             Parapagurodes:
@@ -1062,7 +1062,7 @@ Animalia:
             Cancer:
               productus: red rock crab
         Majoidea:
-          sp: decorator crab
+          sp.: decorator crab
           Inachoididae:
             Stenorhynchus:
               seticornis: arrow crab
@@ -1076,7 +1076,7 @@ Animalia:
             Chorilia:
               longipes: longhorn decorator crab
             Pugettia:
-              sp: kelp crab
+              sp.: kelp crab
               producta: northern kelp crab
               richii: cryptic kelp crab
             Loxorhynchus:
@@ -1084,7 +1084,7 @@ Animalia:
             Scyra:
               acutifrons: sharp nosed crab
 Plantae:
-  sp: algae
+  sp.: algae
   Tracheophytes:
     Angiosperms:
       Monocots:
@@ -1093,16 +1093,16 @@ Plantae:
             Zostera:
               marina: eelgrass
   Chlorophyta:
-    # sp: green algae
+    # sp.: green algae
     Ulvophyceae:
       Ulvales:
         Ulvaceae:
           Ulva: sea lettuce
   Ochrophyta:
-    # sp: brown algae
+    # sp.: brown algae
     Phaeophyceae:
       Laminariales:
-        # sp: kelp
+        # sp.: kelp
         Laminariaceae:
           Nereocystis:
             luetkeana: bull kelp
@@ -1111,7 +1111,7 @@ Plantae:
           Fucus:
             gardneri: rockweed
   Rhodophyta:
-    # sp: red algae
+    # sp.: red algae
     Florideophyceae:
       Rhodymeniales:
         Rhodymeniaceae:
@@ -1120,7 +1120,7 @@ Plantae:
           Botryocladia:
             pseudodichotoma: sea grape
       Ceramiales:
-        sp: filamentous red seaweed
+        sp.: filamentous red seaweed
         Ceramiaceae:
           Microcladia:
             coulteri: delicate sea lace
