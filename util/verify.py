@@ -26,9 +26,40 @@ def required_checks():
     _important_files_exist()
     _link_check()
     _misspellings()
+    _wrong_order()
 
 
 # PRIVATE
+
+
+def _wrong_order():
+    ''' actual check
+    '''
+    tree = collection.go()
+    for value in _find_wrong_name_order(tree):
+        assert False, f'word ordering appears wrong between {value}'
+
+
+def _find_wrong_name_order(tree):
+    ''' look for swapped words
+    '''
+    if not isinstance(tree, dict):
+        return
+
+    conflicts = []
+    seen = {}
+
+    for key in tree.keys():
+        flattened = ' '.join(sorted(key.split(' ')))
+
+        if flattened in seen:
+            conflicts.append((seen[flattened], key,))
+        else:
+            seen[flattened] = key
+
+    yield from conflicts
+    for value in tree.values():
+        yield from _find_wrong_name_order(value)
 
 
 def _misspellings():

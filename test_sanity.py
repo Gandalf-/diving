@@ -437,7 +437,11 @@ class TestLocations(unittest.TestCase):
 class TestCollection(unittest.TestCase):
     ''' collection.py '''
 
-    def build_swapped_tree(self):
+
+class TestVerify(unittest.TestCase):
+    ''' verify.py '''
+
+    def _build_swapped_tree(self):
         ''' swapped words
         '''
         tree = copy.deepcopy(TestGallery.tree)
@@ -454,19 +458,9 @@ class TestCollection(unittest.TestCase):
     def test_detect_wrong_name_order(self):
         ''' pale freckled sea lemon vs freckled pale sea lemon
         '''
-        tree = self.build_swapped_tree()
-
-        wrong = list(collection.find_wrong_name_order(tree))
-        self.assertNotEqual(wrong, [])
-
-    def test_repair_wrong_name_order(self):
-        ''' pale freckled sea lemon vs freckled pale sea lemon
-        '''
-        self.assertEqual(1, 1)
-
-
-class TestVerify(unittest.TestCase):
-    ''' verify.py '''
+        tree = self._build_swapped_tree()
+        wrong = list(verify._find_wrong_name_order(tree))
+        self.assertEqual(wrong, [('freckled pale', 'pale freckled')])
 
     def test_detect_misspelling(self):
         ''' curlyhead spaghetti worm vs curlyheaded spaghetti worm

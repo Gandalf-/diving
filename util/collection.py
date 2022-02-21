@@ -19,11 +19,9 @@ def named():
 def all_names():
     ''' all simplified, split names
     '''
-    everything = {
-        (categorize(split(i.simplified())), i) for i in _expand_names(named())
+    return {
+        categorize(split(i.simplified())) for i in _expand_names(named())
     }
-
-    return {n for (n, _) in everything}
 
 
 def single_level(tree):
@@ -35,7 +33,6 @@ def single_level(tree):
         for value in where.values():
             if isinstance(value, list):
                 yield value
-
             else:
                 yield from inner(value)
 
@@ -73,11 +70,7 @@ def find_vague_names():
     import collections
     collections.Counter(i.simplified() for i in find_vague_names())
     '''
-    everything = {
-        (categorize(split(i.simplified())), i) for i in _expand_names(named())
-    }
-
-    names = {n for (n, _) in everything}
+    names = all_names()
 
     for (name, image) in everything:
         for other in names:
@@ -86,28 +79,6 @@ def find_vague_names():
 
             if other.endswith(name):
                 yield image
-
-
-def find_wrong_name_order(tree):
-    ''' look for swapped words
-    '''
-    if not isinstance(tree, dict):
-        return
-
-    conflicts = []
-    seen = {}
-
-    for key in tree.keys():
-        flattened = ' '.join(sorted(key.split(' ')))
-
-        if flattened in seen:
-            conflicts.append((seen[flattened], key,))
-        else:
-            seen[flattened] = key
-
-    yield from conflicts
-    for value in tree.values():
-        yield from find_wrong_name_order(value)
 
 
 def delve(directory):
