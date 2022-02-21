@@ -14,9 +14,12 @@ import util.collection as collection
 import util.common as utility
 import util.image as image
 import util.taxonomy as taxonomy
+import util.verify as verify
 
 from hypertext import Where, Side
 from util.taxonomy import MappingType
+
+# pylint: disable=protected-access
 
 
 class TestHypertext(unittest.TestCase):
@@ -461,22 +464,46 @@ class TestCollection(unittest.TestCase):
         '''
         self.assertEqual(1, 1)
 
+
+class TestVerify(unittest.TestCase):
+    ''' verify.py '''
+
     def test_detect_misspelling(self):
         ''' curlyhead spaghetti worm vs curlyheaded spaghetti worm
         '''
-        tree = copy.deepcopy(TestGallery.tree)
-        worm = tree['worm']['spaghetti']['curlyhead']['data'].pop()
-        worm.name = 'Curlyheaded Spaghetti Worm'
+        examples = [
+            ['curlyhead spaghetti worm', 'curlyheaded spaghetti worm'],
+            ['encrusting bryozoan', 'encrusting byrozoan'],
+            ['nanaimo nudibranch', 'naniamo nudibranch'],
+        ]
+        for names in examples:
+            wrong = [
+                sorted(w) for w in verify._possible_misspellings(names[:])
+            ]
+            self.assertEqual(wrong, [names])
 
-        tree['worm']['spaghetti']['curlyheaded'] = {
-            'data': [worm],
-        }
+    def test_detect_misspelling_ignore_explicit(self):
+        ''' don't consider ignored names
+        '''
+        examples = [
+            ['submerged log', 'submerged wood'],
+            ['a unknown', 'b unknown'],
+        ]
+        for names in examples:
+            wrong = [
+                sorted(w) for w in verify._possible_misspellings(names[:])
+            ]
+            self.assertEqual(wrong, [])
 
-        self.assertIn('curlyheaded', tree['worm']['spaghetti'].keys())
-        self.assertIn('curlyhead', tree['worm']['spaghetti'].keys())
-
-        wrong = list(collection.find_misspelled_names())
-        self.assertNotEqual(wrong, [])
+    def test_detect_misspelling_ignore_scientific(self):
+        ''' a name isn't misspelled if it has a scientific name
+        '''
+        examples = [
+            ['dalls dendronotid nudibranch', 'red dendronotid nudibranch'],
+        ]
+        for names in examples:
+            wrong = [sorted(w) for w in verify._find_misspellings(names[:])]
+            self.assertEqual(wrong, [])
 
 
 if __name__ == '__main__':

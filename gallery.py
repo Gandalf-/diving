@@ -5,6 +5,7 @@ search through diving pictures to produce a 'taxonomy tree', then convert that
 tree into HTML pages for diving.anardil.net
 '''
 
+import os
 import sys
 import multiprocessing
 from datetime import datetime
@@ -291,5 +292,8 @@ if not sys.flags.interactive and __name__ == "__main__":
     write_all_html()
 
     print("verifying html...              ", end="", flush=True)
-    verify.advisory_checks()
+    if os.environ.get('DIVING_VERIFY'):
+        verify.required_checks()
+    else:
+        verify.advisory_checks()
     print("done")

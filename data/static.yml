@@ -45,6 +45,8 @@ ignore:
   - pier
   - rock
   - reef
+  - log
+  - wood
 
 splits:
   - fish

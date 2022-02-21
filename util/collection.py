@@ -4,7 +4,6 @@
 parsing data from the file system to construct trees of images
 '''
 
-import difflib
 import os
 
 from util.image import Image, categorize, split
@@ -109,24 +108,6 @@ def find_wrong_name_order(tree):
     yield from conflicts
     for value in tree.values():
         yield from find_wrong_name_order(value)
-
-
-def find_misspelled_names():
-    ''' look for edit distance
-
-    prune based on taxonomy.load_known()
-    '''
-    everything = {
-        (categorize(split(i.simplified())), i) for i in _expand_names(named())
-    }
-
-    names = list({n for (n, _) in everything if 'unknown' not in n})
-    while names:
-        name = names.pop()
-        items = difflib.get_close_matches(name, names, cutoff=0.8)
-        items = [item for item in items if item not in name]
-        if items:
-            yield (name, items)
 
 
 def delve(directory):

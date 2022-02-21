@@ -4,8 +4,13 @@
 Check for broken links, misspelled names, and more
 '''
 
+import difflib
 import os
 import re
+
+import util.collection as collection
+import util.static as static
+import util.taxonomy as taxonomy
 
 
 def advisory_checks():
@@ -20,9 +25,54 @@ def required_checks():
     ''' must pass '''
     _important_files_exist()
     _link_check()
+    _misspellings()
 
 
 # PRIVATE
+
+
+def _misspellings():
+    ''' actual check
+    '''
+    found = list(_find_misspellings())
+    assert not found, found
+
+
+def _find_misspellings(names=None):
+    ''' check for misspellings
+    '''
+    candidates = _possible_misspellings(names)
+    scientific = taxonomy.mapping()
+
+    for group in candidates:
+        for candidate in group:
+            if not taxonomy.gallery_scientific(
+                candidate.split(' '), scientific
+            ):
+                yield candidate
+
+
+def _possible_misspellings(names=None):
+    ''' look for edit distance
+
+    prune based on taxonomy.load_known()
+    '''
+    if not names:
+        names = collection.all_names()
+
+    while names:
+        name = names.pop()
+        if any(name.endswith(i) for i in static.ignore + ['unknown']):
+            continue
+
+        similars = difflib.get_close_matches(name, names, cutoff=0.8)
+        similars = [
+            other
+            for other in similars
+            if other not in name and name not in other
+        ]
+        if similars:
+            yield [name] + similars
 
 
 def _important_files_exist():

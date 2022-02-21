@@ -48,6 +48,7 @@ Animalia:
           Cliona:
             californiana: yellow boring sponge
       Poecilosclerida:
+        sp: encrusting sponge
         Esperiopsidae:
           Amphilectus:
             digitatus: glove sponge
@@ -730,6 +731,7 @@ Animalia:
         # soft coral
         Gorgoniidae:
           Pacifigorgia:
+            sp: pacifigorgia fan coral
             darwinii: pacifigorgia darwinii fan coral
         Plexauridae:
           Swiftia:
@@ -928,6 +930,7 @@ Animalia:
                 leonina: hooded nudibranch
             Dendronotus:
               iris: giant nudibranch
+              dalli: dalls dendronotid
               rufus: red dendronotid
               albus: white dendronotid
               diversicolor: multicolor dendronotid
@@ -1088,7 +1091,7 @@ Plantae:
         Alismatales:
           Zosteraceae:
             Zostera:
-              marina: seagrass
+              marina: eelgrass
   Chlorophyta:
     # sp: green algae
     Ulvophyceae:
