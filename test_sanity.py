@@ -22,6 +22,17 @@ from util.taxonomy import MappingType
 # pylint: disable=protected-access
 
 
+_TREE = dict()
+
+
+def get_tree():
+    ''' full image tree '''
+    if not _TREE:
+        _TREE['tree'] = collection.go()
+
+    return copy.deepcopy(_TREE['tree'])
+
+
 class TestHypertext(unittest.TestCase):
     ''' hypertext.py '''
 
@@ -189,28 +200,28 @@ class TestGallery(unittest.TestCase):
 
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
-    tree = collection.go()
 
     def test_find_representative(self):
         ''' picking the newest image to represent a tree, or a predefined
         'pinned' image
         '''
-        self.assertIn('fish', TestGallery.tree)
-        out = gallery.find_representative(
-            TestGallery.tree['fish'], lineage=['fish']
-        )
+        tree = get_tree()
+
+        self.assertIn('fish', tree)
+        out = gallery.find_representative(tree['fish'], lineage=['fish'])
         self.assertEqual(out.name, 'Yellow Eye Rockfish')
 
-        self.assertIn('barnacle', TestGallery.tree)
+        self.assertIn('barnacle', tree)
         out = gallery.find_representative(
-            TestGallery.tree['barnacle'], lineage=['barnacle']
+            tree['barnacle'], lineage=['barnacle']
         )
         self.assertIsNotNone(out)
 
     def test_html_tree_gallery(self):
         ''' basics
         '''
-        sub_tree = TestGallery.tree['coral']
+        tree = get_tree()
+        sub_tree = tree['coral']
         htmls = gallery.html_tree(
             sub_tree, Where.Gallery, TestGallery.g_scientific, ['coral']
         )
@@ -383,10 +394,14 @@ class TestUtility(unittest.TestCase):
         out = list(out)
         self.assertEqual(out, [(1, 2, 3), (1, 3, 4), (1, 4, 5)])
 
-    def test_hmap(self):
-        ''' fold-ish thing '''
-        out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5)
-        self.assertEqual(out, 5)
+    def test_take(self):
+        ''' it works '''
+        self.assertEqual([0, 1, 2], utility.take(range(10), 3))
+
+    def test_flatten(self):
+        ''' it works '''
+        self.assertEqual([0, 1, 2], utility.flatten([[0], [1, 2]]))
+        self.assertEqual([], utility.flatten([[]]))
 
     def test_tree_size(self):
         ''' how many leaves are in this tree '''
@@ -399,6 +414,35 @@ class TestUtility(unittest.TestCase):
         leaves = list(utility.extract_leaves(tree))
         wanted = [3, 4]
         self.assertEqual(sorted(leaves), sorted(wanted))
+
+    def test_extract_branches(self):
+        ''' grab the branches for this tree '''
+        tree = {'a': {'b': 3}, 'c': 4}
+        branches = list(utility.extract_branches(tree))
+        wanted = ['a', 'b', 'c']
+        self.assertEqual(sorted(branches), sorted(wanted))
+
+    def test_hmap(self):
+        ''' fold-ish thing '''
+        out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5)
+        self.assertEqual(out, 5)
+
+    def test_is_date(self):
+        ''' it works '''
+        for positive in ('2017-01-01', '2000-11-21'):
+            self.assertTrue(utility.is_date(positive))
+
+        for negative in ('2000-91-21', '2000-21', '2000-21'):
+            self.assertFalse(utility.is_date(negative))
+
+    def test_strip_date(self):
+        ''' it works '''
+        examples = [
+            ('Sund Rock 2017-01-01', 'Sund Rock'),
+            ('Sund Rock 4', 'Sund Rock 4'),
+        ]
+        for before, after in examples:
+            self.assertEqual(utility.strip_date(before), after)
 
 
 class TestInformation(unittest.TestCase):
@@ -469,7 +513,7 @@ class TestVerify(unittest.TestCase):
     def _build_swapped_tree(self):
         ''' swapped words
         '''
-        tree = copy.deepcopy(TestGallery.tree)
+        tree = get_tree()
         nudi = tree['nudibranch']['sea lemon']['freckled pale']['data'].pop()
         nudi.name = 'Pale Freckled Sea Lemon'
 
