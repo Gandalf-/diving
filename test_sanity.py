@@ -371,7 +371,7 @@ class TestImage(unittest.TestCase):
             self.assertEqual(split, after)
             self.assertEqual(image.unsplit(split), before)
 
-    def test_location(self):
+    def test_image_location(self):
         ''' names can have a number after the date to force ordering that
         should be removed usually
         '''
@@ -383,6 +383,45 @@ class TestImage(unittest.TestCase):
         for before, after in samples:
             picture = image.Image('fish', before)
             self.assertEqual(picture.location(), after)
+
+    def test_image_site(self):
+        ''' it works '''
+        samples = [
+            ("2021-11-05 Rockaway Beach", "Rockaway Beach"),
+            ("2021-11-05 1 Rockaway Beach", "Rockaway Beach"),
+            ("2021-11-05 10 Rockaway Beach", "Rockaway Beach"),
+        ]
+        for before, after in samples:
+            picture = image.Image('fish', before)
+            self.assertEqual(picture.site(), after)
+
+    def test_image_singular(self):
+        ''' it works '''
+        samples = [
+            ('001 - Clams.jpg', 'clam'),
+            ('001 - Decorator Crabs.jpg', 'decorator crab'),
+            ('001 - Green Algae.jpg', 'green algae'),
+            ('001 - Octopus.jpg', 'octopus'),
+            ('001 - Grass.jpg', 'grass'),
+            ('001 - Painted Chitons.jpg', 'painted chiton'),
+        ]
+        for before, after in samples:
+            picture = image.Image(before, '2020-01-01 Rockaway Beach')
+            self.assertEqual(picture.singular(), after)
+
+    def test_image_simplified(self):
+        ''' it works '''
+        samples = [
+            ('001 - Clams.jpg', 'clam'),
+            ('001 - Juvenile Decorator Crab Eggs.jpg', 'decorator crab'),
+            ('001 - Green Algae.jpg', 'green algae'),
+            ('001 - Octopus Egg.jpg', 'octopus'),
+            ('001 - Various Grass.jpg', 'grass'),
+            ('001 - Painted Chitons.jpg', 'painted chiton'),
+        ]
+        for before, after in samples:
+            picture = image.Image(before, '2020-01-01 Rockaway Beach')
+            self.assertEqual(picture.simplified(), after)
 
 
 class TestUtility(unittest.TestCase):

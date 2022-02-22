@@ -14,8 +14,8 @@ from apocrypha.client import Client
 import util.common as utility
 import util.static as static
 
-database = Client()
-inflect = inflect.engine()
+_database = Client()
+_inflect = inflect.engine()
 
 
 def categorize(name):
@@ -140,7 +140,7 @@ class Image:
 
     def singular(self):
         ''' return singular version '''
-        name = inflect.singular_noun(self.name.lower())
+        name = _inflect.singular_noun(self.name.lower())
         name = name or self.name.lower()
 
         # fix inflect's mistakes
@@ -163,10 +163,7 @@ class Image:
 
     def simplified(self):
         ''' remove qualifiers from name '''
-        name = self.singular().lower()
-        name = unqualify(name)
-
-        return name
+        return unqualify(self.singular())
 
     def normalized(self):
         ''' lower case, remove plurals, split and expand '''
@@ -180,7 +177,7 @@ class Image:
     def _hash(self):
         ''' hash a file the same way indexer does, so we can find it's thumbnail
         '''
-        digest = database.get('diving', 'cache', self.identifier(), 'hash')
+        digest = _database.get('diving', 'cache', self.identifier(), 'hash')
         if digest:
             return digest
 
@@ -188,13 +185,13 @@ class Image:
 
         with open(self.path(), "rb") as f:
             while True:
-                data = f.read(65536)
+                data = f.read(2 ** 16)
                 if not data:
                     break
                 sha1.update(data)
 
         digest = sha1.hexdigest()
-        database.set(
+        _database.set(
             'diving', 'cache', self.identifier(), 'hash', value=digest
         )
         return digest
