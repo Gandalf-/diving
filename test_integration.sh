@@ -1,16 +1,26 @@
 #!/bin/bash
 
+require() {
+  local what="$1"
+  if ! command -v "$what" >/dev/null; then
+    echo "Please install '$what'"
+    false
+  fi
+}
+
 set -e
 
-cd ~/working/tmp/diving/
+require tidy
+require parallel
 
+cd ~/working/tmp/diving/
 find gallery sites taxonomy timeline -name '*.html' -delete
 
 DIVING_VERIFY=1 python3 ~/google_drive/code/python/diving/gallery.py
 
 html_lint="$(
   {
-    tidy -q -e \
+    parallel -n 50 tidy -q -e ::: \
       index.html \
       detective/*.html \
       gallery/*.html \
@@ -19,7 +29,7 @@ html_lint="$(
       timeline/index.html \
       2>&1
 
-    tidy -q -e \
+    parallel -n 50 tidy -q -e ::: \
       timeline/20*.html \
       2>&1 \
       | grep -v 'inserting implicit .body.' \
