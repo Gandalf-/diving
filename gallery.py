@@ -96,7 +96,7 @@ def _key_to_subject(key, where):
             subject = f'<em>{subject}</em>'
 
     elif where == Where.Sites:
-        subject = strip_date(key).title().replace("'S", "'s")
+        subject = strip_date(key)
     else:
         subject = taxonomy.simplify(key)
 

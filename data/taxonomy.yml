@@ -33,6 +33,12 @@ Animalia:
           polymorphus: orange ribbon worm
   Porifera:
     Hexactinellida:
+      Lyssacinosida:
+        Rossellidae:
+          Rhabdocalyptus:
+            dawsoni: sharp lipped boot sponge
+          Staurocalyptus:
+            dowlingi: round lipped boot sponge
       Sceptrulophora:
         Aphrocallistidae:
           Aphrocallistes:
@@ -51,6 +57,7 @@ Animalia:
         sp.: encrusting sponge
         Esperiopsidae:
           Amphilectus:
+            rigida: orange finger sponge
             digitatus: glove sponge
         Hymedesmiidae:
           Hamigera: orange cratered encrusting sponge
@@ -86,7 +93,7 @@ Animalia:
               ornata: ornate tube worm
         Polynoidae:
           Arctonoe:
-            vittata: red banded commensal scaled worm
+            vittata: red banded commensal scale worm
           Harmothoe:
             imbricata: fifteen scaled worm
         Goniadidae:
@@ -170,8 +177,21 @@ Animalia:
               lichenoides: leaf crust bryozoan
   Echinodermata:
     Ophiuroidea:
-      # sp.: brittle star
+      sp.: brittle star
+      Ophiurida:
+        Ophiuridae:
+          Ophiura:
+            luetkenii: gray brittle star
+            sarsii: notched brittle star
       Amphilepidida:
+        Ophiactoidea:
+          Ophiopholidae:
+            Ophiopholis:
+              aculeata: daisy brittle star
+        Amphiuroidea:
+          Amphiuridae:
+            Amphiodia:
+              periercta: burrowing brittle star
         Ophiactoidea:
           Ophiotrichidae:
             Ophiothrix:
@@ -186,6 +206,9 @@ Animalia:
     Asteroidea:
       sp.: star
       Paxillosida:
+        Pseudarchasteridae:
+          Gephyreaster:
+            swifti: gunpowder star
         Luidiidae:
           Luidia:
             bellonae: banded sand star
@@ -196,11 +219,16 @@ Animalia:
         Pterasteridae:
           Pteraster:
             tesselatus: slime star
+            militaris: wrinkled star
       Forcipulatida:
         Heliasteridae:
           Heliaster:
             cumingi: red sun star
         Asteriidae:
+          Orthasterias:
+            koehleri: rainbow star
+          Evasterias:
+            troschelii: mottled star
           Stylasterias:
             forreri: velcro star
           Leptasterias:
@@ -229,18 +257,24 @@ Animalia:
             papposus: rose star
           Solaster:
             dawsoni: morning sun star
+            stimpsoni: striped sun star
+            endeca: northern sun star
         Asteropseidae:
           Dermasterias:
             imbricata: leather star
         Goniasteridae:
           Ceramaster:
-            arcticus: arctic cookie star
+            patagonicus: cookie star
           Mediaster:
             aequalis: vermilion star
       Spinulosida:
         Echinasteridae:
           Henricia:
-            leviuscula: blood star
+            sp: blood star
+            leviuscula: "true blood star"
+            aspera: ridged blood star
+            sanguinolenta: fat blood star
+            longispina: long spined blood star
     Holothuroidea:
       sp.: sea cucumber
       Holothuriida:
@@ -344,8 +378,13 @@ Animalia:
           Cystodytes:
             lobatus: lobed compound tunicate
         Didemnidae:
-          Didemnum: white glove leather tunicate
+          Trididemnum: white glove leather tunicate
+          Didemnum:
+            carnulentum: pacific white crust tunicate
       Phlebobranchia:
+        Ascidiidae:
+          Ascidia:
+            paratropa: glassy sea squirt
         Corellidae:
           Corella:
             willmeriana: transparent sea squirt
@@ -572,6 +611,9 @@ Animalia:
            richardsonii: grunt sculpin
         Cottidae:
           sp.: sculpin
+          Cottus:
+            bairdii: mottled sculpin
+            asper: prickly sculpin
           Oligocottus:
             maculosus: tidepool sculpin
           Leptocottus:
@@ -644,6 +686,11 @@ Animalia:
     Hydrozoa:
       sp.: hydroid
       Anthoathecata:
+        Corymorphidae:
+          Euphysa:
+            flammea: tiny red sausage jelly
+          Corymorpha:
+            palma: fairy palm hydroid
         Pennariidae:
           Pennaria:
             disticha: disticha hydroid
@@ -696,6 +743,8 @@ Animalia:
           Porites:
             lobata: porites lobata coral
         Dendrophylliidae:
+          Balanophyllia:
+            elegans: orange cup coral
           Rhizopsammia:
             wellingtoni: rhizopsammia wellingtoni coral
           Tubastraea:
@@ -724,8 +773,8 @@ Animalia:
             willemoesi: sea whip
         Pennatulidae:
           Ptilosarcus:
-            gurneyi: gurneyi sea pen
-            undulatus: undulatus sea pen
+            gurneyi: ptilosarcus gurneyi sea pen
+            undulatus: ptilosarcus undulatus sea pen
       Alcyonacea:
         sp.: fan coral
         # soft coral
@@ -761,6 +810,7 @@ Animalia:
               fernaldi: crimson anemone
             Anthopleura:
               artemisia: green burrowing anemone
+              elegantissima: pink tipped anemone
             Urticina:
               crassicornis: painted anemone
               coriacea: stubby rose anemone
@@ -770,6 +820,7 @@ Animalia:
             Halcampa:
               decemtentaculata: ten tentacled burrowing anemone
           Metridiidae:
+            Diadumenidae: tiny orange anemone
             Metridium:
               senile: short plumose anemone
               farcimen: metridium anemone
@@ -793,13 +844,15 @@ Animalia:
       Adapedonta:
         Hiatelloidea:
           Hiatellidae:
-            Panopea:
+           Panopea:
               generosa: geoduck clam
     Polyplacophora:
       Chitonida:
         Mopalioidea:
           Mopaliidae:
             sp.: chiton
+            Katharina:
+              tunicata: black leather chiton
             Dendrochiton:
               flectens: painted dendrochiton
             Mopalia:
@@ -828,6 +881,10 @@ Animalia:
             Gastropteron:
               pacificum: winged sea slug
       Lepetellida:
+        Haliotoidea:
+          Haliotidae:
+            Haliotis:
+              kamtschatkana: northern abalone
         Fissurelloidea:
           Fissurellidae:
             Diodora:
@@ -861,22 +918,31 @@ Animalia:
               californica: california berthella
       Nudibranchia:
         sp.: nudibranch
+        Arminoidea:
+          Arminidae:
+            Armina:
+              californica: striped nudibranch
         Aeolidioidea:
           Aeolidiidae:
             Aeolidia:
               papillosa: shaggy mouse nudibranch
           Myrrhinidae:
             Hermissenda:
-              crassicornis: opalescent nudibranch
+              crassicornis: horned nudibranch
+              opalescens: opalescent nudibranch
         Doridoidea:
           Chromodorididae:
             Felimare:
               lapislazuli: blue spotted doris
           Dorididae:
+            Geitodoris:
+              heathi: heaths dorid
             Doris:
               montereyensis: monterey sea lemon
               odhneri: white nudibranch
           Discodorididae:
+            Rostanga:
+              pulchra: red sponge dorid
             Peltodoris:
               nobilis: noble sea lemon
               lentignosa: freckled pale sea lemon
@@ -885,9 +951,10 @@ Animalia:
           Cadlinidae:
             Aldisa:
               albomarginata: white rimmed nudibranch
-              cooperi: coopers dorid
+            #   cooperi: coopers dorid
             Cadlina:
               luteomarginata: yellow rimmed nudibranch
+              modesta: modest cadlina nudibranch
         Polyceroidea:
           Polyceridae:
             Tambja:
@@ -895,10 +962,11 @@ Animalia:
             Limacia:
               cockerelli: cockerells nudibranch
             Triopha:
-              catalinae: clown nudibranch
+              catalinae: bold clown nudibranch
+              modesta: modest clown nudibranch
         Proctonotoidea:
           Proctonotidae:
-            Janolus:
+            Antiopella:
               fuscus: bicolor nudibranch
           Dironidae:
             Dirona:
@@ -920,7 +988,7 @@ Animalia:
           Coryphellidae:
             Orienthella:
               trilineata: three lined nudibranch
-            Himatina:
+            Coryphella:
               trophina: red flabellina nudibranch
               verrucosa: red gilled nudibranch
         Dendronotoidea:
@@ -946,6 +1014,10 @@ Animalia:
               nanaimoensis: nanaimo nudibranch
               lutea: sandalwood nudibranch
               hudsoni: yellow margin dorid
+        Tritonioidea:
+          Tritoniidae:
+            Tritonia:
+              festiva: diamondback nudibranch
   Arthropoda:
     Pantopoda:
       Chelicerata:
@@ -972,6 +1044,14 @@ Animalia:
             Caprella:
               alaskana: alaskan skeleton shrimp
       Decapoda:
+        Xanthoidea:
+          Panopeidae:
+            Lophopanopeus:
+              bellus: black clawed crab
+        Astacoidea:
+          Astacidae:
+            Pacifastacus:
+              leniusculus: signal crawdad
         Nematocarcinoidea:
           Rhynchocinetidae:
             Rhynchocinetes:
@@ -998,6 +1078,8 @@ Animalia:
               yucatanicus: spotted cleaner shrimp
         Alpheoidea:
           Hippolytidae:
+            Eualus:
+              pusiolus: sponge eualid shrimp
             Spirontocaris:
               lamellicornis: deep blade shrimp
             Heptacarpus:
@@ -1041,6 +1123,8 @@ Animalia:
               wosnessenskii: scaled crab
             Cryptolithodes:
               sitchensis: umbrella crab
+            Oedignathus:
+              inermis: granular claw crab
           Paguridae:
             sp.: hermit crab
             Elassochirus:
@@ -1060,7 +1144,9 @@ Animalia:
             Metacarcinus:
               magister: dungeness crab
             Cancer:
+              gracilis: graceful crab
               productus: red rock crab
+              antennarius: brown rock crab
         Majoidea:
           sp.: decorator crab
           Inachoididae:
@@ -1079,10 +1165,19 @@ Animalia:
               sp.: kelp crab
               producta: northern kelp crab
               richii: cryptic kelp crab
+            Taliepus:
+              nuttallii: southern kelp crab
             Loxorhynchus:
               crispatus: moss crab
             Scyra:
               acutifrons: sharp nosed crab
+Chromista:
+  Ochrophyta:
+    Bacillariophyceae:
+      Cymbellales:
+        Gomphonemataceae:
+          Didymosphenia:
+            geminata: rock snot diatom
 Plantae:
   sp.: algae
   Tracheophytes:

@@ -75,11 +75,9 @@ h3 {
   border: 1px solid white;
 }
 
-.nolink {
-  border: 1px solid black;
-}
-
-.nolink:hover {
+.nolink,
+.nolink:hover,
+.buffer:hover {
   border: 1px solid black;
 }
 
