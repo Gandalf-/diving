@@ -14,7 +14,7 @@ inttest:
 
 .PHONY: lint
 lint:
-	pylint -j 0 --score n *.py **/*.py
+	pylint --disable=R0022,E0015 -j 0 --score n *.py **/*.py
 	flake8 *.py */*.py
 
 .PHONY: format

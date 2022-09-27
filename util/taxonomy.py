@@ -22,8 +22,7 @@ root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
 
 def gallery_scientific(lineage, scientific, debug=False):
-    ''' attempt to find a scientific name for this page
-    '''
+    '''attempt to find a scientific name for this page'''
 
     def lookup(names, *fns):
         base = ' '.join(names).lower()
@@ -53,7 +52,7 @@ def gallery_scientific(lineage, scientific, debug=False):
 
 
 def simplify(name: str) -> str:
-    ''' try to use similar() to simplify the lineage by looking for repeated
+    '''try to use similar() to simplify the lineage by looking for repeated
     prefixes and abbreviating them
 
     Diadematoida Diadematidae Diadema antillarum
@@ -79,7 +78,7 @@ def simplify(name: str) -> str:
 
 
 def similar(a, b):
-    ''' determine if two words are similar, usually a super family and family,
+    '''determine if two words are similar, usually a super family and family,
     or something to that effect
     '''
     length = sum([len(a), len(b)]) // 2
@@ -89,13 +88,13 @@ def similar(a, b):
 
 
 def load_tree():
-    ''' yaml load '''
-    with open(root + 'data/taxonomy.yml') as fd:
+    '''yaml load'''
+    with open(root + 'data/taxonomy.yml', encoding='utf8') as fd:
         return yaml.safe_load(fd)
 
 
 def load_known(exact_only=False):
-    ''' load taxonomy.yml '''
+    '''load taxonomy.yml'''
 
     tree = load_tree()
     if exact_only:
@@ -109,7 +108,7 @@ MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
 
 
 def mapping(where=MappingType.Gallery):
-    ''' simplified to scientific '''
+    '''simplified to scientific'''
     tree = _invert_known(load_tree())
 
     if where == MappingType.Gallery:
@@ -119,7 +118,7 @@ def mapping(where=MappingType.Gallery):
 
 
 def gallery_tree(tree=None):
-    ''' produce a tree for gallery.py to use
+    '''produce a tree for gallery.py to use
     the provided tree must be from collection.go()
     '''
     if not tree:
@@ -134,8 +133,7 @@ def gallery_tree(tree=None):
 
 
 def binomial_names(tree=None, parent=None):
-    ''' scientific binomial names
-    '''
+    '''scientific binomial names'''
     if not tree:
         tree = load_tree()
 
@@ -151,8 +149,7 @@ def binomial_names(tree=None, parent=None):
 
 
 def is_scientific_name(name):
-    ''' cached lookup
-    '''
+    '''cached lookup'''
     if not _NAMES_CACHE:
         for bname in binomial_names():
             _NAMES_CACHE[bname.lower()] = bname
@@ -162,18 +159,16 @@ def is_scientific_name(name):
 
 # PRIVATE
 
-_NAMES_CACHE = dict()
+_NAMES_CACHE = {}
 
 
 def _to_classification(name, mappings):
-    ''' find a suitable classification for this common name
-    '''
+    '''find a suitable classification for this common name'''
     return gallery_scientific(name.split(' '), mappings)
 
 
 def _filter_exact(tree):
-    ''' remove all sp. entries
-    '''
+    '''remove all sp. entries'''
     assert isinstance(tree, dict), tree
 
     out = {}
@@ -190,8 +185,7 @@ def _filter_exact(tree):
 
 
 def _compress(tree):
-    ''' squash levels
-    '''
+    '''squash levels'''
     if isinstance(tree, str):
         # hit a leaf
         return tree
@@ -217,7 +211,7 @@ def _compress(tree):
 
 
 def _full_compress(tree):
-    ''' keep compressing until nothing changes '''
+    '''keep compressing until nothing changes'''
     old = tree
 
     while True:
@@ -230,8 +224,7 @@ def _full_compress(tree):
 
 
 def _taxia_filler(tree, images):
-    ''' fill in the images
-    '''
+    '''fill in the images'''
     assert isinstance(tree, dict), tree
 
     for key, value in list(tree.items()):
@@ -247,7 +240,7 @@ def _taxia_filler(tree, images):
 
 
 def _invert_known(tree):
-    ''' leaves become roots '''
+    '''leaves become roots'''
 
     result = {}
 
@@ -270,7 +263,7 @@ def _invert_known(tree):
 
 
 def _ordered_simple_names(tree):
-    ''' taxonomy names '''
+    '''taxonomy names'''
     assert isinstance(tree, dict), tree
 
     for value in tree.values():
@@ -285,19 +278,18 @@ def _ordered_simple_names(tree):
 
 
 def _taxonomy_listing():
-    ''' write out the names to a file '''
+    '''write out the names to a file'''
     have = set(load_known())
     everything = set(_ordered_simple_names(go()))
     need = everything - have
 
-    with open(root + 'data/taxonomy.txt', 'w+') as fd:
+    with open(root + 'data/taxonomy.txt', 'w+', encoding='utf8') as fd:
         for name in sorted(need):
             fd.write(name + '\n')
 
 
 def _find_imprecise():
-    ''' find names with classifications that could be more specific
-    '''
+    '''find names with classifications that could be more specific'''
     names = all_names()
     m = mapping()
 

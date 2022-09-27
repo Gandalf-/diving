@@ -18,7 +18,7 @@ m.rcParams['figure.dpi'] = 175
 
 
 def packed_bubble(names, counts, spacing=5):
-    ''' plot '''
+    '''plot'''
     chart = BubbleChart(area=counts, bubble_spacing=spacing)
     chart.collapse()
 

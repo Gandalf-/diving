@@ -9,7 +9,7 @@ import yaml
 
 _root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
-with open(_root + '../data/static.yml') as fd:
+with open(_root + '../data/static.yml', encoding='utf8') as fd:
     _static = yaml.safe_load(fd)
 
 ignore = _static['ignore']
@@ -22,8 +22,7 @@ locations = _static['locations']
 
 
 def _invert(tree):
-    ''' map locations to full location names
-    '''
+    '''map locations to full location names'''
     out = {}
     for area, places in tree.items():
         for place in places:

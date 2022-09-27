@@ -17,7 +17,7 @@ from util.image import (
     uncategorize,
     split,
 )
-import util.taxonomy as taxonomy
+from util import taxonomy
 
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites')
@@ -80,7 +80,7 @@ def lineage_to_link(lineage, side, key=None):
 
 
 def _image_to_gallery_link(image):
-    """ get the /gallery link
+    """get the /gallery link
 
     there could be mulitple subjects in this image, just take the first for now
     """
@@ -99,8 +99,7 @@ def _image_to_gallery_link(image):
 
 
 def _image_to_sites_link(image):
-    """ get the /sites/ link
-    """
+    """get the /sites/ link"""
     when, where = image.location().split(' ', 1)
     site = locations.add_context(where)
     site = site.replace(' ', '-').replace("'", '')
@@ -157,8 +156,7 @@ def _head(_title):
 
 
 def _gallery_title(lineage, scientific):
-    ''' html head and title section for gallery pages
-    '''
+    '''html head and title section for gallery pages'''
     assert lineage
     side = Side.Left
 
@@ -189,9 +187,7 @@ def _gallery_title(lineage, scientific):
             name = f'<em>{name}</em>'
 
         partial = lineage[i:]
-        _link = "/gallery/{path}.html".format(
-            path=lineage_to_link(partial, side)
-        ).lower()
+        _link = f'/gallery/{lineage_to_link(partial, side)}.html'.lower()
 
         html += f"""
         <a href="{_link}">
@@ -222,8 +218,7 @@ def _gallery_title(lineage, scientific):
 
 
 def _taxonomy_title(lineage, scientific):
-    ''' html head and title section for taxonomy pages
-    '''
+    '''html head and title section for taxonomy pages'''
     assert lineage
 
     _title = ' '.join(lineage)
@@ -242,17 +237,13 @@ def _taxonomy_title(lineage, scientific):
 
         name = taxonomy.simplify(name)
         partial = lineage[: i + 1]
-        link = "/taxonomy/{path}.html".format(
-            path=lineage_to_link(partial, side)
-        )
+        link = f"/taxonomy/{lineage_to_link(partial, side)}.html"
 
-        html += """
+        html += f"""
         <a href="{link}">
-            <h1 class="{classes}">{title}</h1>
+            <h1 class="top">{name}</h1>
         </a>
-        """.format(
-            title=name, classes="top", link=link,
-        )
+        """
 
     # check for common name for taxonomy
     name = ""
@@ -281,8 +272,7 @@ def _taxonomy_title(lineage, scientific):
 
 
 def _sites_title(lineage):
-    ''' html head and title section for sites pages
-    '''
+    '''html head and title section for sites pages'''
     assert lineage
 
     display = _title = ' '.join(lineage)
@@ -307,7 +297,7 @@ def _sites_title(lineage):
             rest = None
 
         d = datetime.datetime.strptime(last, '%Y-%m-%d')
-        assert d or True  # pylint please
+        assert d
 
         name = last
         if rest:
@@ -317,7 +307,7 @@ def _sites_title(lineage):
 
     for i, _name in enumerate(lineage):
         partial = lineage[: i + 1]
-        link = "/sites/{path}.html".format(path=lineage_to_link(partial, side))
+        link = f"/sites/{lineage_to_link(partial, side)}.html"
 
         # it's possible that this is the only date available for this location,
         # in which case we want the name to include the location and trim the
@@ -326,13 +316,11 @@ def _sites_title(lineage):
             name = _name + ' ' + name
             continue
 
-        html += """
+        html += f"""
         <a href="{link}">
-            <h1 class="{classes}">{title}</h1>
+            <h1 class="top">{_name}</h1>
         </a>
-        """.format(
-            title=_name, classes="top", link=link,
-        )
+        """
 
     # ???
     html += f"""
@@ -344,8 +332,7 @@ def _sites_title(lineage):
 
 
 def image_to_name_html(image, where):
-    ''' create the html gallery link, entry, or nothing for this image
-    '''
+    '''create the html gallery link, entry, or nothing for this image'''
     if where in (Where.Gallery, Where.Taxonomy):
         return ''
 
@@ -361,8 +348,7 @@ def image_to_name_html(image, where):
 
 
 def image_to_site_html(image, where):
-    ''' create the html site link, entry, or nothing for this image
-    '''
+    '''create the html site link, entry, or nothing for this image'''
     if where == Where.Sites:
         return ''
 

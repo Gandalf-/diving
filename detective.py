@@ -11,9 +11,9 @@ import subprocess
 
 from apocrypha.client import Client
 
-import util.collection as collection
-import util.static as static
-import util.taxonomy as taxonomy
+from util import collection
+from util import static
+from util import taxonomy
 
 from util.image import unqualify, categorize, split
 
@@ -22,8 +22,7 @@ root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 
 def cache_hash(images):
-    ''' cache in a database
-    '''
+    '''cache in a database'''
     client = Client('elm.anardil.net')
     needed = []
     labels = []
@@ -56,7 +55,7 @@ def cache_hash(images):
 
 
 def hasher(images, size=250):
-    ''' [Image] -> [file hash]
+    '''[Image] -> [file hash]
     so we can hash in bulk
     '''
     while images:
@@ -76,8 +75,7 @@ def hasher(images, size=250):
 
 
 def table_builder(debug=True):
-    ''' build the tables!
-    '''
+    '''build the tables!'''
     # reversing so we get newer things first
     images = reversed(list(collection.named()))
     all_names, images = _filter_images(images, debug)
@@ -105,11 +103,10 @@ def table_builder(debug=True):
 
 
 def javascript(debug=True):
-    ''' write out the tables to a file
-    '''
+    '''write out the tables to a file'''
     ns, ts, ss, ds = table_builder(debug)
 
-    with open('detective/data.js', 'w+') as fd:
+    with open('detective/data.js', 'w+', encoding='utf8') as fd:
         print('var names =', ns, file=fd)
         print('var thumbs =', ts, file=fd)
         print('var similarities =', ss, file=fd)
@@ -120,7 +117,7 @@ def javascript(debug=True):
 
 
 def _distance(a, b, tree=None):
-    ''' similarity score, higher means more different
+    '''similarity score, higher means more different
 
     difflib.SequenceMatcher and jellyfish were all junk
     '''
@@ -142,8 +139,7 @@ def _distance(a, b, tree=None):
 
 
 def _difficulties(names):
-    ''' get difficulty overrides
-    '''
+    '''get difficulty overrides'''
     lookup = {
         'very easy': 0,
         'easy': 0,
@@ -166,7 +162,7 @@ def _difficulties(names):
 
 
 def _filter_images(images, debug=True):
-    ''' strip out images that are poor fits for the game
+    '''strip out images that are poor fits for the game
     - multiple subjects
     - vague, like "sponge"
     - no taxonomy, suggesting things like "dive site"
@@ -212,8 +208,7 @@ def _filter_images(images, debug=True):
 
 
 def _similarity_table(names):
-    ''' how alike is every name pair
-    '''
+    '''how alike is every name pair'''
     tree = taxonomy.mapping()
     similarity = [[] for _ in names]
 
@@ -239,8 +234,7 @@ def _similarity_table(names):
 
 
 def _inspect_choices():
-    ''' build a directory tree of chosen thumbnails for visual inspection
-    '''
+    '''build a directory tree of chosen thumbnails for visual inspection'''
     ns, ts, _, _ = table_builder(False)
 
     oroot = '/mnt/zfs/working'

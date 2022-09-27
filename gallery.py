@@ -15,15 +15,15 @@ import information
 import locations
 import timeline
 
-import util.collection as collection
-import util.static as static
-import util.taxonomy as taxonomy
-import util.verify as verify
+from util import collection
+from util import static
+from util import taxonomy
+from util import verify
+from util.image import Image
+from util.common import tree_size, is_date, strip_date, prefix_tuples
 
 from detective import javascript as game
 from hypertext import Where, Side
-from util.image import Image
-from util.common import tree_size, is_date, strip_date, prefix_tuples
 
 # pylint: disable=too-many-locals
 # pylint: disable=line-too-long
@@ -86,8 +86,7 @@ def get_info(where, lineage):
 
 
 def _key_to_subject(key, where):
-    ''' helper!
-    '''
+    '''helper!'''
     if where == Where.Gallery:
         subject = taxonomy.is_scientific_name(key)
         if not subject:
@@ -226,9 +225,7 @@ def html_tree(tree, where, scientific, lineage=None):
 
 
 def write_all_html():
-    ''' main '''
-    pool = multiprocessing.Pool()
-
+    '''main'''
     print("loading images...              ", end="", flush=True)
     tree = collection.go()
     scientific = taxonomy.mapping()
@@ -258,18 +255,19 @@ def write_all_html():
     print("done")
 
     print("writing html...                ", end="", flush=True)
-    pool.map(_pool_writer, prefix_tuples('gallery', name_htmls))
-    pool.map(_pool_writer, prefix_tuples('sites', sites_htmls))
-    pool.map(_pool_writer, prefix_tuples('taxonomy', taxia_htmls))
-    pool.map(_pool_writer, prefix_tuples('timeline', times_htmls))
+    with multiprocessing.Pool() as pool:
+        pool.map(_pool_writer, prefix_tuples('gallery', name_htmls))
+        pool.map(_pool_writer, prefix_tuples('sites', sites_htmls))
+        pool.map(_pool_writer, prefix_tuples('taxonomy', taxia_htmls))
+        pool.map(_pool_writer, prefix_tuples('timeline', times_htmls))
     print("done")
 
 
 def _pool_writer(args):
-    ''' callback for HTML writer pool '''
+    '''callback for HTML writer pool'''
     where, title, html = args
     path = f"{where}/{title}"
-    with open(path, "w+") as f:
+    with open(path, "w+", encoding='utf8') as f:
         print(html, file=f)
 
 

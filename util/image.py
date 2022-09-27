@@ -12,14 +12,14 @@ import inflect
 from apocrypha.client import Client
 
 import util.common as utility
-import util.static as static
+from util import static
 
 _database = Client()
 _inflect = inflect.engine()
 
 
 def categorize(name):
-    ''' add special categorization labels '''
+    '''add special categorization labels'''
     for category, values in static.categories.items():
         for value in values:
             if name.endswith(value):
@@ -28,7 +28,7 @@ def categorize(name):
 
 
 def uncategorize(name):
-    ''' remove the special categorization labels added earlier '''
+    '''remove the special categorization labels added earlier'''
     for category, values in static.categories.items():
         assert isinstance(values, list)
 
@@ -40,7 +40,7 @@ def uncategorize(name):
 
 
 def unqualify(name):
-    ''' remove qualifiers '''
+    '''remove qualifiers'''
     for qualifier in static.qualifiers:
         if name.startswith(qualifier):
             name = name[len(qualifier) + 1 :]
@@ -55,7 +55,7 @@ def unqualify(name):
 
 
 def split(name):
-    ''' add splits
+    '''add splits
     rockfish -> rock fish
     '''
     for s in static.splits:
@@ -65,7 +65,7 @@ def split(name):
 
 
 def unsplit(name):
-    ''' remove splits
+    '''remove splits
     rock fish -> rockfish
     '''
     for s in static.splits:
@@ -75,7 +75,7 @@ def unsplit(name):
 
 
 class Image:
-    ''' container for a diving picture '''
+    '''container for a diving picture'''
 
     def __init__(self, label, directory):
         self.label = label
@@ -101,8 +101,7 @@ class Image:
         )
 
     def location(self):
-        ''' directory minus numbering
-        '''
+        '''directory minus numbering'''
         when, where = self.directory.split(' ', 1)
 
         i = 0
@@ -113,33 +112,29 @@ class Image:
         return when + ' ' + where[i:]
 
     def site(self):
-        ''' directory minus numbering and date
-        '''
+        '''directory minus numbering and date'''
         _, where = self.location().split(' ', 1)
         return where
 
     def identifier(self):
-        ''' unique ID
-        '''
+        '''unique ID'''
         return self.directory + ':' + self.number
 
     def path(self):
-        ''' where this is on the file system
-        '''
+        '''where this is on the file system'''
         return os.path.join(utility.root, self.directory, self.label)
 
     def thumbnail(self):
-        ''' what's the name of the thumbnail for this image?
-        '''
+        '''what's the name of the thumbnail for this image?'''
         return self._hash() + '.jpg'
 
     def fullsize(self):
-        ''' URI of full size image '''
+        '''URI of full size image'''
         resource = urllib.parse.quote(f'{self.directory}/{self.label}')
         return f'https://public.anardil.net/media/diving/{resource}'
 
     def singular(self):
-        ''' return singular version '''
+        '''return singular version'''
         name = _inflect.singular_noun(self.name.lower())
         name = name or self.name.lower()
 
@@ -156,17 +151,17 @@ class Image:
         return name
 
     def scientific(self, names):
-        ''' do we have a scientific name?
+        '''do we have a scientific name?
         names should be taxonomy.mapping()
         '''
         return names.get(self.simplified())
 
     def simplified(self):
-        ''' remove qualifiers from name '''
+        '''remove qualifiers from name'''
         return unqualify(self.singular())
 
     def normalized(self):
-        ''' lower case, remove plurals, split and expand '''
+        '''lower case, remove plurals, split and expand'''
         # simplify name
         name = self.singular()
         name = split(name)
@@ -175,8 +170,7 @@ class Image:
         return name
 
     def _hash(self):
-        ''' hash a file the same way indexer does, so we can find it's thumbnail
-        '''
+        '''hash a file the same way indexer does, so we can find it's thumbnail'''
         digest = _database.get('diving', 'cache', self.identifier(), 'hash')
         if digest:
             return digest

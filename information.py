@@ -27,7 +27,7 @@ from collections import Counter
 import wikipedia
 from apocrypha.client import Client
 
-import util.taxonomy as taxonomy
+from util import taxonomy
 
 db_root = (
     'diving',
@@ -38,7 +38,7 @@ wikipedia.set_rate_limiting(True)
 
 
 class bcolors:
-    ''' terminal colors '''
+    '''terminal colors'''
 
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -52,8 +52,7 @@ class bcolors:
 
 
 def fetch(subject: str, suggest=True):
-    ''' get summary from wikipedia
-    '''
+    '''get summary from wikipedia'''
     now = datetime.now().timestamp()
     try:
         print('fetching', subject)
@@ -106,8 +105,7 @@ def fetch(subject: str, suggest=True):
 
 
 def lookup(subject: str, update=True, again=True) -> dict:
-    ''' get the subject from the database
-    '''
+    '''get the subject from the database'''
     key = subject.lower()
     if key in database.get(*db_root, 'invalid', default=[], cast=list):
         # no page for this name at all
@@ -134,8 +132,7 @@ def lookup(subject: str, update=True, again=True) -> dict:
 
 
 def reference(entry: dict, style='apa') -> str:
-    ''' reference info
-    '''
+    '''reference info'''
     url = entry['url']
     url = f'<a href="{url}">{url}</a>'
 
@@ -154,8 +151,7 @@ def reference(entry: dict, style='apa') -> str:
 
 
 def cleanup(text: str) -> str:
-    ''' remove artifacts from simplification the wikipedia package does
-    '''
+    '''remove artifacts from simplification the wikipedia package does'''
     return (
         text.replace(' ()', '')
         .replace('(, ', '(')
@@ -169,14 +165,12 @@ def cleanup(text: str) -> str:
 
 
 def paragraphs(text: str, count: int) -> [str]:
-    ''' take count number of paragraphs
-    '''
+    '''take count number of paragraphs'''
     return text.split('\n')[:count]
 
 
 def lineage_to_names(lineage):
-    ''' lineage list to names to look up
-    '''
+    '''lineage list to names to look up'''
     if not lineage:
         return []
 
@@ -196,8 +190,7 @@ def lineage_to_names(lineage):
 
 
 def html(name: str) -> (str, str):
-    ''' html fit for use by gallery.py
-    '''
+    '''html fit for use by gallery.py'''
     reasonable_number_of_characters = 400
 
     entry = lookup(name, False)
@@ -228,8 +221,7 @@ def html(name: str) -> (str, str):
 
 
 def missing_list():
-    ''' what subjects are we missing?
-    '''
+    '''what subjects are we missing?'''
     names = set(taxonomy.mapping().values())
     out = []
 
@@ -257,8 +249,7 @@ def missing_list():
 
 
 def check() -> bool:
-    ''' should we stop?
-    '''
+    '''should we stop?'''
     print('? ', end='')
     i = input()
     if i and i in 'nN':
@@ -267,7 +258,7 @@ def check() -> bool:
 
 
 def updater(*missings):
-    ''' interactive update
+    '''interactive update
 
     attempts to do as much as possible automatically. unclear cases will stop
     and ask for confirmation. the ordering is by number of instances available
@@ -310,8 +301,7 @@ def updater(*missings):
 
 
 def link(subject, title):
-    ''' manually link a subject name (taxonomy) to a page
-    '''
+    '''manually link a subject name (taxonomy) to a page'''
     subject = subject.lower()
     title = title.lower()
     fetch(title, False)

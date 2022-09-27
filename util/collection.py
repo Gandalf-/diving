@@ -8,23 +8,21 @@ import os
 
 from util.image import Image, categorize, split
 from util.common import flatten, tree_size, root
-import util.static as static
+from util import static
 
 
 def named():
-    ''' all named images from all directories '''
+    '''all named images from all directories'''
     return flatten([[y for y in z if y.name] for z in _collect()])
 
 
 def all_names():
-    ''' all simplified, split names
-    '''
+    '''all simplified, split names'''
     return {categorize(split(i.simplified())) for i in _expand_names(named())}
 
 
 def single_level(tree):
-    ''' squash the tree into a single level name to images dict
-    '''
+    '''squash the tree into a single level name to images dict'''
     assert isinstance(tree, dict), tree
 
     def inner(where):
@@ -45,7 +43,7 @@ def single_level(tree):
 
 
 def go():
-    ''' construct a nested dictionary where each key is a unique split of a
+    '''construct a nested dictionary where each key is a unique split of a
     name (after processing) from right to left. if there's another split under
     this one, the value is another dictionary, otherwise, it's a list of Images
     '''
@@ -53,8 +51,7 @@ def go():
 
 
 def pipeline(tree, reverse=True):
-    ''' intermediate steps!
-    '''
+    '''intermediate steps!'''
     return _data_to_various(
         _pruner(
             _compress(_compress(_compress(tree, reverse), reverse), reverse)
@@ -63,7 +60,7 @@ def pipeline(tree, reverse=True):
 
 
 def find_vague_names():
-    ''' find names that could be more specific
+    '''find names that could be more specific
 
     import collections
     collections.Counter(i.simplified() for i in find_vague_names())
@@ -80,7 +77,7 @@ def find_vague_names():
 
 
 def delve(directory):
-    """ create an Image object for each picture in a directory """
+    """create an Image object for each picture in a directory"""
     path = os.path.join(root, directory)
     return [
         Image(o, directory)
@@ -93,17 +90,17 @@ def delve(directory):
 
 
 def _listing():
-    """ a list of all dive picture folders available """
+    """a list of all dive picture folders available"""
     return [d for d in os.listdir(root) if not d.startswith(".")]
 
 
 def _collect():
-    """ run delve on all dive picture folders """
+    """run delve on all dive picture folders"""
     return [delve(d) for d in _listing()]
 
 
 def _expand_names(images):
-    """ split out `a and b` into separate elements """
+    """split out `a and b` into separate elements"""
     for image in images:
         for part in (" with ", " and "):
             if part not in image.name:
@@ -120,8 +117,7 @@ def _expand_names(images):
 
 
 def _make_tree(images):
-    """ make a nested dictionary by words
-    """
+    """make a nested dictionary by words"""
     out = {}
 
     for image in images:
@@ -143,8 +139,7 @@ def _make_tree(images):
 
 
 def _pruner(tree, too_few=5):
-    """ remove top level keys with too few elements
-    """
+    """remove top level keys with too few elements"""
     to_remove = []
 
     for key, value in tree.items():
@@ -159,8 +154,7 @@ def _pruner(tree, too_few=5):
 
 
 def _compress(tree, reverse=True):
-    """ look for sub trees with no 'data' key, which can be squished up a level
-    """
+    """look for sub trees with no 'data' key, which can be squished up a level"""
     assert isinstance(tree, dict), tree
 
     for key, value in list(tree.items()):
@@ -185,8 +179,7 @@ def _compress(tree, reverse=True):
 
 
 def _data_to_various(tree):
-    ''' rebucket data into various
-    '''
+    '''rebucket data into various'''
     assert isinstance(tree, dict), tree
 
     for key, value in list(tree.items()):

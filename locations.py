@@ -4,13 +4,12 @@
 collecting dive locations
 '''
 
-import util.collection as collection
-import util.static as static
+from util import collection
+from util import static
 
 
 def add_context(site):
-    ''' try to place a dive site into a larger collection of locations
-    '''
+    '''try to place a dive site into a larger collection of locations'''
     for name, places in static.locations.items():
         for place in places:
             if place == site:
@@ -23,8 +22,7 @@ def add_context(site):
 
 
 def sites():
-    ''' pruned, etc
-    '''
+    '''pruned, etc'''
     return collection.pipeline(_make_tree(), reverse=False)
 
 
@@ -32,8 +30,7 @@ def sites():
 
 
 def _make_tree():
-    ''' images organized into a nested dictionary where keys are locations
-    '''
+    '''images organized into a nested dictionary where keys are locations'''
     images = collection.named()
     out = {}
 

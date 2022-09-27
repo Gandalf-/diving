@@ -8,13 +8,13 @@ import difflib
 import os
 import re
 
-import util.collection as collection
-import util.static as static
-import util.taxonomy as taxonomy
+from util import collection
+from util import static
+from util import taxonomy
 
 
 def advisory_checks():
-    ''' informational '''
+    '''informational'''
     try:
         required_checks()
     except AssertionError as e:
@@ -22,7 +22,7 @@ def advisory_checks():
 
 
 def required_checks():
-    ''' must pass '''
+    '''must pass'''
     _important_files_exist()
     _link_check()
     _misspellings()
@@ -33,16 +33,14 @@ def required_checks():
 
 
 def _wrong_order():
-    ''' actual check
-    '''
+    '''actual check'''
     tree = collection.go()
     for value in _find_wrong_name_order(tree):
         assert False, f'word ordering appears wrong between {value}'
 
 
 def _find_wrong_name_order(tree):
-    ''' look for swapped words
-    '''
+    '''look for swapped words'''
     if not isinstance(tree, dict):
         return
 
@@ -63,15 +61,13 @@ def _find_wrong_name_order(tree):
 
 
 def _misspellings():
-    ''' actual check
-    '''
+    '''actual check'''
     found = list(_find_misspellings())
     assert not found, found
 
 
 def _find_misspellings(names=None):
-    ''' check for misspellings
-    '''
+    '''check for misspellings'''
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
 
@@ -84,7 +80,7 @@ def _find_misspellings(names=None):
 
 
 def _possible_misspellings(names=None):
-    ''' look for edit distance
+    '''look for edit distance
 
     prune based on taxonomy.load_known()
     '''
@@ -107,7 +103,7 @@ def _possible_misspellings(names=None):
 
 
 def _important_files_exist():
-    ''' basic sanity '''
+    '''basic sanity'''
     required = ['index.html', 'style.css', 'favicon.ico', 'imgs']
     required += [
         'jquery.fancybox.min.css',
@@ -164,7 +160,7 @@ def _find_links():
                 continue
 
             path = os.path.join(directory, filename)
-            with open(path) as fd:
+            with open(path, encoding='utf8') as fd:
                 yield from extract_from(fd)
 
 

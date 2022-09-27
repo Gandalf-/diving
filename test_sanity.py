@@ -10,23 +10,23 @@ import hypertext
 import information
 import locations
 
-import util.collection as collection
+from util import collection
+from util import image
+from util import taxonomy
+from util import verify
+from util.taxonomy import MappingType
 import util.common as utility
-import util.image as image
-import util.taxonomy as taxonomy
-import util.verify as verify
 
 from hypertext import Where, Side
-from util.taxonomy import MappingType
 
 # pylint: disable=protected-access
 
 
-_TREE = dict()
+_TREE = {}
 
 
 def get_tree():
-    ''' full image tree '''
+    '''full image tree'''
     if not _TREE:
         _TREE['tree'] = collection.go()
 
@@ -34,11 +34,10 @@ def get_tree():
 
 
 class TestHypertext(unittest.TestCase):
-    ''' hypertext.py '''
+    '''hypertext.py'''
 
     def test_lineage_to_link(self):
-        ''' converting lineage to links between sites
-        '''
+        '''converting lineage to links between sites'''
         samples = [
             (None, False, ["a", "b", "c"], "a-b-c"),
             (None, True, ["a", "b", "c"], "a-b-c"),
@@ -51,8 +50,7 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(link, after)
 
     def test_title_ordering(self):
-        ''' html titles ordering
-        '''
+        '''html titles ordering'''
         samples = [
             (
                 # gallery simple case
@@ -135,8 +133,7 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(title, ' '.join(lineage))
 
     def test_title_ordinary(self):
-        ''' typical common name
-        '''
+        '''typical common name'''
         # gallery
         html, title = hypertext.title(
             ['heart', 'crab'], Where.Gallery, TestGallery.g_scientific
@@ -148,7 +145,7 @@ class TestHypertext(unittest.TestCase):
         self.assertNotIn('<em>', html)
 
     def test_title_scientific_common_name(self):
-        ''' some gallery entries may use scientific names when there isn't a
+        '''some gallery entries may use scientific names when there isn't a
         common name available
         '''
         # gallery
@@ -163,8 +160,7 @@ class TestHypertext(unittest.TestCase):
         self.assertNotIn('Coccinea', html)
 
     def test_title_scientific_sp(self):
-        ''' it works
-        '''
+        '''it works'''
         # taxonomy
         html, title = hypertext.title(
             ['Animalia', 'Cnidaria', 'Anthozoa', 'Actiniaria', 'sp.'],
@@ -178,8 +174,7 @@ class TestHypertext(unittest.TestCase):
         self.assertIn('>Anemone<', html)
 
     def test_title_names(self):
-        ''' html titles top level
-        '''
+        '''html titles top level'''
         # gallery
         html, title = hypertext.title(
             [], Where.Gallery, TestGallery.g_scientific
@@ -196,13 +191,13 @@ class TestHypertext(unittest.TestCase):
 
 
 class TestGallery(unittest.TestCase):
-    ''' gallery.py '''
+    '''gallery.py'''
 
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
     def test_find_representative(self):
-        ''' picking the newest image to represent a tree, or a predefined
+        '''picking the newest image to represent a tree, or a predefined
         'pinned' image
         '''
         tree = get_tree()
@@ -218,8 +213,7 @@ class TestGallery(unittest.TestCase):
         self.assertIsNotNone(out)
 
     def test_html_tree_gallery(self):
-        ''' basics
-        '''
+        '''basics'''
         tree = get_tree()
         sub_tree = tree['coral']
         htmls = gallery.html_tree(
@@ -238,11 +232,10 @@ class TestGallery(unittest.TestCase):
 
 
 class TestTaxonomy(unittest.TestCase):
-    ''' taxonomy.py '''
+    '''taxonomy.py'''
 
     def test_filter_exact(self):
-        ''' remove sp. entries
-        '''
+        '''remove sp. entries'''
         tree = {'Actiniaria': {'sp.': 1, 'Actinioidea': 2, 'Metridioidea': 3}}
         tree = taxonomy._filter_exact(tree)
         self.assertEqual(
@@ -250,8 +243,7 @@ class TestTaxonomy(unittest.TestCase):
         )
 
     def test_gallery_scientific(self):
-        ''' find scientific names by common name
-        '''
+        '''find scientific names by common name'''
         samples = [
             (['copper', 'rock', 'fish'], 'Sebastes caurinus'),
             (['fish'], 'Actinopterygii sp.'),
@@ -273,7 +265,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertTrue(match.endswith(output), match)
 
     def test_similar(self):
-        ''' can these be collapsed? '''
+        '''can these be collapsed?'''
         samples = [
             (True, ('Amphinomida', 'Amphinomidae')),
             (True, ('Aphrocallistidae', 'Aphrocallistes')),
@@ -287,7 +279,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertEqual(expected, taxonomy.similar(a, b), [a, b])
 
     def test_simplify(self):
-        ''' remove similar non-ambiguous names '''
+        '''remove similar non-ambiguous names'''
         samples = [
             (
                 'Polyplacophora Chitonida Mopalioidea Mopaliidae',
@@ -310,8 +302,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertEqual(after, taxonomy.simplify(before))
 
     def test_title_scientific_name(self):
-        ''' cached helper
-        '''
+        '''cached helper'''
         for example in ('crab', 'fish', 'giant pacific octopus'):
             self.assertIsNone(taxonomy.is_scientific_name(example), example)
 
@@ -319,8 +310,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertIsNotNone(taxonomy.is_scientific_name(example), example)
 
     def test_binomial_names(self):
-        ''' parse binomial names from taxonomy.yml
-        '''
+        '''parse binomial names from taxonomy.yml'''
         names = list(taxonomy.binomial_names())
         self.assertNotEqual(names, [])
 
@@ -330,10 +320,10 @@ class TestTaxonomy(unittest.TestCase):
 
 
 class TestImage(unittest.TestCase):
-    ''' image.py '''
+    '''image.py'''
 
     def test_categorize(self):
-        ''' subjects are recategorized, but that needs to be undone for some
+        '''subjects are recategorized, but that needs to be undone for some
         presentations
         '''
         samples = [
@@ -349,7 +339,7 @@ class TestImage(unittest.TestCase):
             self.assertEqual(before, image.uncategorize(after))
 
     def test_unqualify(self):
-        ''' remove qualifiers '''
+        '''remove qualifiers'''
         samples = [
             ("juvenile red octopus egg", "red octopus"),
             ("dead male kelp greenling", "kelp greenling"),
@@ -359,7 +349,7 @@ class TestImage(unittest.TestCase):
             self.assertEqual(image.unqualify(before), after)
 
     def test_split(self):
-        ''' some names are broken to categorize them '''
+        '''some names are broken to categorize them'''
         samples = [
             ("copper rockfish", "copper rock fish"),
             ("eagleray", "eagle ray"),
@@ -372,7 +362,7 @@ class TestImage(unittest.TestCase):
             self.assertEqual(image.unsplit(split), before)
 
     def test_image_location(self):
-        ''' names can have a number after the date to force ordering that
+        '''names can have a number after the date to force ordering that
         should be removed usually
         '''
         samples = [
@@ -385,7 +375,7 @@ class TestImage(unittest.TestCase):
             self.assertEqual(picture.location(), after)
 
     def test_image_site(self):
-        ''' it works '''
+        '''it works'''
         samples = [
             ("2021-11-05 Rockaway Beach", "Rockaway Beach"),
             ("2021-11-05 1 Rockaway Beach", "Rockaway Beach"),
@@ -396,7 +386,7 @@ class TestImage(unittest.TestCase):
             self.assertEqual(picture.site(), after)
 
     def test_image_singular(self):
-        ''' it works '''
+        '''it works'''
         samples = [
             ('001 - Clams.jpg', 'clam'),
             ('001 - Decorator Crabs.jpg', 'decorator crab'),
@@ -410,7 +400,7 @@ class TestImage(unittest.TestCase):
             self.assertEqual(picture.singular(), after)
 
     def test_image_simplified(self):
-        ''' it works '''
+        '''it works'''
         samples = [
             ('001 - Clams.jpg', 'clam'),
             ('001 - Juvenile Decorator Crab Eggs.jpg', 'decorator crab'),
@@ -425,49 +415,49 @@ class TestImage(unittest.TestCase):
 
 
 class TestUtility(unittest.TestCase):
-    ''' utility.py '''
+    '''utility.py'''
 
     def test_prefix_tuples(self):
-        ''' it works '''
+        '''it works'''
         out = utility.prefix_tuples(1, [(2, 3), (3, 4), (4, 5)])
         out = list(out)
         self.assertEqual(out, [(1, 2, 3), (1, 3, 4), (1, 4, 5)])
 
     def test_take(self):
-        ''' it works '''
+        '''it works'''
         self.assertEqual([0, 1, 2], utility.take(range(10), 3))
 
     def test_flatten(self):
-        ''' it works '''
+        '''it works'''
         self.assertEqual([0, 1, 2], utility.flatten([[0], [1, 2]]))
         self.assertEqual([], utility.flatten([[]]))
 
     def test_tree_size(self):
-        ''' how many leaves are in this tree '''
+        '''how many leaves are in this tree'''
         tree = {'a': {'b': [3, 3]}, 'c': [4, 4, 4]}
         self.assertEqual(utility.tree_size(tree), 5)
 
     def test_extract_leaves(self):
-        ''' grab the leaves for this tree '''
+        '''grab the leaves for this tree'''
         tree = {'a': {'b': 3}, 'c': 4}
         leaves = list(utility.extract_leaves(tree))
         wanted = [3, 4]
         self.assertEqual(sorted(leaves), sorted(wanted))
 
     def test_extract_branches(self):
-        ''' grab the branches for this tree '''
+        '''grab the branches for this tree'''
         tree = {'a': {'b': 3}, 'c': 4}
         branches = list(utility.extract_branches(tree))
         wanted = ['a', 'b', 'c']
         self.assertEqual(sorted(branches), sorted(wanted))
 
     def test_hmap(self):
-        ''' fold-ish thing '''
+        '''fold-ish thing'''
         out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5)
         self.assertEqual(out, 5)
 
     def test_is_date(self):
-        ''' it works '''
+        '''it works'''
         for positive in ('2017-01-01', '2000-11-21'):
             self.assertTrue(utility.is_date(positive))
 
@@ -475,7 +465,7 @@ class TestUtility(unittest.TestCase):
             self.assertFalse(utility.is_date(negative))
 
     def test_strip_date(self):
-        ''' it works '''
+        '''it works'''
         examples = [
             ('Sund Rock 2017-01-01', 'Sund Rock'),
             ('Sund Rock 4', 'Sund Rock 4'),
@@ -485,10 +475,10 @@ class TestUtility(unittest.TestCase):
 
 
 class TestInformation(unittest.TestCase):
-    ''' information.py '''
+    '''information.py'''
 
     def test_lineage_to_names(self):
-        ''' extract the right parts for look up '''
+        '''extract the right parts for look up'''
         samples = [
             ([], []),
             (['Animalia'], ['Animalia']),
@@ -523,11 +513,10 @@ class TestInformation(unittest.TestCase):
 
 
 class TestLocations(unittest.TestCase):
-    ''' locations.py '''
+    '''locations.py'''
 
     def test_add_context(self):
-        ''' add_context
-        '''
+        '''add_context'''
         samples = [
             ('Edmonds', 'Washington Edmonds'),
             ('Bonaire Oil Slick', 'Bonaire Oil Slick'),
@@ -538,20 +527,18 @@ class TestLocations(unittest.TestCase):
             self.assertEqual(locations.add_context(before), after)
 
     def test_strip_date(self):
-        ''' strip_date
-        '''
+        '''strip_date'''
 
 
 class TestCollection(unittest.TestCase):
-    ''' collection.py '''
+    '''collection.py'''
 
 
 class TestVerify(unittest.TestCase):
-    ''' verify.py '''
+    '''verify.py'''
 
     def _build_swapped_tree(self):
-        ''' swapped words
-        '''
+        '''swapped words'''
         tree = get_tree()
         nudi = tree['nudibranch']['sea lemon']['freckled pale']['data'].pop()
         nudi.name = 'Pale Freckled Sea Lemon'
@@ -564,15 +551,13 @@ class TestVerify(unittest.TestCase):
         return tree
 
     def test_detect_wrong_name_order(self):
-        ''' pale freckled sea lemon vs freckled pale sea lemon
-        '''
+        '''pale freckled sea lemon vs freckled pale sea lemon'''
         tree = self._build_swapped_tree()
         wrong = list(verify._find_wrong_name_order(tree))
         self.assertEqual(wrong, [('freckled pale', 'pale freckled')])
 
     def test_detect_misspelling(self):
-        ''' curlyhead spaghetti worm vs curlyheaded spaghetti worm
-        '''
+        '''curlyhead spaghetti worm vs curlyheaded spaghetti worm'''
         examples = [
             ['curlyhead spaghetti worm', 'curlyheaded spaghetti worm'],
             ['encrusting bryozoan', 'encrusting byrozoan'],
@@ -585,8 +570,7 @@ class TestVerify(unittest.TestCase):
             self.assertEqual(wrong, [names])
 
     def test_detect_misspelling_ignore_explicit(self):
-        ''' don't consider ignored names
-        '''
+        '''don't consider ignored names'''
         examples = [
             ['submerged log', 'submerged wood'],
             ['a unknown', 'b unknown'],
@@ -598,8 +582,7 @@ class TestVerify(unittest.TestCase):
             self.assertEqual(wrong, [])
 
     def test_detect_misspelling_ignore_scientific(self):
-        ''' a name isn't misspelled if it has a scientific name
-        '''
+        '''a name isn't misspelled if it has a scientific name'''
         examples = [
             ['dalls dendronotid nudibranch', 'red dendronotid nudibranch'],
         ]

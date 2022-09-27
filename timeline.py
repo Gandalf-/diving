@@ -9,7 +9,7 @@ import operator
 
 import hypertext
 from hypertext import Where
-import util.collection as collection
+from util import collection
 import util.common as utility
 
 
@@ -63,8 +63,7 @@ _html_scripts = '''\
 
 
 def timeline():
-    ''' generate all the timeline html
-    '''
+    '''generate all the timeline html'''
     dives = [
         d
         for d in sorted(os.listdir(utility.root), reverse=True)
@@ -96,8 +95,7 @@ def timeline():
 
 
 def _image_html(image):
-    ''' build the html for a picture
-    '''
+    '''build the html for a picture'''
     thumbnail = f'/imgs/{image.thumbnail()}'
     fullsize = image.fullsize()
     subject = image.name
@@ -123,8 +121,7 @@ def _image_html(image):
 
 
 def _subpage(dive):
-    ''' build the sub page for this dive
-    '''
+    '''build the sub page for this dive'''
     when, title = dive.split(' ', 1)
 
     while title[0].isdigit():
@@ -148,8 +145,7 @@ def _subpage(dive):
 
 
 def _javascript(paths):
-    ''' build the javascript lazy loader
-    '''
+    '''build the javascript lazy loader'''
     html = '''\
   <script>
     var furthest = 0;

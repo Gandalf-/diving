@@ -13,13 +13,13 @@ if os.name == 'nt':
 
 
 def prefix_tuples(first, ts):
-    ''' add a value to the beginning of each tuple in a list'''
+    '''add a value to the beginning of each tuple in a list'''
     for (a, b) in ts:
         yield (first, a, b)
 
 
 def take(xs, n):
-    ''' pull n items from xs '''
+    '''pull n items from xs'''
     out = []
     count = 0
     for x in xs:
@@ -31,12 +31,12 @@ def take(xs, n):
 
 
 def flatten(xs):
-    ''' [[a]] -> [a] '''
+    '''[[a]] -> [a]'''
     return [item for sublist in xs for item in sublist]
 
 
 def tree_size(tree):
-    ''' number of leaves '''
+    '''number of leaves'''
     if not isinstance(tree, dict):
         return len(tree)
 
@@ -44,7 +44,7 @@ def tree_size(tree):
 
 
 def extract_leaves(tree):
-    ''' get all the leaves in a tree of trees '''
+    '''get all the leaves in a tree of trees'''
     assert isinstance(tree, dict), tree
 
     for value in tree.values():
@@ -55,7 +55,7 @@ def extract_leaves(tree):
 
 
 def extract_branches(tree):
-    ''' get everything but the leaves '''
+    '''get everything but the leaves'''
     assert isinstance(tree, dict), tree
 
     for key, value in tree.items():
@@ -65,8 +65,7 @@ def extract_branches(tree):
 
 
 def hmap(arg, *fns):
-    ''' apply all the functions provided to the argument, kind of like a fold
-    '''
+    '''apply all the functions provided to the argument, kind of like a fold'''
     out = arg
     for fn in fns:
         out = fn(out)
@@ -74,11 +73,10 @@ def hmap(arg, *fns):
 
 
 def is_date(x):
-    ''' is this a date?
-    '''
+    '''is this a date?'''
     try:
         d = datetime.datetime.strptime(x, '%Y-%m-%d')
-        assert d or True  # pylint please
+        assert d
         return True
     except TypeError:
         return False
@@ -87,8 +85,7 @@ def is_date(x):
 
 
 def strip_date(site):
-    ''' remove the date from a string, unless it's only a date
-    '''
+    '''remove the date from a string, unless it's only a date'''
     if ' ' not in site:
         return site
 
@@ -97,19 +94,18 @@ def strip_date(site):
 
     try:
         d = datetime.datetime.strptime(last, '%Y-%m-%d')
-        assert d or True  # pylint please
+        assert d
     except ValueError:
         return site
 
     return rest
 
 
-_EXISTS = dict()
+_EXISTS = {}
 
 
 def fast_exists(path):
-    ''' cached os.path.exists
-    '''
+    '''cached os.path.exists'''
     if path in _EXISTS:
         return _EXISTS[path]
 
