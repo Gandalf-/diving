@@ -10,6 +10,20 @@ import os
 root = "/mnt/zfs/Media/Pictures/Diving"
 if os.name == 'nt':
     root = "Z:/Media/Pictures/Diving"
+if os.uname().sysname == 'Darwin':
+    root = "/Users/leaf/Pictures/Diving"
+
+web_root = 'https://public.anardil.net/media/diving'
+
+
+def titlecase(xs: str) -> str:
+    '''xs.title() but a bit smarter'''
+    return xs.title().replace("'S", "'s")
+
+
+def sanitize_link(xs: str) -> str:
+    '''cleanup names and lineages to links'''
+    return xs.replace(' sp.', ' sp').replace(' ', '-').replace("'", '')
 
 
 def prefix_tuples(first, ts):

@@ -65,6 +65,10 @@ case $(uname) in
     sha="sha1 -r"
     tac="tail -r"
     ;;
+  Darwin)
+    sha=shasum
+    tac="tail -r"
+    ;;
   *)
     sha=sha1sum
     tac=tac
@@ -76,9 +80,10 @@ main() {
 
   local target="$1"
   [[ -d "$target" ]] || {
-    echo "$1 doesn't exist"
+    echo "'$1' doesn't exist" >&2
     exit 1
   }
+  local workers=0
 
   while read -r f; do
     local name date
@@ -89,13 +94,23 @@ main() {
     (
       # subshell because we're changing directories
       maker "$f" "$name" "$date"
-    )
+      echo -n .
+    ) &
+    (( workers++ ))
+
+    while (( workers > 16 )); do
+      sleep 0.1
+      workers="$( jobs -r | wc -l )"
+    done
 
   done < <(
     for z in "$target"/*; do
       echo "$z"
     done | $tac
   )
+
+  wait
+  echo
 }
 
-main "$@" > timeline/index.html
+main "$@"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 require() {
   local what="$1"

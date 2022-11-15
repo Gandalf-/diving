@@ -140,7 +140,7 @@ def _subpage(dive):
 </div>
 '''
 
-    path = dive.replace(' ', '-').replace("'", "") + '.html'
+    path = utility.sanitize_link(dive) + '.html'
     return path, html
 
 

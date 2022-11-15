@@ -15,6 +15,7 @@ from util import collection
 from util import static
 from util import taxonomy
 
+from util.common import titlecase
 from util.image import unqualify, categorize, split
 
 
@@ -23,7 +24,7 @@ root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 def cache_hash(images):
     '''cache in a database'''
-    client = Client('elm.anardil.net')
+    client = Client()  # Client('elm.anardil.net')
     needed = []
     labels = []
 
@@ -96,7 +97,7 @@ def table_builder(debug=True):
         thumbs[where].append(hashes[i])
 
     similarity = _similarity_table(names)
-    names = [n.title() for n in names]
+    names = [titlecase(n) for n in names]
     diffs = _difficulties(names)
 
     return names, thumbs, similarity, diffs

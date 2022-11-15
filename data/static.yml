@@ -12,6 +12,7 @@ locations:
     - Fulton Creek Reef
     - Gazzam Lake
     - Keystone
+    - Kitsap Memorial Park
     - Lake Crescent
     - Larrabee
     - Leiker's Reef
@@ -47,6 +48,13 @@ locations:
     - Wolf
   Bonaire:
     - Klein
+  Maldives:
+    - Male North
+    - Male South
+    - Ari North
+    - Ari South
+    - Vaavu
+    - Rasdhoo
 
 ignore:
   - pier
@@ -119,11 +127,17 @@ categories:
     - tarpon
     - tomtate
     - war bonnet
+  diver:
+    - snorkeler
+  ray:
+    - manta
   shrimp:
     - amphipod
     - isopod
     - prawn
     - sea flea
+    # wrong
+    - plankton
   lobster:
     - crawdad
   algae:
@@ -166,6 +180,7 @@ categories:
     - transverse lamp shell
     - clam
     - scallop
+    - oyster
 
 pinned:
     crab:

@@ -11,7 +11,7 @@ import datetime
 
 import locations
 
-from util.common import strip_date, fast_exists
+from util.common import strip_date, fast_exists, titlecase, sanitize_link
 from util.image import (
     categorize,
     uncategorize,
@@ -76,7 +76,7 @@ def lineage_to_link(lineage, side, key=None):
         if key and side == Side.Right:
             name = name + ' ' + key
 
-    return name.replace(' ', '-').replace("'", '')
+    return sanitize_link(name)
 
 
 def _image_to_gallery_link(image):
@@ -89,7 +89,7 @@ def _image_to_gallery_link(image):
         if _split in clone.name:
             clone.name, _ = clone.name.split(_split)
 
-    name = clone.normalized().replace(' ', '-').replace("'", '')
+    name = sanitize_link(clone.normalized())
     url = f'gallery/{name}.html'
 
     if fast_exists(url):
@@ -102,8 +102,8 @@ def _image_to_sites_link(image):
     """get the /sites/ link"""
     when, where = image.location().split(' ', 1)
     site = locations.add_context(where)
-    site = site.replace(' ', '-').replace("'", '')
-    url = f'sites/{site}-{when}.html'
+    link = sanitize_link(site)
+    url = f'sites/{link}-{when}.html'
 
     if fast_exists(url):
         return f'/{url}'
@@ -170,15 +170,15 @@ def _gallery_title(lineage, scientific):
 
     if scientific_common_name:
         lineage = [slink[-len(lineage[0]) :]] + [
-            e.title() for e in lineage[1:]
+            titlecase(e) for e in lineage[1:]
         ]
     else:
-        lineage = [e.title() for e in lineage]
+        lineage = [titlecase(e) for e in lineage]
 
     _title = ' '.join(lineage)
     display = uncategorize(_title)
 
-    slink = slink.replace(' ', '-')
+    slink = sanitize_link(slink)
     html = _head(display)
 
     # create the buttons for each part of our name lineage
@@ -253,9 +253,9 @@ def _taxonomy_title(lineage, scientific):
         name = scientific.get(' '.join(history)) or ""
         history = history[:-1]
 
-    name = name.title()
+    name = titlecase(name)
     link = split(categorize(name.lower()))
-    link = link.replace(' ', '-')
+    link = sanitize_link(link)
 
     if link:
         html += f"""
@@ -366,11 +366,11 @@ def image_to_site_html(image, where):
 def _top_title(where):
     """html top for top level pages"""
     # title = 'Gallery' if where == Where.Gallery else 'Taxonomy'
-    _title = where.name.title()
+    _title = titlecase(where.name)
 
     display = uncategorize(_title)
     if where == Where.Gallery:
-        display = display.title()
+        display = titlecase(display)
 
     _timeline = '''
         <a href="/timeline/index.html">

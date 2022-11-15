@@ -2,7 +2,7 @@ tags: *.py */*.py
 	ctags -R --fields=+l --languages=python --python-kinds=-i
 
 .PHONY: test
-test: unittest inttest
+test: unittest # inttest
 
 .PHONY: unittest
 unittest:

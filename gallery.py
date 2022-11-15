@@ -20,7 +20,14 @@ from util import static
 from util import taxonomy
 from util import verify
 from util.image import Image
-from util.common import tree_size, is_date, strip_date, prefix_tuples
+from util.common import (
+    tree_size,
+    is_date,
+    strip_date,
+    prefix_tuples,
+    titlecase,
+    sanitize_link,
+)
 
 from detective import javascript as game
 from hypertext import Where, Side
@@ -90,7 +97,7 @@ def _key_to_subject(key, where):
     if where == Where.Gallery:
         subject = taxonomy.is_scientific_name(key)
         if not subject:
-            subject = key.title()
+            subject = titlecase(key)
         else:
             subject = f'<em>{subject}</em>'
 
@@ -219,7 +226,7 @@ def html_tree(tree, where, scientific, lineage=None):
     if title in ('Gallery', 'Taxonomy', 'Sites'):
         title = 'index'
 
-    path = title.replace(' ', '-').replace("'", "") + '.html'
+    path = sanitize_link(title) + '.html'
     results.append((path, html))
     return results
 
@@ -287,6 +294,13 @@ def _find_by_path(tree, needle):
 
 
 if not sys.flags.interactive and __name__ == "__main__":
+    import util.common
+
+    if len(sys.argv) > 1:
+        util.common.root = sys.argv[1]
+    if len(sys.argv) > 2:
+        util.common.web_root = sys.argv[2]
+
     write_all_html()
 
     print("verifying html...              ", end="", flush=True)

@@ -51,7 +51,12 @@ def _find_wrong_name_order(tree):
         flattened = ' '.join(sorted(key.split(' ')))
 
         if flattened in seen:
-            conflicts.append((seen[flattened], key,))
+            conflicts.append(
+                (
+                    seen[flattened],
+                    key,
+                )
+            )
         else:
             seen[flattened] = key
 
@@ -149,6 +154,9 @@ def _find_links():
 
             for link in re.findall(r'href=\"(.+?)\"', line):
                 if link.startswith('http'):
+                    continue
+
+                if 'fullsize' in link:
                     continue
 
                 link = link[1:]

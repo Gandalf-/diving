@@ -1,5 +1,32 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
+Unlinked:
+  Odonotodactylidae:
+    Odontodactylus:
+      scyllarus: peacock mantis shrimp
+  Lysiosquillidae:
+    Lysiosquillina:
+      maculata: tiger mantis shrimp
+  Trapeziidae:
+    Trapezia:
+      cymodoce: red dotted coral crab
+  Spondylidae:
+    Spondylus:
+      varians: variable thorny oyster
+  Pectinidae:
+    Pedum:
+      spondyloidum: coral scallop
+  Tridacnidae:
+    Tridacna:
+      squamosa: fluted giant clam
+      maxima: large giant clam
+      crocea: crocus giant clam
+  Ostereidae:
+    Hyotissa:
+      hyotis: honeycomb oyster
+    Lopha:
+      cristagalli: cockscomb oyster
+
 Animalia:
   Ctenophora: comb jelly
   Brachiopoda:
@@ -193,16 +220,40 @@ Animalia:
             Amphiodia:
               periercta: burrowing brittle star
         Ophiactoidea:
+          Ophiocomidae:
+            Ophiocoma:
+              pica: brown gold brittle star
+              erinaceus: hedgehog brittle star
           Ophiotrichidae:
+            Ophiothrix:
+              foveolata: soft coral brittle star
+              purpurea: sea fan brittle star
             Ophiothrix:
               spiculata: glass spined brittle star
             Ophiothela:
               mirabilis: epizoic brittle star
     Crinoidea:
+      Mariametridae:
+        Stephanometra:
+          indica: indian feather star
+      Himerometridae:
+        Himerometra:
+          robustipinna: robust feather star
+      Colobometridae:
+        Colobometra:
+          perspinosa: spinose feather star
+        Cenometra:
+          bella: pretty feather star
+      Comasteridae:
+        Comissa: long armed feather star
+        Comanthina:
+          nobilis: noble feather star
+        Oxycomanthus:
+          bennetti: bennet's feather star
       Comatulida:
         Antedonidae:
           Florometra:
-            serratissima: feather star
+            serratissima: northwest feather star
     Asteroidea:
       sp.: star
       Paxillosida:
@@ -243,8 +294,16 @@ Animalia:
           Mithrodia:
             bradleyi: bradley star
         Ophidiasteridae:
+          Fromia:
+            nodosa: noduled star
+            indica: indian star
+            milleporella: thousand pores star
+          Linckia:
+            guildingi: guilding's star
+            multifora: multipore star
+            laevigata: indian blue star
           Phataria:
-            unifascialis: blue star
+            unifascialis: galapagos blue star
           Linckia:
             columbiae: variable star
         Oreasteridae:
@@ -252,6 +311,8 @@ Animalia:
             cumingi: panamic cushion star
           Nidorellia:
             armata: chocolate chip star
+          Choriaster:
+            granulatus: granulated sea star
         Solasteridae:
           Crossaster:
             papposus: rose star
@@ -277,12 +338,18 @@ Animalia:
             longispina: long spined blood star
     Holothuroidea:
       sp.: sea cucumber
+      Synaptidae:
+        Synaptula:
+          recta: gutlike sea cucumber
       Holothuriida:
         Holothuriidae:
+          Pearsonothuria:
+            graeffei: graeffe's sea cucumber
           Halodeima:
             atra: atra sea cucumber
           Holothuria:
             kefersteini: kefersteini sea cucumber
+            eduulis: edible sea cucumber
       Dendrochirotida:
         # branched tentacle sea cucumber
         Sclerodactylidae:
@@ -326,6 +393,8 @@ Animalia:
           Echinometridae:
             Caenocentrotus:
               gibbosus: brown sea urchin
+            Echinostrephus:
+              molaris: burrowing sea urchin
           Toxopneustidae:
             Toxopneustes:
               roseus: flower sea urchin

@@ -131,10 +131,12 @@ class Image:
     def fullsize(self):
         '''URI of full size image'''
         resource = urllib.parse.quote(f'{self.directory}/{self.label}')
-        return f'https://public.anardil.net/media/diving/{resource}'
+        return f'{utility.web_root}/{resource}'
 
     def singular(self):
         '''return singular version'''
+        assert self.name, self
+
         name = _inflect.singular_noun(self.name.lower())
         name = name or self.name.lower()
 
@@ -179,7 +181,7 @@ class Image:
 
         with open(self.path(), "rb") as f:
             while True:
-                data = f.read(2 ** 16)
+                data = f.read(2**16)
                 if not data:
                     break
                 sha1.update(data)
