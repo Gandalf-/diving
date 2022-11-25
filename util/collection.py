@@ -5,6 +5,7 @@ parsing data from the file system to construct trees of images
 '''
 
 import os
+from typing import Iterable
 
 from util.image import Image, categorize, split
 from util.common import flatten, tree_size, root
@@ -76,7 +77,7 @@ def find_vague_names():
                 yield image
 
 
-def delve(directory):
+def delve(directory: str) -> [Image]:
     """create an Image object for each picture in a directory"""
     path = os.path.join(root, directory)
     return [
@@ -89,17 +90,17 @@ def delve(directory):
 # PRIVATE
 
 
-def _listing():
+def _listing() -> [str]:
     """a list of all dive picture folders available"""
     return [d for d in os.listdir(root) if not d.startswith(".")]
 
 
-def _collect():
+def _collect() -> [[Image]]:
     """run delve on all dive picture folders"""
     return [delve(d) for d in _listing()]
 
 
-def _expand_names(images):
+def _expand_names(images: [Image]) -> Iterable[Image]:
     """split out `a and b` into separate elements"""
     for image in images:
         for part in (" with ", " and "):

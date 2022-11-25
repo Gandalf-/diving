@@ -3,114 +3,117 @@
 # timeline html builder. the index page lazy loads the dives in reverese
 # chronological order
 
-hasher() {
-
-  local directory="$1"
-  local image="$2"
-
-  local label="${image%% *}"
-  label="${label%%.*}"
-  label="$directory:$label"
-
-  local out; out="$( d diving cache "$label" hash < /dev/null )"
-
-  if [[ $out ]]; then
-    echo "$out"
-  else
-    echo "hashing $directory/$image" >&2
-    result="$( $sha "$image" | awk '{print $1}' )"
-    d diving cache "$label" hash = "$result" </dev/null
-    echo "$result"
-  fi
-}
-
-maker() {
-  [[ $1 && $2 && $3 ]] || {
-    echo "usage: path title date" >&2
-    exit 1
-  }
-
-  local imgbase; imgbase="$( pwd )/imgs"
-  local srcbase; srcbase="$( basename "$1" )"
-
-  cd "$1" || {
-    echo "$1 doesn't exist" >&2
-    exit 1
-  }
-
-  mkdir -p "$imgbase"
-
-  for image in *.jpg; do
-      local name; name="$( hasher "$srcbase" "$image" ).jpg"
-
-      [[ -f "$imgbase"/"$name" ]] || {
-        {
-          convert \
-            -strip \
-            -interlace plane \
-            -resize 350 \
-            -quality 60% \
-            "$image" \
-            "$imgbase"/"$name"
-
-          echo "resized $image" >&2
-        } &
-      }
-  done
-  wait
-}
+# shellcheck disable=SC2155
 
 case $(uname) in
-  FreeBSD)
-    sha="sha1 -r"
-    tac="tail -r"
-    ;;
-  Darwin)
-    sha=shasum
-    tac="tail -r"
-    ;;
-  *)
-    sha=sha1sum
-    tac=tac
+  FreeBSD) max_workers=30; sha="sha1 -r" ;;
+  Darwin)  max_workers=8;  sha=shasum    ;;
+  *)       max_workers=8;  sha=sha1sum   ;;
 esac
 
-DEBUG=0
+report() { echo "$@" >&2; }
+die() { report "$@"; exit 1; }
+debug() { (( DEBUG )) && report "$@"; }
 
-main() {
+generate_thumbnail() {
+  # regenerate the thumbnail if needed
 
-  local target="$1"
-  [[ -d "$target" ]] || {
-    echo "'$1' doesn't exist" >&2
-    exit 1
-  }
+  local fin="$1"
+  local fout="$2"
+  [[ -f "$fout" ]] && return
+
+  convert \
+    -strip \
+    -interlace plane \
+    -resize 350 \
+    -quality 60% \
+    "$fin" \
+    "$fout" || die "convert failure $fin"
+  report "resized $( basename "$fin" )"
+}
+
+generate_original() {
+  # regenerate the optimized original if needed
+
+  local fin="$1"
+  local fout="$2"
+  [[ -f "$fout" ]] && return
+
+  jpegoptim \
+    --strip-all \
+    --all-progressive \
+    --size 512 \
+    --quiet \
+    --stdout \
+    "$fin" \
+    > "$fout" || die "jpegoptim failure $fin"
+  report "optimized $( basename "$fin" )"
+}
+
+scanner() {
+  local root="$( realpath "$2" )"
+  local size=$(( ${#root} + 2 ))
   local workers=0
 
-  while read -r f; do
-    local name date
-    name="$( basename "$f" | cut -d ' ' -f 2- | sed -e 's/^[[:digit:]]\s\+//' )"
-    date="$( basename "$f" | cut -d ' ' -f 1  )"
-    (( DEBUG )) && echo "$name: " >&2
+  local thumbroot="$( realpath "$PWD" )/imgs"
+  local imageroot="$( realpath "$PWD" )/full"
+  mkdir -p "$thumbroot" "$imageroot"
 
+  case $1 in
+    fast)
+      local newest; newest="$(
+        # shellcheck disable=SC2010
+        ls -Rt "$thumbroot" | grep -vF "$thumbroot" | head -n 1
+      )"
+      newest="$thumbroot/$newest"
+
+      producer() {
+        find "$root" -type f -name '*.jpg' -newer "$newest"
+      }
+      ;;
+
+    full)
+      producer() {
+        find "$root" -type f -name '*.jpg'
+      }
+      ;;
+  esac
+
+  while read -r path; do
     (
-      # subshell because we're changing directories
-      maker "$f" "$name" "$date"
-      echo -n .
-    ) &
-    (( workers++ ))
+      local directory="$( dirname "$path" )"
+      local image="$( basename "$path" )"
 
-    while (( workers > 16 )); do
+      # get the sha1sum of the original
+      report "hashing $path"
+      local hashed; hashed="$( $sha "$root/$path" )" || die "hash failure $path"
+      hashed="${hashed%% *}"
+      local unique="$hashed.jpg"
+
+      # update the database for python
+      local label="${image%% *}"
+      label="${label%%.*}"
+      label="$directory:$label"
+      d diving cache "$label" hash = "$hashed" </dev/null
+
+      generate_thumbnail "$root/$path" "$thumbroot/$unique"
+      generate_original  "$root/$path" "$imageroot/$unique"
+    ) &
+
+    (( workers++ ))
+    while (( workers > max_workers )); do
       sleep 0.1
       workers="$( jobs -r | wc -l )"
     done
 
-  done < <(
-    for z in "$target"/*; do
-      echo "$z"
-    done | $tac
-  )
-
+  done < <( producer | cut -c "$size"- )
   wait
-  echo
 }
 
-main "$@"
+copy_web() {
+  local web; web="$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )"/web
+  rsync --archive "$web"/ "$PWD"
+}
+
+copy_web
+scanner fast "$@"

@@ -23,24 +23,24 @@ start_database() {
   done
 }
 
-full() {
+build() {
   start_database
 
   cd $www
   bash    $src/runner.sh  ~/Pictures/diving/
-  python3 $src/gallery.py ~/Pictures/diving/ /fullsize
-}
-
-quick() {
-  start_database
-
-  cd $www
-  python3 $src/gallery.py ~/Pictures/diving/ /fullsize
+  python3 $src/gallery.py ~/Pictures/diving/
 }
 
 serve() {
   cd $www
   sws --public --local
+}
+
+sync() {
+  rsync \
+    -av --info=progress2 \
+    $www \
+    walnut:/root/local/
 }
 
 "$@"

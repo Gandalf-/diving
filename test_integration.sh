@@ -13,6 +13,7 @@ set -e
 require tidy
 require parallel
 
+mkdir -p ~/working/tmp/diving
 cd ~/working/tmp/diving/
 find gallery sites taxonomy timeline -name '*.html' -delete
 

@@ -75,13 +75,20 @@ def _find_misspellings(names=None):
     '''check for misspellings'''
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
+    ignores = (
+        'clathria',
+        'mauve spiky soft coral',
+        'fan coral',
+    )
 
     for group in candidates:
         for candidate in group:
-            if not taxonomy.gallery_scientific(
-                candidate.split(' '), scientific
-            ):
-                yield candidate
+            if taxonomy.gallery_scientific(candidate.split(' '), scientific):
+                continue
+            if any(i in candidate for i in ignores):
+                continue
+
+            yield candidate
 
 
 def _possible_misspellings(names=None):
@@ -113,7 +120,6 @@ def _important_files_exist():
     required += [
         'jquery.fancybox.min.css',
         'jquery.fancybox.min.js',
-        'jquery.min.js',
     ]
     required += [
         f'{site}/index.html'
@@ -154,9 +160,6 @@ def _find_links():
 
             for link in re.findall(r'href=\"(.+?)\"', line):
                 if link.startswith('http'):
-                    continue
-
-                if 'fullsize' in link:
                     continue
 
                 link = link[1:]

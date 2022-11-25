@@ -8,6 +8,7 @@ tree into HTML pages for diving.anardil.net
 import os
 import sys
 import multiprocessing
+import textwrap
 from datetime import datetime
 
 import hypertext
@@ -137,7 +138,7 @@ def html_tree(tree, where, scientific, lineage=None):
         html += """
         <div class="image">
         <a href="{link}">
-            <img width=300 loading="lazy" alt="{alt}" src="/imgs/{thumbnail}">
+            <img width=300 loading="lazy" alt="{alt}" src="{thumbnail}">
             <h3>
               <span class="sneaky">{size}</span>
               {subject}
@@ -185,7 +186,7 @@ def html_tree(tree, where, scientific, lineage=None):
             html += """
             <div class="card" onclick="flip(this);">
               <div class="card_face card_face-front">
-                <img width=300 loading="lazy" alt="{name}" src="/imgs/{thumbnail}">
+                <img width=300 loading="lazy" alt="{name}" src="{thumbnail}">
               </div>
               <div class="card_face card_face-back">
                 {name_html}
@@ -273,9 +274,21 @@ def write_all_html():
 def _pool_writer(args):
     '''callback for HTML writer pool'''
     where, title, html = args
+    html = textwrap.dedent(html)
     path = f"{where}/{title}"
+
+    size = 0
+    try:
+        size = os.stat(path).st_size
+    except OSError:
+        pass
+    if size == len(html):
+        with open(path, 'r', encoding='utf8') as f:
+            if html == f.read():
+                return
+
     with open(path, "w+", encoding='utf8') as f:
-        print(html, file=f)
+        print(html, file=f, end='')
 
 
 def _find_by_path(tree, needle):

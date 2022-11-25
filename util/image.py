@@ -4,17 +4,14 @@
 base class for a diving image
 '''
 
-import hashlib
 import os
-import urllib.parse
 
 import inflect
-from apocrypha.client import Client
 
 import util.common as utility
+from util import thumbnails
 from util import static
 
-_database = Client()
 _inflect = inflect.engine()
 
 
@@ -125,13 +122,12 @@ class Image:
         return os.path.join(utility.root, self.directory, self.label)
 
     def thumbnail(self):
-        '''what's the name of the thumbnail for this image?'''
-        return self._hash() + '.jpg'
+        '''URI of thumbnail image'''
+        return '/imgs/' + thumbnails.thumbnail(self)
 
     def fullsize(self):
-        '''URI of full size image'''
-        resource = urllib.parse.quote(f'{self.directory}/{self.label}')
-        return f'{utility.web_root}/{resource}'
+        '''URI of original image'''
+        return '/full/' + thumbnails.thumbnail(self)
 
     def singular(self):
         '''return singular version'''
@@ -170,24 +166,3 @@ class Image:
         name = categorize(name)
 
         return name
-
-    def _hash(self):
-        '''hash a file the same way indexer does, so we can find it's thumbnail'''
-        digest = _database.get('diving', 'cache', self.identifier(), 'hash')
-        if digest:
-            return digest
-
-        sha1 = hashlib.sha1()
-
-        with open(self.path(), "rb") as f:
-            while True:
-                data = f.read(2**16)
-                if not data:
-                    break
-                sha1.update(data)
-
-        digest = sha1.hexdigest()
-        _database.set(
-            'diving', 'cache', self.identifier(), 'hash', value=digest
-        )
-        return digest

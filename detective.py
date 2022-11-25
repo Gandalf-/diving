@@ -14,6 +14,7 @@ from apocrypha.client import Client
 from util import collection
 from util import static
 from util import taxonomy
+from util import thumbnails
 
 from util.common import titlecase
 from util.image import unqualify, categorize, split
@@ -30,7 +31,7 @@ def cache_hash(images):
 
     for image in images:
         label = image.identifier()
-        sha1 = client.get('diving', 'cache', label, 'hash')
+        sha1 = thumbnails.hashed(image)
 
         if not sha1:
             needed.append(image)

@@ -96,7 +96,7 @@ def timeline():
 
 def _image_html(image):
     '''build the html for a picture'''
-    thumbnail = f'/imgs/{image.thumbnail()}'
+    thumbnail = image.thumbnail()
     fullsize = image.fullsize()
     subject = image.name
 
