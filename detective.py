@@ -9,12 +9,11 @@ import os
 import pathlib
 import subprocess
 
-from apocrypha.client import Client
-
 from util import collection
 from util import static
 from util import taxonomy
 from util import thumbnails
+from util.database import database
 
 from util.common import titlecase
 from util.image import unqualify, categorize, split
@@ -25,7 +24,6 @@ root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 def cache_hash(images):
     '''cache in a database'''
-    client = Client()  # Client('elm.anardil.net')
     needed = []
     labels = []
 
@@ -41,7 +39,7 @@ def cache_hash(images):
         if needed:
             bulk = hasher(needed)
             for (l, h) in zip(labels, bulk):
-                client.set('diving', 'cache', l, 'hash', value=h)
+                database.set('diving', 'cache', l, 'hash', value=h)
 
             needed = []
             labels = []
@@ -51,7 +49,7 @@ def cache_hash(images):
 
     bulk = hasher(needed)
     for (l, h) in zip(labels, bulk):
-        client.set('diving', 'cache', l, 'hash', value=h)
+        database.set('diving', 'cache', l, 'hash', value=h)
 
     yield from bulk
 

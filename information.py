@@ -25,15 +25,14 @@ from datetime import datetime
 from collections import Counter
 
 import wikipedia
-from apocrypha.client import Client
 
 from util import taxonomy
+from util.database import database
 
 db_root = (
     'diving',
     'wikipedia',
 )
-database = Client()
 wikipedia.set_rate_limiting(True)
 
 

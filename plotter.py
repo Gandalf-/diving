@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 
 # %%
-from apocrypha.client import Client
 import matplotlib.pyplot as m
 import numpy as np
 
 import detective
 
-import util.collection as collection
-import util.taxonomy as taxonomy
+from util.database import database
+from util import collection
+from util import taxonomy
 
 from util.common import flatten, tree_size
 from util.plotting import BubbleChart
@@ -61,7 +61,7 @@ m.show()
 
 # %%
 # cache prefetch timing
-db = Client(host='elm.anardil.net')
+db = database
 choices = db.keys('diving', 'cache-speed')
 
 when = choices[0]
