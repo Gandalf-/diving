@@ -9,7 +9,8 @@ import os
 import inflect
 
 import util.common as utility
-from util import thumbnails
+
+from util.database import database
 from util import static
 
 _inflect = inflect.engine()
@@ -123,11 +124,19 @@ class Image:
 
     def thumbnail(self):
         '''URI of thumbnail image'''
-        return '/imgs/' + thumbnails.thumbnail(self)
+        sha1 = self.hashed()
+        assert sha1
+        return '/imgs/' + sha1 + '.jpg'
 
     def fullsize(self):
         '''URI of original image'''
-        return '/full/' + thumbnails.thumbnail(self)
+        sha1 = self.hashed()
+        assert sha1
+        return '/full/' + sha1 + '.jpg'
+
+    def hashed(self) -> str:
+        '''Get the sha1sum for an original image, using the database as a cache'''
+        return database.get('diving', 'cache', self.identifier(), 'hash')
 
     def singular(self):
         '''return singular version'''

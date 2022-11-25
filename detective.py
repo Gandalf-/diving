@@ -12,7 +12,6 @@ import subprocess
 from util import collection
 from util import static
 from util import taxonomy
-from util import thumbnails
 from util.database import database
 
 from util.common import titlecase
@@ -29,7 +28,7 @@ def cache_hash(images):
 
     for image in images:
         label = image.identifier()
-        sha1 = thumbnails.hashed(image)
+        sha1 = image.hashed()
 
         if not sha1:
             needed.append(image)
