@@ -1,32 +1,5 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
-Unlinked:
-  Odonotodactylidae:
-    Odontodactylus:
-      scyllarus: peacock mantis shrimp
-  Lysiosquillidae:
-    Lysiosquillina:
-      maculata: tiger mantis shrimp
-  Trapeziidae:
-    Trapezia:
-      cymodoce: red dotted coral crab
-  Spondylidae:
-    Spondylus:
-      varians: variable thorny oyster
-  Pectinidae:
-    Pedum:
-      spondyloidum: coral scallop
-  Tridacnidae:
-    Tridacna:
-      squamosa: fluted giant clam
-      maxima: large giant clam
-      crocea: crocus giant clam
-  Ostereidae:
-    Hyotissa:
-      hyotis: honeycomb oyster
-    Lopha:
-      cristagalli: cockscomb oyster
-
 Animalia:
   Ctenophora: comb jelly
   Brachiopoda:
@@ -39,6 +12,12 @@ Animalia:
   Platyhelminthes:
     Rhabditophora:
       Polycladida:
+        Pseudocerotoidea:
+          Pseudocerotidae:
+            Pseudoceros:
+              suzzanae: susan's flatworm
+            Maiazoon:
+              orsaki: orsak's flatworm
         Stylochoidea:
           sp.: flatworm
           Stylochoidae:
@@ -72,6 +51,10 @@ Animalia:
             vastus: cloud sponge
     Demospongiae:
       sp.: sponge
+      Dictyoceratida:
+        Dysideidae:
+          Dysidea:
+            granulosa: granulose sponge
       Polymastiida:
         Polymastiidae:
           Polymastia:
@@ -82,19 +65,26 @@ Animalia:
             californiana: yellow boring sponge
       Poecilosclerida:
         sp.: encrusting sponge
+        Crambeidae:
+          Monanchora:
+            unguiculata: unguiculate sponge
+        Acarnidae:
+          Acarnus: orange crumble sponge
         Esperiopsidae:
           Amphilectus:
             rigida: orange finger sponge
             digitatus: glove sponge
         Hymedesmiidae:
           Hamigera: orange cratered encrusting sponge
-        Microcionidae:
           Antho:
             graceae: red brown encrusting sponge
         Mycalidae:
           Mycale:
             toporoki: bristly yellow clump sponge
       Haplosclerida:
+        Chalinidae:
+          Chalinula:
+            nematifera: coral eating sponge
         Callyspongiidae:
           Callyspongia:
             vaginalis: branching vase sponge
@@ -147,6 +137,8 @@ Animalia:
       Sabellida:
         sp.: tube worm
         Serpulidae:
+          Spirobranchus:
+            giganteus: christmas tree calcareous tube worm
           Crucigera:
             zygophora: yolk bearer calcareous tube worm
           Serpula:
@@ -158,6 +150,7 @@ Animalia:
             cementarium: cemented sandmason tube worm
         Sabellidae:
           sp.: feather duster worm
+          Sabellastarte: brown white crowned tube worm
           Eudistylia:
             vancouveri: vancouver feather duster worm
           Chone: orange feather duster worm
@@ -307,6 +300,9 @@ Animalia:
           Linckia:
             columbiae: variable star
         Oreasteridae:
+          sp.: cushion star
+          Culcita:
+            schmideliana: indian cushion star
           Pentaceraster:
             cumingi: panamic cushion star
           Nidorellia:
@@ -331,7 +327,7 @@ Animalia:
       Spinulosida:
         Echinasteridae:
           Henricia:
-            sp: blood star
+            sp.: blood star
             leviuscula: "true blood star"
             aspera: ridged blood star
             sanguinolenta: fat blood star
@@ -421,6 +417,9 @@ Animalia:
           Sphyrna: hammerhead shark
       Elasmobranchii:
         Orectolobiformes:
+          Ginglymostomatidae:
+            Ginglymostoma:
+              cirratum: nurse shark
           Rhincodontidae:
             Rhincodon:
               typus: whale shark
@@ -430,7 +429,11 @@ Animalia:
               griseus: bluntnose sixgill shark
         Dasyatidae: stingray
         Myliobatiformes:
-          Myliobatidae: eagle ray
+          Myliobatidae:
+            Aetobatus:
+              narinari: eagle ray
+            Mobula:
+              alfredi: reef manta ray
       Holocephali:
         Chimaeriformes:
           Chimaeridae:
@@ -620,6 +623,8 @@ Animalia:
           Gramma:
             royal: fairy basslet
         Gobiidae:
+          Ctenogobiops:
+            feroculus: fierce shrimp goby
           Rhinogobiops:
             nicholsii: blackeye goby
           Lythrypnus:
@@ -800,15 +805,21 @@ Animalia:
     Anthozoa:
       Antipatharia:
         Antipathidae:
+          # Cirrhipathes: black whip coral
           Antipathes:
+            fernyi: ferny black coral
             galapagensis: antipathes galapagensis coral
       Veretillidae:
         Cavernulina:
           darwini: cavernulina darwini coral
       Scleractinia:
+        Intsertae:
+          Plerogyra:
+            sinuosa: sinuose coral
         Pocilloporidae:
           Pocillopora: pocillopora coral
         Poritidae:
+          Goniopora: flower pot coral
           Porites:
             lobata: porites lobata coral
         Dendrophylliidae:
@@ -839,14 +850,18 @@ Animalia:
         sp.: sea pen
         Halipteridae:
           Halipteris:
-            willemoesi: sea whip
+            willemoesi: northwest sea whip
         Pennatulidae:
           Ptilosarcus:
             gurneyi: ptilosarcus gurneyi sea pen
             undulatus: ptilosarcus undulatus sea pen
       Alcyonacea:
-        sp.: fan coral
-        # soft coral
+        sp.: soft coral
+        Nephtheidae:
+          Scleronephthya: orange mouthed soft coral
+          Dendronphthya:
+            hemprichi: orange spiky soft coral
+            sp.: spiky soft coral
         Gorgoniidae:
           Pacifigorgia:
             sp.: pacifigorgia fan coral
@@ -854,6 +869,12 @@ Animalia:
         Plexauridae:
           Swiftia:
             torreyi: dwarf red gorgonian coral
+        Ellisellidae:
+          Junceella: orange sea whip
+        Melithaeidae:
+          Acabaria: white acabaria coral
+          # Clathria:
+          #   sp.: clathria coral
       Zoantharia:
         Epizoanthidae:
           Epizoanthus:
@@ -871,7 +892,12 @@ Animalia:
           Haloclavidae:
             Peachia:
               quinquecapitata: jelly dwelling anemone
+          Stichodactylidae:
+            Heteractis:
+              magnifica: magnificent anemone
           Actiniidae:
+            Entacmea:
+              quadricolor: bulb tentacle anemone
             Epiactis:
               prolifera: proliferating anemone
               lisbethae: brooding anemone
@@ -895,6 +921,20 @@ Animalia:
               farcimen: metridium anemone
   Mollusca:
     Bivalvia:
+      Ostreida:
+        Ostreoidea:
+          Gryphaeidae:
+            Hyotissa:
+              hyotis: honeycomb oyster
+            Lopha:
+              cristagalli: cockscomb oyster
+      Cardiida:
+        Cardioidea:
+          Cardiidae:
+            Tridacna:
+              squamosa: fluted giant clam
+              maxima: large giant clam
+              crocea: crocus giant clam
       Myida:
         Pholadoidea:
           Pholadidae:
@@ -902,8 +942,13 @@ Animalia:
               pilsbryi: rough piddock clam
       Pectinida:
         Pectinoidea:
+          Spondylidae:
+            Spondylus:
+              varians: variable thorny oyster
           Pectinidae:
             sp.: scallop
+            Pedum:
+              spondyloidum: coral scallop
             Nodipecten:
               magnificus: magnificent scallop
             Crassadoma:
@@ -940,6 +985,7 @@ Animalia:
             Octopus:
               rubescens: red octopus
               oculifer: galapagos octopus
+              cyanea: reef octopus
           Enteroctopodidae:
             Enteroctopus:
               dofleini: giant pacific octopus
@@ -974,6 +1020,8 @@ Animalia:
       Littorinimorpha:
         Cypraeoidea:
           Veluntinidae:
+            Coriocella:
+              hibyae: sponge snail
             Limneria:
               prolongata: smooth velvet snail
         Naticoidea:
@@ -1102,6 +1150,14 @@ Animalia:
               crenatus: crenate barnacle
               nubilus: giant acorn barnacle
     Malacostraca:
+      Stomatopoda:
+        sp.: mantis shrimp
+        Odonotodactylidae:
+          Odontodactylus:
+            scyllarus: peacock mantis shrimp
+        Lysiosquillidae:
+          Lysiosquillina:
+            maculata: tiger mantis shrimp
       Isopoda: isopod
       Amphipoda:
         sp.: amphipod
@@ -1113,6 +1169,14 @@ Animalia:
             Caprella:
               alaskana: alaskan skeleton shrimp
       Decapoda:
+        Palinuroidea:
+          Palinuridae:
+            Panulirus:
+              versicolor: painted rock lobster
+        Trapezioidea:
+          Trapeziidae:
+            Trapezia:
+              cymodoce: red dotted coral crab
         Xanthoidea:
           Panopeidae:
             Lophopanopeus:
@@ -1146,7 +1210,14 @@ Animalia:
             Periclimenes:
               yucatanicus: spotted cleaner shrimp
         Alpheoidea:
+          Alpheidae:
+            Alpheus:
+              djeddensis: djedda snapping shrimp
           Hippolytidae:
+            Thor:
+              amboinensis: squat shrimp
+            Lysmata:
+              amboinensis: white banded cleaner shrimp
             Eualus:
               pusiolus: sponge eualid shrimp
             Spirontocaris:
@@ -1194,6 +1265,9 @@ Animalia:
               sitchensis: umbrella crab
             Oedignathus:
               inermis: granular claw crab
+          Diogenidae:
+            Calcinus:
+              latens: blue sock hermit crab
           Paguridae:
             sp.: hermit crab
             Elassochirus:
