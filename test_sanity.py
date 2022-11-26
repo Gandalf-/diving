@@ -14,6 +14,7 @@ from util import collection
 from util import image
 from util import taxonomy
 from util import verify
+from util.database import TestDatabase
 from util.taxonomy import MappingType
 import util.common as utility
 
@@ -28,7 +29,7 @@ _TREE = {}
 def get_tree():
     '''full image tree'''
     if not _TREE:
-        _TREE['tree'] = collection.go()
+        _TREE['tree'] = collection.go(image.TestImage)
 
     return copy.deepcopy(_TREE['tree'])
 
@@ -322,6 +323,8 @@ class TestTaxonomy(unittest.TestCase):
 class TestImage(unittest.TestCase):
     '''image.py'''
 
+    db = TestDatabase()
+
     def test_categorize(self):
         '''subjects are recategorized, but that needs to be undone for some
         presentations
@@ -371,7 +374,7 @@ class TestImage(unittest.TestCase):
             ("2021-11-05 10 Rockaway Beach", "2021-11-05 Rockaway Beach"),
         ]
         for before, after in samples:
-            picture = image.Image('fish', before)
+            picture = image.TestImage('fish', before)
             self.assertEqual(picture.location(), after)
 
     def test_image_site(self):
@@ -382,7 +385,7 @@ class TestImage(unittest.TestCase):
             ("2021-11-05 10 Rockaway Beach", "Rockaway Beach"),
         ]
         for before, after in samples:
-            picture = image.Image('fish', before)
+            picture = image.TestImage('fish', before)
             self.assertEqual(picture.site(), after)
 
     def test_image_singular(self):
@@ -396,7 +399,7 @@ class TestImage(unittest.TestCase):
             ('001 - Painted Chitons.jpg', 'painted chiton'),
         ]
         for before, after in samples:
-            picture = image.Image(before, '2020-01-01 Rockaway Beach')
+            picture = image.TestImage(before, '2020-01-01 Rockaway Beach')
             self.assertEqual(picture.singular(), after)
 
     def test_image_simplified(self):
@@ -410,7 +413,7 @@ class TestImage(unittest.TestCase):
             ('001 - Painted Chitons.jpg', 'painted chiton'),
         ]
         for before, after in samples:
-            picture = image.Image(before, '2020-01-01 Rockaway Beach')
+            picture = image.TestImage(before, '2020-01-01 Rockaway Beach')
             self.assertEqual(picture.simplified(), after)
 
 

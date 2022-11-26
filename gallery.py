@@ -20,7 +20,7 @@ from util import collection
 from util import static
 from util import taxonomy
 from util import verify
-from util.image import Image
+from util.image import Image, RealImage
 from util.common import (
     tree_size,
     is_date,
@@ -234,6 +234,7 @@ def html_tree(tree, where, scientific, lineage=None):
 
 def write_all_html():
     '''main'''
+
     print("loading images...              ", end="", flush=True)
     tree = collection.go()
     scientific = taxonomy.mapping()
@@ -255,7 +256,7 @@ def write_all_html():
     print("done", len(taxia_htmls), "pages prepared")
 
     print("building /timeline...          ", end="", flush=True)
-    times_htmls = timeline.timeline()
+    times_htmls = timeline.timeline(RealImage)
     print("done", len(times_htmls), "pages prepared")
 
     print("building /detective/data.js... ", end="", flush=True)

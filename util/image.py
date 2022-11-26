@@ -8,9 +8,9 @@ import os
 
 import inflect
 
+import util.database
 import util.common as utility
 
-from util.database import database
 from util import static
 
 _inflect = inflect.engine()
@@ -75,7 +75,7 @@ def unsplit(name):
 class Image:
     '''container for a diving picture'''
 
-    def __init__(self, label, directory):
+    def __init__(self, database, label, directory):
         self.label = label
         label, _ = os.path.splitext(label)
 
@@ -88,6 +88,7 @@ class Image:
         self.name = name
         self.number = number
         self.directory = directory
+        self.database = database
 
     def __repr__(self):
         return ", ".join(
@@ -136,7 +137,7 @@ class Image:
 
     def hashed(self) -> str:
         '''Get the sha1sum for an original image, using the database as a cache'''
-        return database.get('diving', 'cache', self.identifier(), 'hash')
+        return self.database.get('diving', 'cache', self.identifier(), 'hash')
 
     def singular(self):
         '''return singular version'''
@@ -175,3 +176,17 @@ class Image:
         name = categorize(name)
 
         return name
+
+
+class RealImage(Image):
+    """Real Image"""
+
+    def __init__(self, label, directory) -> None:
+        super().__init__(util.database.database, label, directory)
+
+
+class TestImage(Image):
+    """Test Image"""
+
+    def __init__(self, label, directory) -> None:
+        super().__init__(util.database.TestDatabase(), label, directory)

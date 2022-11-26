@@ -5,17 +5,18 @@ html generation
 '''
 
 import os
-import copy
 import enum
 import datetime
 
 import locations
 
+from util.collection import expand_names
 from util.common import strip_date, fast_exists, titlecase, sanitize_link
 from util.image import (
     categorize,
     uncategorize,
     split,
+    RealImage,
 )
 from util import taxonomy
 
@@ -84,12 +85,8 @@ def _image_to_gallery_link(image):
 
     there could be mulitple subjects in this image, just take the first for now
     """
-    clone = copy.deepcopy(image)
-    for _split in (' with ', ' and '):
-        if _split in clone.name:
-            clone.name, _ = clone.name.split(_split)
-
-    name = sanitize_link(clone.normalized())
+    first = next(expand_names([image], RealImage))
+    name = sanitize_link(first.normalized())
     url = f'gallery/{name}.html'
 
     if fast_exists(url):
