@@ -409,8 +409,10 @@ Animalia:
         sp.: shark
         Carcharhinidae:
           Triaenodon:
-            obesus: white tipped reef shark
+            obesus: whitetip reef shark
           Carcharhinus:
+            melanopterus: blacktip reef shark
+            amblyrhynchos: blacktail reef shark
             falciformis: silky shark
             galapagensis: galapagos shark
         Sphyrnidae:
@@ -657,6 +659,10 @@ Animalia:
           Heterocongrinae: garden eel
         Muraenidae:
           Gymnothorax:
+            breedeni: blackcheek moray eel
+            thyrsoideus: white eyed moray eel
+            javanicus: giant moray eel
+            undulatus: undulated moray eel
             moringa: spotted moray eel
             funebris: green moray eel
       Scorpaeniformes:
@@ -833,7 +839,7 @@ Animalia:
           Pavona:
             sp.: pavona coral
             gigantea: pavona gigantea coral
-            chiriquiensis: chiriquiensis coral
+            chiriquiensis: pavona chiriquiensis coral
         Mussidae: brain coral
         Solenastrea:
           bournoni: smooth star coral
