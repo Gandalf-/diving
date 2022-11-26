@@ -5,6 +5,7 @@ base class for a diving image
 '''
 
 import os
+from typing import Callable
 
 import inflect
 
@@ -176,6 +177,9 @@ class Image:
         name = categorize(name)
 
         return name
+
+
+ImageF = Callable[[str, str], Image]
 
 
 class RealImage(Image):

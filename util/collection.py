@@ -5,19 +5,21 @@ parsing data from the file system to construct trees of images
 '''
 
 import os
-from typing import Iterable, Callable
+from typing import Iterable, Set, Dict, Union, List
 
-from util.image import Image, categorize, split, RealImage
+from util.image import Image, ImageF, categorize, split, RealImage
 from util.common import flatten, tree_size, root
 from util import static
 
+ImageTree = Dict[str, Union['ImageTree', List[Image]]]
 
-def named(imagef: Callable[[str, str], Image] = RealImage):
+
+def named(imagef: ImageF = RealImage):
     '''all named images from all directories'''
     return flatten([[y for y in z if y.name] for z in _collect(imagef)])
 
 
-def all_names():
+def all_names() -> Set[str]:
     '''all simplified, split names'''
     return {
         categorize(split(i.simplified()))
@@ -25,7 +27,7 @@ def all_names():
     }
 
 
-def single_level(tree):
+def single_level(tree: ImageTree) -> Dict[str, Image]:
     '''squash the tree into a single level name to images dict'''
     assert isinstance(tree, dict), tree
 
@@ -46,7 +48,7 @@ def single_level(tree):
     return out
 
 
-def build_image_tree(imagef: Callable[[str, str], Image] = RealImage):
+def build_image_tree(imagef: ImageF = RealImage) -> ImageTree:
     '''construct a nested dictionary where each key is a unique split of a
     name (after processing) from right to left. if there's another split under
     this one, the value is another dictionary, otherwise, it's a list of Images
@@ -54,7 +56,7 @@ def build_image_tree(imagef: Callable[[str, str], Image] = RealImage):
     return pipeline(_make_tree(expand_names(named(imagef), imagef)))
 
 
-def pipeline(tree, reverse=True):
+def pipeline(tree: ImageTree, reverse=True) -> ImageTree:
     '''intermediate steps!'''
     return _data_to_various(
         _pruner(
@@ -63,7 +65,7 @@ def pipeline(tree, reverse=True):
     )
 
 
-def find_vague_names():
+def find_vague_names() -> Iterable[str]:
     '''find names that could be more specific
 
     import collections
@@ -80,7 +82,7 @@ def find_vague_names():
                 yield image
 
 
-def delve(directory: str, imagef: Callable[[str, str], Image]) -> [Image]:
+def delve(directory: str, imagef: ImageF) -> [Image]:
     """create an Image object for each picture in a directory"""
     path = os.path.join(root, directory)
     return [
@@ -90,9 +92,7 @@ def delve(directory: str, imagef: Callable[[str, str], Image]) -> [Image]:
     ]
 
 
-def expand_names(
-    images: [Image], imagef: Callable[[str, str], Image]
-) -> Iterable[Image]:
+def expand_names(images: List[Image], imagef: ImageF) -> Iterable[Image]:
     """split out `a and b` into separate elements"""
     for image in images:
         for part in (" with ", " and "):
@@ -112,17 +112,17 @@ def expand_names(
 # PRIVATE
 
 
-def _listing() -> [str]:
+def _listing() -> List[str]:
     """a list of all dive picture folders available"""
     return [d for d in os.listdir(root) if not d.startswith(".")]
 
 
-def _collect(imagef: Callable[[str, str], Image]) -> [[Image]]:
+def _collect(imagef: ImageF) -> List[List[Image]]:
     """run delve on all dive picture folders"""
     return [delve(d, imagef) for d in _listing()]
 
 
-def _make_tree(images):
+def _make_tree(images: List[Image]) -> ImageTree:
     """make a nested dictionary by words"""
     out = {}
 
@@ -144,7 +144,7 @@ def _make_tree(images):
     return out
 
 
-def _pruner(tree, too_few=5):
+def _pruner(tree: ImageTree, too_few=5) -> ImageTree:
     """remove top level keys with too few elements"""
     to_remove = []
 
