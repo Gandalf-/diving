@@ -34,7 +34,7 @@ def required_checks():
 
 def _wrong_order():
     '''actual check'''
-    tree = collection.go()
+    tree = collection.build_image_tree()
     for value in _find_wrong_name_order(tree):
         assert False, f'word ordering appears wrong between {value}'
 

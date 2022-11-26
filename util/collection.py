@@ -46,7 +46,7 @@ def single_level(tree):
     return out
 
 
-def go(imagef: Callable[[str, str], Image] = RealImage):
+def build_image_tree(imagef: Callable[[str, str], Image] = RealImage):
     '''construct a nested dictionary where each key is a unique split of a
     name (after processing) from right to left. if there's another split under
     this one, the value is another dictionary, otherwise, it's a list of Images

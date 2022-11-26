@@ -14,7 +14,7 @@ import sys
 import pathlib
 import yaml
 
-from util.collection import go, single_level, all_names
+from util.collection import build_image_tree, single_level, all_names
 from util.common import extract_leaves, hmap
 from util.image import uncategorize, unqualify, unsplit
 
@@ -119,10 +119,10 @@ def mapping(where=MappingType.Gallery):
 
 def gallery_tree(tree=None):
     '''produce a tree for gallery.py to use
-    the provided tree must be from collection.go()
+    the provided tree must be from collection.build_image_tree()
     '''
     if not tree:
-        tree = go()
+        tree = build_image_tree()
 
     images = single_level(tree)
     taxia = _full_compress(load_tree())
@@ -280,7 +280,7 @@ def _ordered_simple_names(tree):
 def _taxonomy_listing():
     '''write out the names to a file'''
     have = set(load_known())
-    everything = set(_ordered_simple_names(go()))
+    everything = set(_ordered_simple_names(build_image_tree()))
     need = everything - have
 
     with open(root + 'data/taxonomy.txt', 'w+', encoding='utf8') as fd:

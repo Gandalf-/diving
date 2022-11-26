@@ -236,7 +236,7 @@ def write_all_html():
     '''main'''
 
     print("loading images...              ", end="", flush=True)
-    tree = collection.go()
+    tree = collection.build_image_tree()
     scientific = taxonomy.mapping()
     taxia = taxonomy.gallery_tree(tree)
     print("done", tree_size(tree), "images loaded")

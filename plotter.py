@@ -83,7 +83,7 @@ m.show()
 
 # %%
 # common names bar graph
-tree = collection.go()  # common names
+tree = collection.build_image_tree()  # common names
 sizes = {k: tree_size(v) for k, v in tree.items()}
 
 for k, v in list(sizes.items()):
@@ -108,7 +108,7 @@ m.show()
 
 m.rcParams.update({'font.size': 6})
 
-tree = collection.go()  # common names
+tree = collection.build_image_tree()  # common names
 tree = tree['shrimp']
 sizes = {k: tree_size(v) for k, v in tree.items()}
 

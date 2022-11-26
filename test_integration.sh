@@ -8,6 +8,24 @@ require() {
   fi
 }
 
+start_database() {
+  cleanup() {
+    [[ $pid ]] || return;
+    kill $pid
+    echo Server stopped
+  }
+  trap cleanup EXIT
+
+  pgrep apocrypha-server >/dev/null &&
+    return
+
+  apocrypha-server --headless &
+  pid=$!
+  until d --keys | grep -q .; do
+    sleep 0.1
+  done
+}
+
 set -e
 
 require tidy
@@ -17,6 +35,7 @@ mkdir -p ~/working/tmp/diving
 cd ~/working/tmp/diving/
 find gallery sites taxonomy timeline -name '*.html' -delete
 
+start_database
 DIVING_VERIFY=1 python3 ~/google_drive/code/python/diving/gallery.py
 
 html_lint="$(

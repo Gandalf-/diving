@@ -29,7 +29,7 @@ _TREE = {}
 def get_tree():
     '''full image tree'''
     if not _TREE:
-        _TREE['tree'] = collection.go(image.TestImage)
+        _TREE['tree'] = collection.build_image_tree(image.TestImage)
 
     return copy.deepcopy(_TREE['tree'])
 
