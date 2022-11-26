@@ -35,7 +35,7 @@ def single_level(tree: ImageTree) -> Dict[str, Image]:
             else:
                 yield from inner(value)
 
-    out = {}
+    out: Dict[str, Image] = {}
     for group in inner(tree):
         name = group[0].simplified()
 
@@ -62,24 +62,7 @@ def pipeline(tree: ImageTree, reverse=True) -> ImageTree:
     )
 
 
-def find_vague_names() -> Iterable[str]:
-    '''find names that could be more specific
-
-    import collections
-    collections.Counter(i.simplified() for i in find_vague_names())
-    '''
-    names = all_names()
-
-    for (name, image) in names:
-        for other in names:
-            if name == other:
-                continue
-
-            if other.endswith(name):
-                yield image
-
-
-def delve(directory: str) -> [Image]:
+def delve(directory: str) -> List[Image]:
     """create an Image object for each picture in a directory"""
     path = os.path.join(root, directory)
     return [
@@ -119,9 +102,9 @@ def _collect() -> List[List[Image]]:
     return [delve(d) for d in _listing()]
 
 
-def _make_tree(images: List[Image]) -> ImageTree:
+def _make_tree(images: Iterable[Image]) -> ImageTree:
     """make a nested dictionary by words"""
-    out = {}
+    out: ImageTree = {}
 
     for image in images:
         name = image.normalized()

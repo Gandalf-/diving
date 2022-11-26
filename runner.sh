@@ -59,36 +59,59 @@ scanner() {
   local imageroot="$( realpath "$PWD" )/full"
   mkdir -p "$thumbroot" "$imageroot"
 
+  local newest; newest="$(
+    # shellcheck disable=SC2010
+    ls -Rt "$thumbroot" | grep -vF "$thumbroot" | head -n 1
+  )"
+  newest="$thumbroot/$newest"
+  debug "$newest"
+
   case $1 in
     fast)
-      local newest; newest="$(
-        # shellcheck disable=SC2010
-        ls -Rt "$thumbroot" | grep -vF "$thumbroot" | head -n 1
-      )"
-      newest="$thumbroot/$newest"
-
       producer() {
-        find "$root" -type f -name '*.jpg' -newer "$newest"
+        while read -r path; do
+          case $path in
+            *.jpg)
+              # this image changed
+              echo "$path"
+              ;;
+
+            *)
+              # this directory changed, scan its contents
+              for sub in "$path"/*.jpg; do
+                echo "$sub"
+              done
+              printf '%0*d%s\n' $(( size - 1 )) 0 'FOUND_RENAME'
+              ;;
+          esac
+        done < <(
+          find "$root" \( -name '*.jpg' -o -type d \) -newer "$newest"
+        ) | cut -c "$size"- | sort | uniq
       }
       ;;
 
     full)
       producer() {
-        find "$root" -type f -name '*.jpg'
+        find "$root" -type f -name '*.jpg' | cut -c "$size"-
       }
       ;;
   esac
 
   while read -r path; do
+    [[ $path == FOUND_RENAME ]] && {
+      touch "$newest"
+      continue
+    }
+
     (
       local directory="$( dirname "$path" )"
       local image="$( basename "$path" )"
 
       # get the sha1sum of the original
-      report "hashing $path"
       local hashed; hashed="$( $sha "$root/$path" )" || die "hash failure $path"
       hashed="${hashed%% *}"
       local unique="$hashed.jpg"
+      report "hashed $path"
 
       # update the database for python
       local label="${image%% *}"
@@ -106,7 +129,7 @@ scanner() {
       workers="$( jobs -r | wc -l )"
     done
 
-  done < <( producer | cut -c "$size"- )
+  done < <( producer )
   wait
 }
 

@@ -4,3 +4,4 @@ web/detective/data.js
 tags
 node_modules
 *.pyc
+profile.*

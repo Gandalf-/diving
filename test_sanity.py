@@ -310,6 +310,9 @@ class TestTaxonomy(unittest.TestCase):
         for example in ('acanthodoris hudsoni', 'antipathes galapagensis'):
             self.assertIsNotNone(taxonomy.is_scientific_name(example), example)
 
+        for example in ('pavona', 'porites'):
+            self.assertIsNotNone(taxonomy.is_scientific_name(example), example)
+
     def test_binomial_names(self):
         '''parse binomial names from taxonomy.yml'''
         names = list(taxonomy.binomial_names())

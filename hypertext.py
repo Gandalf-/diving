@@ -246,7 +246,7 @@ def _taxonomy_title(lineage, scientific):
     history = ' '.join(lineage).split(' ')
 
     while history and not name:
-        name = scientific.get(' '.join(history)) or ""
+        name = scientific.get(' '.join(history), "")
         history = history[:-1]
 
     name = titlecase(name)

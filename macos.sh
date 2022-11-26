@@ -38,7 +38,7 @@ serve() {
 
 sync() {
   rsync \
-    -av --info=progress2 \
+    -av $1 --info=progress2 \
     $www \
     walnut:/root/local/
 }

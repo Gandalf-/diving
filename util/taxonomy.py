@@ -12,6 +12,8 @@ taxonomy related things
 import enum
 import sys
 import pathlib
+from typing import Iterator
+
 import yaml
 
 from util.collection import build_image_tree, single_level, all_names
@@ -132,7 +134,7 @@ def gallery_tree(tree=None):
     return taxia
 
 
-def binomial_names(tree=None, parent=None):
+def binomial_names(tree=None, parent=None) -> Iterator[str]:
     '''scientific binomial names'''
     if not tree:
         tree = load_tree()
@@ -153,6 +155,9 @@ def is_scientific_name(name):
     if not _NAMES_CACHE:
         for bname in binomial_names():
             _NAMES_CACHE[bname.lower()] = bname
+
+            genus, _ = bname.split()
+            _NAMES_CACHE[genus.lower()] = genus
 
     return _NAMES_CACHE.get(name.lower())
 
