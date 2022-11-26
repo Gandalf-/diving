@@ -16,7 +16,6 @@ from util.image import (
     categorize,
     uncategorize,
     split,
-    RealImage,
 )
 from util import taxonomy
 
@@ -85,7 +84,7 @@ def _image_to_gallery_link(image):
 
     there could be mulitple subjects in this image, just take the first for now
     """
-    first = next(expand_names([image], RealImage))
+    first = next(expand_names([image]))
     name = sanitize_link(first.normalized())
     url = f'gallery/{name}.html'
 

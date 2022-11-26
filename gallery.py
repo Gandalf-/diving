@@ -20,7 +20,7 @@ from util import collection
 from util import static
 from util import taxonomy
 from util import verify
-from util.image import Image, RealImage
+from util.image import Image
 from util.common import (
     tree_size,
     is_date,
@@ -256,7 +256,7 @@ def write_all_html():
     print("done", len(taxia_htmls), "pages prepared")
 
     print("building /timeline...          ", end="", flush=True)
-    times_htmls = timeline.timeline(RealImage)
+    times_htmls = timeline.timeline()
     print("done", len(times_htmls), "pages prepared")
 
     print("building /detective/data.js... ", end="", flush=True)

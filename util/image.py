@@ -5,11 +5,10 @@ base class for a diving image
 '''
 
 import os
-from typing import Callable
 
 import inflect
 
-import util.database
+from util import database
 import util.common as utility
 
 from util import static
@@ -76,7 +75,7 @@ def unsplit(name):
 class Image:
     '''container for a diving picture'''
 
-    def __init__(self, database, label, directory):
+    def __init__(self, label, directory):
         self.label = label
         label, _ = os.path.splitext(label)
 
@@ -89,7 +88,7 @@ class Image:
         self.name = name
         self.number = number
         self.directory = directory
-        self.database = database
+        self.database = database.database
 
     def __repr__(self):
         return ", ".join(
@@ -177,20 +176,3 @@ class Image:
         name = categorize(name)
 
         return name
-
-
-ImageF = Callable[[str, str], Image]
-
-
-class RealImage(Image):
-    """Real Image"""
-
-    def __init__(self, label, directory) -> None:
-        super().__init__(util.database.database, label, directory)
-
-
-class TestImage(Image):
-    """Test Image"""
-
-    def __init__(self, label, directory) -> None:
-        super().__init__(util.database.TestDatabase(), label, directory)

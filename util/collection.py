@@ -7,24 +7,21 @@ parsing data from the file system to construct trees of images
 import os
 from typing import Iterable, Set, Dict, Union, List
 
-from util.image import Image, ImageF, categorize, split, RealImage
+from util.image import Image, categorize, split
 from util.common import flatten, tree_size, root
 from util import static
 
 ImageTree = Dict[str, Union['ImageTree', List[Image]]]
 
 
-def named(imagef: ImageF = RealImage):
+def named():
     '''all named images from all directories'''
-    return flatten([[y for y in z if y.name] for z in _collect(imagef)])
+    return flatten([[y for y in z if y.name] for z in _collect()])
 
 
 def all_names() -> Set[str]:
     '''all simplified, split names'''
-    return {
-        categorize(split(i.simplified()))
-        for i in expand_names(named(RealImage), RealImage)
-    }
+    return {categorize(split(i.simplified())) for i in expand_names(named())}
 
 
 def single_level(tree: ImageTree) -> Dict[str, Image]:
@@ -48,12 +45,12 @@ def single_level(tree: ImageTree) -> Dict[str, Image]:
     return out
 
 
-def build_image_tree(imagef: ImageF = RealImage) -> ImageTree:
+def build_image_tree() -> ImageTree:
     '''construct a nested dictionary where each key is a unique split of a
     name (after processing) from right to left. if there's another split under
     this one, the value is another dictionary, otherwise, it's a list of Images
     '''
-    return pipeline(_make_tree(expand_names(named(imagef), imagef)))
+    return pipeline(_make_tree(expand_names(named())))
 
 
 def pipeline(tree: ImageTree, reverse=True) -> ImageTree:
@@ -82,17 +79,17 @@ def find_vague_names() -> Iterable[str]:
                 yield image
 
 
-def delve(directory: str, imagef: ImageF) -> [Image]:
+def delve(directory: str) -> [Image]:
     """create an Image object for each picture in a directory"""
     path = os.path.join(root, directory)
     return [
-        imagef(o, directory)
+        Image(o, directory)
         for o in os.listdir(path)
         if o.endswith(".jpg") and '-' in o
     ]
 
 
-def expand_names(images: List[Image], imagef: ImageF) -> Iterable[Image]:
+def expand_names(images: List[Image]) -> Iterable[Image]:
     """split out `a and b` into separate elements"""
     for image in images:
         for part in (" with ", " and "):
@@ -101,7 +98,7 @@ def expand_names(images: List[Image], imagef: ImageF) -> Iterable[Image]:
 
             left, right = image.name.split(part)
 
-            clone = imagef(image.label, image.directory)
+            clone = Image(image.label, image.directory)
             clone.name = left
             image.name = right
             yield clone
@@ -117,9 +114,9 @@ def _listing() -> List[str]:
     return [d for d in os.listdir(root) if not d.startswith(".")]
 
 
-def _collect(imagef: ImageF) -> List[List[Image]]:
+def _collect() -> List[List[Image]]:
     """run delve on all dive picture folders"""
-    return [delve(d, imagef) for d in _listing()]
+    return [delve(d) for d in _listing()]
 
 
 def _make_tree(images: List[Image]) -> ImageTree:

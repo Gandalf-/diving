@@ -6,12 +6,10 @@ Python implementation of runner.sh
 
 import os
 import operator
-from typing import Callable
 
 import hypertext
 from hypertext import Where
 from util import collection
-from util.image import Image
 import util.common as utility
 
 
@@ -64,7 +62,7 @@ _html_scripts = '''\
 '''
 
 
-def timeline(imagef: Callable[[str, str], Image]):
+def timeline():
     '''generate all the timeline html'''
     dives = [
         d
@@ -74,7 +72,7 @@ def timeline(imagef: Callable[[str, str], Image]):
     results = []
 
     for dive in dives:
-        results.append(_subpage(dive, imagef))
+        results.append(_subpage(dive))
 
     paths = [path for (path, _) in results]
     divs = '\n'.join(f"    <div id='{i}'></div>" for i, _ in enumerate(dives))
@@ -122,7 +120,7 @@ def _image_html(image):
 '''
 
 
-def _subpage(dive, imagef: Callable[[str, str], Image]):
+def _subpage(dive):
     '''build the sub page for this dive'''
     when, title = dive.split(' ', 1)
 
@@ -135,9 +133,7 @@ def _subpage(dive, imagef: Callable[[str, str], Image]):
 <div class="grid">
 '''
 
-    images = sorted(
-        collection.delve(dive, imagef), key=operator.attrgetter('number')
-    )
+    images = sorted(collection.delve(dive), key=operator.attrgetter('number'))
     html += '\n'.join(_image_html(image) for image in images)
 
     html += '''\
