@@ -80,13 +80,15 @@ def expand_names(images: List[Image]) -> Iterable[Image]:
                 continue
 
             left, right = image.name.split(part)
-
-            clone = Image(image.label, image.directory)
-            clone.name = left
-            image.name = right
-            yield clone
-
-        yield image
+            lnew = Image(image.label, image.directory)
+            rnew = Image(image.label, image.directory)
+            lnew.name = left
+            rnew.name = right
+            yield lnew
+            yield rnew
+            break
+        else:
+            yield image
 
 
 # PRIVATE

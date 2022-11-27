@@ -37,6 +37,28 @@ def get_tree():
 class TestHypertext(unittest.TestCase):
     '''hypertext.py'''
 
+    def test_image_to_name_html(self):
+        '''it works'''
+        utility._EXISTS['gallery/rock-fish.html'] = True
+
+        fish = image.Image(
+            "001 - Rockfish.jpg", "2021-11-05 10 Rockaway Beach"
+        )
+        html = hypertext.image_to_name_html(fish, Where.Sites)
+        self.assertIn('href="/gallery/rock-fish.html"', html)
+        self.assertIn('Rockfish', html)
+
+    def test_image_to_name_html_pair(self):
+        '''it works'''
+        utility._EXISTS['gallery/rock-fish.html'] = True
+
+        fish = image.Image(
+            "001 - Rockfish and Coral.jpg", "2021-11-05 10 Rockaway Beach"
+        )
+        html = hypertext.image_to_name_html(fish, Where.Sites)
+        self.assertIn('href="/gallery/rock-fish.html"', html)
+        self.assertIn('Rockfish', html)
+
     def test_lineage_to_link(self):
         '''converting lineage to links between sites'''
         samples = [
@@ -600,6 +622,31 @@ class TestLocations(unittest.TestCase):
 
 class TestCollection(unittest.TestCase):
     '''collection.py'''
+
+    def test_expand_names(self):
+        '''it works'''
+        base = image.Image(
+            "001 - Fish and Coral.jpg", "2021-11-05 10 Rockaway Beach"
+        )
+        out = list(collection.expand_names([base]))
+        self.assertEqual(len(out), 2)
+        fish = out[0]
+        coral = out[1]
+
+        self.assertEqual(fish.name, 'Fish')
+        self.assertEqual(coral.name, 'Coral')
+        self.assertEqual(fish.number, coral.number)
+        self.assertEqual(fish.directory, coral.directory)
+
+    def test_expand_names_noop(self):
+        '''it works'''
+        base = image.Image("001 - Fish", "2021-11-05 10 Rockaway Beach")
+        out = list(collection.expand_names([base]))
+        self.assertEqual(len(out), 1)
+        fish = out[0]
+
+        self.assertEqual(fish.name, 'Fish')
+        self.assertEqual(fish.number, '001')
 
 
 class TestVerify(unittest.TestCase):
