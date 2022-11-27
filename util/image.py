@@ -137,7 +137,7 @@ class Image:
 
     def hashed(self) -> str:
         '''Get the sha1sum for an original image, using the database as a cache'''
-        return self.database.get('diving', 'cache', self.identifier(), 'hash')
+        return self.database.get_image_hash(self.identifier())
 
     def singular(self):
         '''return singular version'''

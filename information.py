@@ -106,16 +106,17 @@ def fetch(subject: str, suggest=True):
 def lookup(subject: str, update=True, again=True) -> dict:
     '''get the subject from the database'''
     key = subject.lower()
-    if key in database.get(*db_root, 'invalid', default=[], cast=list):
+
+    if database.is_invalid_subject(key):
         # no page for this name at all
         return {}
 
-    mapped_key = database.get(*db_root, 'maps', key)
+    mapped_key = database.get_mapped_subject(key)
     if mapped_key:
         # metacarcinus magister -> dungeness crab
         key = mapped_key
 
-    out = database.get(*db_root, 'valid', key)
+    out = database.get_valid_subject(key)
     if not out and not update:
         # didn't find it, don't ask wikipedia
         return {}
