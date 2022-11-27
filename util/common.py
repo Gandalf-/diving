@@ -6,6 +6,7 @@ dict and list functions
 
 import datetime
 import os
+from typing import List
 
 root = "/mnt/zfs/Media/Pictures/Diving"
 if os.name == 'nt':
@@ -44,6 +45,18 @@ def take(xs, n):
     return out
 
 
+def walk_spine(tree, lineage: List[str]):
+    '''walk the spine of a tree'''
+    lineage = lineage[::-1]
+
+    while lineage:
+        vertebra = lineage.pop()
+        assert vertebra in tree, tree.keys()
+        tree = tree[vertebra]
+
+    return tree
+
+
 def flatten(xs):
     '''[[a]] -> [a]'''
     return [item for sublist in xs for item in sublist]
@@ -64,6 +77,8 @@ def extract_leaves(tree):
     for value in tree.values():
         if isinstance(value, dict):
             yield from extract_leaves(value)
+        elif isinstance(value, list):
+            yield from value
         else:
             yield value
 

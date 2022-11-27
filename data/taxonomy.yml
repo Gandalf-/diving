@@ -776,8 +776,8 @@ Animalia:
             disticha: disticha hydroid
         Tubulariidae:
           Ectopleura:
-            integra: integra hydroid
-            media: media hydroid
+            integra: ectopleura integra hydroid
+            media: ectopleura media hydroid
         Filifera:
           Bythotiaridae:
             Bythotiara:
@@ -793,12 +793,12 @@ Animalia:
         Plumularioidea:
           Plumulariidae:
             Plumularia:
-              floridana: floridana hydroid
+              floridana: plumularia floridana hydroid
           Aglaopheniidae:
             Macrorhynchia:
-              philippina: philippina hydroid
+              philippina: macrorhynchia philippina hydroid
             Aglaophenia:
-              diegensis: diegensis hydroid
+              diegensis: aglaophenia diegensis hydroid
         Campanulariidae:
           Orthopyxis: spider web hydroid
         Aequoreidae:

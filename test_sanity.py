@@ -235,6 +235,63 @@ class TestGallery(unittest.TestCase):
 class TestTaxonomy(unittest.TestCase):
     '''taxonomy.py'''
 
+    def test_find_representative(self):
+        '''same as gallery.py but the lineage is reversed'''
+        tree = get_tree()
+        taxia = taxonomy.gallery_tree(tree)
+        lineage = [
+            'Animalia',
+            'Cnidaria',
+            'Hydrozoa',
+            'Leptothecata',
+            'Plumularioidea',
+        ]
+        self.assertIn('Animalia', taxia)
+        self.assertIn('Cnidaria', taxia['Animalia'])
+
+        for i in range(len(lineage)):
+            out = gallery.find_representative(taxia, lineage=lineage[:i])
+            self.assertIsNotNone(out)
+
+    def test_taxia_filler(self):
+        '''it doesn't lose data'''
+        tree = get_tree()
+        images = taxonomy.single_level(tree)
+        taxia = taxonomy._full_compress(taxonomy.load_tree())
+
+        sub_taxia = utility.walk_spine(
+            taxia,
+            [
+                'Animalia',
+                'Cnidaria',
+                'Hydrozoa',
+                'Leptothecata',
+                'Plumularioidea',
+            ],
+        )
+        self.assertIsNotNone(sub_taxia)
+        filled = taxonomy._taxia_filler(sub_taxia, images)
+
+        self.assertIn('Aglaopheniidae', filled)
+        self.assertNotEqual(filled['Aglaopheniidae'], {})
+
+    def test_looks_like_scientific_name(self):
+        '''it works'''
+        positives = [
+            'Aglaophenia diegensis Hydroid',
+            'Antipathes galapagensis',
+        ]
+        for sample in positives:
+            self.assertTrue(
+                taxonomy.looks_like_scientific_name(sample), sample
+            )
+
+        negatives = ['Fairy Palm Hydroid']
+        for sample in negatives:
+            self.assertFalse(
+                taxonomy.looks_like_scientific_name(sample), sample
+            )
+
     def test_filter_exact(self):
         '''remove sp. entries'''
         tree = {'Actiniaria': {'sp.': 1, 'Actinioidea': 2, 'Metridioidea': 3}}
@@ -420,6 +477,13 @@ class TestImage(unittest.TestCase):
 
 class TestUtility(unittest.TestCase):
     '''utility.py'''
+
+    def test_walk_spine(self):
+        '''it works'''
+        tree = {'a': {'b': {'c': 1}}}
+        self.assertEqual(utility.walk_spine(tree, ['a']), {'b': {'c': 1}})
+        self.assertEqual(utility.walk_spine(tree, ['a', 'b']), {'c': 1})
+        self.assertEqual(utility.walk_spine(tree, ['a', 'b', 'c']), 1)
 
     def test_prefix_tuples(self):
         '''it works'''

@@ -23,6 +23,7 @@ from util import verify
 from util.image import Image
 from util.common import (
     tree_size,
+    extract_leaves,
     is_date,
     strip_date,
     prefix_tuples,
@@ -42,27 +43,13 @@ def find_representative(tree, lineage=None):
     if not lineage:
         lineage = []
 
-    # forwards for gallery
-    category = ' '.join(lineage)
-    if category in static.pinned:
-        found = _find_by_path(tree, static.pinned[category])
+    pinned = static.pinned.get(' '.join(lineage), None)
+    if pinned:
+        found = _find_by_path(tree, pinned)
         if found:
             return found
 
-    # backwards for taxonomy
-    category = ' '.join(lineage[::-1])
-    if category in static.pinned:
-        found = _find_by_path(tree, static.pinned[category])
-        if found:
-            return found
-
-    if not isinstance(tree, dict):
-        results = tree
-    else:
-        results = (
-            find_representative(values, lineage=[key] + lineage)
-            for (key, values) in tree.items()
-        )
+    results = extract_leaves(tree)
 
     def get_path(image):
         assert isinstance(image, Image), image
@@ -132,7 +119,7 @@ def html_tree(tree, where, scientific, lineage=None):
 
         new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
         size = tree_size(value)
-        example = find_representative(value, [key] + lineage)
+        example = find_representative(value, new_lineage)
         subject = _key_to_subject(key, where)
 
         html += """
@@ -294,16 +281,9 @@ def _pool_writer(args):
 
 def _find_by_path(tree, needle):
     """search the tree for an image with this path"""
-    if not isinstance(tree, dict):
-        for image in tree:
-            if needle in image.path():
-                return image
-    else:
-        for child in tree.values():
-            found = _find_by_path(child, needle)
-            if found:
-                return found
-
+    for leaf in extract_leaves(tree):
+        if needle in leaf.path():
+            return leaf
     return None
 
 

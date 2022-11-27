@@ -150,6 +150,18 @@ def binomial_names(tree=None, parent=None) -> Iterator[str]:
             yield from binomial_names(value, parent=key)
 
 
+def looks_like_scientific_name(name: str) -> bool:
+    '''Genus species Other Other'''
+    parts = name.split(' ')
+    if len(parts) < 2:
+        return False
+
+    genus = parts[0]
+    species = parts[1]
+
+    return genus.istitle() and species.islower()
+
+
 def is_scientific_name(name):
     '''cached lookup'''
     if not _NAMES_CACHE:
@@ -234,6 +246,9 @@ def _taxia_filler(tree, images):
 
     for key, value in list(tree.items()):
         if isinstance(value, str):
+            if not value.islower():
+                assert False, f'taxonomy.yml keys must be lowercase: {key}'
+
             if value in images:
                 tree[key] = {'data': images[value]}
             else:
