@@ -335,14 +335,14 @@ class TestTaxonomy(unittest.TestCase):
             (['six rayed', 'star'], 'hexactis'),
             (['mossy', 'chiton'], 'muscosa'),
             (['mossy', 'chiton'], 'muscosa'),
-            (['stone', 'fish'], 'plumieri mystes'),
+            (['pacific', 'stone', 'fish'], 'plumieri mystes'),
         ]
 
         for lineage, output in samples:
             match = taxonomy.gallery_scientific(
                 lineage, TestGallery.g_scientific
             )
-            self.assertTrue(match.endswith(output), match)
+            self.assertTrue(match.endswith(output), f'{match} != {output}')
 
     def test_similar(self):
         '''can these be collapsed?'''
