@@ -519,6 +519,8 @@ Animalia:
             flavidus: tubesnout fish
       Syngnathiformes:
         Syngnathidae:
+          Corythoichthys:
+            haematopterus: messmate pipefish
           Syngnathus:
             leptorhynchus: bay pipefish
           Hippocampus:
@@ -548,6 +550,8 @@ Animalia:
             Scarus:
               vetula: queen parrotfish
               guacamaia: rainbow parrotfish
+            Chlorurus:
+              strongylocephalus: steephead parrotfish
       Elopiformes:
         Megalopidae:
           Megalops: tarpon
@@ -557,8 +561,17 @@ Animalia:
             sagax: pacific sardine
       Batrachoidiformes:
         Porichthys: midshipman
+      Echeneidae:
+        Remora:
+          remora: remora
       Perciformes:
         # perch-like fish
+        Ephippidae:
+          Platax:
+            teira: longfish batfish
+        Lutjanidae:
+          Lutjanus:
+            kasmira: bluestripe snapper
         Apogonidae:
           Apogon: cardinal fish
         Chaenopsidae:
@@ -578,6 +591,8 @@ Animalia:
           Cirrhitus:
             rivulatus: giant hawkfish
         Blenniidae:
+          Aspidontus:
+            dussumieri: lance blenny
           Ophioblennius:
             steindachneri: panamic fanged blenny
         Tripterygiidae:
@@ -591,10 +606,15 @@ Animalia:
             diplotaenia: mexican hogfish
           Lachnolaimus:
             maximus: hogfish
+          Cheilinus:
+            undulatus: napoleon fish
         Mullidae: goatfish
         Chaetodontidae:
           Chaetodon:
             striatus: banded butterflyfish
+          Heniochus:
+            monoceros: masked bannerfish
+            acuminatus: pennant coralfish
         Acanthuridae:
           Paracanthurus:
             hepatus: blue tang
@@ -613,6 +633,9 @@ Animalia:
           Mycteroperca:
             tigris: tiger grouper
         Pomacentridae:
+          Amphiprion:
+            clarkii: yellowtail clownfish
+            nigripes: maldives anemone fish
           Stegastes:
             beebei: galapagos ringtail damselfish
         Pomacanthidae:
@@ -680,9 +703,15 @@ Animalia:
             fucensis: slipskin snailfish
         Scorpaenidae:
           Pterois: lionfish
+          Scorpaenopsis:
+            barbatus: bearded scorpion fish
+          Taenianotus:
+            triacanthus: leaf fish
+          Synanceia:
+            verrucosa: indian stonefish
           Scorpaena:
             plumieri:
-              mystes: stonefish
+              mystes: pacific stonefish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin
@@ -740,6 +769,8 @@ Animalia:
             # sp.: pufferfish
             Arothron:
               meleagris: guineafowl pufferfish
+            Canthigaster:
+              valentini: blacksaddle toby fish
         Balistidae:
           sp.: triggerfish
           Melichthys:

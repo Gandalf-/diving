@@ -110,7 +110,7 @@ scanner() {
       # get the sha1sum of the original
       local hashed; hashed="$( $sha "$root/$path" )" || die "hash failure $path"
       hashed="${hashed%% *}"
-      local unique="$hashed.jpg"
+      local unique="$hashed"
       report "hashed $path"
 
       # update the database for python
@@ -119,8 +119,8 @@ scanner() {
       label="$directory:$label"
       d diving cache "$label" hash = "$hashed" </dev/null
 
-      generate_thumbnail "$root/$path" "$thumbroot/$unique"
-      generate_original  "$root/$path" "$imageroot/$unique"
+      generate_thumbnail "$root/$path" "$thumbroot/$unique.webp"
+      generate_original  "$root/$path" "$imageroot/$unique.jpg"
     ) &
 
     (( workers++ ))

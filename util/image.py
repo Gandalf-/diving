@@ -127,7 +127,7 @@ class Image:
         '''URI of thumbnail image'''
         sha1 = self.hashed()
         assert sha1
-        return '/imgs/' + sha1 + '.jpg'
+        return '/imgs/' + sha1 + '.webp'
 
     def fullsize(self):
         '''URI of original image'''

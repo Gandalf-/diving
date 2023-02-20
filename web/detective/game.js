@@ -30,7 +30,7 @@ function image_game() {
     for (i = 0, w = 0; i < count; i++) {
 
         var child = document.createElement('div');
-        child.setAttribute('class', 'image');
+        child.setAttribute('class', 'choice');
         child.setAttribute('id', 'option' + i);
         byId('options').appendChild(child);
 
@@ -114,7 +114,7 @@ function set_thumbnail(where, what, onclick, thumb) {
     if (!thumb) {
         thumb = thumbs[what][random(thumbs[what].length)];
     }
-    var html = '<img src="/imgs/' + thumb + '.jpg" alt=""';
+    var html = '<img src="/imgs/' + thumb + '.jpg" width=300 alt=""';
 
     if (onclick) {
         html += 'onclick="' + onclick + '"';
@@ -174,7 +174,7 @@ function set_correct_name(correct, difficulty) {
 
     for (i = 0; i < samples; i++) {
         var child = document.createElement('div');
-        child.setAttribute('class', 'image');
+        child.setAttribute('class', 'choice');
         child.setAttribute('id', 'correct' + i);
         outer.appendChild(child);
 

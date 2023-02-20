@@ -125,7 +125,7 @@ def html_tree(tree, where, scientific, lineage=None):
         html += """
         <div class="image">
         <a href="{link}">
-            <img width=300 loading="lazy" alt="{alt}" src="{thumbnail}">
+            <img height=225 width=300 alt="{alt}" src="{thumbnail}">
             <h3>
               <span class="sneaky">{size}</span>
               {subject}
@@ -162,7 +162,7 @@ def html_tree(tree, where, scientific, lineage=None):
         seen = set()
         html += '<div class="grid">'
 
-        for image in direct:
+        for i, image in enumerate(direct):
             identifier = tuple([image.name, image.path()])
             if identifier in seen:
                 continue
@@ -173,7 +173,7 @@ def html_tree(tree, where, scientific, lineage=None):
             html += """
             <div class="card" onclick="flip(this);">
               <div class="card_face card_face-front">
-                <img width=300 loading="lazy" alt="{name}" src="{thumbnail}">
+                <img height=225 width=300 {lazy} alt="{name}" src="{thumbnail}">
               </div>
               <div class="card_face card_face-back">
                 {name_html}
@@ -187,6 +187,7 @@ def html_tree(tree, where, scientific, lineage=None):
             """.format(
                 name=image.name,
                 name_html=name_html,
+                lazy='loading="lazy"' if i > 16 else '',
                 site_html=site_html,
                 location=image.location(),
                 fullsize=image.fullsize(),

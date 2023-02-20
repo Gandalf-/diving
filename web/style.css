@@ -134,16 +134,16 @@ a:link {
   text-decoration: none;
 }
 
-.image {
+.choice, .image {
   border: 1px solid black;
   max-width: 350px;
 }
 
-.image:hover {
+.choice:hover, .image:hover {
   border: 1px solid white;
 }
 
-.correct_name>.image:hover {
+.correct_name>.choice:hover {
   border: 1px solid black;
 }
 
@@ -219,6 +219,19 @@ div.skip {
   position: relative;
   max-width: 350px;
   padding-top: 75%;
+}
+
+.choice img {
+  height: 100%;
+}
+
+.card img {
+  height: 100%;
+}
+
+.image img {
+  /* Need space for the label */
+  height: 86%;
 }
 
 .card.is-flipped {
