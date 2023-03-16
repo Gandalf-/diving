@@ -8,7 +8,7 @@ src=$HOME/google_drive/code/shell/diving
 start_database() {
   cleanup() {
     [[ $pid ]] || return;
-    kill $pid
+    kill "$pid"
     echo Server stopped
   }
   trap cleanup EXIT
@@ -26,21 +26,24 @@ start_database() {
 build() {
   start_database
 
-  cd $www
-  bash    $src/runner.sh  ~/Pictures/diving/
-  python3 $src/gallery.py ~/Pictures/diving/
+  cd "$www"
+  bash    "$src"/runner.sh  ~/Pictures/diving/
+  python3 "$src"/gallery.py ~/Pictures/diving/
 }
 
 serve() {
-  cd $www
+  cd "$www"
   sws --public --local
 }
 
 sync() {
   rsync \
-    -av $1 --info=progress2 \
-    $www \
-    walnut:/root/local/
+    --exclude .DS_Store \
+    --delete \
+    --delete-excluded \
+    -av --info=progress2 \
+    "$www"/ \
+    yew:/mnt/ssd/hosts/web/diving/
 }
 
 "$@"

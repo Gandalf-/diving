@@ -39,14 +39,20 @@ generate_original() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
-  jpegoptim \
-    --strip-all \
-    --all-progressive \
-    --size 512 \
-    --quiet \
-    --stdout \
+  convert \
+    -strip \
+    -quality 35 \
     "$fin" \
-    > "$fout" || die "jpegoptim failure $fin"
+    "$fout" || die "convert failure $fin"
+
+  # jpegoptim \
+  #   --strip-all \
+  #   --all-progressive \
+  #   --size 512 \
+  #   --quiet \
+  #   --stdout \
+  #   "$fin" \
+  #   > "$fout" || die "jpegoptim failure $fin"
   report "optimized $( basename "$fin" )"
 }
 
@@ -120,7 +126,7 @@ scanner() {
       d diving cache "$label" hash = "$hashed" </dev/null
 
       generate_thumbnail "$root/$path" "$thumbroot/$unique.webp"
-      generate_original  "$root/$path" "$imageroot/$unique.jpg"
+      generate_original  "$root/$path" "$imageroot/$unique.webp"
     ) &
 
     (( workers++ ))

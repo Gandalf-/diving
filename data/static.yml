@@ -8,6 +8,8 @@ locations:
     - Deception Pass
     - Edmonds
     - Ediz Hook
+    - Elephant Wall
+    - Flag Pole
     - Fort Ward
     - Fort Worden
     - Fulton Creek Reef
@@ -63,6 +65,8 @@ ignore:
   - reef
   - log
   - wood
+  - marina
+  - site
 
 splits:
   - fish
@@ -121,7 +125,9 @@ categories:
     - rock beauty
     - sardine
     - sculpin
+    - schoolmaster
     - seahorse
+    - sergeant major
     - serrano
     - sole
     - snapper
@@ -154,6 +160,7 @@ categories:
     - seagrass
     - seaweed
     - turkish towel
+    - diatom
   crab:
     - reef spider
   nudibranch:
@@ -172,6 +179,8 @@ categories:
     - sea pen
     - sea rod
     - sea whip
+    - coral polyp
+    - sea fan
   worm:
     - sea nymph
   urchin:
@@ -184,6 +193,21 @@ categories:
     - clam
     - scallop
     - oyster
+    - mussel
+  mammal:
+    - sea lion
+    - dolphin
+    - diver
+  dive site:
+    - marina
+    - east bonaire
+    - research station
+    - puget sound
+    - blakely harbor
+    - marine park
+    - egmont bc
+    - seattle
+    - shoreline
 
 pinned:
     crab:

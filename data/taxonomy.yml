@@ -78,6 +78,9 @@ Animalia:
           Hamigera: orange cratered encrusting sponge
           Antho:
             graceae: red brown encrusting sponge
+        Myxillidae:
+          Myxilla:
+            incrustans: rough scallop sponge
         Mycalidae:
           Mycale:
             toporoki: bristly yellow clump sponge
@@ -1084,13 +1087,17 @@ Animalia:
             Hermissenda:
               crassicornis: horned nudibranch
               opalescens: opalescent nudibranch
+        Phyllidioidea:
+          Phyllidiidae:
+            Alyta:
+              phyllidia: alyta phyllidia
         Doridoidea:
           Chromodorididae:
             Felimare:
               lapislazuli: blue spotted doris
           Dorididae:
             Geitodoris:
-              heathi: heaths dorid
+              heathi: heath's dorid
             Doris:
               montereyensis: monterey sea lemon
               odhneri: white nudibranch
@@ -1114,7 +1121,7 @@ Animalia:
             Tambja:
               mullineri: mulliner doris
             Limacia:
-              cockerelli: cockerells nudibranch
+              cockerelli: cockerell's nudibranch
             Triopha:
               catalinae: bold clown nudibranch
               modesta: modest clown nudibranch
@@ -1138,7 +1145,7 @@ Animalia:
               japonica: pearly nudibranch
           Apataidae:
             Apata:
-              pricei: prices aeolid nudibranch
+              pricei: price's aeolid nudibranch
           Coryphellidae:
             Orienthella:
               trilineata: three lined nudibranch

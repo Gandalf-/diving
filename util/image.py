@@ -133,7 +133,7 @@ class Image:
         '''URI of original image'''
         sha1 = self.hashed()
         assert sha1
-        return '/full/' + sha1 + '.jpg'
+        return '/full/' + sha1 + '.webp'
 
     def hashed(self) -> str:
         '''Get the sha1sum for an original image, using the database as a cache'''
