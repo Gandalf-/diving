@@ -74,25 +74,18 @@ def hasher(images, size=250):
 
 
 def table_builder(debug=True):
-    '''build the tables!'''
-    # reversing so we get newer things first
+    '''Build the tables.'''
     images = reversed(list(collection.named()))
     all_names, images = _filter_images(images, debug)
 
     hashes = list(cache_hash(images))
-
-    # names array
     names = sorted(list(set(all_names)))
-
-    # thumbnail table
     thumbs = [[] for _ in names]
+
     for i, name in enumerate(all_names):
         where = names.index(name)
-
-        if len(thumbs[where]) > 25:
-            continue
-
-        thumbs[where].append(hashes[i])
+        if len(thumbs[where]) <= 25:
+            thumbs[where].append(hashes[i])
 
     similarity = _similarity_table(names)
     names = [titlecase(n) for n in names]

@@ -38,24 +38,19 @@ from hypertext import Where, Side
 # pylint: disable=line-too-long
 
 
-def find_representative(tree, lineage=None):
-    """grab one image to represent this tree"""
-    if not lineage:
-        lineage = []
+def find_representative(tree, lineage=None) -> Image:
+    """Find one image to represent this tree."""
+    lineage = lineage or []
+    pinned = static.pinned.get(' '.join(lineage))
 
-    pinned = static.pinned.get(' '.join(lineage), None)
     if pinned:
         found = _find_by_path(tree, pinned)
         if found:
             return found
 
     results = extract_leaves(tree)
+    results = sorted(results, key=lambda image: image.path(), reverse=True)
 
-    def get_path(image):
-        assert isinstance(image, Image), image
-        return image.path()
-
-    results = sorted(results, key=get_path, reverse=True)
     assert results, (tree, lineage)
     return results[0]
 

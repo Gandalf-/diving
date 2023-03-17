@@ -163,6 +163,10 @@ a:link {
   min-height: 350px;
 }
 
+#options {
+  padding-top: 1em;
+}
+
 select {
   border-radius: 0.5em;
   color: white;
@@ -221,10 +225,6 @@ div.skip {
   padding-top: 75%;
 }
 
-.choice img {
-  height: 100%;
-}
-
 .card img {
   height: 100%;
 }
@@ -248,9 +248,6 @@ div.skip {
   font-weight: bold;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-}
-
-.card_face-front {
 }
 
 .card_face-back {
@@ -295,7 +292,6 @@ div.skip {
   .correct_name {
     justify-content: center;
     height: 100%;
-    min-height: 150px;
   }
 
   .grid {

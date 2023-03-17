@@ -35,14 +35,12 @@ def prefix_tuples(first, ts):
 
 def take(xs, n):
     '''pull n items from xs'''
-    out = []
-    count = 0
-    for x in xs:
-        if count == n:
+    result = []
+    for i, x in enumerate(xs):
+        if i == n:
             break
-        count += 1
-        out.append(x)
-    return out
+        result.append(x)
+    return result
 
 
 def walk_spine(tree, lineage: List[str]):
@@ -107,9 +105,7 @@ def is_date(x):
         d = datetime.datetime.strptime(x, '%Y-%m-%d')
         assert d
         return True
-    except TypeError:
-        return False
-    except ValueError:
+    except (TypeError, ValueError):
         return False
 
 

@@ -219,6 +219,9 @@ class TestGallery(unittest.TestCase):
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
+    def setUp(self):
+        database.use_test_database()
+
     def test_find_representative(self):
         '''picking the newest image to represent a tree, or a predefined
         'pinned' image
@@ -256,6 +259,9 @@ class TestGallery(unittest.TestCase):
 
 class TestTaxonomy(unittest.TestCase):
     '''taxonomy.py'''
+
+    def setUp(self):
+        database.use_test_database()
 
     def test_find_representative(self):
         '''same as gallery.py but the lineage is reversed'''
@@ -515,7 +521,25 @@ class TestUtility(unittest.TestCase):
 
     def test_take(self):
         '''it works'''
-        self.assertEqual([0, 1, 2], utility.take(range(10), 3))
+        xs = [1, 2, 3, 4, 5]
+        n = 3
+        expected = [1, 2, 3]
+        self.assertEqual(utility.take(xs, n), expected)
+
+        xs = [1, 2, 3]
+        n = 5
+        expected = [1, 2, 3]
+        self.assertEqual(utility.take(xs, n), expected)
+
+        xs = [1, 2, 3, 4, 5]
+        n = 0
+        expected = []
+        self.assertEqual(utility.take(xs, n), expected)
+
+        xs = range(100000000)
+        n = 5
+        expected = [0, 1, 2, 3, 4]
+        self.assertEqual(utility.take(xs, n), expected)
 
     def test_flatten(self):
         '''it works'''
@@ -651,6 +675,9 @@ class TestCollection(unittest.TestCase):
 
 class TestVerify(unittest.TestCase):
     '''verify.py'''
+
+    def setUp(self):
+        database.use_test_database()
 
     def _build_swapped_tree(self):
         '''swapped words'''

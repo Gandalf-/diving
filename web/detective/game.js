@@ -111,17 +111,23 @@ function set_text(where, what, onclick) {
 }
 
 function set_thumbnail(where, what, onclick, thumb) {
-    if (!thumb) {
-        thumb = thumbs[what][random(thumbs[what].length)];
-    }
-    var html = '<img src="/imgs/' + thumb + '.jpg" width=300 alt=""';
+    thumb = thumb || thumbs[what][random(thumbs[what].length)];
+
+    var img = document.createElement('img');
+    img.src = '/imgs/' + thumb + '.webp';
+    img.width = 300;
+    img.height = 225;
+    img.alt = '';
 
     if (onclick) {
-        html += 'onclick="' + onclick + '"';
+        img.onclick = function() {
+            eval(onclick);
+        };
     }
-    html += '>';
 
-    byId(where).innerHTML = html;
+    var target = document.getElementById(where);
+    target.innerHTML = '';
+    target.appendChild(img);
 }
 
 function update_score() {
@@ -161,36 +167,41 @@ function set_correct_image(correct) {
     outer.appendChild(child);
 }
 
+/**
+ * Set the correct creature name and thumbnails on the game board.
+ *
+ * @param {number} correct - The index of the correct creature.
+ * @param {number} difficulty - The difficulty level of the game.
+ */
 function set_correct_name(correct, difficulty) {
-    var outer = byId('correct_outer');
-    outer.setAttribute('class', 'grid correct_name');
+    const outer = byId('correct_outer');
+    outer.classList.add('grid', 'correct_name');
     outer.innerHTML = '';
 
-    var images = thumbs[correct].slice();
-    shuffle(images);
+    const images = shuffle([...thumbs[correct]]);
+    const samples = Math.min(g_sample_table[difficulty], images.length);
 
-    var samples = g_sample_table[difficulty];
-    samples = Math.min(samples, images.length);
-
-    for (i = 0; i < samples; i++) {
-        var child = document.createElement('div');
-        child.setAttribute('class', 'choice');
-        child.setAttribute('id', 'correct' + i);
+    for (let i = 0; i < samples; i++) {
+        const child = document.createElement('div');
+        child.classList.add('choice');
+        child.setAttribute('id', `correct${i}`);
         outer.appendChild(child);
 
-        set_thumbnail('correct' + i, correct, null, images[i]);
+        set_thumbnail(`correct${i}`, correct, null, images[i]);
     }
 }
 
-
 /* helpers */
 
+/**
+ * Add a "Skip" button to the options section.
+ */
 function add_skip() {
-    var options = byId('options');
+    const options = byId('options');
 
-    var child = document.createElement('div');
-    child.setAttribute('class', 'top switch skip');
-    child.setAttribute('onclick', 'choose_game();');
+    const child = document.createElement('div');
+    child.classList.add('top', 'switch', 'skip');
+    child.addEventListener('click', choose_game);
     child.innerHTML = '<h4 class="skip">Skip</h4>';
 
     options.appendChild(child);
@@ -200,94 +211,90 @@ function get_difficulty() {
     return byId('difficulty').value;
 }
 
+
+/**
+ * Choose a creature index that matches the given difficulty level.
+ *
+ * @param {number} difficulty - The difficulty level to match.
+ * @returns {number} An index of a creature that matches the difficulty level.
+ */
 function choose_correct(difficulty) {
     const attempts = 10;
-    var candidate = random(names.length);
+    let candidate;
 
     if (typeof variable !== 'undefined') {
-        // in case we have cache mismatches between data.js and game.js
-        return candidate;
+        // In case we have cache mismatches between data.js and game.js.
+        return random(names.length);
     }
 
-    for (i = 0; i < attempts; i++) {
+    for (let i = 0; i < attempts; i++) {
         candidate = random(names.length);
+
         if (difficulties[candidate] <= difficulty) {
             break;
         }
-        console.log(names[candidate], 'too difficult')
+
+        console.log(names[candidate], 'is too difficult');
     }
+
     return candidate;
 }
 
 /**
- * Find similar creatures as the provided target
+ * Find similar creatures as the provided target.
  *
  * The bounds restrict which creatures are valid candidates. A high minimum
- * simliarity means only very similar creatures will be found. Likewise, a high
- * maximum similiarity will make less similar creatures more likely
+ * similarity means only very similar creatures will be found. Likewise, a high
+ * maximum similarity will make less similar creatures more likely.
  *
  * Both bounds will be relaxed if no candidates can be found until eventually
- * every creature will be considered
+ * every creature will be considered.
  *
- * @param   target          index of the creature to find similar creatures for
- * @param   lower_bound     minimum starting similarity
- * @param   upper_bound     maximum starting similarity
- * @param   required        how many creatures to find
- * @returns                 array of creature indicies
+ * @param   {number} target - Index of the creature to find similar creatures for.
+ * @param   {number} lowerBound - Minimum starting similarity.
+ * @param   {number} upperBound - Maximum starting similarity.
+ * @param   {number} required - How many creatures to find.
+ * @returns {number[]} Array of creature indices.
  */
-function find_similar(target, lower_bound, upper_bound, required) {
-    var index = 0;
-    var found = [];
+function find_similar(target, lowerBound, upperBound, required) {
+    const found = [];
+    var shuffledIndices = shuffle([...Array(names.length).keys()]);
 
-    /* create a mirror of the names array; we shuffle the indices so we can
-     * leave the actual names array alone
-     */
-    var indicies = [];
-    for (i = 0; i < names.length; i++) {
-        indicies[i] = i;
-    }
-    shuffle(indicies);
-    console.log("search limits", lower_bound, upper_bound);
+    console.log("Search limits", lowerBound, upperBound);
 
     while (found.length < required) {
+        const candidate = shuffledIndices.pop();
 
-        /* a candidate is valid if it's not what we're looking for and hasn't
-         * already been chosen
-         */
-        var candidate = indicies[index];
-        var valid = true;
-        valid &= candidate != target;
-        valid &= !found.includes(candidate);
-
-        if (valid) {
-            var i = Math.max(candidate, target);
-            var j = Math.min(candidate, target);
-            score = similarities[i][j];
-
-            if (score >= lower_bound && score <= upper_bound) {
-                found.push(candidate);
-            }
+        if (candidate === target || found.includes(candidate)) {
+            continue;
         }
 
-        index = (index + 1) % names.length;
-        if (index == 0) {
-            if (lower_bound <= 0 && upper_bound >= 100) {
-                console.log(
-                    "error: couldn't satisfy the requirement",
-                    target, lower_bound, required);
+        const i = Math.max(candidate, target);
+        const j = Math.min(candidate, target);
+        const score = similarities[i][j];
+
+        if (score >= lowerBound && score <= upperBound) {
+            found.push(candidate);
+        }
+
+        if (shuffledIndices.length === 0) {
+            if (lowerBound <= 0 && upperBound >= 100) {
+                console.error(
+                    "Couldn't satisfy the requirement:", target, lowerBound, required);
                 break;
             }
 
-            // we've looped through, relax the constraints
-            lower_bound = Math.max(0, lower_bound - 5);
-            upper_bound = Math.min(100, upper_bound + 5);
-            console.log("new limits", lower_bound, upper_bound);
+            // We've looped through, relax the constraints.
+            lowerBound = Math.max(0, lowerBound - 5);
+            upperBound = Math.min(100, upperBound + 5);
+            console.log("New limits", lowerBound, upperBound);
+            shuffledIndices = shuffle([...Array(names.length).keys()]);
         }
     }
 
-    for (i = 0; i < found.length; i++) {
-        console.log(i, found[i], names[found[i]]);
-    }
+    found.forEach((creatureIndex, i) => {
+        console.log(i, creatureIndex, names[creatureIndex]);
+    });
 
     return found;
 }
@@ -306,10 +313,10 @@ function byId(label) {
 function shuffle(array) {
     // https://stackoverflow.com/a/12646864
 
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
     }
+    return result;
 }
