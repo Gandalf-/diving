@@ -20,7 +20,7 @@ import util.common as utility
 
 from hypertext import Where, Side
 
-# pylint: disable=protected-access
+# pylint: disable=protected-access,missing-docstring
 
 
 _TREE = {}
@@ -253,8 +253,8 @@ class TestGallery(unittest.TestCase):
         self.assertRegex(
             html, r'(?s)<head>.*<title>.*Coral.*</title>.*</head>'
         )
-        self.assertRegex(html, r'(?s)<h3>.*Fan.*</h3>')
-        self.assertRegex(html, r'(?s)<h3>.*Rhizopsammia wellingtoni.*</h3>')
+        self.assertRegex(html, r'(?s)<h3.*Fan.*</h3>')
+        self.assertRegex(html, r'(?s)<h3.*Rhizopsammia wellingtoni.*</h3>')
 
 
 class TestTaxonomy(unittest.TestCase):
@@ -262,6 +262,33 @@ class TestTaxonomy(unittest.TestCase):
 
     def setUp(self):
         database.use_test_database()
+
+    def test_compress_single_leaf(self):
+        tree = {"a": {"b": {"c": "d"}}}
+        result = taxonomy.compress_tree(tree)
+        self.assertEqual(result, {"a b c": "d"})
+
+    def test_compress_single_subtree(self):
+        tree = {"a": {"b": {"c": {"d": "e"}}}}
+        result = taxonomy.compress_tree(tree)
+        self.assertEqual(result, {"a b c d": "e"})
+
+    def test_compress_multiple_subtrees(self):
+        tree = {"a": {"b": {"c": {"d": "e", "f": "g"}}}}
+        result = taxonomy.compress_tree(tree)
+        self.assertEqual(result, {"a b c": {"d": "e", "f": "g"}})
+
+    def test_compress_complex_tree(self):
+        tree = {
+            "a": {"b": {"c": "d", "e": {"f": "g", "h": {"i": "n"}}}, "j": "k"},
+            "l": "m",
+        }
+        result = taxonomy.compress_tree(tree)
+        expected = {
+            "a": {"b": {"c": "d", "e": {"f": "g", "h i": "n"}}, "j": "k"},
+            "l": "m",
+        }
+        self.assertEqual(result, expected)
 
     def test_find_representative(self):
         '''same as gallery.py but the lineage is reversed'''
@@ -285,7 +312,7 @@ class TestTaxonomy(unittest.TestCase):
         '''it doesn't lose data'''
         tree = get_tree()
         images = taxonomy.single_level(tree)
-        taxia = taxonomy._full_compress(taxonomy.load_tree())
+        taxia = taxonomy.compress_tree(taxonomy.load_tree())
 
         sub_taxia = utility.walk_spine(
             taxia,
@@ -518,6 +545,22 @@ class TestUtility(unittest.TestCase):
         out = utility.prefix_tuples(1, [(2, 3), (3, 4), (4, 5)])
         out = list(out)
         self.assertEqual(out, [(1, 2, 3), (1, 3, 4), (1, 4, 5)])
+
+    def test_pretty_date(self):
+        pairs = [
+            ('2023-01-01', 'January 1st, 2023'),
+            ('2023-01-11', 'January 11th, 2023'),
+            ('2023-01-12', 'January 12th, 2023'),
+            ('2023-01-13', 'January 13th, 2023'),
+            ('2023-10-02', 'October 2nd, 2023'),
+            ('2023-10-22', 'October 22nd, 2023'),
+            ('2023-12-03', 'December 3rd, 2023'),
+            ('2023-12-23', 'December 23rd, 2023'),
+            ('2023-04-04', 'April 4th, 2023'),
+            ('2023-04-24', 'April 24th, 2023'),
+        ]
+        for before, after in pairs:
+            self.assertEqual(utility.pretty_date(before), after)
 
     def test_take(self):
         '''it works'''

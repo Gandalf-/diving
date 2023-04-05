@@ -21,7 +21,7 @@ def categorize(name):
     for category, values in static.categories.items():
         for value in values:
             if name.endswith(value):
-                name += " " + category
+                name += f' {category}'
     return name
 
 
@@ -31,8 +31,8 @@ def uncategorize(name):
         assert isinstance(values, list)
 
         for value in values:
-            if name.endswith(" " + category) and value in name:
-                name = name[: -len(' ' + category)]
+            if name.endswith(f' {category}') and value in name:
+                name = name[: -len(f' {category}')]
 
     return name
 
@@ -91,13 +91,7 @@ class Image:
         self.database = database.database
 
     def __repr__(self):
-        return ", ".join(
-            [
-                # self.number,
-                self.name,
-                # self.directory
-            ]
-        )
+        return self.name
 
     def location(self):
         '''directory minus numbering'''

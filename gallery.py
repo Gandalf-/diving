@@ -26,6 +26,7 @@ from util.common import (
     extract_leaves,
     is_date,
     strip_date,
+    pretty_date,
     prefix_tuples,
     titlecase,
     sanitize_link,
@@ -86,6 +87,8 @@ def _key_to_subject(key, where):
 
     elif where == Where.Sites:
         subject = strip_date(key)
+        if is_date(subject):
+            subject = pretty_date(subject)
     else:
         subject = taxonomy.simplify(key)
 
@@ -121,7 +124,7 @@ def html_tree(tree, where, scientific, lineage=None):
         <div class="image">
         <a href="{link}">
             <img height=225 width=300 alt="{alt}" src="{thumbnail}">
-            <h3>
+            <h3 class="tight">
               <span class="sneaky">{size}</span>
               {subject}
               <span class="count">{size}</span>

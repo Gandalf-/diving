@@ -14,32 +14,28 @@ const g_sample_table = [2, 2, 2, 1, 1];
  * options below
  */
 function image_game() {
-    var difficulty = get_difficulty();
-
-    var correct = choose_correct(difficulty);
+    const difficulty = get_difficulty();
+    const correct = choose_correct(difficulty);
     console.log(names[correct]);
 
-    var lower_bound = g_lower_bound_table[difficulty];
-    var upper_bound = g_upper_bound_table[difficulty];
-    var count = g_count_table[difficulty];
-    var options = find_similar(correct, lower_bound, upper_bound, count - 1);
+    const lower_bound = g_lower_bound_table[difficulty];
+    const upper_bound = g_upper_bound_table[difficulty];
+    const count = g_count_table[difficulty];
+    const options = find_similar(correct, lower_bound, upper_bound, count - 1);
 
     set_correct_image(correct);
 
-    var actual = random(count);
-    for (i = 0, w = 0; i < count; i++) {
+    const actual = random(count);
 
-        var child = document.createElement('div');
-        child.setAttribute('class', 'choice');
-        child.setAttribute('id', 'option' + i);
-        byId('options').appendChild(child);
+    for (let i = 0, w = 0; i < count; i++) {
+        const child = document.createElement('div');
+        child.classList.add('choice');
+        child.id = 'option' + i;
+        document.getElementById('options').appendChild(child);
 
-        if (i == actual) {
-            set_thumbnail('option' + i, correct, 'success();');
-        } else {
-            set_thumbnail('option' + i, options[w], 'failure(this);');
-            w++;
-        }
+        const callback = i === actual ? 'success();' : 'failure(this);';
+        const option = i === actual ? correct : options[w++];
+        set_thumbnail('option' + i, option, callback);
     }
     add_skip();
 }
@@ -260,23 +256,9 @@ function find_similar(target, lowerBound, upperBound, required) {
     const found = [];
     var shuffledIndices = shuffle([...Array(names.length).keys()]);
 
-    console.log("Search limits", lowerBound, upperBound);
+    console.log("Search limits", lowerBound, upperBound, names[target]);
 
     while (found.length < required) {
-        const candidate = shuffledIndices.pop();
-
-        if (candidate === target || found.includes(candidate)) {
-            continue;
-        }
-
-        const i = Math.max(candidate, target);
-        const j = Math.min(candidate, target);
-        const score = similarities[i][j];
-
-        if (score >= lowerBound && score <= upperBound) {
-            found.push(candidate);
-        }
-
         if (shuffledIndices.length === 0) {
             if (lowerBound <= 0 && upperBound >= 100) {
                 console.error(
@@ -289,6 +271,20 @@ function find_similar(target, lowerBound, upperBound, required) {
             upperBound = Math.min(100, upperBound + 5);
             console.log("New limits", lowerBound, upperBound);
             shuffledIndices = shuffle([...Array(names.length).keys()]);
+        }
+
+        const candidate = shuffledIndices.pop();
+        if (candidate === target || found.includes(candidate)) {
+            continue;
+        }
+
+        const i = Math.max(candidate, target);
+        const j = Math.min(candidate, target);
+        console.log('getting score for', candidate, target, i, j, names.length, shuffledIndices.length);
+        const score = similarities[i][j];
+
+        if (score >= lowerBound && score <= upperBound) {
+            found.push(candidate);
         }
     }
 

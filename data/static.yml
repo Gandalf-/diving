@@ -32,6 +32,7 @@ locations:
     - Tacoma North Wall
     - Zees Reef
   British Columbia:
+    # Jervis Inlet
     - Argonaut Point
     - Captain Island Light
     - Jaggy Crack
@@ -41,6 +42,16 @@ locations:
     - HMCS Chaudiere
     - Observation Wall
     - Wingy Dingy
+    # God's Pocket
+    - Browning Wall
+    - Hussar Bay
+    - Fantasy Island
+    - Lu Can's Shoot
+    - Seven Trees
+    - Eagle's Nest
+    - Aquarium
+    - Browning Islet
+    - Hoodi Nudi
   Galapagos:
     - Baltra
     - Cousin's Rock

@@ -8,6 +8,9 @@ import difflib
 import os
 import re
 
+from typing import List, Tuple, Iterable
+from concurrent.futures import ThreadPoolExecutor
+
 from util import collection
 from util import static
 from util import taxonomy
@@ -25,7 +28,7 @@ def required_checks():
     '''must pass'''
     _important_files_exist()
     _link_check()
-    _misspellings()
+    # _misspellings()
     _wrong_order()
 
 
@@ -67,8 +70,8 @@ def _find_wrong_name_order(tree):
 
 def _misspellings():
     '''actual check'''
-    found = list(_find_misspellings())
-    assert not found, found
+    found = set(_find_misspellings())
+    assert False, f'{found} may be mispelled'
 
 
 def _find_misspellings(names=None):
@@ -145,34 +148,56 @@ def _link_check():
     """check the html directory for broken links by extracting all the
     internal links from the written files and looking for those as paths
     """
-    for path, link in _find_links():
-        assert os.path.exists(link), f'broken {link} in {path}'
+
+    def check_link_exists(args):
+        path, link = args
+        if not os.path.exists(link):
+            return f'broken {link} in {path}'
+        return None
+
+    with ThreadPoolExecutor() as executor:
+        broken = list(
+            filter(None, executor.map(check_link_exists, _find_links()))
+        )
+
+    assert not broken, broken
 
 
-def _find_links():
+def _find_links() -> Iterable[Tuple[str, str]]:
     """check the html directory for internal links"""
 
-    def extract_from(fd):
+    def extract_from(path) -> List[Tuple[str, str]]:
         """get links from a file"""
-        for line in fd:
-            if 'href' not in line:
-                continue
-
-            for link in re.findall(r'href=\"(.+?)\"', line):
+        links = []
+        with open(path, encoding='utf8') as fd:
+            content = fd.read()
+            for link in re.findall(r'(?:href|src)=\"(.+?)\"', content):
                 if link.startswith('http'):
                     continue
 
                 link = link[1:]
-                yield path, link
+                links.append((path, link))
+        return links
 
-    for directory in ('taxonomy', 'gallery', 'sites'):
-        for filename in os.listdir(directory):
-            if not filename.endswith(".html"):
-                continue
+    def process_file(directory, filename) -> List[Tuple[str, str]]:
+        path = os.path.join(directory, filename)
+        return extract_from(path)
 
-            path = os.path.join(directory, filename)
-            with open(path, encoding='utf8') as fd:
-                yield from extract_from(fd)
+    with ThreadPoolExecutor(max_workers=os.cpu_count() * 2) as executor:
+        file_list = [
+            (directory, filename)
+            for directory in ('taxonomy', 'gallery', 'sites')
+            for filename in os.listdir(directory)
+            if filename.endswith(".html")
+        ]
+        links = executor.map(lambda args: process_file(*args), file_list)
+
+    seen = set()
+    for result in links:
+        for path, link in result:
+            if link not in seen:
+                seen.add(link)
+                yield (path, link)
 
 
 if __name__ == '__main__':

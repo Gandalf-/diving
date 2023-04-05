@@ -322,6 +322,8 @@ Animalia:
         Asteropseidae:
           Dermasterias:
             imbricata: leather star
+          Asterina:
+              miniata: bat star
         Goniasteridae:
           Ceramaster:
             patagonicus: cookie star
@@ -758,6 +760,7 @@ Animalia:
             maliger: quillback rockfish
             caurinus: copper rockfish
             pinniger: canary rockfish
+            nebulosus: china rockfish
         Hexagrammidae:
           sp.: greenling
           Oxylebius:
@@ -812,6 +815,8 @@ Animalia:
           Ectopleura:
             integra: ectopleura integra hydroid
             media: ectopleura media hydroid
+            marina: solitary pink mouth hydroid
+            crocea: bushy pink mouth hydroid
         Filifera:
           Bythotiaridae:
             Bythotiara:
@@ -950,6 +955,7 @@ Animalia:
               crassicornis: painted anemone
               coriacea: stubby rose anemone
               piscivora: fish eating anemone
+              lofotensis: white spotted rose anemone
         Metridioidea:
           Halcampidae:
             Halcampa:
@@ -1159,7 +1165,7 @@ Animalia:
                 leonina: hooded nudibranch
             Dendronotus:
               iris: giant nudibranch
-              dalli: dalls dendronotid
+              dalli: dall's dendronotid
               rufus: red dendronotid
               albus: white dendronotid
               diversicolor: multicolor dendronotid
@@ -1175,6 +1181,7 @@ Animalia:
               nanaimoensis: nanaimo nudibranch
               lutea: sandalwood nudibranch
               hudsoni: yellow margin dorid
+              pilosa: pilose dorid
         Tritonioidea:
           Tritoniidae:
             Tritonia:
@@ -1270,6 +1277,7 @@ Animalia:
               kincaidi: kincaid shrimp
               decorus: elegant coastal shrimp
               stylus: stiletto shrimp
+              tridens: threespine shrimp
         Pandaloidea:
           Pandalidae:
             Pandalopsis:
@@ -1323,7 +1331,8 @@ Animalia:
               granosimanus: grainyhand hermit crab
               caurinus: greenmark hermit crab
               beringanus: bering hermit crab
-              stevensae: stevens hermit crab
+              stevensae: steven's hermit crab
+              hemphilli: maroon hermit crab
         Cancroidea:
           Cancridae:
             Glebocarcinus:

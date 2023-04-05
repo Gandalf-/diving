@@ -98,6 +98,11 @@ def javascript(debug=True):
     '''write out the tables to a file'''
     ns, ts, ss, ds = table_builder(debug)
 
+    # This saves 100KB of data, ~20% of the total
+    ts = str(ts).replace(' ', '')
+    ss = str(ss).replace(' ', '')
+    ds = str(ds).replace(' ', '')
+
     with open('detective/data.js', 'w+', encoding='utf8') as fd:
         print('var names =', ns, file=fd)
         print('var thumbs =', ts, file=fd)

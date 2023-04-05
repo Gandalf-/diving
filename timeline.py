@@ -8,6 +8,7 @@ import os
 import operator
 
 import hypertext
+import locations
 from hypertext import Where
 from util import collection
 import util.common as utility
@@ -124,12 +125,32 @@ def _subpage(dive):
     '''build the sub page for this dive'''
     when, title = dive.split(' ', 1)
 
-    while title[0].isdigit():
+    while title[0].isdigit() or title[0] == ' ':
         title = title[1:]
 
+    sites_link = locations.sites_link(when, title)
+    when = utility.pretty_date(when)
+
+    location = locations.get_context(title)
+    if not location and title.startswith('Bonaire'):
+        _, title = title.split('Bonaire ')
+        location = 'Bonaire'
+
+    assert location, f'{dive} has no location'
+    if sites_link:
+        name = f'''\
+<a href="{sites_link}">
+    <h1 class="where sites">{title}</h1>
+</a>
+'''
+    else:
+        name = f'''\
+    <h1>{title}</h1>
+'''
+
     html = f'''\
-<h1>{title}</h1>
-<h4>{when}</h4>
+{name}
+<h3>{when} - {location}</h3>
 <div class="grid">
 '''
 

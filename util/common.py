@@ -126,6 +126,38 @@ def strip_date(site):
     return rest
 
 
+def pretty_date(when: str) -> str:
+    '''convert 2023-04-04 to April 4th, 2023'''
+    year, month, day = when.split('-')
+
+    day = day.lstrip('0')
+    if day.endswith('1') and day != '11':
+        day = f'{day}st'
+    elif day.endswith('2') and day != '12':
+        day = f'{day}nd'
+    elif day.endswith('3') and day != '13':
+        day = f'{day}rd'
+    else:
+        day = f'{day}th'
+
+    month = {
+        '1': 'January',
+        '2': 'February',
+        '3': 'March',
+        '4': 'April',
+        '5': 'May',
+        '6': 'June',
+        '7': 'July',
+        '8': 'August',
+        '9': 'September',
+        '10': 'October',
+        '11': 'November',
+        '12': 'December',
+    }[month.lstrip('0')]
+
+    return f'{month} {day}, {year}'
+
+
 _EXISTS = {}
 
 

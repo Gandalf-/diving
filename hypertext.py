@@ -4,19 +4,22 @@
 html generation
 '''
 
-import os
 import enum
 import datetime
+from typing import Optional
 
 import locations
 
 from util.collection import expand_names
-from util.common import strip_date, fast_exists, titlecase, sanitize_link
-from util.image import (
-    categorize,
-    uncategorize,
-    split,
+from util.common import (
+    is_date,
+    strip_date,
+    pretty_date,
+    fast_exists,
+    titlecase,
+    sanitize_link,
 )
+from util.image import categorize, uncategorize, split, Image
 from util import taxonomy
 
 
@@ -94,17 +97,10 @@ def _image_to_gallery_link(image):
     return None
 
 
-def _image_to_sites_link(image):
+def _image_to_sites_link(image: Image) -> Optional[str]:
     """get the /sites/ link"""
     when, where = image.location().split(' ', 1)
-    site = locations.add_context(where)
-    link = sanitize_link(site)
-    url = f'sites/{link}-{when}.html'
-
-    if fast_exists(url):
-        return f'/{url}'
-
-    return None
+    return locations.sites_link(when, where)
 
 
 # PRIVATE
@@ -307,8 +303,8 @@ def _sites_title(lineage):
 
         # it's possible that this is the only date available for this location,
         # in which case we want the name to include the location and trim the
-        # lineage on more value
-        if not os.path.exists(link[1:]):
+        # lineage one more value
+        if not fast_exists(link[1:]):
             name = _name + ' ' + name
             continue
 
@@ -318,9 +314,17 @@ def _sites_title(lineage):
         </a>
         """
 
+    if ' ' in name:
+        rest, last = name.rsplit(' ', maxsplit=1)
+        if is_date(last):
+            when = pretty_date(last)
+            name = f'{rest} - {when}'
+    elif is_date(name):
+        name = pretty_date(name)
+
     # ???
     html += f"""
-    <p class="scientific">{name}</p>
+    <h3 class="tight">{name}</h3>
     </div>
     """
 

@@ -54,21 +54,16 @@ def gallery_scientific(lineage, scientific, debug=False):
 
 
 def simplify(name: str) -> str:
-    '''try to use similar() to simplify the lineage by looking for repeated
-    prefixes and abbreviating them
-
-    Diadematoida Diadematidae Diadema antillarum
-        to
-    D. D. Diadema antillarum
-    '''
+    """Try to simplify the lineage by abbreviating repeated prefixes.
+    Diadematoida Diadematidae Diadema antillarum -> to D. D. Diadema antillarum
+    """
     if ' ' not in name:
         return name
 
     parts = name.split(' ')
-    lefts = parts[:-1]
-    rights = parts[1:]
-
+    lefts, rights = parts[:-1], parts[1:]
     out = []
+
     for a, b in zip(lefts, rights):
         if similar(a, b):
             out.append(a[0].upper() + '.')
@@ -127,7 +122,7 @@ def gallery_tree(tree=None):
         tree = build_image_tree()
 
     images = single_level(tree)
-    taxia = _full_compress(load_tree())
+    taxia = compress_tree(load_tree())
 
     _taxia_filler(taxia, images)
 
@@ -201,43 +196,27 @@ def _filter_exact(tree):
     return out
 
 
-def _compress(tree):
-    '''squash levels'''
-    if isinstance(tree, str):
-        # hit a leaf
-        return tree
+def compress_tree(tree):
+    '''
+    Collapse subtrees with only one child into their parent and update the parent's
+    key for the current subtree to be "key + child key".
+    '''
+    new_tree = {}
 
-    out = {}
+    for key, value in tree.items():
+        if isinstance(value, dict):
+            sub_tree = compress_tree(value)
 
-    for key, value in list(tree.items()):
-
-        if isinstance(value, str):
-            out[key] = value
-            continue
-
-        if len(value.keys()) == 1:
-            child = list(value.keys())[0]
-
-            # squash
-            new_key = key + ' ' + child
-            out[new_key] = _compress(value[child])
+            if len(sub_tree) == 1:
+                child_key, child_value = next(iter(sub_tree.items()))
+                new_key = key + ' ' + child_key
+                new_tree[new_key] = child_value
+            else:
+                new_tree[key] = sub_tree
         else:
-            out[key] = _compress(value)
+            new_tree[key] = value
 
-    return out
-
-
-def _full_compress(tree):
-    '''keep compressing until nothing changes'''
-    old = tree
-
-    while True:
-        new = _compress(old)
-        if new == old:
-            break
-        old = new
-
-    return new
+    return new_tree
 
 
 def _taxia_filler(tree, images):
