@@ -23,6 +23,7 @@ import base64
 import operator
 from datetime import datetime
 from collections import Counter
+from typing import Dict, List, Tuple, Any
 
 import wikipedia
 
@@ -50,7 +51,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def fetch(subject: str, suggest=True):
+def fetch(subject: str, suggest: bool = True) -> None:
     '''get summary from wikipedia'''
     now = datetime.now().timestamp()
     try:
@@ -103,7 +104,9 @@ def fetch(subject: str, suggest=True):
         database.set(*db_root, 'valid', name, value=value)
 
 
-def lookup(subject: str, update=True, again=True) -> dict:
+def lookup(
+    subject: str, update: bool = True, again: bool = True
+) -> Dict[str, str]:
     '''get the subject from the database'''
     key = subject.lower()
 
@@ -126,12 +129,13 @@ def lookup(subject: str, update=True, again=True) -> dict:
         fetch(subject)
         return lookup(subject, update, False)
 
+    assert out
     out['summary'] = cleanup(base64.b64decode(out['summary']).decode())
     out['subject'] = subject
     return out
 
 
-def reference(entry: dict, style='apa') -> str:
+def reference(entry: Dict[str, Any], style: str = 'apa') -> str:
     '''reference info'''
     url = entry['url']
     url = f'<a href="{url}">{url}</a>'
@@ -146,7 +150,7 @@ def reference(entry: dict, style='apa') -> str:
     apa = f'{subject}. Retrieved {apa_date}, from {url}.'
 
     # https://en.wikipedia.org/wiki/Wikipedia:Reusing_Wikipedia_content
-    out = {'mla': mla, 'apa': apa}.get(style)
+    out = {'mla': mla, 'apa': apa}[style]
     return out
 
 
@@ -164,12 +168,12 @@ def cleanup(text: str) -> str:
     )
 
 
-def paragraphs(text: str, count: int) -> [str]:
+def paragraphs(text: str, count: int) -> List[str]:
     '''take count number of paragraphs'''
     return text.split('\n')[:count]
 
 
-def lineage_to_names(lineage):
+def lineage_to_names(lineage: List[str]) -> List[str]:
     '''lineage list to names to look up'''
     if not lineage:
         return []
@@ -189,7 +193,7 @@ def lineage_to_names(lineage):
     return parts
 
 
-def html(name: str) -> (str, str):
+def html(name: str) -> Tuple[str, str]:
     '''html fit for use by gallery.py'''
     reasonable_number_of_characters = 400
 
@@ -220,7 +224,7 @@ def html(name: str) -> (str, str):
     )
 
 
-def missing_list():
+def missing_list() -> List[str]:
     '''what subjects are we missing?'''
     names = set(taxonomy.mapping().values())
     out = []
@@ -257,7 +261,7 @@ def check() -> bool:
     return False
 
 
-def updater(*missings):
+def updater(*targets: str) -> None:
     '''interactive update
 
     attempts to do as much as possible automatically. unclear cases will stop
@@ -268,8 +272,10 @@ def updater(*missings):
     so you can run this as long as your interest holds, get the largest impact
     for your time, and continue later
     '''
-    if not missings:
+    if not targets:
         missings = missing_list()
+    else:
+        missings = list(targets)
 
     for i, missing in enumerate(missings):
         print(bcolors.OKCYAN, len(missings) - i, missing, bcolors.ENDC)
@@ -287,8 +293,8 @@ def updater(*missings):
 
         print(paragraphs(entry['summary'], 1)[0])
         print('? ', end='')
-        i = input()
-        if i and i in 'nid':
+        keep = input()
+        if keep and keep in 'nid':
             database.append(*db_root, 'invalid', value=missing.lower())
 
             key = missing
@@ -300,7 +306,7 @@ def updater(*missings):
             print('removed')
 
 
-def link(subject, title):
+def link(subject: str, title: str) -> None:
     '''manually link a subject name (taxonomy) to a page'''
     subject = subject.lower()
     title = title.lower()

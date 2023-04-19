@@ -126,7 +126,7 @@ def load_known(exact_only: bool = False) -> Iterable[str]:
 MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
 
 
-def mapping(where: MappingType = MappingType.Gallery) -> Dict[str, str]:
+def mapping(where: MappingType = MappingType.Gallery) -> TaxiaTree:
     '''simplified to scientific'''
     tree = _invert_known(load_tree())
 

@@ -7,80 +7,43 @@ identification game
 import shutil
 import os
 import pathlib
-import subprocess
+
+from typing import List, Optional, Iterable, Tuple
 
 from util import collection
 from util import static
 from util import taxonomy
-from util.database import database
 
 from util.common import titlecase
-from util.image import unqualify, categorize, split
+from util.image import unqualify, categorize, split, Image
 
 
 root = str(pathlib.Path(__file__).parent.absolute()) + '/'
 
 
-def cache_hash(images):
+def get_hashes(images: List[Image]) -> Iterable[str]:
     '''cache in a database'''
-    needed = []
-    labels = []
-
     for image in images:
-        label = image.identifier()
         sha1 = image.hashed()
-
-        if not sha1:
-            needed.append(image)
-            labels.append(label)
-            continue
-
-        if needed:
-            bulk = hasher(needed)
-            for (l, h) in zip(labels, bulk):
-                database.set('diving', 'cache', l, 'hash', value=h)
-
-            needed = []
-            labels = []
-            yield from bulk
-
+        assert sha1, f'{image.path()} has no hash'
         yield sha1
 
-    bulk = hasher(needed)
-    for (l, h) in zip(labels, bulk):
-        database.set('diving', 'cache', l, 'hash', value=h)
 
-    yield from bulk
-
-
-def hasher(images, size=250):
-    '''[Image] -> [file hash]
-    so we can hash in bulk
-    '''
-    while images:
-        print('.', end='', flush=True)
-
-        batch = images[:size]
-        paths = [i.path() for i in batch]
-
-        out = subprocess.check_output(['sha1sum'] + paths).decode()
-        for line in out.split('\n'):
-            if not line:
-                continue
-            sha1, *_ = line.split(' ')
-            yield sha1
-
-        images = images[size:]
+ThumbsTable = List[List[str]]
+SimiliarityTable = List[List[int]]
+DifficultyTable = List[int]
 
 
-def table_builder(debug=True):
+def table_builder(
+    debug: bool = True,
+) -> Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
     '''Build the tables.'''
     images = reversed(list(collection.named()))
     all_names, images = _filter_images(images, debug)
 
-    hashes = list(cache_hash(images))
+    hashes = list(get_hashes(images))
     names = sorted(list(set(all_names)))
-    thumbs = [[] for _ in names]
+    thumbs: ThumbsTable = [[] for _ in names]
 
     for i, name in enumerate(all_names):
         where = names.index(name)
@@ -94,7 +57,7 @@ def table_builder(debug=True):
     return names, thumbs, similarity, diffs
 
 
-def javascript(debug=True):
+def javascript(debug: bool = True) -> None:
     '''write out the tables to a file'''
     ns, ts, ss, ds = table_builder(debug)
 
@@ -113,7 +76,9 @@ def javascript(debug=True):
 # PRIVATE
 
 
-def _distance(a, b, tree=None):
+def _distance(
+    a: str, b: str, tree: Optional[taxonomy.TaxiaTree] = None
+) -> float:
     '''similarity score, higher means more different
 
     difflib.SequenceMatcher and jellyfish were all junk
@@ -135,7 +100,7 @@ def _distance(a, b, tree=None):
     return match / total
 
 
-def _difficulties(names):
+def _difficulties(names: List[str]) -> DifficultyTable:
     '''get difficulty overrides'''
     lookup = {
         'very easy': 0,
@@ -158,7 +123,9 @@ def _difficulties(names):
     return out
 
 
-def _filter_images(images, debug=True):
+def _filter_images(
+    images: Iterable[Image], debug: bool = True
+) -> Tuple[List[str], List[Image]]:
     '''strip out images that are poor fits for the game
     - multiple subjects
     - vague, like "sponge"
@@ -204,10 +171,10 @@ def _filter_images(images, debug=True):
     return all_names, new_images
 
 
-def _similarity_table(names):
+def _similarity_table(names: List[str]) -> SimiliarityTable:
     '''how alike is every name pair'''
     tree = taxonomy.mapping()
-    similarity = [[] for _ in names]
+    similarity: SimiliarityTable = [[] for _ in names]
 
     for i, name in enumerate(names):
         for j, other in enumerate(names):
@@ -230,7 +197,7 @@ def _similarity_table(names):
 # INFORMATIONAL
 
 
-def _inspect_choices():
+def _inspect_choices() -> None:
     '''build a directory tree of chosen thumbnails for visual inspection'''
     ns, ts, _, _ = table_builder(False)
 

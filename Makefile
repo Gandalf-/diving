@@ -16,7 +16,7 @@ inttest:
 lint:
 	pylint -j 0 --score n *.py **/*.py
 	flake8 *.py */*.py
-	mypy util locations.py hypertext.py timeline.py
+	mypy .
 
 .PHONY: format
 format:

@@ -10,6 +10,7 @@ import sys
 import multiprocessing
 import textwrap
 from datetime import datetime
+from typing import Tuple, Optional, List
 
 import hypertext
 import information
@@ -30,6 +31,7 @@ from util.common import (
     prefix_tuples,
     titlecase,
     sanitize_link,
+    Tree,
 )
 
 from detective import javascript as game
@@ -39,7 +41,9 @@ from hypertext import Where, Side
 # pylint: disable=line-too-long
 
 
-def find_representative(tree, lineage=None) -> Image:
+def find_representative(
+    tree: Tree, lineage: Optional[List[str]] = None
+) -> Image:
     """Find one image to represent this tree."""
     lineage = lineage or []
     pinned = static.pinned.get(' '.join(lineage))
@@ -56,7 +60,7 @@ def find_representative(tree, lineage=None) -> Image:
     return results[0]
 
 
-def get_info(where, lineage):
+def get_info(where: Where, lineage: List[str]) -> str:
     """wikipedia information if available"""
     if where != Where.Taxonomy:
         return ''
@@ -76,7 +80,7 @@ def get_info(where, lineage):
     return '<br>'.join(htmls)
 
 
-def _key_to_subject(key, where):
+def _key_to_subject(key: str, where: Where) -> str:
     '''helper!'''
     if where == Where.Gallery:
         subject = taxonomy.is_scientific_name(key)
@@ -95,7 +99,12 @@ def _key_to_subject(key, where):
     return subject
 
 
-def html_tree(tree, where, scientific, lineage=None):
+def html_tree(
+    tree: collection.ImageTree,
+    where: Where,
+    scientific: collection.ImageTree,
+    lineage: Optional[List[str]] = None,
+) -> List[Tuple[str, str]]:
     """html version of display"""
     if not lineage:
         lineage = []
@@ -219,7 +228,7 @@ def html_tree(tree, where, scientific, lineage=None):
     return results
 
 
-def write_all_html():
+def write_all_html() -> None:
     '''main'''
 
     print("loading images...              ", end="", flush=True)
@@ -259,7 +268,7 @@ def write_all_html():
     print("done")
 
 
-def _pool_writer(args):
+def _pool_writer(args: Tuple[str, str, str]) -> None:
     '''callback for HTML writer pool'''
     where, title, html = args
     html = textwrap.dedent(html)
@@ -279,7 +288,7 @@ def _pool_writer(args):
         print(html, file=f, end='')
 
 
-def _find_by_path(tree, needle):
+def _find_by_path(tree: Tree, needle: str) -> Optional[Image]:
     """search the tree for an image with this path"""
     for leaf in extract_leaves(tree):
         if needle in leaf.path():
