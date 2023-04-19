@@ -6,7 +6,7 @@ html generation
 
 import enum
 import datetime
-from typing import Optional, Tuple, List, Dict, Any
+from typing import Optional, Tuple, List, Dict, Any, Type
 
 import locations
 
@@ -54,7 +54,7 @@ def title(
 ) -> Tuple[str, str]:
     """html head and title section"""
     if not lineage:
-        impl = TopTitle
+        impl: Type[Title] = TopTitle
     else:
         assert lineage
         impl = {
@@ -66,9 +66,12 @@ def title(
     return impl(where, lineage, scientific).run()
 
 
-def lineage_to_link(lineage: List[str], side: Side, key: str = None) -> str:
+def lineage_to_link(
+    lineage: List[str], side: Side, key: Optional[str] = None
+) -> str:
     """get a link to this page"""
     if not lineage:
+        assert key
         name = key
     else:
         name = ' '.join(lineage)
@@ -335,8 +338,8 @@ class SitesTitle(Title):
         try:
             last = self.lineage[-1]
             if ' ' in last:
-                *rest, last = last.split(' ')
-                rest = ' '.join(rest)
+                *parts, last = last.split(' ')
+                rest = ' '.join(parts)
             else:
                 rest = None
 

@@ -5,7 +5,7 @@ parsing data from the file system to construct trees of images
 '''
 
 import os
-from typing import Iterable, Set, Dict, List
+from typing import Iterable, Set, Dict, List, Iterator
 
 from util.image import Image, categorize, split
 from util.common import flatten, tree_size, root, Tree
@@ -28,7 +28,7 @@ def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
     '''squash the tree into a single level name to images dict'''
     assert isinstance(tree, dict), tree
 
-    def inner(where: ImageTree) -> Iterable[List[Image]]:
+    def inner(where: ImageTree) -> Iterator[List[Image]]:
         for value in where.values():
             if isinstance(value, list):
                 yield value
@@ -72,7 +72,7 @@ def delve(directory: str) -> List[Image]:
     ]
 
 
-def expand_names(images: List[Image]) -> Iterable[Image]:
+def expand_names(images: List[Image]) -> Iterator[Image]:
     """split out `a and b` into separate elements"""
     for image in images:
         for part in (" with ", " and "):

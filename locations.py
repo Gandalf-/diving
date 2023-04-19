@@ -10,6 +10,8 @@ from util import collection
 from util import static
 from util import common
 
+from util.collection import ImageTree
+
 
 def sites_link(when: str, where: str) -> Optional[str]:
     '''try to produce the correct /sites/ link'''
@@ -45,7 +47,7 @@ def add_context(site: str) -> str:
     return site
 
 
-def sites():
+def sites() -> ImageTree:
     '''pruned, etc'''
     return collection.pipeline(_make_tree(), reverse=False)
 
@@ -53,10 +55,10 @@ def sites():
 # PRIVATE
 
 
-def _make_tree():
+def _make_tree() -> ImageTree:
     '''images organized into a nested dictionary where keys are locations'''
     images = collection.named()
-    out = {}
+    out: ImageTree = {}
 
     for image in images:
         when, *where = image.location().split(' ')

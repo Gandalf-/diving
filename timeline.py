@@ -6,11 +6,13 @@ Python implementation of runner.sh
 
 import os
 import operator
+from typing import List, Tuple
 
 import hypertext
 import locations
 from hypertext import Where
 from util import collection
+from util.image import Image
 import util.common as utility
 
 
@@ -63,7 +65,7 @@ _html_scripts = '''\
 '''
 
 
-def timeline():
+def timeline() -> List[Tuple[str, str]]:
     '''generate all the timeline html'''
     dives = [
         d
@@ -95,7 +97,7 @@ def timeline():
     return results
 
 
-def _image_html(image):
+def _image_html(image: Image) -> str:
     '''build the html for a picture'''
     thumbnail = image.thumbnail()
     fullsize = image.fullsize()
@@ -121,7 +123,7 @@ def _image_html(image):
 '''
 
 
-def _subpage(dive):
+def _subpage(dive: str) -> Tuple[str, str]:
     '''build the sub page for this dive'''
     when, title = dive.split(' ', 1)
 
@@ -165,7 +167,7 @@ def _subpage(dive):
     return path, html
 
 
-def _javascript(paths):
+def _javascript(paths: List[str]) -> str:
     '''build the javascript lazy loader'''
     html = '''\
   <script>
