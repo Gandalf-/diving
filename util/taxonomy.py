@@ -12,7 +12,7 @@ taxonomy related things
 import enum
 import sys
 import pathlib
-from typing import Iterable, Dict, List, Any, Optional, Callable
+from typing import Iterable, Dict, List, Optional, Callable, Any
 
 import yaml
 
@@ -27,7 +27,8 @@ from util.image import uncategorize, unqualify, unsplit, Image
 
 root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
-TaxiaTree = Dict[str, Any]
+NestedStringTree = Dict[str, Any]
+TaxiaTree = NestedStringTree
 
 
 def gallery_scientific(
@@ -106,7 +107,7 @@ def similar(a: str, b: str) -> bool:
     return a[:pivot] == b[:pivot]
 
 
-def load_tree() -> TaxiaTree:
+def load_tree() -> NestedStringTree:
     '''yaml load'''
     with open(root + 'data/taxonomy.yml', encoding='utf8') as fd:
         return yaml.safe_load(fd)
@@ -126,8 +127,11 @@ def load_known(exact_only: bool = False) -> Iterable[str]:
 MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
 
 
-def mapping(where: MappingType = MappingType.Gallery) -> TaxiaTree:
-    '''simplified to scientific'''
+def mapping(where: MappingType = MappingType.Gallery) -> Dict[str, str]:
+    '''
+    gallery:  mapping of common names to scientific names
+    taxonomy: mapping of scientific names to common names
+    '''
     tree = _invert_known(load_tree())
 
     if where == MappingType.Gallery:
@@ -152,11 +156,10 @@ def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
 
 
 def binomial_names(
-    tree: Optional[TaxiaTree] = None, parent: Optional[str] = None
+    tree: Optional[Any] = None, parent: Optional[str] = None
 ) -> Iterable[str]:
     '''scientific binomial names'''
-    if not tree:
-        tree = load_tree()
+    tree = tree or load_tree()
 
     if not isinstance(tree, dict):
         return
@@ -203,7 +206,7 @@ def _to_classification(name: str, mappings: ImageTree) -> str:
     return gallery_scientific(name.split(' '), mappings)
 
 
-def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
+def _filter_exact(tree: NestedStringTree) -> NestedStringTree:
     '''remove all sp. entries'''
     assert isinstance(tree, dict), tree
 
@@ -220,7 +223,7 @@ def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
     return out
 
 
-def compress_tree(tree: TaxiaTree) -> TaxiaTree:
+def compress_tree(tree: NestedStringTree) -> NestedStringTree:
     '''
     Collapse subtrees with only one child into their parent and update the parent's
     key for the current subtree to be "key + child key".

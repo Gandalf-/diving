@@ -23,13 +23,14 @@ from util.image import categorize, uncategorize, split, Image
 from util import taxonomy
 
 
-Where = enum.Enum('Where', 'Gallery Taxonomy Sites')
+Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline')
 Side = enum.Enum('Side', 'Left Right')
 
 scripts = """
     <!-- fancybox is excellent, this project is not commercial -->
     <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
+
     <script>
     function flip(elem) {
         const label = 'is-flipped';
@@ -64,6 +65,50 @@ def title(
         }[where]
 
     return impl(where, lineage, scientific).run()
+
+
+def head(_title: str) -> str:
+    """top of the document"""
+    if _title.endswith('Gallery'):
+        desc = (
+            'Scuba diving pictures organized into a tree structure by '
+            'subject\'s common names. Such as anemone, fish, '
+            'nudibranch, octopus, sponge.'
+        )
+    elif _title.endswith('Taxonomy'):
+        desc = (
+            'Scuba diving pictures organized into a tree structure by '
+            'subject\'s scientific classification. Such as Arthropoda, '
+            'Cnidaria, Mollusca.'
+        )
+    elif _title.endswith('Sites'):
+        desc = (
+            'Scuba diving pictures from Bonaire, Galapagos, British Columbia, '
+            'and Washington organized into a tree structure by dive site.'
+        )
+    elif _title.endswith('Timeline'):
+        desc = (
+            'Scuba diving pictures organized into a timeline and by location'
+        )
+    else:
+        _title = strip_date(_title)
+        desc = f'Scuba diving pictures related to {_title}'
+
+    return f"""
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>{_title}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name=description content="{desc}">
+        <link rel="stylesheet" href="/style.css"/>
+        <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
+      </head>
+      <body>
+      <div class="wrapper">
+      <div class="title">
+      """
 
 
 def lineage_to_link(
@@ -156,47 +201,6 @@ class Title:
         raise NotImplementedError
 
 
-def _head(_title: str) -> str:
-    """top of the document"""
-    if _title.endswith('Gallery'):
-        desc = (
-            'Scuba diving pictures organized into a tree structure by '
-            'subject\'s common names. Such as anemone, fish, '
-            'nudibranch, octopus, sponge.'
-        )
-    elif _title.endswith('Taxonomy'):
-        desc = (
-            'Scuba diving pictures organized into a tree structure by '
-            'subject\'s scientific classification. Such as Arthropoda, '
-            'Cnidaria, Mollusca.'
-        )
-    elif _title.endswith('Sites'):
-        desc = (
-            'Scuba diving pictures from Bonaire, Galapagos, British Columbia, '
-            'and Washington organized into a tree structure by dive site.'
-        )
-    else:
-        _title = strip_date(_title)
-        desc = f'Scuba diving pictures related to {_title}'
-
-    return f"""
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <title>{_title}</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name=description content="{desc}">
-        <link rel="stylesheet" href="/style.css"/>
-        <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
-      </head>
-
-      <body>
-      <div class="wrapper">
-      <div class="title">
-    """
-
-
 class GalleryTitle(Title):
     '''html head and title section for gallery pages'''
 
@@ -226,7 +230,7 @@ class GalleryTitle(Title):
         display = uncategorize(_title)
 
         slink = sanitize_link(slink)
-        html = _head(display)
+        html = head(display)
 
         # create the buttons for each part of our name lineage
         for i, name in enumerate(self.lineage):
@@ -271,7 +275,7 @@ class TaxonomyTitle(Title):
         _title = ' '.join(self.lineage)
         side = Side.Right
 
-        html = _head(' '.join(self.lineage[-2:]))
+        html = head(' '.join(self.lineage[-2:]))
         html += """
             <a href="/taxonomy/index.html">
                 <h1 class="top switch taxonomy">Taxonomy</h1>
@@ -325,7 +329,7 @@ class SitesTitle(Title):
         display = _title = ' '.join(self.lineage)
         side = Side.Right
 
-        html = _head(display)
+        html = head(display)
         html += """
             <a href="/sites/index.html">
                 <h1 class="top switch sites">Sites</h1>
@@ -423,29 +427,43 @@ class TopTitle(Title):
         '''
         spacer = '<div class="top buffer"></div>\n'
 
-        html = _head(display)
+        html = head(display)
         if self.where == Where.Gallery:
             parts = [
-                _timeline.replace('h1', 'h2'),
+                _timeline,
                 _gallery,
-                _detective.replace('h1', 'h2'),
+                _detective,
             ]
         elif self.where == Where.Taxonomy:
             parts = [
-                _sites.replace('h1', 'h2'),
+                _sites,
                 _taxonomy,
-                _timeline.replace('h1', 'h2'),
+                _timeline,
             ]
         elif self.where == Where.Sites:
             parts = [
-                _detective.replace('h1', 'h2'),
+                _detective,
                 _sites,
-                _taxonomy.replace('h1', 'h2'),
+                _taxonomy,
+            ]
+        elif self.where == Where.Timeline:
+            parts = [
+                _taxonomy,
+                _timeline,
+                _gallery,
             ]
 
+        parts[0] = parts[0].replace('h1', 'h2')
+        parts[2] = parts[0].replace('h1', 'h2')
+
         html += spacer.join(parts)
+
+        if self.where != Where.Timeline:
+            html += '''
+                <p class="scientific"></p>
+            '''
+
         html += '''
-            <p class="scientific"></p>
         </div>
         '''
 

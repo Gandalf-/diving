@@ -356,6 +356,16 @@ class TestTaxonomy(unittest.TestCase):
             tree, {'Actiniaria': {'Actinioidea': 2, 'Metridioidea': 3}}
         )
 
+    def test_mapping_gallery(self):
+        ms = taxonomy.mapping(MappingType.Gallery)
+        self.assertIn('fish', ms)
+        self.assertEqual(ms['fish'], 'Animalia Chordata Actinopterygii sp.')
+
+    def test_mapping_taxonomy(self):
+        ms = taxonomy.mapping(MappingType.Taxonomy)
+        self.assertIn('Animalia Chordata Actinopterygii sp.', ms)
+        self.assertEqual(ms['Animalia Chordata Actinopterygii sp.'], 'fish')
+
     def test_gallery_scientific(self):
         '''find scientific names by common name'''
         samples = [

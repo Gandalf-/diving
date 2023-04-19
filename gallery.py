@@ -99,6 +99,51 @@ def _key_to_subject(key: str, where: Where) -> str:
     return subject
 
 
+def html_direct_examples(direct: List[Image], where: Where) -> str:
+    '''
+    Generate the HTML for the direct examples of a tree.
+    '''
+    seen = set()
+    html = '<div class="grid">'
+
+    for i, image in enumerate(direct):
+        identifier = tuple([image.name, image.path()])
+        if identifier in seen:
+            continue
+
+        name_html = hypertext.image_to_name_html(image, where)
+        site_html = hypertext.image_to_site_html(image, where)
+
+        html += """
+        <div class="card" onclick="flip(this);">
+            <div class="card_face card_face-front">
+            <img height=225 width=300 {lazy} alt="{name}" src="{thumbnail}">
+            </div>
+            <div class="card_face card_face-back">
+            {name_html}
+            {site_html}
+            <a class="top elem timeline" data-fancybox="gallery" data-caption="{name} - {location}" href="{fullsize}">
+            Fullsize Image
+            </a>
+            <p class="top elem">Close</p>
+            </div>
+        </div>
+        """.format(
+            name=image.name,
+            name_html=name_html,
+            lazy='loading="lazy"' if i > 16 else '',
+            site_html=site_html,
+            location=image.location(),
+            fullsize=image.fullsize(),
+            thumbnail=image.thumbnail(),
+        )
+
+        seen.add(identifier)
+    html += "</div>"
+
+    return html
+
+
 def html_tree(
     tree: collection.ImageTree,
     where: Where,
@@ -106,14 +151,14 @@ def html_tree(
     lineage: Optional[List[str]] = None,
 ) -> List[Tuple[str, str]]:
     """html version of display"""
-    if not lineage:
-        lineage = []
-
+    lineage = lineage or []
     side = Side.Left if where == Where.Gallery else Side.Right
 
+    # title
     html, title = hypertext.title(lineage, where, scientific)
-    results = []
 
+    # body
+    results = []
     has_subcategories = [1 for key in tree.keys() if key != "data"] != []
     if has_subcategories:
         html += '<div class="grid">'
@@ -160,50 +205,14 @@ def html_tree(
     if has_subcategories:
         html += "</div>"
 
+    # direct examples
     direct = tree.get("data", [])
     chronological = where != Where.Sites
     direct = sorted(direct, key=lambda x: x.path(), reverse=chronological)
     assert not (direct and has_subcategories)
 
-    # direct examples
     if direct:
-        seen = set()
-        html += '<div class="grid">'
-
-        for i, image in enumerate(direct):
-            identifier = tuple([image.name, image.path()])
-            if identifier in seen:
-                continue
-
-            name_html = hypertext.image_to_name_html(image, where)
-            site_html = hypertext.image_to_site_html(image, where)
-
-            html += """
-            <div class="card" onclick="flip(this);">
-              <div class="card_face card_face-front">
-                <img height=225 width=300 {lazy} alt="{name}" src="{thumbnail}">
-              </div>
-              <div class="card_face card_face-back">
-                {name_html}
-                {site_html}
-                <a class="top elem timeline" data-fancybox="gallery" data-caption="{name} - {location}" href="{fullsize}">
-                Fullsize Image
-                </a>
-                <p class="top elem">Close</p>
-              </div>
-            </div>
-            """.format(
-                name=image.name,
-                name_html=name_html,
-                lazy='loading="lazy"' if i > 16 else '',
-                site_html=site_html,
-                location=image.location(),
-                fullsize=image.fullsize(),
-                thumbnail=image.thumbnail(),
-            )
-
-            seen.add(identifier)
-        html += "</div>"
+        html += html_direct_examples(direct, where)
 
     # wikipedia info
     info = get_info(where, lineage)
@@ -301,8 +310,6 @@ if not sys.flags.interactive and __name__ == "__main__":
 
     if len(sys.argv) > 1:
         util.common.root = sys.argv[1]
-    if len(sys.argv) > 2:
-        util.common.web_root = sys.argv[2]
 
     write_all_html()
 

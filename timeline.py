@@ -6,7 +6,7 @@ Python implementation of runner.sh
 
 import os
 import operator
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any
 
 import hypertext
 import locations
@@ -16,52 +16,20 @@ from util.image import Image
 import util.common as utility
 
 
-_html_head = '''\
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Diving Timeline</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Scuba diving pictures organized into a timeline and by location">
-    <link rel="stylesheet" href="/style.css"/>
-  </head>
-'''
-
 _html_switcher = '''\
-    <a href="/taxonomy/index.html">
-        <h2 class="top switch taxonomy">Taxonomy</h2>
-    </a>
-    <div class="top buffer"></div>
-    <a href="/timeline/index.html">
-        <h1 class="top switch">Timeline</h1>
-    </a>
-    <div class="top buffer"></div>
-    <a href="/gallery/index.html">
-        <h2 class="top switch gallery">Gallery</h2>
-    </a>
-'''
-
-_html_scripts = '''\
-    <!-- fancybox is excellent, this project is not commercial -->
-    <script src="/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
-    <script src="/jquery.fancybox.min.js"></script>
-    <script>
-    function flip(elem) {
-        const label = "is-flipped";
-        if (elem.classList.contains(label)) {
-            elem.classList.remove(label);
-        } else {
-            const seconds = 10;
-            elem.classList.add(label);
-            setTimeout(function () {
-                if (elem.classList.contains(label)) {
-                    elem.classList.remove(label);
-                }
-            }, 1000 * seconds);
-        }
-    }
-    </script>
+    <div class="title">
+        <a href="/taxonomy/index.html">
+            <h2 class="top switch taxonomy">Taxonomy</h2>
+        </a>
+        <div class="top buffer"></div>
+        <a href="/timeline/index.html">
+            <h1 class="top switch">Timeline</h1>
+        </a>
+        <div class="top buffer"></div>
+        <a href="/gallery/index.html">
+            <h2 class="top switch gallery">Gallery</h2>
+        </a>
+    </div>
 '''
 
 
@@ -80,13 +48,15 @@ def timeline() -> List[Tuple[str, str]]:
     paths = [path for (path, _) in results]
     divs = '\n'.join(f"    <div id='{i}'></div>" for i, _ in enumerate(dives))
 
+    fake_scientific: Dict[str, Any] = {}
+    title, _ = hypertext.title([], Where.Timeline, fake_scientific)
+
     html = '\n'.join(
         [
-            _html_head,
-            '  <body>',
-            _html_switcher,
-            _html_scripts,
+            title,
             divs,
+            '</div>',
+            hypertext.scripts,
             _javascript(paths),
             '  </body>',
             '</html>',
@@ -224,6 +194,6 @@ def _javascript(paths: List[str]) -> str:
 
     html += '''\
     });
-  </script>'
+  </script>
     '''
     return html

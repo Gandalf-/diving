@@ -14,8 +14,6 @@ if os.name == 'nt':
 if os.uname().sysname == 'Darwin':
     root = "/Users/leaf/Pictures/Diving"
 
-web_root = 'https://public.anardil.net/media/diving'
-
 
 Tree = Dict[str, Any]
 
