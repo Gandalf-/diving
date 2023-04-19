@@ -5,18 +5,19 @@ base class for a diving image
 '''
 
 import os
+from typing import Optional, cast
 
 import inflect
 
 from util import database
-import util.common as utility
+from util.common import root, Tree
 
 from util import static
 
 _inflect = inflect.engine()
 
 
-def categorize(name):
+def categorize(name: str) -> str:
     '''add special categorization labels'''
     for category, values in static.categories.items():
         for value in values:
@@ -25,7 +26,7 @@ def categorize(name):
     return name
 
 
-def uncategorize(name):
+def uncategorize(name: str) -> str:
     '''remove the special categorization labels added earlier'''
     for category, values in static.categories.items():
         assert isinstance(values, list)
@@ -37,7 +38,7 @@ def uncategorize(name):
     return name
 
 
-def unqualify(name):
+def unqualify(name: str) -> str:
     '''remove qualifiers'''
     for qualifier in static.qualifiers:
         if name.startswith(qualifier):
@@ -52,7 +53,7 @@ def unqualify(name):
     return name
 
 
-def split(name):
+def split(name: str) -> str:
     '''add splits
     rockfish -> rock fish
     '''
@@ -62,7 +63,7 @@ def split(name):
     return name
 
 
-def unsplit(name):
+def unsplit(name: str) -> str:
     '''remove splits
     rock fish -> rockfish
     '''
@@ -75,7 +76,7 @@ def unsplit(name):
 class Image:
     '''container for a diving picture'''
 
-    def __init__(self, label, directory):
+    def __init__(self, label: str, directory: str) -> None:
         self.label = label
         label, _ = os.path.splitext(label)
 
@@ -90,10 +91,10 @@ class Image:
         self.directory = directory
         self.database = database.database
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.name
 
-    def location(self):
+    def location(self) -> str:
         '''directory minus numbering'''
         when, where = self.directory.split(' ', 1)
 
@@ -104,41 +105,41 @@ class Image:
             break
         return when + ' ' + where[i:]
 
-    def site(self):
+    def site(self) -> str:
         '''directory minus numbering and date'''
         _, where = self.location().split(' ', 1)
         return where
 
-    def identifier(self):
+    def identifier(self) -> str:
         '''unique ID'''
         return self.directory + ':' + self.number
 
-    def path(self):
+    def path(self) -> str:
         '''where this is on the file system'''
-        return os.path.join(utility.root, self.directory, self.label)
+        return os.path.join(root, self.directory, self.label)
 
-    def thumbnail(self):
+    def thumbnail(self) -> str:
         '''URI of thumbnail image'''
         sha1 = self.hashed()
         assert sha1, f'{self.directory}/{self.label} has no hash'
         return '/imgs/' + sha1 + '.webp'
 
-    def fullsize(self):
+    def fullsize(self) -> str:
         '''URI of original image'''
         sha1 = self.hashed()
         assert sha1
         return '/full/' + sha1 + '.webp'
 
-    def hashed(self) -> str:
+    def hashed(self) -> Optional[str]:
         '''Get the sha1sum for an original image, using the database as a cache'''
         return self.database.get_image_hash(self.identifier())
 
-    def singular(self):
+    def singular(self) -> str:
         '''return singular version'''
         assert self.name, self
 
-        name = _inflect.singular_noun(self.name.lower())
-        name = name or self.name.lower()
+        singular = _inflect.singular_noun(self.name.lower())
+        name = cast(str, singular) if singular else self.name.lower()
 
         # fix inflect's mistakes
         for tofix in ("octopu", "gras", "fuscu", "dori"):
@@ -152,17 +153,17 @@ class Image:
 
         return name
 
-    def scientific(self, names):
+    def scientific(self, names: Tree) -> Optional[str]:
         '''do we have a scientific name?
         names should be taxonomy.mapping()
         '''
         return names.get(self.simplified())
 
-    def simplified(self):
+    def simplified(self) -> str:
         '''remove qualifiers from name'''
         return unqualify(self.singular())
 
-    def normalized(self):
+    def normalized(self) -> str:
         '''lower case, remove plurals, split and expand'''
         # simplify name
         name = self.singular()

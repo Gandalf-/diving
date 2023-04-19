@@ -520,6 +520,7 @@ class TestImage(unittest.TestCase):
     def test_image_singular(self):
         '''it works'''
         samples = [
+            ('001 - Sea Lemon.jpg', 'sea lemon'),
             ('001 - Clams.jpg', 'clam'),
             ('001 - Decorator Crabs.jpg', 'decorator crab'),
             ('001 - Green Algae.jpg', 'green algae'),

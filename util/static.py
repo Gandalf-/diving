@@ -4,6 +4,8 @@
 configuration information
 '''
 
+from typing import Dict, List
+
 import pathlib
 import yaml
 
@@ -21,7 +23,7 @@ difficulty = _static['difficulty']
 locations = _static['locations']
 
 
-def _invert(tree):
+def _invert(tree: Dict[str, List[str]]) -> Dict[str, str]:
     '''map locations to full location names'''
     out = {}
     for area, places in tree.items():
