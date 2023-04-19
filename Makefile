@@ -16,6 +16,7 @@ inttest:
 lint:
 	pylint --disable=R0022,E0015 -j 0 --score n *.py **/*.py
 	flake8 *.py */*.py
+	mypy util/common.py util/database.py
 
 .PHONY: format
 format:

@@ -12,7 +12,7 @@ taxonomy related things
 import enum
 import sys
 import pathlib
-from typing import Iterator
+from typing import Iterator, Dict
 
 import yaml
 
@@ -184,7 +184,7 @@ def is_scientific_name(name):
 
 # PRIVATE
 
-_NAMES_CACHE = {}
+_NAMES_CACHE: Dict[str, str] = {}
 
 
 def _to_classification(name, mappings):

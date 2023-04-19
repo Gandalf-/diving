@@ -6,7 +6,7 @@ dict and list functions
 
 import datetime
 import os
-from typing import List
+from typing import List, Dict, Tuple, Any, Iterable, Callable
 
 root = "/mnt/zfs/Media/Pictures/Diving"
 if os.name == 'nt':
@@ -15,6 +15,9 @@ if os.uname().sysname == 'Darwin':
     root = "/Users/leaf/Pictures/Diving"
 
 web_root = 'https://public.anardil.net/media/diving'
+
+
+Tree = Dict[str, Any]
 
 
 def titlecase(xs: str) -> str:
@@ -27,13 +30,15 @@ def sanitize_link(xs: str) -> str:
     return xs.replace(' sp.', ' sp').replace(' ', '-').replace("'", '')
 
 
-def prefix_tuples(first, ts):
+def prefix_tuples(
+    first: Any, ts: List[Tuple[Any, Any]]
+) -> Iterable[Tuple[Any, Any, Any]]:
     '''add a value to the beginning of each tuple in a list'''
     for (a, b) in ts:
         yield (first, a, b)
 
 
-def take(xs, n):
+def take(xs: Iterable[Any], n: int) -> List[Any]:
     '''pull n items from xs'''
     result = []
     for i, x in enumerate(xs):
@@ -43,7 +48,7 @@ def take(xs, n):
     return result
 
 
-def walk_spine(tree, lineage: List[str]):
+def walk_spine(tree: Tree, lineage: List[str]) -> Tree:
     '''walk the spine of a tree'''
     lineage = lineage[::-1]
 
@@ -55,12 +60,12 @@ def walk_spine(tree, lineage: List[str]):
     return tree
 
 
-def flatten(xs):
+def flatten(xs: List[List[Any]]) -> List[Any]:
     '''[[a]] -> [a]'''
     return [item for sublist in xs for item in sublist]
 
 
-def tree_size(tree):
+def tree_size(tree: Tree) -> int:
     '''number of leaves'''
     if not isinstance(tree, dict):
         return len(tree)
@@ -68,7 +73,7 @@ def tree_size(tree):
     return sum(tree_size(c) for c in tree.values())
 
 
-def extract_leaves(tree):
+def extract_leaves(tree: Tree) -> Iterable[Any]:
     '''get all the leaves in a tree of trees'''
     assert isinstance(tree, dict), tree
 
@@ -81,7 +86,7 @@ def extract_leaves(tree):
             yield value
 
 
-def extract_branches(tree):
+def extract_branches(tree: Tree) -> Iterable[str]:
     '''get everything but the leaves'''
     assert isinstance(tree, dict), tree
 
@@ -91,7 +96,7 @@ def extract_branches(tree):
             yield from extract_branches(value)
 
 
-def hmap(arg, *fns):
+def hmap(arg: Any, *fns: Callable[[Any], Any]) -> Any:
     '''apply all the functions provided to the argument, kind of like a fold'''
     out = arg
     for fn in fns:
@@ -99,7 +104,7 @@ def hmap(arg, *fns):
     return out
 
 
-def is_date(x):
+def is_date(x: str) -> bool:
     '''is this a date?'''
     try:
         d = datetime.datetime.strptime(x, '%Y-%m-%d')
@@ -109,13 +114,13 @@ def is_date(x):
         return False
 
 
-def strip_date(site):
+def strip_date(site: str) -> str:
     '''remove the date from a string, unless it's only a date'''
     if ' ' not in site:
         return site
 
-    *rest, last = site.split(' ')
-    rest = ' '.join(rest)
+    *parts, last = site.split(' ')
+    rest = ' '.join(parts)
 
     try:
         d = datetime.datetime.strptime(last, '%Y-%m-%d')
@@ -158,10 +163,10 @@ def pretty_date(when: str) -> str:
     return f'{month} {day}, {year}'
 
 
-_EXISTS = {}
+_EXISTS: Dict[str, bool] = {}
 
 
-def fast_exists(path):
+def fast_exists(path: str) -> bool:
     '''cached os.path.exists'''
     if path in _EXISTS:
         return _EXISTS[path]

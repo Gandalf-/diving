@@ -8,7 +8,7 @@ import difflib
 import os
 import re
 
-from typing import List, Tuple, Iterable
+from typing import List, Tuple, Iterable, Dict, Any
 from concurrent.futures import ThreadPoolExecutor
 
 from util import collection
@@ -35,14 +35,14 @@ def required_checks():
 # PRIVATE
 
 
-def _wrong_order():
+def _wrong_order() -> None:
     '''actual check'''
     tree = collection.build_image_tree()
     for value in _find_wrong_name_order(tree):
         assert False, f'word ordering appears wrong between {value}'
 
 
-def _find_wrong_name_order(tree):
+def _find_wrong_name_order(tree: Dict[str, Any]) -> Iterable[Tuple[str, str]]:
     '''look for swapped words'''
     if not isinstance(tree, dict):
         return
@@ -68,14 +68,14 @@ def _find_wrong_name_order(tree):
         yield from _find_wrong_name_order(value)
 
 
-def _misspellings():
+def _misspellings() -> None:
     '''actual check'''
     found = set(_find_misspellings())
     if found:
         assert False, f'{found} may be mispelled'
 
 
-def _find_misspellings(names=None):
+def _find_misspellings(names: List[str] = None) -> Iterable[str]:
     '''check for misspellings'''
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
@@ -95,7 +95,7 @@ def _find_misspellings(names=None):
             yield candidate
 
 
-def _possible_misspellings(names=None):
+def _possible_misspellings(names: List[str] = None) -> Iterable[List[str]]:
     '''look for edit distance
 
     prune based on taxonomy.load_known()
@@ -118,7 +118,7 @@ def _possible_misspellings(names=None):
             yield [name] + similars
 
 
-def _important_files_exist():
+def _important_files_exist() -> None:
     '''basic sanity'''
     required = ['index.html', 'style.css', 'favicon.ico', 'imgs']
     required += [
@@ -145,7 +145,7 @@ def _important_files_exist():
         assert os.path.exists(fpath), f'required file {fpath} does not exist'
 
 
-def _link_check():
+def _link_check() -> None:
     """check the html directory for broken links by extracting all the
     internal links from the written files and looking for those as paths
     """

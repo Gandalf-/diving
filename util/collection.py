@@ -5,16 +5,16 @@ parsing data from the file system to construct trees of images
 '''
 
 import os
-from typing import Iterable, Set, Dict, Union, List
+from typing import Iterable, Set, Dict, List
 
 from util.image import Image, categorize, split
-from util.common import flatten, tree_size, root
+from util.common import flatten, tree_size, root, Tree
 from util import static
 
-ImageTree = Dict[str, Union['ImageTree', List[Image]]]
+ImageTree = Tree
 
 
-def named():
+def named() -> List[Image]:
     '''all named images from all directories'''
     return flatten([[y for y in z if y.name] for z in _collect()])
 
@@ -24,7 +24,7 @@ def all_names() -> Set[str]:
     return {categorize(split(i.simplified())) for i in expand_names(named())}
 
 
-def single_level(tree: ImageTree) -> Dict[str, Image]:
+def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
     '''squash the tree into a single level name to images dict'''
     assert isinstance(tree, dict), tree
 
@@ -35,7 +35,7 @@ def single_level(tree: ImageTree) -> Dict[str, Image]:
             else:
                 yield from inner(value)
 
-    out: Dict[str, Image] = {}
+    out: Dict[str, List[Image]] = {}
     for group in inner(tree):
         name = group[0].simplified()
 

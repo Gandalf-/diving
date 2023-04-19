@@ -3,7 +3,7 @@ Database interface
 '''
 
 import copy
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Callable
 
 from apocrypha.client import Client
 
@@ -31,27 +31,32 @@ class Database:
 
     # Low Level
 
-    def get(self, *keys, default=None, cast=None) -> Any:
+    def get(
+        self,
+        *keys: str,
+        default: Optional[Any] = None,
+        cast: Optional[Callable] = None
+    ) -> Any:
         '''Retrieve a value'''
         raise NotImplementedError
 
-    def set(self, *keys, value) -> None:
+    def set(self, *keys: str, value: Any) -> None:
         '''Assign a value to a key'''
         raise NotImplementedError
 
-    def delete(self, *keys) -> None:
+    def delete(self, *keys: str) -> None:
         '''Delete a value'''
         raise NotImplementedError
 
-    def keys(self, *keys) -> List[str]:
+    def keys(self, *keys: str) -> List[str]:
         '''Retrieve a list of keys'''
         raise NotImplementedError
 
-    def append(self, *keys, value) -> None:
+    def append(self, *keys: str, value: Any) -> None:
         '''Append a value to a key'''
         raise NotImplementedError
 
-    def remove(self, *keys, value) -> None:
+    def remove(self, *keys: str, value: Any) -> None:
         '''Remove a value from a key'''
         raise NotImplementedError
 
@@ -61,8 +66,8 @@ class RealDatabase(Database):
 
     def __init__(self) -> None:
         self.database = Client()
-        self.hash_cache = {}
-        self.wiki_cache = {}
+        self.hash_cache: Dict[str, Dict[str, str]] = {}
+        self.wiki_cache: Dict[str, Any] = {}
 
     def _fill_hash_cache(self) -> None:
         '''populate the hash cache'''
@@ -95,24 +100,29 @@ class RealDatabase(Database):
         self._fill_wiki_cache()
         return copy.deepcopy(self.wiki_cache['valid'].get(key))
 
-    def get(self, *keys, default=None, cast=None) -> Any:
+    def get(
+        self,
+        *keys: str,
+        default: Optional[Any] = None,
+        cast: Optional[Callable] = None
+    ) -> Any:
         return self.database.get(*keys, default=default, cast=cast)
 
-    def set(self, *keys, value) -> None:
+    def set(self, *keys: str, value: Any) -> None:
         self.hash_cache = {}
         self.wiki_cache = {}
         self.database.set(*keys, value=value)
 
-    def delete(self, *keys) -> None:
+    def delete(self, *keys: str) -> None:
         self.database.delete(*keys)
 
-    def keys(self, *keys) -> List[str]:
+    def keys(self, *keys: str) -> List[str]:
         return self.database.keys(*keys)
 
-    def append(self, *keys, value) -> None:
+    def append(self, *keys: str, value: Any) -> None:
         self.database.append(*keys, value=value)
 
-    def remove(self, *keys, value) -> None:
+    def remove(self, *keys: str, value: Any) -> None:
         self.database.remove(*keys, value=value)
 
 
@@ -134,29 +144,34 @@ class TestDatabase(Database):
     def get_valid_subject(self, key: str) -> Optional[Dict[str, Any]]:
         return None
 
-    def get(self, *keys, default=None, cast=None) -> Any:
+    def get(
+        self,
+        *keys: str,
+        default: Optional[Any] = None,
+        cast: Optional[Callable] = None
+    ) -> Any:
         return 'test'
 
-    def set(self, *keys, value) -> None:
+    def set(self, *keys: str, value: Any) -> None:
         pass
 
-    def delete(self, *keys) -> None:
+    def delete(self, *keys: str) -> None:
         pass
 
-    def keys(self, *keys) -> List[str]:
+    def keys(self, *keys: str) -> List[str]:
         return []
 
-    def append(self, *keys, value) -> None:
+    def append(self, *keys: str, value: Any) -> None:
         pass
 
-    def remove(self, *keys, value) -> None:
+    def remove(self, *keys: str, value: Any) -> None:
         pass
 
 
-database = RealDatabase()
+database: Database = RealDatabase()
 
 
-def use_test_database():
+def use_test_database() -> None:
     """Switch to TestDatabase"""
     # pylint: disable=global-statement
     global database
