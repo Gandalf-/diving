@@ -109,6 +109,9 @@ scanner() {
       continue
     }
 
+    [[ $path == '*.jpg' ]] &&
+      continue
+
     (
       local directory="$( dirname "$path" )"
       local image="$( basename "$path" )"

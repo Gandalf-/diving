@@ -120,7 +120,7 @@ class Image:
     def thumbnail(self):
         '''URI of thumbnail image'''
         sha1 = self.hashed()
-        assert sha1
+        assert sha1, f'{self.directory}/{self.label} has no hash'
         return '/imgs/' + sha1 + '.webp'
 
     def fullsize(self):

@@ -28,7 +28,7 @@ def required_checks():
     '''must pass'''
     _important_files_exist()
     _link_check()
-    # _misspellings()
+    _misspellings()
     _wrong_order()
 
 
@@ -71,7 +71,8 @@ def _find_wrong_name_order(tree):
 def _misspellings():
     '''actual check'''
     found = set(_find_misspellings())
-    assert False, f'{found} may be mispelled'
+    if found:
+        assert False, f'{found} may be mispelled'
 
 
 def _find_misspellings(names=None):

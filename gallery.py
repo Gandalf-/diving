@@ -90,7 +90,7 @@ def _key_to_subject(key, where):
         if is_date(subject):
             subject = pretty_date(subject)
     else:
-        subject = taxonomy.simplify(key)
+        subject = taxonomy.simplify(key, shorten=True)
 
     return subject
 
@@ -152,7 +152,8 @@ def html_tree(tree, where, scientific, lineage=None):
         html += "</div>"
 
     direct = tree.get("data", [])
-    direct = sorted(direct, key=lambda x: x.path(), reverse=True)
+    chronological = where != Where.Sites
+    direct = sorted(direct, key=lambda x: x.path(), reverse=chronological)
     assert not (direct and has_subcategories)
 
     # direct examples

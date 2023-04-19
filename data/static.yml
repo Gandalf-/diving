@@ -6,8 +6,8 @@ locations:
     - China Wall
     - Dalco Wall
     - Deception Pass
-    - Edmonds
     - Ediz Hook
+    - Edmonds
     - Elephant Wall
     - Flag Pole
     - Fort Ward
@@ -35,23 +35,25 @@ locations:
     # Jervis Inlet
     - Argonaut Point
     - Captain Island Light
+    - HMCS Chaudiere
     - Jaggy Crack
     - Jervis Point
     - Nemo's Leap
-    - Power Lines
-    - HMCS Chaudiere
     - Observation Wall
+    - Power Lines
     - Wingy Dingy
     # God's Pocket
-    - Browning Wall
-    - Hussar Bay
-    - Fantasy Island
-    - Lu Can's Shoot
-    - Seven Trees
-    - Eagle's Nest
     - Aquarium
     - Browning Islet
+    - Browning Wall
+    - Christie's Corner
+    - Eagle's Nest
+    - Fantasy Island
+    - God's Pocket
     - Hoodi Nudi
+    - Hussar Bay
+    - Lucan Shoot
+    - Seven Trees
   Galapagos:
     - Baltra
     - Cousin's Rock
@@ -186,6 +188,7 @@ categories:
     - zoanthid
   tunicate:
     - sea squirt
+    - salp
   coral:
     - sea pen
     - sea rod

@@ -414,6 +414,22 @@ class TestTaxonomy(unittest.TestCase):
         for before, after in samples:
             self.assertEqual(after, taxonomy.simplify(before))
 
+    def test_simplify_shortens_very_long(self):
+        samples = [
+            (
+                'Brachiopoda Rhynchonellata Terebratulida Laqueoidea '
+                'Terebrataliidae Terebratalia transversa',
+                'Brachiopoda ... transversa',
+            ),
+            (
+                'Chromista Ochrophyta Bacillariophyceae Cymbellales '
+                'Gomphonemataceae Didymosphenia geminata',
+                'Chromista ... geminata',
+            ),
+        ]
+        for before, after in samples:
+            self.assertEqual(after, taxonomy.simplify(before, shorten=True))
+
     def test_title_scientific_name(self):
         '''cached helper'''
         for example in ('crab', 'fish', 'giant pacific octopus'):

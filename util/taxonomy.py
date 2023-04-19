@@ -53,7 +53,7 @@ def gallery_scientific(lineage, scientific, debug=False):
     return name or ""
 
 
-def simplify(name: str) -> str:
+def simplify(name: str, shorten=False) -> str:
     """Try to simplify the lineage by abbreviating repeated prefixes.
     Diadematoida Diadematidae Diadema antillarum -> to D. D. Diadema antillarum
     """
@@ -71,7 +71,20 @@ def simplify(name: str) -> str:
             out.append(a)
 
     out.append(parts[-1])
-    return ' '.join(out)
+
+    # shorten very long names
+    result = ' '.join(out)
+    shortened = False
+
+    while shorten and len(result) > 30:
+        shortened = True
+        out = [out[0]] + out[2:]
+        result = ' '.join(out)
+
+    if shortened:
+        result = ' '.join([out[0], '...'] + out[1:])
+
+    return result
 
 
 def similar(a, b):

@@ -51,6 +51,10 @@ Animalia:
             vastus: cloud sponge
     Demospongiae:
       sp.: sponge
+      Tethyida:
+        Tethyidae:
+          Tethya:
+            californiana: orange rough ball sponge
       Dictyoceratida:
         Dysideidae:
           Dysidea:
@@ -153,6 +157,8 @@ Animalia:
             cementarium: cemented sandmason tube worm
         Sabellidae:
           sp.: feather duster worm
+          Parasabella:
+            media: parasol feather duster worm
           Sabellastarte: brown white crowned tube worm
           Eudistylia:
             vancouveri: vancouver feather duster worm
@@ -181,6 +187,10 @@ Animalia:
             alaskensis: delicate staghorn bryozoan
     Gymnolaemata:
       Cheilostomatida:
+        Celleporoidea:
+          Phidoloporidae:
+            Phidolopora:
+              pacifica: lattice work bryozoan
         Microporoidea:
           Microporidae:
             Microporina:
@@ -329,6 +339,8 @@ Animalia:
             patagonicus: cookie star
           Mediaster:
             aequalis: vermilion star
+          Hippasteria:
+            spinosa: spiny red star
       Spinulosida:
         Echinasteridae:
           Henricia:
@@ -907,6 +919,8 @@ Animalia:
           Dendronphthya:
             hemprichi: orange spiky soft coral
             sp.: spiky soft coral
+          Gersemia:
+            rubiformis: red soft coral
         Gorgoniidae:
           Pacifigorgia:
             sp.: pacifigorgia fan coral
@@ -920,6 +934,8 @@ Animalia:
           Acabaria: white acabaria coral
           # Clathria:
           #   sp.: clathria coral
+        Alcyoniidae:
+          Alcyonium: orange soft coral
       Zoantharia:
         Epizoanthidae:
           Epizoanthus:
@@ -1265,6 +1281,8 @@ Animalia:
             Alpheus:
               djeddensis: djedda snapping shrimp
           Hippolytidae:
+            Lebbeus:
+              grandimana: candy stripe shrimp
             Thor:
               amboinensis: squat shrimp
             Lysmata:
