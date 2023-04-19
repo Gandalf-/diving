@@ -8,7 +8,7 @@ import difflib
 import os
 import re
 
-from typing import List, Tuple, Iterable, Dict, Any
+from typing import List, Tuple, Iterable, Dict, Any, Optional
 from concurrent.futures import ThreadPoolExecutor
 
 from util import collection
@@ -16,7 +16,7 @@ from util import static
 from util import taxonomy
 
 
-def advisory_checks():
+def advisory_checks() -> None:
     '''informational'''
     try:
         required_checks()
@@ -24,7 +24,7 @@ def advisory_checks():
         print(e)
 
 
-def required_checks():
+def required_checks() -> None:
     '''must pass'''
     _important_files_exist()
     _link_check()
@@ -48,7 +48,7 @@ def _find_wrong_name_order(tree: Dict[str, Any]) -> Iterable[Tuple[str, str]]:
         return
 
     conflicts = []
-    seen = {}
+    seen: Dict[str, str] = {}
 
     for key in tree.keys():
         flattened = ' '.join(sorted(key.split(' ')))
@@ -75,7 +75,7 @@ def _misspellings() -> None:
         assert False, f'{found} may be mispelled'
 
 
-def _find_misspellings(names: List[str] = None) -> Iterable[str]:
+def _find_misspellings(names: Optional[List[str]] = None) -> Iterable[str]:
     '''check for misspellings'''
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
@@ -95,20 +95,21 @@ def _find_misspellings(names: List[str] = None) -> Iterable[str]:
             yield candidate
 
 
-def _possible_misspellings(names: List[str] = None) -> Iterable[List[str]]:
+def _possible_misspellings(
+    names: Optional[List[str]] = None,
+) -> Iterable[List[str]]:
     '''look for edit distance
 
     prune based on taxonomy.load_known()
     '''
-    if not names:
-        names = collection.all_names()
+    all_names = names or collection.all_names()
 
-    while names:
-        name = names.pop()
+    while all_names:
+        name = all_names.pop()
         if any(name.endswith(i) for i in static.ignore + ['unknown']):
             continue
 
-        similars = difflib.get_close_matches(name, names, cutoff=0.8)
+        similars = difflib.get_close_matches(name, all_names, cutoff=0.8)
         similars = [
             other
             for other in similars
@@ -150,7 +151,7 @@ def _link_check() -> None:
     internal links from the written files and looking for those as paths
     """
 
-    def check_link_exists(args):
+    def check_link_exists(args: Tuple[str, str]) -> Optional[str]:
         path, link = args
         if not os.path.exists(link):
             return f'broken {link} in {path}'
@@ -167,7 +168,7 @@ def _link_check() -> None:
 def _find_links() -> Iterable[Tuple[str, str]]:
     """check the html directory for internal links"""
 
-    def extract_from(path) -> List[Tuple[str, str]]:
+    def extract_from(path: str) -> List[Tuple[str, str]]:
         """get links from a file"""
         links = []
         with open(path, encoding='utf8') as fd:
@@ -180,11 +181,12 @@ def _find_links() -> Iterable[Tuple[str, str]]:
                 links.append((path, link))
         return links
 
-    def process_file(directory, filename) -> List[Tuple[str, str]]:
+    def process_file(directory: str, filename: str) -> List[Tuple[str, str]]:
         path = os.path.join(directory, filename)
         return extract_from(path)
 
-    with ThreadPoolExecutor(max_workers=os.cpu_count() * 2) as executor:
+    workers = (os.cpu_count() or 4) * 2
+    with ThreadPoolExecutor(max_workers=workers) as executor:
         file_list = [
             (directory, filename)
             for directory in ('taxonomy', 'gallery', 'sites')

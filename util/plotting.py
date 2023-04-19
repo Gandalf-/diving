@@ -1,3 +1,5 @@
+# type: ignore
+
 '''
 https://matplotlib.org/stable/gallery/misc/packed_bubbles.html
 '''

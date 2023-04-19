@@ -12,21 +12,30 @@ taxonomy related things
 import enum
 import sys
 import pathlib
-from typing import Iterator, Dict
+from typing import Iterable, Dict, List, Any, Optional, Callable
 
 import yaml
 
-from util.collection import build_image_tree, single_level, all_names
+from util.collection import (
+    build_image_tree,
+    single_level,
+    all_names,
+    ImageTree,
+)
 from util.common import extract_leaves, hmap
-from util.image import uncategorize, unqualify, unsplit
+from util.image import uncategorize, unqualify, unsplit, Image
 
 root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
+TaxiaTree = Dict[str, Any]
 
-def gallery_scientific(lineage, scientific, debug=False):
+
+def gallery_scientific(
+    lineage: List[str], scientific: ImageTree, debug: bool = False
+) -> str:
     '''attempt to find a scientific name for this page'''
 
-    def lookup(names, *fns):
+    def lookup(names: List[str], *fns: Callable) -> Optional[str]:
         base = ' '.join(names).lower()
         candidate = hmap(base, *fns)
         return scientific.get(candidate)
@@ -53,7 +62,7 @@ def gallery_scientific(lineage, scientific, debug=False):
     return name or ""
 
 
-def simplify(name: str, shorten=False) -> str:
+def simplify(name: str, shorten: bool = False) -> str:
     """Try to simplify the lineage by abbreviating repeated prefixes.
     Diadematoida Diadematidae Diadema antillarum -> to D. D. Diadema antillarum
     """
@@ -87,7 +96,7 @@ def simplify(name: str, shorten=False) -> str:
     return result
 
 
-def similar(a, b):
+def similar(a: str, b: str) -> bool:
     '''determine if two words are similar, usually a super family and family,
     or something to that effect
     '''
@@ -97,13 +106,13 @@ def similar(a, b):
     return a[:pivot] == b[:pivot]
 
 
-def load_tree():
+def load_tree() -> TaxiaTree:
     '''yaml load'''
     with open(root + 'data/taxonomy.yml', encoding='utf8') as fd:
         return yaml.safe_load(fd)
 
 
-def load_known(exact_only=False):
+def load_known(exact_only: bool = False) -> Iterable[str]:
     '''load taxonomy.yml'''
 
     tree = load_tree()
@@ -117,7 +126,7 @@ def load_known(exact_only=False):
 MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
 
 
-def mapping(where=MappingType.Gallery):
+def mapping(where: MappingType = MappingType.Gallery) -> Dict[str, str]:
     '''simplified to scientific'''
     tree = _invert_known(load_tree())
 
@@ -127,7 +136,7 @@ def mapping(where=MappingType.Gallery):
     return {v: k for k, v in tree.items()}
 
 
-def gallery_tree(tree=None):
+def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
     '''produce a tree for gallery.py to use
     the provided tree must be from collection.build_image_tree()
     '''
@@ -142,7 +151,9 @@ def gallery_tree(tree=None):
     return taxia
 
 
-def binomial_names(tree=None, parent=None) -> Iterator[str]:
+def binomial_names(
+    tree: Optional[TaxiaTree] = None, parent: Optional[str] = None
+) -> Iterable[str]:
     '''scientific binomial names'''
     if not tree:
         tree = load_tree()
@@ -170,7 +181,7 @@ def looks_like_scientific_name(name: str) -> bool:
     return genus.istitle() and species.islower()
 
 
-def is_scientific_name(name):
+def is_scientific_name(name: str) -> Optional[str]:
     '''cached lookup'''
     if not _NAMES_CACHE:
         for bname in binomial_names():
@@ -187,12 +198,12 @@ def is_scientific_name(name):
 _NAMES_CACHE: Dict[str, str] = {}
 
 
-def _to_classification(name, mappings):
+def _to_classification(name: str, mappings: ImageTree) -> str:
     '''find a suitable classification for this common name'''
     return gallery_scientific(name.split(' '), mappings)
 
 
-def _filter_exact(tree):
+def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
     '''remove all sp. entries'''
     assert isinstance(tree, dict), tree
 
@@ -209,7 +220,7 @@ def _filter_exact(tree):
     return out
 
 
-def compress_tree(tree):
+def compress_tree(tree: TaxiaTree) -> TaxiaTree:
     '''
     Collapse subtrees with only one child into their parent and update the parent's
     key for the current subtree to be "key + child key".
@@ -232,7 +243,9 @@ def compress_tree(tree):
     return new_tree
 
 
-def _taxia_filler(tree, images):
+def _taxia_filler(
+    tree: TaxiaTree, images: Dict[str, List[Image]]
+) -> ImageTree:
     '''fill in the images'''
     assert isinstance(tree, dict), tree
 
@@ -251,12 +264,16 @@ def _taxia_filler(tree, images):
     return tree
 
 
-def _invert_known(tree):
+def _invert_known(tree: TaxiaTree) -> Dict[str, str]:
     '''leaves become roots'''
 
-    result = {}
+    result: Dict[str, str] = {}
 
-    def inner(tree, out, lineage=None):
+    def inner(
+        tree: TaxiaTree,
+        out: Dict[str, str],
+        lineage: Optional[List[str]] = None,
+    ) -> None:
         if not lineage:
             lineage = []
 
@@ -274,7 +291,7 @@ def _invert_known(tree):
 # INFORMATIONAL
 
 
-def _ordered_simple_names(tree):
+def _ordered_simple_names(tree: ImageTree) -> Iterable[str]:
     '''taxonomy names'''
     assert isinstance(tree, dict), tree
 
@@ -289,7 +306,7 @@ def _ordered_simple_names(tree):
             assert False, value
 
 
-def _taxonomy_listing():
+def _taxonomy_listing() -> None:
     '''write out the names to a file'''
     have = set(load_known())
     everything = set(_ordered_simple_names(build_image_tree()))
@@ -300,7 +317,7 @@ def _taxonomy_listing():
             fd.write(name + '\n')
 
 
-def _find_imprecise():
+def _find_imprecise() -> Iterable[str]:
     '''find names with classifications that could be more specific'''
     names = all_names()
     m = mapping()

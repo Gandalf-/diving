@@ -28,7 +28,7 @@ def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
     '''squash the tree into a single level name to images dict'''
     assert isinstance(tree, dict), tree
 
-    def inner(where):
+    def inner(where: ImageTree) -> Iterable[List[Image]]:
         for value in where.values():
             if isinstance(value, list):
                 yield value
@@ -53,7 +53,7 @@ def build_image_tree() -> ImageTree:
     return pipeline(_make_tree(expand_names(named())))
 
 
-def pipeline(tree: ImageTree, reverse=True) -> ImageTree:
+def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
     '''intermediate steps!'''
     return _data_to_various(
         _pruner(
@@ -126,7 +126,7 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
     return out
 
 
-def _pruner(tree: ImageTree, too_few=5) -> ImageTree:
+def _pruner(tree: ImageTree, too_few: int = 5) -> ImageTree:
     """remove top level keys with too few elements"""
     to_remove = []
 
@@ -141,7 +141,7 @@ def _pruner(tree: ImageTree, too_few=5) -> ImageTree:
     return tree
 
 
-def _compress(tree, reverse=True):
+def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
     """look for sub trees with no 'data' key, which can be squished up a level"""
     assert isinstance(tree, dict), tree
 
@@ -166,7 +166,7 @@ def _compress(tree, reverse=True):
     return tree
 
 
-def _data_to_various(tree):
+def _data_to_various(tree: ImageTree) -> ImageTree:
     '''rebucket data into various'''
     assert isinstance(tree, dict), tree
 
