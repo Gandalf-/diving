@@ -11,7 +11,7 @@ require() {
 start_database() {
   cleanup() {
     [[ $pid ]] || return;
-    kill $pid
+    kill "$pid"
     echo Server stopped
   }
   trap cleanup EXIT
@@ -19,7 +19,11 @@ start_database() {
   pgrep apocrypha-server >/dev/null &&
     return
 
-  apocrypha-server --headless &
+  apocrypha-server \
+    --headless \
+    --stateless \
+    --database ~/google_drive/code/python/diving/data/db.json &
+
   pid=$!
   until d --keys | grep -q .; do
     sleep 0.1

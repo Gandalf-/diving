@@ -32,7 +32,7 @@ def prefix_tuples(
     first: Any, ts: List[Tuple[Any, Any]]
 ) -> Iterable[Tuple[Any, Any, Any]]:
     '''add a value to the beginning of each tuple in a list'''
-    for (a, b) in ts:
+    for a, b in ts:
         yield (first, a, b)
 
 

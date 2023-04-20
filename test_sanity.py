@@ -144,7 +144,6 @@ class TestHypertext(unittest.TestCase):
             ),
         ]
         for where, lineage, elements in samples:
-
             if where == Where.Gallery:
                 scientific = TestGallery.g_scientific
             else:
@@ -212,6 +211,17 @@ class TestHypertext(unittest.TestCase):
         )
         self.assertEqual(title, 'Taxonomy')
         self.assertIn('<title>Taxonomy</title>', html)
+
+    def test_switcher_button(self):
+        '''See that the correct HTML is generated for each site's button'''
+        for where in Where:
+            shorter = hypertext.switcher_button(where)
+            self.assertIn(f'href="/{where.name.lower()}/index.html"', shorter)
+            self.assertNotIn(where.name, shorter)
+
+            longer = hypertext.switcher_button(where, long=True)
+            self.assertIn(f'href="/{where.name.lower()}/index.html"', longer)
+            self.assertIn(where.name, longer)
 
 
 class TestGallery(unittest.TestCase):

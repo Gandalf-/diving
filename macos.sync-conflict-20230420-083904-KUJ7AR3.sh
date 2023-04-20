@@ -16,10 +16,7 @@ start_database() {
   pgrep apocrypha-server >/dev/null &&
     return
 
-  apocrypha-server \
-    --headless \
-    --database ~/google_drive/code/python/diving/data/db.json &
-
+  apocrypha-server --headless &
   pid=$!
   until d --keys | grep -q .; do
     sleep 0.1

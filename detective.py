@@ -92,7 +92,7 @@ def _distance(
     total = 0
     match = 0
 
-    for (x, y) in zip(at, bt):
+    for x, y in zip(at, bt):
         total += 1
         if x == y:
             match += 1
@@ -136,7 +136,6 @@ def _filter_images(
     new_images = []
 
     for image in images:
-
         # skip old pictures until cleaned up
         if image.directory.startswith('2019-09'):
             continue
@@ -178,7 +177,6 @@ def _similarity_table(names: List[str]) -> SimiliarityTable:
 
     for i, name in enumerate(names):
         for j, other in enumerate(names):
-
             if i == j:
                 similarity[i].append(0)
                 continue

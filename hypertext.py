@@ -23,7 +23,7 @@ from util.image import categorize, uncategorize, split, Image
 from util import taxonomy
 
 
-Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline')
+Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
 Side = enum.Enum('Side', 'Left Right')
 
 scripts = """
@@ -285,7 +285,6 @@ class TaxonomyTitle(Title):
 
         # create the buttons for each part of our name lineage
         for i, name in enumerate(self.lineage):
-
             name = taxonomy.simplify(name)
             partial = self.lineage[: i + 1]
             link = f"/taxonomy/{lineage_to_link(partial, side)}.html"
@@ -390,8 +389,63 @@ class SitesTitle(Title):
         return html, _title
 
 
+def switcher_button(where: Where, long: bool = False) -> str:
+    '''Get the switcher button for this site'''
+    _timeline = '''
+        <a href="/timeline/index.html">
+            <h1 class="top switch">{}</h1>
+        </a>
+    '''
+    _gallery = '''
+        <a href="/gallery/index.html">
+            <h1 class="top switch gallery">{}</h1>
+        </a>
+    '''
+    _detective = '''
+        <a href="/detective/index.html">
+            <h1 class="top switch detective">{}</h1>
+        </a>
+    '''
+    _sites = '''
+        <a href="/sites/index.html">
+            <h1 class="top switch sites">{}</h1>
+        </a>
+    '''
+    _taxonomy = '''
+        <a href="/taxonomy/index.html">
+            <h1 class="top switch taxonomy">{}</h1>
+        </a>
+    '''
+    return {
+        Where.Timeline: _timeline,
+        Where.Gallery: _gallery,
+        Where.Detective: _detective,
+        Where.Sites: _sites,
+        Where.Taxonomy: _taxonomy,
+    }[where].format(long_name(where) if long else short_name(where))
+
+
+def long_name(where: Where) -> str:
+    '''Get the full name'''
+    return where.name
+
+
+def short_name(where: Where) -> str:
+    '''Get the abbreviated switcher button for this site'''
+    return {
+        Where.Timeline: '📅',
+        Where.Gallery: '📸',
+        Where.Detective: '🔍',  # '🕵️',
+        Where.Sites: '🌎',
+        Where.Taxonomy: '🔬',
+    }[where]
+
+
 class TopTitle(Title):
-    '''html head and title section for top level pages'''
+    '''
+    HTML head and title section for top level pages. The most interesting
+    part of this is the switcher, which allows us to move between the sites
+    '''
 
     def run(self) -> Tuple[str, str]:
         _title = titlecase(self.where.name)
@@ -400,62 +454,29 @@ class TopTitle(Title):
         if self.where == Where.Gallery:
             display = titlecase(display)
 
-        _timeline = '''
-            <a href="/timeline/index.html">
-                <h1 class="top switch">Timeline</h1>
-            </a>
-        '''
-        _gallery = '''
-            <a href="/gallery/index.html">
-                <h1 class="top switch gallery">Gallery</h1>
-            </a>
-        '''
-        _taxonomy = '''
-            <a href="/taxonomy/index.html">
-                <h1 class="top switch taxonomy">Taxonomy</h1>
-            </a>
-        '''
-        _detective = '''
-            <a href="/detective/index.html">
-                <h1 class="top switch detective">Detective</h1>
-            </a>
-        '''
-        _sites = '''
-            <a href="/sites/index.html">
-                <h1 class="top switch sites">Sites</h1>
-            </a>
-        '''
+        carousel = [
+            Where.Timeline,
+            Where.Gallery,
+            Where.Detective,
+            Where.Sites,
+            Where.Taxonomy,
+        ]
+
+        start = carousel.index(self.where)
+        indicies = [start - 2, start - 1, start, start + 1, start + 2]
+        indicies = [i % len(carousel) for i in indicies]
+
+        parts = [
+            switcher_button(carousel[indicies[0]]),
+            switcher_button(carousel[indicies[1]]),
+            switcher_button(carousel[indicies[2]], long=True),
+            switcher_button(carousel[indicies[3]]),
+            switcher_button(carousel[indicies[4]]),
+        ]
+
         spacer = '<div class="top buffer"></div>\n'
 
         html = head(display)
-        if self.where == Where.Gallery:
-            parts = [
-                _timeline,
-                _gallery,
-                _detective,
-            ]
-        elif self.where == Where.Taxonomy:
-            parts = [
-                _sites,
-                _taxonomy,
-                _timeline,
-            ]
-        elif self.where == Where.Sites:
-            parts = [
-                _detective,
-                _sites,
-                _taxonomy,
-            ]
-        elif self.where == Where.Timeline:
-            parts = [
-                _taxonomy,
-                _timeline,
-                _gallery,
-            ]
-
-        parts[0] = parts[0].replace('h1', 'h2')
-        parts[2] = parts[0].replace('h1', 'h2')
-
         html += spacer.join(parts)
 
         if self.where != Where.Timeline:

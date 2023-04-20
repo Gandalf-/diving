@@ -16,23 +16,6 @@ from util.image import Image
 import util.common as utility
 
 
-_html_switcher = '''\
-    <div class="title">
-        <a href="/taxonomy/index.html">
-            <h2 class="top switch taxonomy">Taxonomy</h2>
-        </a>
-        <div class="top buffer"></div>
-        <a href="/timeline/index.html">
-            <h1 class="top switch">Timeline</h1>
-        </a>
-        <div class="top buffer"></div>
-        <a href="/gallery/index.html">
-            <h2 class="top switch gallery">Gallery</h2>
-        </a>
-    </div>
-'''
-
-
 def timeline() -> List[Tuple[str, str]]:
     '''generate all the timeline html'''
     dives = [
@@ -112,12 +95,12 @@ def _subpage(dive: str) -> Tuple[str, str]:
     if sites_link:
         name = f'''\
 <a href="{sites_link}">
-    <h1 class="where sites">{title}</h1>
+    <h2 class="where sites">{title}</h2>
 </a>
 '''
     else:
         name = f'''\
-    <h1>{title}</h1>
+    <h2>{title}</h2>
 '''
 
     html = f'''\

@@ -146,7 +146,6 @@ def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
     assert isinstance(tree, dict), tree
 
     for key, value in list(tree.items()):
-
         if not isinstance(value, dict):
             continue
 
@@ -172,7 +171,6 @@ def _data_to_various(tree: ImageTree) -> ImageTree:
 
     for key, value in list(tree.items()):
         if key == 'data':
-
             if len(tree.keys()) == 1:
                 # we're alone, don't nest further
                 continue

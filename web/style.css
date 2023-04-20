@@ -124,12 +124,10 @@ tight {
 }
 
 .switch {
-  min-width: 9ch;
   border-color: rgb(56, 19, 221);
 }
 
 .buffer {
-  width: 1em;
   border: 1px solid black;
 }
 
@@ -292,7 +290,6 @@ div.skip {
   }
 
   .buffer {
-    width: 0.1em;
     border: 1px solid black;
   }
 
@@ -325,7 +322,6 @@ div.skip {
   }
 
   .buffer {
-    width: 0.05em;
     border: 1px solid black;
   }
 }

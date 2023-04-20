@@ -1,2 +1,10 @@
 wikipedia
 inflect
+apocrypha
+pyyaml
+types-PyYaml
+
+mypy
+pylint
+flake8
+black
