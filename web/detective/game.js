@@ -1,6 +1,8 @@
 /* globals */
 var g_correct = 0;
 var g_incorrect = 0;
+var g_points = 0;
+var g_made_mistake = false;
 
 const g_lower_bound_table = [0, 15, 25, 40, 80];
 const g_upper_bound_table = [10, 25, 35, 40, 100];
@@ -79,6 +81,7 @@ function name_game() {
 /* HTML modifying utilities */
 
 function choose_game() {
+    g_made_mistake = false;
     update_score();
     reset_options();
 
@@ -88,7 +91,7 @@ function choose_game() {
     } else if (game == "names") {
         name_game();
     } else {
-        image_game();
+        name_game();
     }
 }
 
@@ -137,17 +140,27 @@ function update_score() {
 
     byId('score').innerHTML =
         score + '% (' + g_correct + '/' + total + ')';
+
+    byId('points').innerHTML = `Points: ${g_points.toLocaleString()}`;
 }
 
 function success() {
     g_correct++;
+    if (!g_made_mistake) {
+        const points = Math.pow(10, 1 + get_difficulty());
+        console.log(`adding ${points} points for ${get_difficulty()}`)
+        g_points += points;
+    }
     choose_game();
 }
 
 function failure(where) {
-    g_incorrect++;
     where.style.border = "1px solid red";
-    update_score();
+    if (!g_made_mistake) {
+        g_incorrect++;
+        update_score();
+    }
+    g_made_mistake = true;
 }
 
 function reset_options() {
@@ -230,7 +243,7 @@ function add_new_correct_thumbnail(correct) {
 }
 
 function get_difficulty() {
-    return byId('difficulty').value;
+    return parseInt(byId('difficulty').value);
 }
 
 

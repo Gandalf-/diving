@@ -48,10 +48,13 @@ body {
             </div>
             <div id="control">
                 <select id="game" onchange="choose_game();">
-                    <option value="images">Images</option>
                     <option value="names">Names</option>
+                    <option value="images">Images</option>
                 </select>
-                <h4 id="score"></h4>
+                <div class="scoring">
+                    <h3 id="score"></h3>
+                    <h3 id="points"></h3>
+                </div>
                 <select id="difficulty" onchange="choose_game();">
                     <option value=0>Very Easy</option>
                     <option value=1 selected>Easy</option>
