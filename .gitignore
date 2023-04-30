@@ -7,3 +7,4 @@ node_modules
 profile.*
 .mypy_cache
 .DS_Store
+*.sync-conflict*

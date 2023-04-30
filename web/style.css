@@ -57,7 +57,7 @@ p {
   color: white;
 }
 
-tight {
+.tight {
   margin-top: 0px;
 }
 
@@ -109,13 +109,13 @@ tight {
 .sneaky {
   color: #000000;
   float: left;
-  margin-left: 0.5em;
+  /* margin-left: 0.5em; */
 }
 
 .count {
   color: #808080;
   float: right;
-  margin-right: 0.5em;
+  /* margin-right: 0.5em; */
 }
 
 .ref {
@@ -140,16 +140,16 @@ a:link {
   text-decoration: none;
 }
 
-.choice, .image {
+.image {
   border: 1px solid black;
   max-width: 350px;
 }
 
-.choice:hover, .image:hover {
+.image:hover {
   border: 1px solid white;
 }
 
-.correct_name>.choice:hover {
+.correct_name>.image:hover {
   border: 1px solid black;
 }
 
@@ -237,6 +237,11 @@ div.skip {
 .image img {
   /* Need space for the label */
   height: 86%;
+}
+
+#options .image img {
+  /* but not on detective */
+  height: 100%;
 }
 
 .card.is-flipped {

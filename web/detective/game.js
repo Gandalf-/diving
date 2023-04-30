@@ -29,7 +29,7 @@ function image_game() {
 
     for (let i = 0, w = 0; i < count; i++) {
         const child = document.createElement('div');
-        child.classList.add('choice');
+        child.classList.add('image');
         child.id = 'option' + i;
         document.getElementById('options').appendChild(child);
 
@@ -55,7 +55,7 @@ function name_game() {
     var count = g_count_table[difficulty];
     var options = find_similar(correct, lower_bound, upper_bound, count - 1);
 
-    set_correct_name(correct, difficulty);
+    set_correct_name(correct);
 
     var actual = random(count);
     for (i = 0, w = 0; i < count; i++) {
@@ -72,6 +72,7 @@ function name_game() {
         }
     }
     add_skip();
+    add_new_correct_thumbnail(correct);
 }
 
 
@@ -113,7 +114,7 @@ function set_thumbnail(where, what, onclick, thumb) {
     img.src = '/imgs/' + thumb + '.webp';
     img.width = 300;
     img.height = 225;
-    img.alt = '';
+    // img.alt = '';
 
     if (onclick) {
         img.onclick = function() {
@@ -167,25 +168,33 @@ function set_correct_image(correct) {
  * Set the correct creature name and thumbnails on the game board.
  *
  * @param {number} correct - The index of the correct creature.
- * @param {number} difficulty - The difficulty level of the game.
+ * @param {string} previous - The last thumbnail, optional
  */
-function set_correct_name(correct, difficulty) {
+function set_correct_name(correct, previous) {
     const outer = byId('correct_outer');
     outer.classList.add('grid', 'correct_name');
     outer.innerHTML = '';
 
     const images = shuffle([...thumbs[correct]]);
-    const samples = Math.min(g_sample_table[difficulty], images.length);
 
-    for (let i = 0; i < samples; i++) {
-        const child = document.createElement('div');
-        child.classList.add('choice');
-        child.setAttribute('id', `correct${i}`);
-        outer.appendChild(child);
-
-        set_thumbnail(`correct${i}`, correct, null, images[i]);
+    var i = 0;
+    while (i < images.length && images[i] === previous) {
+        i++;
     }
+    console.log('chose', images[i], 'as the correct image');
+
+    const child = document.createElement('div');
+    child.classList.add('choice');
+    child.setAttribute('id', `correct`);
+    outer.appendChild(child);
+
+    set_thumbnail(`correct`, correct, null, images[i]);
 }
+
+/**
+ * Don't change the game state at all but choose a new example
+ * thumbnails.
+ */
 
 /* helpers */
 
@@ -199,6 +208,23 @@ function add_skip() {
     child.classList.add('top', 'switch', 'skip');
     child.addEventListener('click', choose_game);
     child.innerHTML = '<h4 class="skip">Skip</h4>';
+
+    options.appendChild(child);
+}
+
+function add_new_correct_thumbnail(correct) {
+    const options = byId('options');
+
+    function new_correct_thumbnail() {
+        const current = byId('correct').firstChild.src.split('/').pop().split('.')[0];
+        console.log('Setting a new correct thumbnail, previous was', current);
+        set_correct_name(correct, current);
+    }
+
+    const child = document.createElement('div');
+    child.classList.add('top', 'switch', 'skip');
+    child.addEventListener('click', new_correct_thumbnail);
+    child.innerHTML = '<h4 class="skip">New Example</h4>';
 
     options.appendChild(child);
 }
