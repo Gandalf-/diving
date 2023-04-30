@@ -117,7 +117,6 @@ function set_thumbnail(where, what, onclick, thumb) {
     img.src = '/imgs/' + thumb + '.webp';
     img.width = 300;
     img.height = 225;
-    // img.alt = '';
 
     if (onclick) {
         img.onclick = function() {
@@ -138,9 +137,7 @@ function update_score() {
         score = Math.floor(g_correct / total * 100);
     }
 
-    byId('score').innerHTML =
-        score + '% (' + g_correct + '/' + total + ')';
-
+    byId('score').innerHTML = score + '% (' + g_correct + '/' + total + ')';
     byId('points').innerHTML = `Points: ${g_points.toLocaleString()}`;
 }
 
@@ -154,6 +151,10 @@ function success() {
     choose_game();
 }
 
+/**
+ * Called when the player makes a mistake.
+ * @param {HTMLElement} where - The element that was clicked.
+ */
 function failure(where) {
     where.style.border = "1px solid red";
     if (!g_made_mistake) {
@@ -167,6 +168,10 @@ function reset_options() {
     byId('options').innerHTML = '';
 }
 
+/**
+ * Hide the correct image but update the task for the player
+ * @param {number} correct - The index of the correct creature.
+ */
 function set_correct_image(correct) {
     var outer = byId('correct_outer');
     outer.setAttribute('class', '');
@@ -181,7 +186,7 @@ function set_correct_image(correct) {
  * Set the correct creature name and thumbnails on the game board.
  *
  * @param {number} correct - The index of the correct creature.
- * @param {string} previous - The last thumbnail, optional
+ * @param {string} previous - The last thumbnail hash, optional
  */
 function set_correct_name(correct, previous) {
     const outer = byId('correct_outer');
@@ -204,12 +209,13 @@ function set_correct_name(correct, previous) {
     set_thumbnail(`correct`, correct, null, images[i]);
 }
 
-/**
- * Don't change the game state at all but choose a new example
- * thumbnails.
- */
-
-/* helpers */
+/*        _   _ _ _ _
+ *  _   _| |_(_) (_) |_ _   _
+ * | | | | __| | | | __| | | |
+ * | |_| | |_| | | | |_| |_| |
+ *  \__,_|\__|_|_|_|\__|\__, |
+ *                      |___/
+*/
 
 /**
  * Add a "Skip" button to the options section.
@@ -225,6 +231,10 @@ function add_skip() {
     options.appendChild(child);
 }
 
+/**
+ * Add a "New Example" button to the options section. This is only for the name game.
+ * @param {number} correct - The index of the correct creature.
+ */
 function add_new_correct_thumbnail(correct) {
     const options = byId('options');
 
@@ -246,12 +256,11 @@ function get_difficulty() {
     return parseInt(byId('difficulty').value);
 }
 
-
 /**
  * Choose a creature index that matches the given difficulty level.
  *
  * @param {number} difficulty - The difficulty level to match.
- * @returns {number} An index of a creature that matches the difficulty level.
+ * @returns {number} The index of a creature that matches the difficulty level.
  */
 function choose_correct(difficulty) {
     const attempts = 10;
@@ -337,6 +346,10 @@ function find_similar(target, lowerBound, upperBound, required) {
 
 /* other utilities */
 
+/**
+ * Get a random integer between 0 and maximum.
+ * @param {number} maximum - The maximum value possible.
+ */
 function random(maximum) {
     return Math.floor(Math.random() * 10 ** 5) % maximum
 }
@@ -345,6 +358,10 @@ function byId(label) {
     return document.getElementById(label);
 }
 
+/**
+ * Produce a shuffled version of the input array.
+ * @param {any[]} array - The array to shuffle.
+ */
 function shuffle(array) {
     // https://stackoverflow.com/a/12646864
 
