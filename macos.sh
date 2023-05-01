@@ -29,6 +29,10 @@ start_database() {
 build() {
   start_database
 
+  case $1 in
+    -f|--fast) export DIVING_FAST=1 ;;
+  esac
+
   cd "$www"
   bash    "$src"/runner.sh  ~/Pictures/diving/
   python3 "$src"/gallery.py ~/Pictures/diving/

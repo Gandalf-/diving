@@ -6,6 +6,7 @@ dict and list functions
 
 import datetime
 import os
+import pathlib
 from typing import List, Dict, Tuple, Any, Iterable, Callable
 
 root = "/mnt/zfs/Media/Pictures/Diving"
@@ -14,6 +15,7 @@ if os.name == 'nt':
 if os.uname().sysname == 'Darwin':
     root = "/Users/leaf/Pictures/Diving"
 
+source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
 Tree = Dict[str, Any]
 

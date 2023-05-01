@@ -707,6 +707,7 @@ Animalia:
           Heterocongrinae: garden eel
         Muraenidae:
           Gymnothorax:
+            favagineus: honeycomb moray eel
             breedeni: blackcheek moray eel
             thyrsoideus: white eyed moray eel
             javanicus: giant moray eel
@@ -774,6 +775,7 @@ Animalia:
         Sebastidae:
           Sebastes:
             sp.: rockfish
+            miniatus: vermilion rockfish
             ruberrimus: yellow eye rockfish
             melanops: black rockfish
             auriculatus: brown rockfish
@@ -820,6 +822,9 @@ Animalia:
         Phacellophoridae:
           Phacellophora:
             camtschatica: egg yolk jelly
+        Cyaneidae:
+          Cyanea:
+            capillata: lion's mane jelly
         Ulmaridae:
           Aurelia:
             labiata: moon jelly

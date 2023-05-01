@@ -11,7 +11,6 @@ taxonomy related things
 
 import enum
 import sys
-import pathlib
 from typing import Iterable, Dict, List, Optional, Callable, Any
 
 import yaml
@@ -22,11 +21,10 @@ from util.collection import (
     all_names,
     ImageTree,
 )
-from util.common import extract_leaves, hmap
+from util.common import extract_leaves, hmap, source_root
 from util.image import uncategorize, unqualify, unsplit, Image
 
-root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
-yaml_path = root + 'data/taxonomy.yml'
+yaml_path = source_root + 'data/taxonomy.yml'
 
 NestedStringTree = Dict[str, Any]
 TaxiaTree = NestedStringTree
@@ -316,7 +314,7 @@ def _taxonomy_listing() -> None:
     everything = set(_ordered_simple_names(build_image_tree()))
     need = everything - have
 
-    with open(root + 'data/taxonomy.txt', 'w+', encoding='utf8') as fd:
+    with open(yaml_path, 'w+', encoding='utf8') as fd:
         for name in sorted(need):
             fd.write(name + '\n')
 

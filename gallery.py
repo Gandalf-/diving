@@ -16,6 +16,7 @@ import hypertext
 import information
 import locations
 import timeline
+import detective
 
 from util import collection
 from util import static
@@ -34,7 +35,6 @@ from util.common import (
     Tree,
 )
 
-from detective import javascript as game
 from hypertext import Where, Side
 
 # pylint: disable=too-many-locals
@@ -264,8 +264,8 @@ def write_all_html() -> None:
     times_htmls = timeline.timeline()
     print("done", len(times_htmls), "pages prepared")
 
-    print("building /detective/data.js... ", end="", flush=True)
-    game(False)
+    print("building /detective/...        ", end="", flush=True)
+    detective.writer()
     print("done")
 
     print("writing html...                ", end="", flush=True)
@@ -313,9 +313,10 @@ if not sys.flags.interactive and __name__ == "__main__":
 
     write_all_html()
 
-    print("verifying html...              ", end="", flush=True)
-    if os.environ.get('DIVING_VERIFY'):
-        verify.required_checks()
-    else:
-        verify.advisory_checks()
+    if not os.environ.get('DIVING_FAST'):
+        print("verifying html...              ", end="", flush=True)
+        if os.environ.get('DIVING_VERIFY'):
+            verify.required_checks()
+        else:
+            verify.advisory_checks()
     print("done")
