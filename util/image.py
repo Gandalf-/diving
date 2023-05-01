@@ -10,7 +10,7 @@ from typing import Optional, cast
 import inflect
 
 from util import database
-from util.common import root, Tree
+from util.common import image_root, Tree
 
 from util import static
 
@@ -116,7 +116,7 @@ class Image:
 
     def path(self) -> str:
         '''where this is on the file system'''
-        return os.path.join(root, self.directory, self.label)
+        return os.path.join(image_root, self.directory, self.label)
 
     def thumbnail(self) -> str:
         '''URI of thumbnail image'''

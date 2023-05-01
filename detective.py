@@ -55,15 +55,18 @@ def table_builder() -> Tuple[
 
 def writer() -> None:
     '''Write out all the game artifacts'''
-    with open('detective/index.html', 'w+', encoding='utf8') as fd:
-        print(html, file=fd, end='')
-
     _write_javascript()
 
     shutil.copy(
         os.path.join(source_root, 'game.js'),
         'detective/game.js',
     )
+
+    with open('detective/index.html', 'w+') as fd:
+        html = html_builder(
+            'style.css', 'detective/data.js', 'detective/game.js'
+        )
+        print(html, file=fd, end='')
 
 
 # PRIVATE
@@ -78,7 +81,7 @@ def _write_javascript() -> None:
     ss = str(ss).replace(' ', '')
     ds = str(ds).replace(' ', '')
 
-    with open('detective/data.js', 'w+', encoding='utf8') as fd:
+    with open('detective/data.js', 'w+') as fd:
         print('var names =', ns, file=fd)
         print('var thumbs =', ts, file=fd)
         print('var similarities =', ss, file=fd)
@@ -224,7 +227,9 @@ def _inspect_choices() -> None:
             os.link(src, dst)
 
 
-html = '''
+def html_builder(css: str, data: str, game: str) -> str:
+    '''Insert dynamic content into the HTML template'''
+    return f'''
 <!DOCTYPE html>
 <html>
     <head>
@@ -233,17 +238,17 @@ html = '''
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description"
               content="Scuba diving picture identification game, identify a picture or choose the image for a name">
-        <link rel="stylesheet" href="/style.css" />
+        <link rel="stylesheet" href="/{css}" />
         <link rel="stylesheet" href="/jquery.fancybox.min.css" />
-        <script src="/detective/data.js"></script>
-        <script src="/detective/game.js"></script>
+        <script src="/{data}"></script>
+        <script src="/{game}"></script>
         <style>
-body {
+body {{
     max-width: 1080px;
     margin-left: auto;
     margin-right: auto;
     float: none !important;
-}
+}}
         </style>
     </head>
 

@@ -6,21 +6,21 @@ configuration information
 
 from typing import Dict, List
 
-import pathlib
 import yaml
 
-_root = str(pathlib.Path(__file__).parent.absolute()) + '/'
+from util.common import source_root
 
-with open(_root + '../data/static.yml', encoding='utf8') as fd:
+
+with open(source_root + 'data/static.yml') as fd:
     _static = yaml.safe_load(fd)
 
-ignore = _static['ignore']
-splits = _static['splits']
-qualifiers = _static['qualifiers']
-categories = _static['categories']
-pinned = _static['pinned']
-difficulty = _static['difficulty']
-locations = _static['locations']
+ignore: List[str] = _static['ignore']
+splits: List[str] = _static['splits']
+qualifiers: List[str] = _static['qualifiers']
+categories: Dict[str, List[str]] = _static['categories']
+pinned: Dict[str, str] = _static['pinned']
+difficulty: Dict[str, List[str]] = _static['difficulty']
+locations: Dict[str, List[str]] = _static['locations']
 
 
 def _invert(tree: Dict[str, List[str]]) -> Dict[str, str]:

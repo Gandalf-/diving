@@ -289,11 +289,11 @@ def _pool_writer(args: Tuple[str, str, str]) -> None:
     except OSError:
         pass
     if size == len(html):
-        with open(path, 'r', encoding='utf8') as f:
+        with open(path) as f:
             if html == f.read():
                 return
 
-    with open(path, "w+", encoding='utf8') as f:
+    with open(path, "w+") as f:
         print(html, file=f, end='')
 
 
@@ -309,7 +309,7 @@ if not sys.flags.interactive and __name__ == "__main__":
     import util.common
 
     if len(sys.argv) > 1:
-        util.common.root = sys.argv[1]
+        util.common.image_root = sys.argv[1]
 
     write_all_html()
 

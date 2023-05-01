@@ -69,7 +69,7 @@ def _yaml_duplicate_keys() -> None:
     ignore = ('sp.', 'Pantopoda')
     duplicates = []
 
-    with open(fname, encoding='utf8') as fd:
+    with open(fname) as fd:
         for line in fd:
             if ':' not in line:
                 continue
@@ -218,7 +218,7 @@ def _find_links() -> Iterable[Tuple[str, str]]:
     def extract_from(path: str) -> List[Tuple[str, str]]:
         """get links from a file"""
         links = []
-        with open(path, encoding='utf8') as fd:
+        with open(path) as fd:
             content = fd.read()
             for link in re.findall(r'(?:href|src)=\"(.+?)\"', content):
                 if link.startswith('http'):

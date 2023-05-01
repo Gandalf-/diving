@@ -8,7 +8,7 @@ import os
 from typing import Iterable, Set, Dict, List, Iterator
 
 from util.image import Image, categorize, split
-from util.common import flatten, tree_size, root, Tree
+from util.common import flatten, tree_size, image_root, Tree
 from util import static
 
 ImageTree = Tree
@@ -97,8 +97,8 @@ def expand_names(images: List[Image]) -> Iterator[Image]:
 def dive_listing() -> List[str]:
     """a list of all dive picture folders available"""
     return [
-        os.path.join(root, dive)
-        for dive in os.listdir(root)
+        os.path.join(image_root, dive)
+        for dive in os.listdir(image_root)
         if not dive.startswith(".")
     ]
 

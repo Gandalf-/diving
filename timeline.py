@@ -11,16 +11,16 @@ from typing import List, Tuple, Dict, Any
 import hypertext
 import locations
 from hypertext import Where
-from util import collection
 from util.image import Image
-import util.common as utility
+from util import collection
+from util import common
 
 
 def timeline() -> List[Tuple[str, str]]:
     '''generate all the timeline html'''
     dives = [
         d
-        for d in sorted(os.listdir(utility.root), reverse=True)
+        for d in sorted(os.listdir(common.image_root), reverse=True)
         if d.startswith('20')
     ]
     results = []
@@ -84,7 +84,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
         title = title[1:]
 
     sites_link = locations.sites_link(when, title)
-    when = utility.pretty_date(when)
+    when = common.pretty_date(when)
 
     location = locations.get_context(title)
     if not location and title.startswith('Bonaire'):
@@ -109,7 +109,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
 <div class="grid">
 '''
 
-    path = os.path.join(utility.root, dive)
+    path = os.path.join(common.image_root, dive)
     images = sorted(collection.delve(path), key=operator.attrgetter('number'))
     html += '\n'.join(_image_html(image) for image in images)
 
@@ -117,7 +117,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
 </div>
 '''
 
-    path = utility.sanitize_link(dive) + '.html'
+    path = common.sanitize_link(dive) + '.html'
     return path, html
 
 

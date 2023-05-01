@@ -9,11 +9,11 @@ import os
 import pathlib
 from typing import List, Dict, Tuple, Any, Iterable, Callable
 
-root = "/mnt/zfs/Media/Pictures/Diving"
+image_root = "/mnt/zfs/Media/Pictures/Diving"
 if os.name == 'nt':
-    root = "Z:/Media/Pictures/Diving"
+    image_root = "Z:/Media/Pictures/Diving"
 if os.uname().sysname == 'Darwin':
-    root = "/Users/leaf/Pictures/Diving"
+    image_root = "/Users/leaf/Pictures/Diving"
 
 source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
