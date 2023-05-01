@@ -115,6 +115,8 @@ Animalia:
           Onuphidae:
             Diopatra:
               ornata: ornate tube worm
+          Eunicidae:
+            Leodice: bobbit worm
         Polynoidae:
           Arctonoe:
             vittata: red banded commensal scale worm
@@ -127,9 +129,6 @@ Animalia:
           Nereis:
             # sp.: sea nymph
             vexillosa: banner sea nymph
-      Eunicida:
-        Eunicidae:
-          Leodice: bobbit worm
       Opheliidae:
         Travisiidae:
           Travisia: utility worm
@@ -211,21 +210,26 @@ Animalia:
   Echinodermata:
     Ophiuroidea:
       sp.: brittle star
+      Euryalida:
+        Gorgonocephalidae:
+          Gorgonocephalus:
+            eucnemis: basket star
       Ophiurida:
         Ophiuridae:
           Ophiura:
             luetkenii: gray brittle star
             sarsii: notched brittle star
       Amphilepidida:
+        Amphiuroidea:
+          Amphiuridae:
+            Amphipholis:
+              squamata: dwarf brittle star
+            Amphiodia:
+              periercta: burrowing brittle star
         Ophiactoidea:
           Ophiopholidae:
             Ophiopholis:
               aculeata: daisy brittle star
-        Amphiuroidea:
-          Amphiuridae:
-            Amphiodia:
-              periercta: burrowing brittle star
-        Ophiactoidea:
           Ophiocomidae:
             Ophiocoma:
               pica: brown gold brittle star
@@ -234,7 +238,6 @@ Animalia:
             Ophiothrix:
               foveolata: soft coral brittle star
               purpurea: sea fan brittle star
-            Ophiothrix:
               spiculata: glass spined brittle star
             Ophiothela:
               mirabilis: epizoic brittle star
@@ -308,10 +311,9 @@ Animalia:
             guildingi: guilding's star
             multifora: multipore star
             laevigata: indian blue star
+            columbiae: variable star
           Phataria:
             unifascialis: galapagos blue star
-          Linckia:
-            columbiae: variable star
         Oreasteridae:
           sp.: cushion star
           Culcita:
@@ -326,6 +328,7 @@ Animalia:
           Crossaster:
             papposus: rose star
           Solaster:
+            endeca: northern sun star
             dawsoni: morning sun star
             stimpsoni: striped sun star
             endeca: northern sun star
@@ -589,6 +592,11 @@ Animalia:
         Lutjanidae:
           Lutjanus:
             kasmira: bluestripe snapper
+          Ocyurus:
+            chrysurus: yellowtail snapper
+        Priacanthidae:
+          Heteropriacanthus:
+            cruentatus: glasseye snapper
         Apogonidae:
           Apogon: cardinal fish
         Chaenopsidae:
@@ -782,6 +790,9 @@ Animalia:
           Ophiodon:
             elongatus: lingcod
       Tetraodontiformes:
+        Molidae:
+          Mola:
+            mola: mola mola
         Tetraodontoidei:
           Tetraodontoidae:
             # sp.: pufferfish
@@ -874,7 +885,8 @@ Animalia:
           Plerogyra:
             sinuosa: sinuose coral
         Pocilloporidae:
-          Pocillopora: pocillopora coral
+          Pocillopora:
+            meandrina: pocillopora meandrina coral
         Poritidae:
           Goniopora: flower pot coral
           Porites:
@@ -894,8 +906,6 @@ Animalia:
         Mussidae: brain coral
         Solenastrea:
           bournoni: smooth star coral
-        Pocillopora:
-          meandrina: pocillopora meandrina coral
         Acroporidae:
           Acropora:
             cervicornis: staghorn coral
@@ -1202,6 +1212,7 @@ Animalia:
           Tritoniidae:
             Tritonia:
               festiva: diamondback nudibranch
+              gigantea: orange peel nudibranch
   Arthropoda:
     Pantopoda:
       Chelicerata:
@@ -1386,13 +1397,6 @@ Animalia:
             Scyra:
               acutifrons: sharp nosed crab
 Chromista:
-  Ochrophyta:
-    Bacillariophyceae:
-      Cymbellales:
-        Gomphonemataceae:
-          Didymosphenia:
-            geminata: rock snot diatom
-Plantae:
   sp.: algae
   Tracheophytes:
     Angiosperms:
@@ -1409,6 +1413,11 @@ Plantae:
           Ulva: sea lettuce
   Ochrophyta:
     # sp.: brown algae
+    Bacillariophyceae:
+      Cymbellales:
+        Gomphonemataceae:
+          Didymosphenia:
+            geminata: rock snot diatom
     Phaeophyceae:
       Laminariales:
         # sp.: kelp

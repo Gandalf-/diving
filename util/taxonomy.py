@@ -26,6 +26,7 @@ from util.common import extract_leaves, hmap
 from util.image import uncategorize, unqualify, unsplit, Image
 
 root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
+yaml_path = root + 'data/taxonomy.yml'
 
 NestedStringTree = Dict[str, Any]
 TaxiaTree = NestedStringTree
@@ -109,7 +110,7 @@ def similar(a: str, b: str) -> bool:
 
 def load_tree() -> NestedStringTree:
     '''yaml load'''
-    with open(root + 'data/taxonomy.yml', encoding='utf8') as fd:
+    with open(yaml_path, encoding='utf8') as fd:
         return yaml.safe_load(fd)
 
 

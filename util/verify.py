@@ -30,9 +30,33 @@ def required_checks() -> None:
     _link_check()
     _misspellings()
     _wrong_order()
+    _yaml_duplicate_keys()
 
 
 # PRIVATE
+
+
+def _yaml_duplicate_keys() -> None:
+    '''
+    Read the yaml file and check for duplicate keys. Duplicates shadow previous
+    definitions making things appear to be missing when they are not.
+    '''
+    fname = taxonomy.yaml_path
+    keys = set()
+    ignore = ('sp.', 'Pantopoda')
+    duplicates = []
+
+    with open(fname, encoding='utf8') as fd:
+        for line in fd:
+            if ':' not in line:
+                continue
+
+            key = line.split(':')[0].strip()
+            if key in keys and key not in ignore and key.istitle():
+                duplicates.append(key)
+            keys.add(key)
+
+    assert not duplicates, f'duplicate keys: {duplicates}'
 
 
 def _wrong_order() -> None:
