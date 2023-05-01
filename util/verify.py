@@ -31,9 +31,32 @@ def required_checks() -> None:
     _misspellings()
     _wrong_order()
     _yaml_duplicate_keys()
+    _no_duplicate_image_keys()
 
 
 # PRIVATE
+
+
+def _no_duplicate_image_keys() -> None:
+    '''
+    Ensure that no two files in the same dive directory have the same key.
+    Images with the same name are fine, but the key must be different.
+    '''
+    dive_paths = collection.dive_listing()
+    pattern = re.compile(r"(\d+)(.*)")
+
+    for path in dive_paths:
+        seen = set()
+
+        for filename in os.listdir(path):
+            match = pattern.match(filename)
+            if not match:
+                continue
+
+            key = match.group(1)
+            if key in seen:
+                assert False, f'Duplicate key {key}, {filename} in {path}'
+            seen.add(key)
 
 
 def _yaml_duplicate_keys() -> None:

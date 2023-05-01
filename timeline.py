@@ -109,7 +109,8 @@ def _subpage(dive: str) -> Tuple[str, str]:
 <div class="grid">
 '''
 
-    images = sorted(collection.delve(dive), key=operator.attrgetter('number'))
+    path = os.path.join(utility.root, dive)
+    images = sorted(collection.delve(path), key=operator.attrgetter('number'))
     html += '\n'.join(_image_html(image) for image in images)
 
     html += '''\

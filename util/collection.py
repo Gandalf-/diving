@@ -16,7 +16,7 @@ ImageTree = Tree
 
 def named() -> List[Image]:
     '''all named images from all directories'''
-    return flatten([[y for y in z if y.name] for z in _collect()])
+    return flatten([[y for y in z if y.name] for z in _collect_all_images()])
 
 
 def all_names() -> Set[str]:
@@ -62,13 +62,16 @@ def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
     )
 
 
-def delve(directory: str) -> List[Image]:
-    """create an Image object for each picture in a directory"""
-    path = os.path.join(root, directory)
+def delve(dive_path: str) -> List[Image]:
+    '''
+    Create an Image object for each labeled picture in a directory; the path
+    provided must be absolute
+    '''
+    directory = os.path.basename(dive_path)
     return [
-        Image(o, directory)
-        for o in os.listdir(path)
-        if o.endswith(".jpg") and '-' in o
+        Image(entry, directory)
+        for entry in os.listdir(dive_path)
+        if entry.endswith(".jpg") and '-' in entry
     ]
 
 
@@ -91,17 +94,21 @@ def expand_names(images: List[Image]) -> Iterator[Image]:
             yield image
 
 
+def dive_listing() -> List[str]:
+    """a list of all dive picture folders available"""
+    return [
+        os.path.join(root, dive)
+        for dive in os.listdir(root)
+        if not dive.startswith(".")
+    ]
+
+
 # PRIVATE
 
 
-def _listing() -> List[str]:
-    """a list of all dive picture folders available"""
-    return [d for d in os.listdir(root) if not d.startswith(".")]
-
-
-def _collect() -> List[List[Image]]:
+def _collect_all_images() -> List[List[Image]]:
     """run delve on all dive picture folders"""
-    return [delve(d) for d in _listing()]
+    return [delve(dive_path) for dive_path in dive_listing()]
 
 
 def _make_tree(images: Iterable[Image]) -> ImageTree:
