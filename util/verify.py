@@ -168,7 +168,7 @@ def _possible_misspellings(
 
 def _important_files_exist() -> None:
     '''basic sanity'''
-    required = ['index.html', 'style.css', 'favicon.ico', 'imgs']
+    required = ['index.html', static.stylesheet.path, 'favicon.ico', 'imgs']
     required += [
         'jquery.fancybox.min.css',
         'jquery.fancybox.min.js',

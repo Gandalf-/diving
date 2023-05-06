@@ -19,6 +19,7 @@ from util.common import (
     titlecase,
     sanitize_link,
 )
+from util.static import stylesheet
 from util.image import categorize, uncategorize, split, Image
 from util import taxonomy
 
@@ -102,7 +103,7 @@ def head(_title: str) -> str:
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name=description content="{desc}">
-        <link rel="stylesheet" href="/style.css"/>
+        <link rel="stylesheet" href="/{stylesheet.path}"/>
         <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
       </head>
       <body>

@@ -264,11 +264,14 @@ def write_all_html() -> None:
     times_htmls = timeline.timeline()
     print("done", len(times_htmls), "pages prepared")
 
-    print("building /detective/...        ", end="", flush=True)
+    print("building /detective...         ", end="", flush=True)
     detective.writer()
     print("done")
 
     print("writing html...                ", end="", flush=True)
+    static.stylesheet.cleanup()
+    static.stylesheet.write()
+
     with multiprocessing.Pool() as pool:
         pool.map(_pool_writer, prefix_tuples('gallery', name_htmls))
         pool.map(_pool_writer, prefix_tuples('sites', sites_htmls))

@@ -13,6 +13,7 @@ from util import collection
 from util import static
 from util import taxonomy
 
+from util.static import VersionedResource, stylesheet
 from util.common import titlecase, source_root
 from util.image import unqualify, categorize, split, Image
 
@@ -30,9 +31,9 @@ SimiliarityTable = List[List[int]]
 DifficultyTable = List[int]
 
 
-def table_builder() -> Tuple[
-    List[str], ThumbsTable, SimiliarityTable, DifficultyTable
-]:
+def table_builder() -> (
+    Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]
+):
     '''Build the tables.'''
     images = reversed(list(collection.named()))
     all_names, images = _filter_images(images)
@@ -62,10 +63,15 @@ def writer() -> None:
         'detective/game.js',
     )
 
+    data = VersionedResource('detective/data.js', 'detective')
+    game = VersionedResource('detective/game.js', 'detective')
+
+    for vr in [data, game]:
+        vr.cleanup()
+        vr.write()
+
     with open('detective/index.html', 'w+') as fd:
-        html = html_builder(
-            'style.css', 'detective/data.js', 'detective/game.js'
-        )
+        html = html_builder(stylesheet.path, data.path, game.path)
         print(html, file=fd, end='')
 
 

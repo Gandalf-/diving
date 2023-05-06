@@ -5,6 +5,7 @@ dict and list functions
 '''
 
 import datetime
+import functools
 import os
 import pathlib
 from typing import List, Dict, Tuple, Any, Iterable, Callable
@@ -166,11 +167,10 @@ def pretty_date(when: str) -> str:
 _EXISTS: Dict[str, bool] = {}
 
 
+@functools.cache
 def fast_exists(path: str) -> bool:
     '''cached os.path.exists'''
     if path in _EXISTS:
         return _EXISTS[path]
 
-    exists = os.path.exists(path)
-    _EXISTS[path] = exists
-    return exists
+    return os.path.exists(path)
