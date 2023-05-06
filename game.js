@@ -73,8 +73,10 @@ function name_game() {
             w++;
         }
     }
-    add_skip();
+
     add_new_correct_thumbnail(correct);
+    add_zoom();
+    add_skip();
 }
 
 
@@ -115,8 +117,8 @@ function set_thumbnail(where, what, onclick, thumb) {
 
     var img = document.createElement('img');
     img.src = '/imgs/' + thumb + '.webp';
-    img.width = 300;
-    img.height = 225;
+    img.width = 350;
+    img.height = 263;
 
     if (onclick) {
         img.onclick = function() {
@@ -236,6 +238,10 @@ function add_skip() {
  * @param {number} correct - The index of the correct creature.
  */
 function add_new_correct_thumbnail(correct) {
+    if (thumbs[correct].length < 2) {
+        return;
+    }
+
     const options = byId('options');
 
     function new_correct_thumbnail() {
@@ -248,6 +254,32 @@ function add_new_correct_thumbnail(correct) {
     child.classList.add('top', 'switch', 'skip');
     child.addEventListener('click', new_correct_thumbnail);
     child.innerHTML = '<h4 class="skip">New Example</h4>';
+
+    options.appendChild(child);
+}
+
+/**
+ * Add a "Zoom" button to the options section.
+ * This replaces '/imgs/' with '/full/' in the image URL.
+ */
+function add_zoom() {
+    const options = byId('options');
+
+    function zoom() {
+        const current = byId('correct').firstChild.src;
+        var img = byId('correct').firstChild;
+
+        img.src = current.replace('/imgs/', '/full/');
+        img.width = 700;
+        img.height = 526;
+        img.style.maxWidth = '90vw';
+        img.style.height = 'auto';
+    }
+
+    const child = document.createElement('div');
+    child.classList.add('top', 'switch', 'skip');
+    child.addEventListener('click', zoom);
+    child.innerHTML = '<h4 class="skip">Zoom</h4>';
 
     options.appendChild(child);
 }

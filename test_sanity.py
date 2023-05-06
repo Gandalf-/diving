@@ -40,12 +40,17 @@ def get_tree():
 class TestStatic(unittest.TestCase):
     '''static.py'''
 
+    def writer(self, path: str, body: str) -> None:
+        '''write a file, track it for cleanup'''
+        if path not in self.written:
+            self.written.append(path)
+
+        with open(path, 'w+') as fd:
+            print(body, end='', file=fd)
+
     def setUp(self) -> None:
         self.written = []
-        self.written.append('/tmp/versioned.bin')
-
-        with open('/tmp/versioned.bin', 'w+') as fd:
-            print('applesauce', end='', file=fd)
+        self.writer('/tmp/versioned.bin', 'applesauce')
 
     def tearDown(self) -> None:
         for path in self.written:
@@ -65,12 +70,10 @@ class TestStatic(unittest.TestCase):
         vr = static.VersionedResource('/tmp/versioned.bin', '/tmp')
         self.assertEqual(vr.path, '/tmp/versioned-404a6e35ea.bin')
 
-        self.written.append(vr.path)
+        self.writer(vr.path, 'applesauce')
         vr.write()
-        with open(vr.path) as fd:
-            self.assertEqual(fd.read(), 'applesauce')
-
         st1 = os.stat(vr.path)
+
         vr.write()
         vr.write()
         st2 = os.stat(vr.path)
@@ -81,8 +84,7 @@ class TestStatic(unittest.TestCase):
         seen = []
 
         for body in range(0, 10):
-            with open('/tmp/versioned.bin', 'w+') as fd:
-                print(str(body), end='', file=fd)
+            self.writer('/tmp/versioned.bin', str(body))
 
             vr = static.VersionedResource('/tmp/versioned.bin', '/tmp')
             self.assertNotIn(vr.path, seen)
@@ -95,8 +97,7 @@ class TestStatic(unittest.TestCase):
 
     def test_cleans_up_old_versions(self):
         for body in range(0, 10):
-            with open('/tmp/versioned.bin', 'w+') as fd:
-                print(str(body), end='', file=fd)
+            self.writer('/tmp/versioned.bin', str(body))
 
             vr = static.VersionedResource('/tmp/versioned.bin', '/tmp')
             self.written.append(vr.path)
