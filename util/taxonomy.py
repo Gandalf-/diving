@@ -26,7 +26,7 @@ from util.image import uncategorize, unqualify, unsplit, Image
 
 yaml_path = source_root + 'data/taxonomy.yml'
 
-NestedStringTree = Dict[str, Any]
+NestedStringTree = Any
 TaxiaTree = NestedStringTree
 
 

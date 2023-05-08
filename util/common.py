@@ -18,7 +18,7 @@ if os.uname().sysname == 'Darwin':
 
 source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
-Tree = Dict[str, Any]
+Tree = Any
 
 
 def titlecase(xs: str) -> str:

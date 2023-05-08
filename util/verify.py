@@ -89,7 +89,7 @@ def _wrong_order() -> None:
         assert False, f'word ordering appears wrong between {value}'
 
 
-def _find_wrong_name_order(tree: Dict[str, Any]) -> Iterable[Tuple[str, str]]:
+def _find_wrong_name_order(tree: Any) -> Iterable[Tuple[str, str]]:
     '''look for swapped words'''
     if not isinstance(tree, dict):
         return
