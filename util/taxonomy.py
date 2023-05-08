@@ -245,9 +245,7 @@ def compress_tree(tree: NestedStringTree) -> NestedStringTree:
     return new_tree
 
 
-def _taxia_filler(
-    tree: TaxiaTree, images: Dict[str, List[Image]]
-) -> ImageTree:
+def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
     '''fill in the images'''
     assert isinstance(tree, dict), tree
 

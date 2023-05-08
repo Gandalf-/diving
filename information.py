@@ -95,18 +95,14 @@ def fetch(subject: str, suggest: bool = True) -> None:
 
         if name != subject:
             # metacarcinus magister -> dungeness crab, just save the later
-            print(
-                f'{bcolors.WARNING}mapping {subject} to {name}{bcolors.ENDC}'
-            )
+            print(f'{bcolors.WARNING}mapping {subject} to {name}{bcolors.ENDC}')
             database.set(*db_root, 'maps', subject, value=name)
 
         print('saved', name)
         database.set(*db_root, 'valid', name, value=value)
 
 
-def lookup(
-    subject: str, update: bool = True, again: bool = True
-) -> Dict[str, str]:
+def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, str]:
     '''get the subject from the database'''
     key = subject.lower()
 
@@ -246,9 +242,7 @@ def missing_list() -> List[str]:
             out.append(part)
 
     # sorted by frequency
-    elems = sorted(
-        Counter(out).items(), key=operator.itemgetter(1), reverse=True
-    )
+    elems = sorted(Counter(out).items(), key=operator.itemgetter(1), reverse=True)
     return [e for (e, _) in elems]
 
 

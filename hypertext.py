@@ -88,9 +88,7 @@ def head(_title: str) -> str:
             'and Washington organized into a tree structure by dive site.'
         )
     elif _title.endswith('Timeline'):
-        desc = (
-            'Scuba diving pictures organized into a timeline and by location'
-        )
+        desc = 'Scuba diving pictures organized into a timeline and by location'
     else:
         _title = strip_date(_title)
         desc = f'Scuba diving pictures related to {_title}'
@@ -112,9 +110,7 @@ def head(_title: str) -> str:
       """
 
 
-def lineage_to_link(
-    lineage: List[str], side: Side, key: Optional[str] = None
-) -> str:
+def lineage_to_link(lineage: List[str], side: Side, key: Optional[str] = None) -> str:
     """get a link to this page"""
     if not lineage:
         assert key
@@ -138,9 +134,7 @@ def image_to_name_html(image: Image, where: Where) -> str:
 
     name_url = _image_to_gallery_link(image)
     if name_url:
-        name_html = (
-            f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
-        )
+        name_html = f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
     else:
         name_html = f'<p class="top elem nolink">{image.name}</p>'
 
@@ -154,9 +148,7 @@ def image_to_site_html(image: Image, where: Where) -> str:
 
     site_url = _image_to_sites_link(image)
     if site_url:
-        site_html = (
-            f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
-        )
+        site_html = f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
     else:
         site_html = f'<p class="top elem nolink">{image.site()}</p>'
 
@@ -209,16 +201,12 @@ class GalleryTitle(Title):
         side = Side.Left
 
         # check for scientific name for gallery
-        slink = sname = taxonomy.gallery_scientific(
-            self.lineage, self.scientific
-        )
+        slink = sname = taxonomy.gallery_scientific(self.lineage, self.scientific)
         sname = taxonomy.simplify(sname)
         if slink.endswith(' sp.'):
             slink = slink.replace(' sp.', '')
 
-        scientific_common_name = slink.lower().endswith(
-            self.lineage[0].lower()
-        )
+        scientific_common_name = slink.lower().endswith(self.lineage[0].lower())
 
         if scientific_common_name:
             self.lineage = [slink[-len(self.lineage[0]) :]] + [

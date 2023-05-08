@@ -32,10 +32,7 @@ class Database:
     # Low Level
 
     def get(
-        self,
-        *keys: str,
-        default: Optional[Any] = None,
-        cast: Optional[Callable] = None
+        self, *keys: str, default: Optional[Any] = None, cast: Optional[Callable] = None
     ) -> Any:
         '''Retrieve a value'''
         raise NotImplementedError
@@ -101,10 +98,7 @@ class RealDatabase(Database):
         return copy.deepcopy(self.wiki_cache['valid'].get(key))
 
     def get(
-        self,
-        *keys: str,
-        default: Optional[Any] = None,
-        cast: Optional[Callable] = None
+        self, *keys: str, default: Optional[Any] = None, cast: Optional[Callable] = None
     ) -> Any:
         return self.database.get(*keys, default=default, cast=cast)
 
@@ -145,10 +139,7 @@ class TestDatabase(Database):
         return None
 
     def get(
-        self,
-        *keys: str,
-        default: Optional[Any] = None,
-        cast: Optional[Callable] = None
+        self, *keys: str, default: Optional[Any] = None, cast: Optional[Callable] = None
     ) -> Any:
         return 'test'
 

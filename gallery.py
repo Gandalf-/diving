@@ -41,9 +41,7 @@ from hypertext import Where, Side
 # pylint: disable=line-too-long
 
 
-def find_representative(
-    tree: Tree, lineage: Optional[List[str]] = None
-) -> Image:
+def find_representative(tree: Tree, lineage: Optional[List[str]] = None) -> Image:
     """Find one image to represent this tree."""
     lineage = lineage or []
     pinned = static.pinned.get(' '.join(lineage))
@@ -193,14 +191,10 @@ def html_tree(
                 path=hypertext.lineage_to_link(lineage, side, key),
             ),
             thumbnail=example.thumbnail(),
-            size='{}:{}'.format(
-                sum(1 for k in value if k != 'data') or '', size
-            ),
+            size='{}:{}'.format(sum(1 for k in value if k != 'data') or '', size),
         )
 
-        results.extend(
-            html_tree(value, where, scientific, lineage=new_lineage)
-        )
+        results.extend(html_tree(value, where, scientific, lineage=new_lineage))
 
     if has_subcategories:
         html += "</div>"

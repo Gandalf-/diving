@@ -121,9 +121,7 @@ for k, v in list(sizes.items()):
     sizes['other'] += v
     del sizes[k]
 
-sizes = {
-    k.title().replace(' ', '\n') + f'\n{v}': 2 * v for k, v in sizes.items()
-}
+sizes = {k.title().replace(' ', '\n') + f'\n{v}': 2 * v for k, v in sizes.items()}
 
 names, counts = list(zip(*sizes.items()))
 packed_bubble(names, counts, 1)

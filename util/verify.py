@@ -158,9 +158,7 @@ def _possible_misspellings(
 
         similars = difflib.get_close_matches(name, all_names, cutoff=0.8)
         similars = [
-            other
-            for other in similars
-            if other not in name and name not in other
+            other for other in similars if other not in name and name not in other
         ]
         if similars:
             yield [name] + similars
@@ -205,9 +203,7 @@ def _link_check() -> None:
         return None
 
     with ThreadPoolExecutor() as executor:
-        broken = list(
-            filter(None, executor.map(check_link_exists, _find_links()))
-        )
+        broken = list(filter(None, executor.map(check_link_exists, _find_links())))
 
     assert not broken, broken
 

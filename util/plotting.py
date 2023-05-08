@@ -44,18 +44,14 @@ class BubbleChart:
         self.com = self.center_of_mass()
 
     def center_of_mass(self):
-        return np.average(
-            self.bubbles[:, :2], axis=0, weights=self.bubbles[:, 3]
-        )
+        return np.average(self.bubbles[:, :2], axis=0, weights=self.bubbles[:, 3])
 
     def center_distance(self, bubble, bubbles):
         return np.hypot(bubble[0] - bubbles[:, 0], bubble[1] - bubbles[:, 1])
 
     def outline_distance(self, bubble, bubbles):
         center_distance = self.center_distance(bubble, bubbles)
-        return (
-            center_distance - bubble[2] - bubbles[:, 2] - self.bubble_spacing
-        )
+        return center_distance - bubble[2] - bubbles[:, 2] - self.bubble_spacing
 
     def check_collisions(self, bubble, bubbles):
         distance = self.outline_distance(bubble, bubbles)
@@ -105,18 +101,10 @@ class BubbleChart:
                         # calculate orthogonal vector
                         orth = np.array([dir_vec[1], -dir_vec[0]])
                         # test which direction to go
-                        new_point1 = (
-                            self.bubbles[i, :2] + orth * self.step_dist
-                        )
-                        new_point2 = (
-                            self.bubbles[i, :2] - orth * self.step_dist
-                        )
-                        dist1 = self.center_distance(
-                            self.com, np.array([new_point1])
-                        )
-                        dist2 = self.center_distance(
-                            self.com, np.array([new_point2])
-                        )
+                        new_point1 = self.bubbles[i, :2] + orth * self.step_dist
+                        new_point2 = self.bubbles[i, :2] - orth * self.step_dist
+                        dist1 = self.center_distance(self.com, np.array([new_point1]))
+                        dist2 = self.center_distance(self.com, np.array([new_point2]))
                         new_point = new_point1 if dist1 < dist2 else new_point2
                         new_bubble = np.append(new_point, self.bubbles[i, 2:4])
                         if not self.check_collisions(new_bubble, rest_bub):
