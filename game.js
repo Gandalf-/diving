@@ -74,9 +74,9 @@ function name_game() {
         }
     }
 
-    add_new_correct_thumbnail(correct);
     add_zoom();
     add_skip();
+    add_new_correct_thumbnail(correct);
 }
 
 

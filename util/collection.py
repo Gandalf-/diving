@@ -56,9 +56,7 @@ def build_image_tree() -> ImageTree:
 def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
     '''intermediate steps!'''
     return _data_to_various(
-        _pruner(
-            _compress(_compress(_compress(tree, reverse), reverse), reverse)
-        )
+        _pruner(_compress(_compress(_compress(tree, reverse), reverse), reverse))
     )
 
 

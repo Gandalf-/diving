@@ -1,0 +1,15 @@
+[tool.ruff]
+ignore = ["E501"]
+
+[tool.mypy]
+allow_redefinition = true
+disallow_untyped_defs = true
+disallow_untyped_globals = true
+
+[[tool.mypy.overrides]]
+module = "apocrypha.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "wikipedia.*"
+ignore_missing_imports = true

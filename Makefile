@@ -6,7 +6,7 @@ test: unittest inttest
 
 .PHONY: unittest
 unittest:
-	python3 test_sanity.py
+	python3 -m unittest
 
 .PHONY: inttest
 inttest:
@@ -14,10 +14,9 @@ inttest:
 
 .PHONY: lint
 lint:
-	pylint -j 0 --score n *.py **/*.py
-	flake8 *.py */*.py
 	mypy .
+	ruff check --fix .
 
 .PHONY: format
 format:
-	black -l 79 -S *.py */*.py
+	black -S *.py */*.py

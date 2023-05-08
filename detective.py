@@ -31,9 +31,7 @@ SimiliarityTable = List[List[int]]
 DifficultyTable = List[int]
 
 
-def table_builder() -> (
-    Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]
-):
+def table_builder() -> Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
     '''Build the tables.'''
     images = reversed(list(collection.named()))
     all_names, images = _filter_images(images)
@@ -94,9 +92,7 @@ def _write_javascript() -> None:
         print('var difficulties =', ds, file=fd)
 
 
-def _distance(
-    a: str, b: str, tree: Optional[taxonomy.TaxiaTree] = None
-) -> float:
+def _distance(a: str, b: str, tree: Optional[taxonomy.TaxiaTree] = None) -> float:
     '''similarity score, higher means more different
 
     difflib.SequenceMatcher and jellyfish were all junk
@@ -235,6 +231,7 @@ def _inspect_choices() -> None:
 
 def html_builder(css: str, data: str, game: str) -> str:
     '''Insert dynamic content into the HTML template'''
+    desc = "Scuba diving picture identification game, identify a picture or choose the image for a name"
     return f'''
 <!DOCTYPE html>
 <html>
@@ -243,7 +240,7 @@ def html_builder(css: str, data: str, game: str) -> str:
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description"
-              content="Scuba diving picture identification game, identify a picture or choose the image for a name">
+              content="{desc}">
         <link rel="stylesheet" href="/{css}" />
         <link rel="stylesheet" href="/jquery.fancybox.min.css" />
         <script src="/{data}"></script>

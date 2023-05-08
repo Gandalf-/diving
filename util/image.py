@@ -99,8 +99,8 @@ class Image:
         when, where = self.directory.split(' ', 1)
 
         i = 0
-        for i, l in enumerate(where):
-            if l in '0123456789 ':
+        for i, char in enumerate(where):
+            if char in '0123456789 ':
                 continue
             break
         return when + ' ' + where[i:]
