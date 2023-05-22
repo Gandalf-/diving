@@ -100,8 +100,8 @@ def similar(a: str, b: str) -> bool:
     '''determine if two words are similar, usually a super family and family,
     or something to that effect
     '''
-    length = sum([len(a), len(b)]) // 2
-    pivot = int(length * 0.5)
+    length = (len(a) + len(b)) // 2
+    pivot = length // 2
 
     return a[:pivot] == b[:pivot]
 

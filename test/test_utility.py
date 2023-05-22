@@ -64,8 +64,25 @@ class TestUtility(unittest.TestCase):
         self.assertEqual([], utility.flatten([[]]))
 
     def test_tree_size(self) -> None:
-        '''how many leaves are in this tree'''
+        '''Test the tree_size function with various inputs.'''
+        # Test a tree with no leaves
+        tree = {'a': {'b': {}, 'c': {}}, 'd': {}}
+        self.assertEqual(utility.tree_size(tree), 0)
+
+        # Test a tree with one leaf
+        tree = {'a': {'b': {'c': [1]}}}
+        self.assertEqual(utility.tree_size(tree), 1)
+
+        # Test a tree with multiple leaves
         tree = {'a': {'b': [3, 3]}, 'c': [4, 4, 4]}
+        self.assertEqual(utility.tree_size(tree), 5)
+
+        # Test a tree with nested leaves
+        tree = {'a': {'b': {'c': {'d': [1]}}}}
+        self.assertEqual(utility.tree_size(tree), 1)
+
+        # Test a tree with multiple levels
+        tree = {'a': {'b': {'c': {'d': [1, 2, 3]}}, 'e': {'f': [4]}}, 'g': [5]}
         self.assertEqual(utility.tree_size(tree), 5)
 
     def test_extract_leaves(self) -> None:
@@ -86,6 +103,14 @@ class TestUtility(unittest.TestCase):
         '''fold-ish thing'''
         out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5)
         self.assertEqual(out, 5)
+
+        out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5, lambda x: x - 1)
+        self.assertEqual(out, 4)
+
+        out = utility.hmap(
+            0, lambda x: x + 1, lambda x: x * 5, lambda x: x - 1, lambda x: x / 2
+        )
+        self.assertEqual(out, 2.0)
 
     def test_is_date(self) -> None:
         '''it works'''

@@ -5,6 +5,7 @@ dict and list functions
 '''
 
 import datetime
+import itertools
 import functools
 import os
 import pathlib
@@ -41,12 +42,7 @@ def prefix_tuples(
 
 def take(xs: Iterable[Any], n: int) -> List[Any]:
     '''pull n items from xs'''
-    result = []
-    for i, x in enumerate(xs):
-        if i == n:
-            break
-        result.append(x)
-    return result
+    return list(itertools.islice(xs, n))
 
 
 def walk_spine(tree: Tree, lineage: List[str]) -> Tree:
@@ -98,70 +94,46 @@ def extract_branches(tree: Tree) -> Iterable[str]:
 
 
 def hmap(arg: Any, *fns: Callable[[Any], Any]) -> Any:
-    '''apply all the functions provided to the argument, kind of like a fold'''
-    out = arg
-    for fn in fns:
-        out = fn(out)
-    return out
+    '''Apply a sequence of functions to an argument, returning the result.
+
+    Example:
+        >>> hmap(3, lambda x: x + 1, lambda x: x * 2)
+        8
+    '''
+    return functools.reduce(lambda x, f: f(x), fns, arg)
 
 
 def is_date(x: str) -> bool:
     '''is this a date?'''
     try:
-        d = datetime.datetime.strptime(x, '%Y-%m-%d')
-        assert d
+        _ = datetime.datetime.strptime(x, '%Y-%m-%d')
         return True
     except (TypeError, ValueError):
         return False
 
 
 def strip_date(site: str) -> str:
-    '''remove the date from a string, unless it's only a date'''
-    if ' ' not in site:
-        return site
-
-    *parts, last = site.split(' ')
-    rest = ' '.join(parts)
+    '''Remove the date from a string, unless it's only a date.'''
+    parts = site.split(' ')
+    last = parts[-1]
 
     try:
-        d = datetime.datetime.strptime(last, '%Y-%m-%d')
-        assert d
+        datetime.datetime.strptime(last, '%Y-%m-%d')
+        return ' '.join(parts[:-1])
     except ValueError:
         return site
 
-    return rest
-
 
 def pretty_date(when: str) -> str:
-    '''convert 2023-04-04 to April 4th, 2023'''
-    year, month, day = when.split('-')
+    date = datetime.datetime.strptime(when, '%Y-%m-%d')
+    day_suffixes = {1: 'st', 2: 'nd', 3: 'rd'}
 
-    day = day.lstrip('0')
-    if day.endswith('1') and day != '11':
-        day = f'{day}st'
-    elif day.endswith('2') and day != '12':
-        day = f'{day}nd'
-    elif day.endswith('3') and day != '13':
-        day = f'{day}rd'
+    if 4 <= date.day <= 20 or 24 <= date.day <= 30:
+        suffix = 'th'
     else:
-        day = f'{day}th'
+        suffix = day_suffixes[date.day % 10]
 
-    month = {
-        '1': 'January',
-        '2': 'February',
-        '3': 'March',
-        '4': 'April',
-        '5': 'May',
-        '6': 'June',
-        '7': 'July',
-        '8': 'August',
-        '9': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December',
-    }[month.lstrip('0')]
-
-    return f'{month} {day}, {year}'
+    return date.strftime(f'%B {date.day}{suffix}, %Y')
 
 
 _EXISTS: Dict[str, bool] = {}

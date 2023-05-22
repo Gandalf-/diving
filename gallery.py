@@ -157,7 +157,7 @@ def html_tree(
 
     # body
     results = []
-    has_subcategories = [1 for key in tree.keys() if key != "data"] != []
+    has_subcategories = any(key != "data" for key in tree.keys())
     if has_subcategories:
         html += '<div class="grid">'
 
