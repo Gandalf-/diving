@@ -81,6 +81,11 @@ class RealDatabase(Database):
             )
             assert self.wiki_cache
 
+    def _invalidate_cache(self) -> None:
+        '''invalidate the cache'''
+        self.hash_cache = {}
+        self.wiki_cache = {}
+
     def get_image_hash(self, identifier: str) -> Optional[str]:
         self._fill_hash_cache()
         return self.hash_cache.get(identifier, {}).get('hash')
@@ -103,20 +108,22 @@ class RealDatabase(Database):
         return self.database.get(*keys, default=default, cast=cast)
 
     def set(self, *keys: str, value: Any) -> None:
-        self.hash_cache = {}
-        self.wiki_cache = {}
+        self._invalidate_cache()
         self.database.set(*keys, value=value)
 
     def delete(self, *keys: str) -> None:
+        self._invalidate_cache()
         self.database.delete(*keys)
 
     def keys(self, *keys: str) -> List[str]:
         return self.database.keys(*keys)
 
     def append(self, *keys: str, value: Any) -> None:
+        self._invalidate_cache()
         self.database.append(*keys, value=value)
 
     def remove(self, *keys: str, value: Any) -> None:
+        self._invalidate_cache()
         self.database.remove(*keys, value=value)
 
 

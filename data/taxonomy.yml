@@ -336,7 +336,7 @@ Animalia:
           Dermasterias:
             imbricata: leather star
           Asterina:
-              miniata: bat star
+            miniata: bat star
         Goniasteridae:
           Ceramaster:
             patagonicus: cookie star
@@ -365,7 +365,7 @@ Animalia:
             atra: atra sea cucumber
           Holothuria:
             kefersteini: kefersteini sea cucumber
-            eduulis: edible sea cucumber
+            edulis: edible sea cucumber
       Dendrochirotida:
         # branched tentacle sea cucumber
         Sclerodactylidae:
@@ -931,7 +931,7 @@ Animalia:
         sp.: soft coral
         Nephtheidae:
           Scleronephthya: orange mouthed soft coral
-          Dendronphthya:
+          Dendronephthya:
             hemprichi: orange spiky soft coral
             sp.: spiky soft coral
           Gersemia:
@@ -972,7 +972,7 @@ Animalia:
             Heteractis:
               magnifica: magnificent anemone
           Actiniidae:
-            Entacmea:
+            Entacmaea:
               quadricolor: bulb tentacle anemone
             Epiactis:
               prolifera: proliferating anemone

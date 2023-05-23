@@ -3,6 +3,7 @@ inflect
 apocrypha
 pyyaml
 types-PyYaml
+types-beautifulsoup4
 
 mypy
 pylint

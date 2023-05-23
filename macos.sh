@@ -18,7 +18,7 @@ start_database() {
 
   apocrypha-server \
     --headless \
-    --database ~/google_drive/code/python/diving/data/db.json &
+    --database "$src"/data/db.json &
 
   pid=$!
   until d --keys | grep -q .; do
@@ -36,6 +36,13 @@ build() {
   cd "$www"
   bash    "$src"/runner.sh  ~/Pictures/diving/
   python3 "$src"/gallery.py ~/Pictures/diving/
+}
+
+wikipedia() {
+  start_database
+
+  echo ">>> updater()"
+  python3 -i "$src"/information.py
 }
 
 serve() {

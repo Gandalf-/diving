@@ -231,7 +231,7 @@ def missing_list() -> List[str]:
     complete.update(database.get(*db_root, 'invalid', default=[], cast=list))
 
     for name in names:
-        parts = [p for p in name.split(' ') if p != 'sp']
+        parts = [p for p in name.split(' ') if p not in ('sp', 'sp.')]
         if parts[-1].islower():
             # species
             parts[-1] = parts[-2] + ' ' + parts[-1]
