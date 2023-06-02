@@ -129,6 +129,7 @@ def _find_misspellings(names: Optional[List[str]] = None) -> Iterable[str]:
     ignores = (
         'clathria',
         'mauve spiky soft coral',
+        'magenta spiky soft coral',
         'fan coral',
     )
 

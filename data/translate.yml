@@ -1,111 +1,1392 @@
-thorny:
-  - acanthus
-  - acanthias
-  - acantha
-  - acanthium
-stemless:
-  - acaulis
-  - acaule
-radial:
-  - actin
-  - actino
-sharpened:
-  - acutus
-  - acuta
-  - acutum
-prickly:
-  - aculeatus
-  - aculeata
-  - aculeatum
-singed:
-  - adustus
-  - adusta
-  - adustum
-equal:
-  - aequalis
-  - aequale
-summer:
-  - aestivus
-  - aestiva
-  - aestivum
-kindred:
-  - affinis
-  - affine
-african:
-  - africanus
-  - africana
-  - africanum
-  - africanae
-wild:
-  - agrestis
-  - agreste
-winged:
-  - alatus
-  - alata
-  - alatum
-white-headed:
-  - albiceps
-white-toothed:
-  - albidens
-painted-white:
-  - albopictus
-  - albopicta
-  - albopictum
-white:
-  - albus
-  - alba
-  - album
-alpine:
-  - alpinus
-  - alpina
-  - alpinum
-lovable:
-  - amabilis
-  - amabile
-uncertain:
-  - ambiguus
-  - ambigua
-  - ambiguum
-blunt:
-  - amblys
-  - ambly
-american:
-  - americanus
-  - americana
-  - americanum
-on all sides:
-  - amphi
-bottle:
-  - ampullatus
-  - ampullata
-  - ampulla
-english:
-  - anglicus
-  - anglica
-  - anglicum
-narrow:
-  - angustus
-  - angusta
-  - angustum
-  - angustatus
-  - angustissimus
-antarctic:
-  - antarcticus
-  - antarctica
-  - antarcticum
-  - antarcticae
-flower:
-  - antho
-human:
-  - anthropo
-bee:
-  - apianus
-  - apiana
-  - apianum
-  - api
-aquatic:
-  - aquaticus
-  - aquatica
-  - aquaticum
-tree-like:
-  - arborescens
+animalia: Animals
+ctenophora: Comb bearers
+brachiopoda: Arm-footed
+rhynchonellata: Beak shell
+terebratulida: Auger shells
+# laqueoidea: No direct translation found (possibly a taxonomic rank or grouping)
+terebrataliidae: Auger shell family
+terebratalia: Auger shells
+transversa: Transverse, crosswise
+platyhelminthes: Flatworms
+rhabditophora: Rod-shaped bearers
+polycladida: Many plates
+pseudocerotoidea: False wax worms
+pseudocerotidae: False cerotid worms
+pseudoceros: False horns
+suzzanae: Named after Suzzana
+maiazoon: Midday animal
+orsaki: Named after Orsak
+stylochoidea: Column-like
+stylochoidae: Column-like family
+stylochus: Column-like
+californiensis: From California
+callioplanidae: Beautifully flat family
+kaburakia: Named after Kaburaki
+excelsa: High, elevated
+nemertea: Ribbon worms
+pilidiophora: Hair-bearers
+
+heteronemertea: Different ribbon worms
+lineidae: Lineid worms
+cerebratulus: Brain-like
+montgomery: Named after Montgomery
+palaeonemertea: Ancient ribbon worms
+tubulanidae: Tube worms
+tubulanus: Tube-like
+sexlineatus: With six lines
+polymorphus: Having many forms
+porifera: Pore-bearers
+hexactinellida: Six-rayed nets
+lyssacinosida: Sac-like
+rossellidae: Named after Rosselli
+rhabdocalyptus: Rod-shaped
+dawsoni: Named after Dawson
+staurocalyptus: Cross-shaped
+dowlingi: Named after Dowling
+sceptrulophora: Scepter-bearing
+aphrocallistidae: Seafoam beauty family
+aphrocallistes: Seafoam beauty
+vastus: Vast, large
+tethyida: Tethyid
+tethyidae: Tethyid family
+tethya: Tethya
+californiana: From California
+dictyoceratida: Net-horned
+dysideidae: Named after Dysidea
+dysidea: Dysidea
+granulosa: Granulated
+polymastiida: Many breasts
+polymastiidae: Many-breasted family
+polymastia: Many-breasted
+pachymastia: Thick-breasted
+
+clionaida: Cliona-like (referring to a group of sponges)
+clionaidae: Cliona family
+cliona: Cliona (referring to a genus of sponges)
+californiana: From California
+poecilosclerida: Many-stemmed hard (referring to a group of sponges)
+crambeidae: Crambe family
+monanchora: Solitary anchor
+unguiculata: Clawed
+acarnidae: Acarnidae family
+acarnus: Acarnus (referring to a genus of sponges)
+amphilectus: Double thread
+rigida: Rigid
+digitatus: Finger-like
+hymedesmiidae: Hymedesmiidae family
+hamigera: With hooks
+antho: Flower-like
+graceae: Named after Grace
+myxillidae: Myxillidae family
+myxilla: Myxilla (referring to a genus of sponges)
+incrustans: Encrusting
+mycalidae: Mycalidae family
+mycale: Mycale (referring to a genus of sponges)
+toporoki: Named after Toporok
+haplosclerida: Simple hard (referring to a group of sponges)
+chalinidae: Chalinidae family
+chalinula: Chalinula (referring to a genus of sponges)
+nematifera: Thread-bearing
+vaginalis: Vaginal (referring to the shape)
+petrosiidae: Petrosiidae family
+suberitida: Suberitid (referring to a group of sponges)
+halichondriidae: Halichondriidae family
+halichondria: Halichondria (referring to a genus of sponges)
+bowerbanki: Named after Bowerbank
+suberitidae: Suberitidae family
+homaxinella: Similar to Maxinella
+pseudosuberites: False Suberites
+montiniger: Named after Montiniger
+annelida: Ringed (referring to segmented worms)
+
+polychaeta: Many bristles (referring to a class of marine worms)
+phyllodocida: Leaf-like
+eunicida: True spines (referring to a group of polychaete worms)
+onuphidae: Onuphidae family (referring to a family of marine worms)
+diopatra: Double-rimmed
+ornata: Ornate
+eunicidae: True spines family (referring to a family of polychaete worms)
+leodice: Bright
+polynoidae: Polynoidae family (referring to a family of marine worms)
+arctonoe: Bear-dwelling
+vittata: Banded
+harmothoe: Graceful
+imbricata: Overlapping
+goniadidae: Goniadidae family (referring to a family of marine worms)
+glycinde: Sweet-smelling
+polygnatha: Many jaws
+nereididae: Nereididae family (referring to a family of marine worms)
+nereis: Nereis (referring to a genus of polychaete worms)
+vexillosa: Banner-like
+opheliidae: Opheliidae family (referring to a family of marine worms)
+travisiidae: Travisiidae family (referring to a family of marine worms)
+travisia: Travisia (referring to a genus of marine worms)
+terebellida: Terebellid (referring to a group of marine worms)
+terebellidae: Terebellidae family (referring to a family of marine worms)
+thelepus: Nipple-footed
+amphinomida: Amphitrite-like (referring to a family of marine worms)
+amphinomidae: Amphitrite-like family (referring to a family of marine worms)
+hermodice: Messenger of war
+carunculata: With a small fleshy excrescence
+sabellida: Sabellid (referring to a family of marine worms)
+serpulidae: Serpulidae family (referring to a family of marine worms)
+spirobranchus: Spiral gills
+giganteus: Gigantic
+crucigera: Cross-bearing
+zygophora: Yoke-bearing
+serpula: Serpula (referring to a genus of marine worms)
+
+columbiana: From Colombia
+protula: Protruding
+pacifica: From the Pacific
+sabellariidae: Sabellariidae family (referring to a family of marine worms)
+neosabellaria: New Sabellaria
+cementarium: Cementing
+sabellidae: Sabellidae family (referring to a family of marine worms)
+parasabella: Parasabella (referring to a genus of marine worms)
+media: Middle
+sabellastarte: Sabellastarte (referring to a genus of marine worms)
+eudistylia: Well-formed style
+vancouveri: From Vancouver
+chone: Chone (referring to a genus of marine worms)
+schizobranchia: Split gills
+insignis: Remarkable
+myxicola: Mucus-dwelling
+infundibulum: Funnel-shaped
+crassicornis: Thick-horned
+spionida: Spionida (referring to an order of marine worms)
+chaetopteridae: Chaetopteridae family (referring to a family of marine worms)
+spiochaetopterus: Spiochaetopterus (referring to a genus of marine worms)
+costarum: Ribbed
+phyllochaetopterus: Leaf-like Chaetopterus
+prolifica: Prolific
+bryozoa: Moss animals
+stenolaemata: Thin plates
+cyclostomatida: Cyclostomatida (referring to an order of bryozoans)
+lichenoporidae: Lichenoporidae family (referring to a family of bryozoans)
+lichenopora: Lichenopora (referring to a genus of bryozoans)
+heteroporidae: Heteroporidae family (referring to a family of bryozoans)
+heteropora: Heteropora (referring to a genus of bryozoans)
+pacifica: From the Pacific
+alaskensis: From Alaska
+gymnolaemata: Naked mouth
+cheilostomatida: Cheilostomatida (referring to an order of bryozoans)
+celleporoidea: Celleporoidea (referring to a superfamily of bryozoans)
+phidoloporidae: Phidoloporidae family (referring to a family of bryozoans)
+phidolopora: Phidolopora (referring to a genus of bryozoans)
+pacifica: From the Pacific
+
+microporoidea: Small pores
+microporidae: Microporidae family (referring to a family of bryozoans)
+microporina: Microporina (referring to a genus of bryozoans)
+articulata: Articulated
+membraniporoidea: Thin-pored
+membraniporidae: Membraniporidae family (referring to a family of bryozoans)
+membranipora: Membranipora (referring to a genus of bryozoans)
+membranacea: Membranous
+schizoporelloidea: Split-pored
+schizoporellidae: Schizoporellidae family (referring to a family of bryozoans)
+schizoporella: Schizoporella (referring to a genus of bryozoans)
+unicornis: Unicorn
+buguloidea: Buguloidea (referring to a superfamily of bryozoans)
+bugulidae: Bugulidae family (referring to a family of bryozoans)
+dendrobeania: Dendrobeania (referring to a genus of bryozoans)
+murrayana: Named after Murray
+lichenoides: Lichen-like
+echinodermata: Spiny skin
+ophiuroidea: Ophiuroidea (referring to a class of echinoderms)
+euryalida: Broad baskets
+gorgonocephalidae: Gorgonocephalidae family (referring to a family of brittle stars)
+gorgonocephalus: Gorgonocephalus (referring to a genus of brittle stars)
+eucnemis: True striped
+ophiurida: Ophiurida (referring to an order of brittle stars)
+ophiuridae: Ophiuridae family (referring to a family of brittle stars)
+ophiura: Ophiura (referring to a genus of brittle stars)
+luetkenii: Named after Lütken
+sarsii: Named after Sars
+amphilepidida: Amphilepidida (referring to an order of amphipods)
+amphiuroidea: Amphiuroidea (referring to a superfamily of brittle stars)
+amphiuridae: Amphiuridae family (referring to a family of brittle stars)
+amphipholis: Amphipholis (referring to a genus of brittle stars)
+squamata: Scaled
+amphiodia: Amphiodia (referring to a genus of brittle stars)
+periercta: Highly erect
+ophiactoidea: Ophiactoidea (referring to an order of brittle stars)
+ophiopholidae: Ophiopholidae family (referring to a family of brittle stars)
+ophiopholis: Ophiopholis (referring to a genus of brittle stars)
+aculeata: Spiny
+ophiocomidae: Ophiocomidae family (referring to a family of brittle stars)
+ophiocoma: Ophiocoma (referring to a genus of brittle stars)
+pica: Magpie
+erinaceus: Hedgehog
+ophiotrichidae: Ophiotrichidae family (referring to a family of brittle stars)
+ophiothrix: Ophiothrix (referring to a genus of brittle stars)
+foveolata: Pitted
+purpurea: Purple
+
+ophiothela: Ophiothela (referring to a genus of brittle stars)
+mirabilis: Wonderful, marvelous
+crinoidea: Lily-like (referring to a class of echinoderms, including sea lilies and feather stars)
+mariametridae: Mariametridae family (referring to a family of crinoids)
+stephanometra: Crown-like uterus
+indica: From India
+himerometridae: Himerometridae family (referring to a family of crinoids)
+himerometra: Himerometra (referring to a genus of crinoids)
+robustipinna: Robust fin
+colobometridae: Colobometridae family (referring to a family of crinoids)
+colobometra: Colobometra (referring to a genus of crinoids)
+cenometra: Cenometra (referring to a genus of crinoids)
+bella: Beautiful
+comasteridae: Comasteridae family (referring to a family of starfish)
+comissa: Meeting, joined
+comanthina: Comanthina (referring to a genus of feather stars)
+nobilis: Noble
+oxycomanthus: Sharp or acid-tasting flower
+bennetti: Named after Bennett
+comatulida: Comatulida (referring to an order of feather stars)
+antedonidae: Antedonidae family (referring to a family of crinoids)
+florometra: Flower-like uterus
+serratissima: Very serrated
+asteroidea: Star-like (referring to a class of echinoderms, including starfish)
+paxillosida: Paxillosida (referring to an order of starfish)
+pseudarchasteridae: Pseudarchasteridae family (referring to a family of starfish)
+gephyreaster: Bridge-like star
+swifti: Named after Swift
+luidiidae: Luidiidae family (referring to a family of starfish)
+luidia: Luidia (referring to a genus of starfish)
+bellonae: Named after Bellona
+astropectinidae: Astropectinidae family (referring to a family of starfish)
+astropecten: Astropecten (referring to a genus of starfish)
+armatus: Armed, protected
+velatida: Velatida (referring to an order of starfish)
+
+pterasteridae: Pterasteridae family (referring to a family of starfish)
+pteraster: Pteraster (referring to a genus of starfish)
+tesselatus: Tessellated, patterned like a mosaic
+militaris: Military, soldier-like
+forcipulatida: Forcipulatida (referring to an order of starfish)
+heliasteridae: Heliasteridae family (referring to a family of starfish)
+heliaster: Heliaster (referring to a genus of starfish)
+cumingi: Named after Cuming
+asteriidae: Asteriidae family (referring to a family of starfish)
+orthasterias: Straight star
+koehleri: Named after Koehler
+evasterias: Beautiful star
+troschelii: Named after Troschel
+stylasterias: Column-like star
+forreri: Named after Forrer
+leptasterias: Slender star
+hexactis: Six-rayed
+pycnopodia: Dense foot
+helianthoides: Sunflower-like
+pisaster: Pisaster (referring to a genus of starfish)
+ochraceus: Ochre-colored
+valvatida: Valvatida (referring to an order of starfish)
+mithrodiidae: Mithrodiidae family (referring to a family of starfish)
+mithrodia: Mithrodia (referring to a genus of starfish)
+bradleyi: Named after Bradley
+ophidiasteridae: Ophidiasteridae family (referring to a family of starfish)
+fromia: Fromia (referring to a genus of starfish)
+nodosa: Knotted, knobby
+indica: From India
+milleporella: Thousand-pored
+linckia: Linckia (referring to a genus of starfish)
+guildingi: Named after Guilding
+multifora: Many-pored
+laevigata: Smooth
+columbiae: From Columbia
+phataria: Phataria (referring to a genus of starfish)
+
+unifascialis: Single-banded
+oreasteridae: Oreasteridae family (referring to a family of starfish)
+culcita: Cushion
+schmideliana: Named after Schmidel
+pentaceraster: Five-rayed star
+cumingi: Named after Cuming
+nidorellia: Nest-like
+armata: Armed
+choriaster: Choriaster (referring to a genus of starfish)
+granulatus: Granulated
+solasteridae: Solasteridae family (referring to a family of starfish)
+crossaster: Crossed star
+papposus: Covered with hairs
+solaster: Solaster (referring to a genus of starfish)
+endeca: Eleven
+dawsoni: Named after Dawson
+stimpsoni: Named after Stimpson
+endeca: Eleven
+asteropseidae: Asteropseidae family (referring to a family of starfish)
+dermasterias: Dermasterias (referring to a genus of starfish)
+imbricata: Overlapping, imbricate
+asterina: Asterina (referring to a genus of starfish)
+miniata: Red-colored
+goniasteridae: Goniasteridae family (referring to a family of starfish)
+ceramaster: Ceramaster (referring to a genus of starfish)
+patagonicus: From Patagonia
+mediaster: Mediaster (referring to a genus of starfish)
+aequalis: Equal, identical
+hippasteria: Hippasteria (referring to a genus of starfish)
+spinulosida: Spinulosida (referring to an order of starfish)
+echinasteridae: Echinasteridae family (referring to a family of starfish)
+henricia: Henricia (referring to a genus of starfish)
+leviuscula: Slightly smooth
+sanguinolenta: Blood-red
+holothuroidea: Holothuroidea (referring to a class of sea cucumbers)
+synaptidae: Synaptidae family (referring to a family of sea cucumbers)
+synaptula: Synaptula (referring to a genus of sea cucumbers)
+
+recta: Straight
+holothuriida: Holothuriida (referring to an order of sea cucumbers)
+holothuriidae: Holothuriidae family (referring to a family of sea cucumbers)
+pearsonothuria: Pearsonothuria (referring to a genus of sea cucumbers)
+graeffei: Named after Graeffe
+halodeima: Halodeima (referring to a genus of sea cucumbers)
+atra: Black
+holothuria: Holothuria (referring to a genus of sea cucumbers)
+kefersteini: Named after Keferstein
+edulis: Edible
+dendrochirotida: Dendrochirotida (referring to an order of sea cucumbers)
+sclerodactylidae: Sclerodactylidae family (referring to a family of sea cucumbers)
+eupentacta: Eupentacta (referring to a genus of sea cucumbers)
+quinquesemita: Five rows
+cucumariidae: Cucumariidae family (referring to a family of sea cucumbers)
+cucumaria: Cucumaria (referring to a genus of sea cucumbers)
+miniata: Red-colored
+piperata: Peppered
+pallida: Pale
+frondosa: Leafy
+psolidae: Psolidae family (referring to a family of sea cucumbers)
+psolus: Psolus (referring to a genus of sea cucumbers)
+chitonoides: Chiton-like
+squamatus: Scaled
+synallactida: Synallactida (referring to an order of sea cucumbers)
+stichopodidae: Stichopodidae family (referring to a family of sea cucumbers)
+isostichopus: Isostichopus (referring to a genus of sea cucumbers)
+fuscus: Dark
+horrens: Rough
+apostichopus: Apostichopus (referring to a genus of sea cucumbers)
+californicus: From California
+echinoidea: Echinoidea (referring to a class of sea urchins)
+clypeasteroida: Clypeasteroida (referring to an order of sea urchins)
+cidaroida: Cidaroida (referring to an order of sea urchins)
+cidaroidea: Cidaroida (referring to a superfamily of sea urchins)
+
+cidaridae: Cidaridae family (referring to a family of sea urchins)
+eucidaris: True thorny
+thouarsii: Named after Thouars
+diadematoida: Diadematoida (referring to an order of sea urchins)
+diadematidae: Diadematidae family (referring to a family of sea urchins)
+centrostephanus: Central crown
+coronatus: Crowned
+diadema: Diadem
+antillarum: Of the Antilles
+mexicanum: Mexican
+camarodonta: Camarodonta (referring to an order of sea urchins)
+odontophora: Odontophora (referring to a subclass of sea urchins)
+echinometridae: Echinometridae family (referring to a family of sea urchins)
+caenocentrotus: Recent center
+gibbosus: Humpbacked
+echinostrephus: Spiral spines
+molaris: Of the molars
+toxopneustidae: Toxopneustidae family (referring to a family of sea urchins)
+toxopneustes: Toxic breather
+roseus: Rosy
+tripneustes: Three-spined
+depressus: Depressed
+strongylocentrotidae: Strongylocentrotidae family (referring to a family of sea urchins)
+strongylocentrotus: Strongylocentrotus (referring to a genus of sea urchins)
+pallidus: Pale
+purpuratus: Purple
+franciscanus: From San Francisco
+droebachiensis: Droebachiensis (referring to a species of fish)
+chordata: Chordates
+chondrichthyes: Chondrichthyes (referring to a class of cartilaginous fish)
+carcharhiniformes: Carcharhiniformes (referring to an order of sharks)
+carcharhinidae: Carcharhinidae family (referring to a family of sharks)
+triaenodon: Triaenodon (referring to a genus of sharks)
+obesus: Stout, plump
+
+carcharhinus: Sharp-nosed
+melanopterus: Black fins
+amblyrhynchos: Blunt-nosed
+falciformis: Sickle-shaped
+galapagensis: From the Galapagos Islands
+sphyrnidae: Sphyrnidae family (referring to a family of sharks)
+sphyrna: Sphyrna (referring to a genus of hammerhead sharks)
+elasmobranchii: Elasmobranchii (referring to a subclass of cartilaginous fish)
+orectolobiformes: Orectolobiformes (referring to an order of carpet sharks)
+ginglymostomatidae: Ginglymostomatidae family (referring to a family of nurse sharks)
+ginglymostoma: Ginglymostoma (referring to a genus of nurse sharks)
+cirratum: Curled, ringed
+rhincodontidae: Rhincodontidae family (referring to a family of whale sharks)
+rhincodon: Rhincodon (referring to a genus of whale sharks)
+typus: Type, model
+hexanchiformes: Hexanchiformes (referring to an order of sharks)
+hexanchidae: Hexanchidae family (referring to a family of sharks)
+hexanchus: Hexanchus (referring to a genus of sharks)
+griseus: Gray
+dasyatidae: Dasyatidae family (referring to a family of stingrays)
+myliobatiformes: Myliobatiformes (referring to an order of rays)
+myliobatidae: Myliobatidae family (referring to a family of rays)
+aetobatus: Aetobatus (referring to a genus of rays)
+narinari: Spotted eagle ray
+mobula: Mobula (referring to a genus of rays)
+alfredi: Named after Alfred
+holocephali: Holocephali (referring to a subclass of cartilaginous fish)
+chimaeriformes: Chimaeriformes (referring to an order of cartilaginous fish)
+chimaeridae: Chimaeridae family (referring to a family of chimaeras)
+hydrolagus: Hydrolagus (referring to a genus of chimaeras)
+colliei: Named after Collie
+ascidiacea: Ascidians
+aplousobranchia: Aplousobranchia (referring to an order of sea squirts)
+polyclinidae: Polyclinidae family (referring to a family of sea squirts)
+aplidium: Aplidium (referring to a genus of sea squirts)
+californicum: From California
+
+polycitoridae: Polycitoridae family (referring to a family of sea squirts)
+cystodytes: Cystodytes (referring to a genus of sea squirts)
+lobatus: Lobed
+didemnidae: Didemnidae family (referring to a family of sea squirts)
+trididemnum: Trididemnum (referring to a genus of sea squirts)
+didemnum: Didemnum (referring to a genus of sea squirts)
+carnulentum: Fleshy
+phlebobranchia: Phlebobranchia (referring to an order of sea squirts)
+ascidiidae: Asciidiidae family (referring to a family of sea squirts)
+ascidia: Ascidia (referring to a genus of sea squirts)
+paratropa: Paratropa (referring to a genus of sea squirts)
+corellidae: Corellidae family (referring to a family of sea squirts)
+corella: Corella (referring to a genus of sea squirts)
+willmeriana: Named after Willmer
+cionidae: Cionidae family (referring to a family of sea squirts)
+ciona: Ciona (referring to a genus of sea squirts)
+savignyi: Named after Savigny
+stolidobranchia: Stolidobranchia (referring to an order of sea squirts)
+pyuridae: Pyuridae family (referring to a family of sea squirts)
+halocynthia: Halocynthia (referring to a genus of sea squirts)
+aurantium: Orange-colored
+igaboja: Igaboja (referring to a genus of sea squirts)
+styelidae: Styelidae family (referring to a family of sea squirts)
+cnemidocarpa: Cnemidocarpa (referring to a genus of sea squirts)
+finmarkiensis: From Finmark, Norway
+metandrocarpa: Metandrocarpa (referring to a genus of sea squirts)
+taylori: Named after Taylor
+mammalia: Mammals
+carnivora: Carnivores
+otariidae: Otariidae family (referring to a family of seals)
+zalophus: Zalophus (referring to a genus of sea lions)
+wollebaeki: Named after Wollebaek
+cetacea: Cetaceans
+delphinidae: Delphinidae family (referring to a family of dolphins)
+tursiops: Tursiops (referring to a genus of dolphins)
+truncatus: Truncated
+primates: Primates
+hominoidea: Hominoidea (referring to a superfamily of apes)
+hominidae: Hominidae family (referring to a family of great apes)
+homo: Homo (referring to the genus including humans)
+
+sapiens:
+reptilia:
+squamata:
+iguanidae:
+amblyrhynchus:
+cristatus:
+testudines:
+cheloniidae:
+eretmochelys:
+imbricata:
+chelonia:
+mydas:
+actinopterygii:
+lophiiformes:
+ogcocephalidae:
+ogcocephalus:
+darwini:
+pleuronectiformes:
+bothidae:
+bothus:
+leopardinus:
+gasterosteiformes:
+aulorhynchidae:
+aulorhynchus:
+flavidus:
+syngnathiformes:
+syngnathidae:
+corythoichthys:
+haematopterus:
+syngnathus:
+leptorhynchus:
+hippocampus:
+ingens:
+aulostomoidei:
+aulostomoidea:
+aulostomidae:
+aulostomus:
+beryciformes:
+holocentridae:
+holocentrus:
+rufus:
+myripristis:
+leiognathus:
+jacobus:
+scombriformes:
+scombridae:
+scomberomorini:
+scomberomorus:
+regalis:
+percomorpha:
+labriformes:
+scaridae:
+sparisoma:
+viride:
+scarus:
+vetula:
+guacamaia:
+chlorurus:
+strongylocephalus:
+elopiformes:
+megalopidae:
+megalops:
+clupeiformes:
+clupeidae:
+sardinops:
+sagax:
+batrachoidiformes:
+porichthys:
+echeneidae:
+remora:
+remora:
+perciformes:
+ephippidae:
+platax:
+teira:
+lutjanidae:
+lutjanus:
+kasmira:
+ocyurus:
+chrysurus:
+priacanthidae:
+heteropriacanthus:
+cruentatus:
+apogonidae:
+apogon:
+chaenopsidae:
+acanthemblemaria:
+castroi:
+zanclidae:
+zanclus:
+cornutus:
+carangidae:
+caranx:
+melampygus:
+cirrhitidae:
+oxycirrhites:
+typus:
+cirrhitichthys:
+oxycephalus:
+cirrhitus:
+rivulatus:
+blenniidae:
+dussumieri:
+ophioblennius:
+steindachneri:
+tripterygiidae:
+lepidonectes:
+corallicola:
+labrisomidae:
+gobioclinus:
+dendriticus:
+labridae:
+bodianus:
+diplotaenia:
+lachnolaimus:
+maximus:
+cheilinus:
+undulatus:
+mullidae:
+chaetodontidae:
+chaetodon:
+striatus:
+heniochus:
+monoceros:
+acuminatus:
+acanthuridae:
+paracanthurus:
+hepatus:
+embiotocidae:
+cymatogaster:
+aggregata:
+sciaenidae:
+equetus:
+punctatus:
+serranidae:
+epinephelus:
+labriformis:
+serranus:
+psittacinus:
+mycteroperca:
+tigris:
+pomacentridae:
+amphiprion:
+clarkii:
+nigripes:
+stegastes:
+beebei:
+pomacanthidae:
+pomacanthus:
+paru:
+holacanthus:
+tricolor:
+passer:
+grammatidae:
+gramma:
+royal:
+gobiidae:
+ctenogobiops:
+feroculus:
+rhinogobiops:
+nicholsii:
+lythrypnus:
+gilberti:
+haemulidae:
+haemulon:
+aurolineatum:
+flavolineatum:
+sciurus:
+stichaeidae:
+lumpenus:
+sagitta:
+chirolophis:
+nugator:
+decoratus:
+pholidae:
+apodichthys:
+flavidus:
+pholis:
+laeta:
+ornata:
+clemensi:
+anarhichadidae:
+anarrhichthys:
+ocellatus:
+anguilliformes:
+congridae:
+heterocongrinae:
+muraenidae:
+gymnothorax:
+favagineus:
+breedeni:
+thyrsoideus:
+javanicus:
+undulatus:
+moringa:
+funebris:
+scorpaeniformes:
+cyclopteridae:
+eumicrotremus:
+orbis:
+agonidae:
+agonopsis:
+vulsa:
+bathyagonus:
+alascanus:
+liparidae:
+liparis:
+fucensis:
+scorpaenidae:
+pterois:
+scorpaenopsis:
+barbatus:
+taenianotus:
+triacanthus:
+synanceia:
+verrucosa:
+scorpaena:
+plumieri:
+mystes:
+hemitripteridae:
+nautichthys:
+oculofasciatus:
+rhamphocottidae:
+rhamphocottus:
+richardsonii:
+cottidae:
+cottus:
+bairdii:
+oligocottus:
+maculosus:
+leptocottus:
+armatus:
+chitonotus:
+pugetensis:
+artedius:
+harringtoni:
+lateralis:
+jordania:
+zonope:
+paricelinus:
+hopliticus:
+ascelichthys:
+rhodorus:
+scorpaenichthys:
+marmoratus:
+hemilepidotus:
+hemilepidotus:
+myoxocephalus:
+polyacanthocephalus:
+enophrys:
+bison:
+sebastidae:
+sebastes:
+miniatus:
+ruberrimus:
+melanops:
+auriculatus:
+maliger:
+caurinus:
+pinniger:
+nebulosus:
+hexagrammidae:
+oxylebius:
+pictus:
+hexagrammos:
+decagrammus:
+ophiodon:
+elongatus:
+tetraodontiformes:
+molidae:
+mola:
+mola:
+tetraodontoidei:
+tetraodontoidae:
+arothron:
+meleagris:
+canthigaster:
+valentini:
+balistidae:
+melichthys:
+niger:
+balistes:
+vetula:
+polylepis:
+ostraciidae:
+lactoria:
+cornuta:
+lactophrys:
+bicaudalis:
+triqueter:
+cnidaria:
+scyphozoa:
+semaeostomeae:
+phacellophoridae:
+phacellophora:
+camtschatica:
+cyaneidae:
+cyanea:
+capillata:
+ulmaridae:
+aurelia:
+labiata:
+hydrozoa:
+anthoathecata:
+corymorphidae:
+euphysa:
+flammea:
+corymorpha:
+palma:
+pennariidae:
+pennaria:
+disticha:
+tubulariidae:
+ectopleura:
+integra:
+media:
+marina:
+crocea:
+filifera:
+bythotiaridae:
+bythotiara:
+huntsmani:
+milleporidae:
+millepora:
+complanata:
+tenera:
+stylasteridae:
+stylaster:
+norvegicus:
+leptothecata:
+plumularioidea:
+plumulariidae:
+plumularia:
+floridana:
+aglaopheniidae:
+macrorhynchia:
+philippina:
+aglaophenia:
+diegensis:
+campanulariidae:
+orthopyxis:
+aequoreidae:
+aequorea:
+sertularioidea:
+abietinaria:
+lafoeidae:
+lafoea:
+dumosa:
+anthozoa:
+antipatharia:
+antipathidae:
+antipathes:
+fernyi:
+galapagensis:
+veretillidae:
+cavernulina:
+darwini:
+scleractinia:
+intsertae:
+plerogyra:
+sinuosa:
+pocilloporidae:
+pocillopora:
+meandrina:
+poritidae:
+goniopora:
+porites:
+lobata:
+dendrophylliidae:
+balanophyllia:
+elegans:
+rhizopsammia:
+wellingtoni:
+tubastraea:
+coccinea:
+agariciidae:
+pavona:
+gigantea:
+chiriquiensis:
+mussidae:
+solenastrea:
+bournoni:
+acroporidae:
+acropora:
+cervicornis:
+spirularia:
+cerianthidae:
+pachycerianthus:
+fimbriatus:
+pennatulacea:
+halipteridae:
+halipteris:
+willemoesi:
+pennatulidae:
+ptilosarcus:
+gurneyi:
+undulatus:
+alcyonacea:
+nephtheidae:
+scleronephthya:
+dendronephthya:
+hemprichi:
+gersemia:
+rubiformis:
+gorgoniidae:
+pacifigorgia:
+darwinii:
+plexauridae:
+swiftia:
+torreyi:
+ellisellidae:
+junceella:
+melithaeidae:
+acabaria:
+alcyoniidae:
+alcyonium:
+zoantharia:
+epizoanthidae:
+epizoanthus:
+scotinus:
+actiniaria:
+edwardsioidea:
+edwardsiidae:
+edwardsia:
+actinostoloidea:
+actinostolidae:
+stomphia:
+didemon:
+actinioidea:
+haloclavidae:
+peachia:
+quinquecapitata:
+stichodactylidae:
+heteractis:
+magnifica:
+actiniidae:
+entacmaea:
+quadricolor:
+epiactis:
+prolifera:
+lisbethae:
+cribrinopsis:
+fernaldi:
+anthopleura:
+artemisia:
+elegantissima:
+urticina:
+crassicornis:
+coriacea:
+piscivora:
+lofotensis:
+metridioidea:
+halcampidae:
+halcampa:
+decemtentaculata:
+metridiidae:
+diadumenidae:
+metridium:
+senile:
+farcimen:
+mollusca:
+bivalvia:
+ostreida:
+ostreoidea:
+gryphaeidae:
+hyotissa:
+hyotis:
+lopha:
+cristagalli:
+cardiida:
+cardioidea:
+cardiidae:
+tridacna:
+squamosa:
+maxima:
+crocea:
+myida:
+pholadoidea:
+pholadidae:
+zirfaea:
+pilsbryi:
+pectinida:
+pectinoidea:
+spondylidae:
+spondylus:
+varians:
+pectinidae:
+pedum:
+nodipecten:
+magnificus:
+crassadoma:
+gigantea:
+chlamys:
+rubida:
+adapedonta:
+hiatelloidea:
+hiatellidae:
+panopea:
+generosa:
+polyplacophora:
+chitonida:
+mopalioidea:
+mopaliidae:
+katharina:
+tunicata:
+dendrochiton:
+flectens:
+mopalia:
+muscosa:
+lignosa:
+insignis:
+cryptochiton:
+stelleri:
+cephalopoda:
+octopoda:
+octopodoidea:
+octopodidae:
+octopus:
+rubescens:
+oculifer:
+cyanea:
+enteroctopodidae:
+enteroctopus:
+dofleini:
+gastropoda:
+philinoidea:
+gastropteridae:
+gastropteron:
+pacificum:
+lepetellida:
+haliotoidea:
+haliotidae:
+haliotis:
+kamtschatkana:
+fissurelloidea:
+fissurellidae:
+diodora:
+neogastropoda:
+buccinoidea:
+nassariidae:
+nassarius:
+fossatus:
+muricoidea:
+muricdae:
+nucella:
+trochida:
+trochoidea:
+tegulidae:
+tegula:
+pulligo:
+littorinimorpha:
+cypraeoidea:
+veluntinidae:
+coriocella:
+hibyae:
+limneria:
+
+prolongata:
+naticoidea:
+naticidae:
+neverita:
+lewisii:
+pleurobranchida:
+pleurobranchoidea:
+pleurobranchidae:
+berthella:
+californica:
+nudibranchia:
+arminoidea:
+arminidae:
+armina:
+californica:
+aeolidioidea:
+aeolidiidae:
+aeolidia:
+papillosa:
+myrrhinidae:
+hermissenda:
+crassicornis:
+opalescens:
+phyllidioidea:
+phyllidiidae:
+alyta:
+phyllidia:
+doridoidea:
+chromodorididae:
+felimare:
+lapislazuli:
+dorididae:
+geitodoris:
+heathi:
+doris:
+montereyensis:
+odhneri:
+discodorididae:
+rostanga:
+pulchra:
+peltodoris:
+
+nobilis: Noble
+lentignosa: Freckled
+diaulula: Double groove
+sandiegensis: From San Diego
+cadlinidae: Cadlina family
+aldisa: Unknown
+albomarginata: White-edged
+cadlina: Cadlina
+luteomarginata: Yellow-edged
+modesta: Modest
+polyceroidea: Polyceroidea
+polyceridae: Polyceridae
+tambja: Unknown
+mullineri: Mullineri
+limacia: Unknown
+cockerelli: Cockerelli
+triopha: Triopha
+catalinae: From Santa Catalina
+modesta: Modest
+proctonotoidea: Proctonotoidea
+proctonotidae: Proctonotidae
+antiopella: Antiopella
+fuscus: Dark
+dironidae: Dironidae
+dirona: Dirona
+albolineata: White-lined
+pellucida: Transparent
+fionoidea: Fionoidea
+trinchesiidae: Trinchesiidae
+zelentia: Zelentia
+pustulata: Pustulate
+eubranchidae: Eubranchidae
+eubranchus: Eubranchus
+sanjuanensis: From San Juan
+paracoryphellidae: Paracoryphellidae
+ziminella: Ziminella
+
+japonica: Japanese
+apataidae: Apata family
+apata: Deceptive
+pricei: Price's
+coryphellidae: Coryphella family
+orienthella: Eastern small beauty
+trilineata: Three-lined
+coryphella: Beautiful head
+trophina: Feeder
+verrucosa: Warty
+dendronotoidea: Dendronotoidea
+dendronotidae: Dendronotidae
+tethydidae: Tethydidae
+melibe: Soft-bodied
+leonina: Lion-like
+dendronotus: Dendronotus
+iris: Rainbow
+dalli: Dalli
+rufus: Red
+albus: White
+diversicolor: Various colors
+onchidoridoidea: Onchidoridoidea
+onchidorididae: Onchidorididae
+diaphorodoris: Diaphorodoris
+lirulatocauda: Ridged tail
+onchidoris: Onchidoris
+bilamellata: Double-ridged
+adalaria: Adalaria
+proxima: Near
+acanthodoris: Spiny-backed
+nanaimoensis: From Nanaimo
+lutea: Yellow
+
+hudsoni: Hudson's
+pilosa: Hairy
+tritonioidea: Tritonia-like
+tritoniidae: Tritonia family
+tritonia: Tritonia
+festiva: Festive
+gigantea: Giant
+arthropoda: Jointed-legged
+pantopoda: All-footed
+chelicerata: Clawed
+pycnogonida: Thick-knee
+pantopoda: All-footed
+maxillopoda: Jaw-legged
+sessilia: Attached
+balanoidea: Acorn-like
+balanidae: Acorn family
+balanus: Acorn
+glandula: Gland
+crenatus: Notched
+nubilus: Clouded
+malacostraca: Soft-shelled
+stomatopoda: Mouth-footed
+odonotodactylidae: Tooth-fingered family
+odontodactylus: Tooth-fingered
+scyllarus: Scyllarus
+lysiosquillidae: Lysiosquillidae
+lysiosquillina: Lysiosquillina
+maculata: Spotted
+isopoda: Equal-footed
+amphipoda: Two-legged
+phronimoidea: Phronima-like
+hyperiidae: Hyperiidae
+hyperia: Hyperia
+caprelloidea: Caprellid-like
+caprellidae: Caprellidae
+
+caprella: Caprella (referring to a genus of skeleton shrimp)
+alaskana: From Alaska
+decapoda: Decapoda (referring to an order of crustaceans including crabs)
+palinuroidea: Palinuroidea (referring to a superfamily of spiny lobsters)
+palinuridae: Palinuridae family (referring to a family of spiny lobsters)
+panulirus: Panulirus (referring to a genus of spiny lobsters)
+versicolor: Versicolored
+trapezioidea: Trapezioidea (referring to a superfamily of crabs)
+trapeziidae: Trapeziidae family (referring to a family of crabs)
+trapezia: Trapezia (referring to a genus of crabs)
+cymodoce: Cymodoce (referring to a genus of crabs)
+xanthoidea: Xanthoidea (referring to a superfamily of crabs)
+panopeidae: Panopeidae family (referring to a family of crabs)
+lophopanopeus: Lophopanopeus (referring to a genus of crabs)
+bellus: Beautiful
+astacoidea: Astacoidea (referring to a superfamily of crayfish)
+astacidae: Astacidae family (referring to a family of crayfish)
+pacifastacus: Pacifastacus (referring to a genus of crayfish)
+leniusculus: Lenient
+nematocarcinoidea: Nematocarcinoidea (referring to a superfamily of crabs)
+rhynchocinetidae: Rhynchocinetidae family (referring to a family of crabs)
+rhynchocinetes: Rhynchocinetes (referring to a genus of crabs)
+typus: Type
+crangonoidea: Crangonoidea (referring to a superfamily of crabs)
+crangonidae: Crangonidae family (referring to a family of crabs)
+crangon: Crangon (referring to a genus of crabs)
+handi: Hand's
+franciscorum: Of the Franciscan
+metacrangon: Metacrangon (referring to a genus of crabs)
+munita: Protected
+mesocrangon: Mesocrangon (referring to a genus of crabs)
+munitella: Little protected
+nephropoidea: Nephropoidea (referring to a superfamily of lobsters)
+nephropidae: Nephropidae family (referring to a family of lobsters)
+homarus: Homarus (referring to a genus of lobsters)
+americanus: American
+stenopodidae: Stenopodidae family (referring to a family of mantis shrimp)
+stenopus: Stenopus (referring to a genus of mantis shrimp)
+
+palaemonoidea: Palaemonoidea (referring to a superfamily of shrimp)
+palaemonidae: Palaemonidae family (referring to a family of shrimp)
+periclimenes: Periclimenes (referring to a genus of shrimp)
+yucatanicus: From Yucatan
+alpheoidea: Alpheoidea (referring to a superfamily of snapping shrimp)
+alpheidae: Alpheidae family (referring to a family of snapping shrimp)
+alpheus: Alpheus (referring to a genus of snapping shrimp)
+djeddensis: Named after Djeddah
+hippolytidae: Hippolytidae family (referring to a family of shrimp)
+lebbeus: Lebbeus (referring to a genus of shrimp)
+grandimana: Large-handed
+thor: Thor (referring to a species of shrimp)
+amboinensis: From Amboina
+lysmata: Lysmata (referring to a genus of cleaner shrimp)
+eualus: Eualus (referring to a genus of shrimp)
+pusiolus: Small bud
+spirontocaris: Spirontocaris (referring to a genus of shrimp)
+lamellicornis: Lamellicornis (referring to a species of shrimp)
+heptacarpus: Heptacarpus (referring to a genus of shrimp)
+kincaidi: Kincaid's
+decorus: Handsome
+stylus: Stylus
+tridens: Three-toothed
+pandaloidea: Pandaloidea (referring to a superfamily of shrimp)
+pandalidae: Pandalidae family (referring to a family of shrimp)
+pandalopsis: Pandalopsis (referring to a genus of shrimp)
+lucidirimicola: Lucid and rimicola
+pandalus: Pandalus (referring to a genus of shrimp)
+platyceros: Flat-horned
+stenolepis: Narrow-scaled
+cheiragonoidea: Cheiragonoidea (referring to a superfamily of crab)
+cheiragonidae: Cheiragonidae family (referring to a family of crab)
+telmessus: Telmessus (referring to a genus of crab)
+cheiragonus: Cheiragonus (referring to a genus of crab)
+grapsoidea: Grapsoidea (referring to a superfamily of crabs)
+varunidae: Varunidae family (referring to a family of crabs)
+hemigrapsus: Hemigrapsus (referring to a genus of crabs)
+oregonensis: From Oregon
+nudus: Naked
+galatheoidea: Galatheoidea (referring to a superfamily of squat lobsters)
+porcellanidae: Porcellanidae family (referring to a family of porcelain crabs)
+
+petrolisthes: Rock-dweller
+eriomerus: Delicate thigh
+galatheidae: Galatheidae family (referring to a family of squat lobsters)
+munida: Munida (referring to a genus of squat lobsters)
+paguroidea: Paguroidea (referring to a superfamily of hermit crabs)
+lithodidae: Lithodidae family (referring to a family of king crabs)
+phyllolithodes: Leaf-like Lithodes
+papillosus: With papillae
+acantholithodes: Spiny Lithodes
+rhinolithodes: Nose-like Lithodes
+wosnessenskii: Named after Wosnessensky
+lopholithodes: Crested Lithodes
+mandtii: Named after Mandt
+placetron: Plate-like
+cryptolithodes: Hidden Lithodes
+sitchensis: From Sitka
+oedignathus: Swollen jaw
+inermis: Unarmed
+diogenidae: Diogenidae family (referring to a family of hermit crabs)
+calcinus: Calcinus (referring to a genus of hermit crabs)
+latens: Hidden
+paguridae: Paguridae family (referring to a family of hermit crabs)
+elassochirus: Elassochirus (referring to a genus of hermit crabs)
+tenuimanus: Thin-handed
+parapagurodes: Near Parapagurus
+hartae: Named after Harta
+pagurus: Pagurus (referring to a genus of hermit crabs)
+armatus: Armed
+granosimanus: Grainy-handed
+caurinus: Caurinus (referring to a genus of hermit crabs)
+beringanus: From Bering
+stevensae: Named after Stevens
+hemphilli: Named after Hemphill
+cancroidea: Cancroidea (referring to a superfamily of crabs)
+cancridae: Cancridae family (referring to a family of crabs)
+glebocarcinus: Glebocarcinus (referring to a genus of crabs)
+oregonesis: From Oregon
+metacarcinus: Metacarcinus (referring to a genus of crabs)
+magister: Master
+cancer: Cancer (referring to a genus of crabs)
+
+gracilis: Slender
+productus: Extended, produced
+antennarius: Antenna-like
+majoidea: Majoidea (referring to a superfamily of crabs)
+inachoididae: Inachoididae family (referring to a family of crabs)
+stenorhynchus: Narrow snout
+seticornis: Bristle horn
+mithracidae: Mithracidae family (referring to a family of crabs)
+mithrax: Mithrax (referring to a genus of crabs)
+oregoniidae: Oregoniidae family (referring to a family of crabs)
+oregonia: Oregonia (referring to a genus of crabs)
+gracilis: Slender
+epialtidae: Epialtidae family (referring to a family of crabs)
+chorilia: Chorilia (referring to a genus of crabs)
+longipes: Long-legged
+pugettia: Pugettia (referring to a genus of crabs)
+producta: Produced
+richii: Named after Rich
+taliepus: Taliepus (referring to a genus of crabs)
+nuttallii: Named after Nuttall
+loxorhynchus: Slant snout
+scyra: Scyra (referring to a genus of crabs)
+acutifrons: Sharp forehead
+chromista: Colored
+tracheophytes: Vascular plants
+monocots: Monocotyledons
+alismatales: Alismatales (referring to an order of monocots)
+zosteraceae: Zosteraceae family (referring to a family of marine plants)
+zostera: Eelgrass
+marina: Marine
+chlorophyta: Green algae
+ulvophyceae: Ulvophyceae (referring to a class of green algae)
+ulvales: Ulvales (referring to an order of green algae)
+ulvaceae: Ulvaceae family (referring to a family of green algae)
+ulva: Sea lettuce
+ochrophyta: Brown algae
+bacillariophyceae: Bacillariophyceae (referring to a class of diatoms)
+cymbellales: Cymbellales (referring to an order of diatoms)
+gomphonemataceae: Gomphonemataceae family (referring to a family of diatoms)
+geminata: Twin, paired
+
+phaeophyceae: Brown algae
+laminariales: Kelp
+laminariaceae: Laminariaceae family (referring to a family of brown algae)
+nereocystis: Mermaid's bladder
+luetkeana: Named after Lütke
+fucales: Wrack (referring to a group of brown algae)
+fucaceae: Fucaceae family (referring to a family of brown algae)
+fucus: Rockweed
+gardneri: Named after Gardner
+rhodophyta: Red algae
+florideophyceae: Florideophyceae (referring to a class of red algae)
+rhodymeniales: Rhodymeniales (referring to an order of red algae)
+rhodymeniaceae: Rhodymeniaceae family (referring to a family of red algae)
+rhodymenia: Rhodymenia (referring to a genus of red algae)
+pacifica: From the Pacific
+botryocladia: Clustered branches
+pseudodichotoma: False dichotomy
+ceramiales: Ceramiales (referring to an order of red algae)
+ceramiaceae: Ceramiaceae family (referring to a family of red algae)
+microcladia: Small branches
+coulteri: Named after Coulter
+wrangeliaceae: Wrangeliaceae family (referring to a family of red algae)
+neoptilota: New feathers
+aslpenioides: Similar to Alpina
+rhodomelaceae: Rhodomelaceae family (referring to a family of red algae)
+osmunda: Fragrant
+gigartinales: Gigartinales (referring to an order of red algae)
+solieriaceae: Solieriaceae family (referring to a family of red algae)
+sarcodiotheca: Fleshlike case
+gaudichaudii: Named after Gaudichaud
+gigartinaceae: Gigartinaceae family (referring to a family of red algae)
+chondracanthus: Cartilage thorn
+mazzaella: Named after Mazza
+corallinales: Corallinales (referring to an order of red algae)
+plocamiales: Plocamiales (referring to an order of red algae)
+plocamiaceae: Plocamiaceae family (referring to a family of red algae)
+plocamiacium: Plocamiacium (referring to a genus of red algae)
+cartilagineum: Cartilaginous

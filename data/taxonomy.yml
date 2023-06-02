@@ -556,6 +556,8 @@ Animalia:
           Myripristis:
             leiognathus: panamic squirrelfish
             jacobus: blackbar squirrelfish
+          Sargocentron:
+            spiniferum: giant squirrelfish
       Scombriformes:
         Scombridae:
           Scomberomorini:
@@ -608,6 +610,7 @@ Animalia:
         Carangidae:
           Caranx:
             melampygus: bluefin trevally jack
+            sexfasciatus: bigeye trevally jack
         Cirrhitidae:
           Oxycirrhites:
             typus: longnosed hawkfish
@@ -657,10 +660,14 @@ Animalia:
             psittacinus: barred serrano
           Mycteroperca:
             tigris: tiger grouper
+          Cephalopholis:
+            nigripinnis: blackfin grouper
+            miniata: coral grouper
         Pomacentridae:
           Amphiprion:
             clarkii: yellowtail clownfish
             nigripes: maldives anemone fish
+            sebae: northern indian anemone fish
           Stegastes:
             beebei: galapagos ringtail damselfish
         Pomacanthidae:
@@ -795,6 +802,9 @@ Animalia:
         Molidae:
           Mola:
             mola: mola mola
+        Diodontidae:
+          Diodon:
+            holocanthus: masked porcupine fish
         Tetraodontoidei:
           Tetraodontoidae:
             # sp.: pufferfish
@@ -886,6 +896,9 @@ Animalia:
         Cavernulina:
           darwini: cavernulina darwini coral
       Scleractinia:
+        Fungiidae:
+          Fungia:
+            fungites: common mushroom coral
         Intsertae:
           Plerogyra:
             sinuosa: sinuose coral
@@ -903,6 +916,7 @@ Animalia:
             wellingtoni: rhizopsammia wellingtoni coral
           Tubastraea:
             coccinea: tubastraea coccinea coral
+            faulkneri: faulkner's coral
         Agariciidae:
           Pavona:
             sp.: pavona coral
@@ -914,6 +928,7 @@ Animalia:
         Acroporidae:
           Acropora:
             cervicornis: staghorn coral
+            solitaryensis: solitary islands coral
       Spirularia:
         Cerianthidae:
           Pachycerianthus:
@@ -930,6 +945,7 @@ Animalia:
       Alcyonacea:
         sp.: soft coral
         Nephtheidae:
+          Lemnalia: bushy lemnalia coral
           Scleronephthya: orange mouthed soft coral
           Dendronephthya:
             hemprichi: orange spiky soft coral
@@ -951,6 +967,8 @@ Animalia:
           #   sp.: clathria coral
         Alcyoniidae:
           Alcyonium: orange soft coral
+          Sarcophyton:
+            trocheliophorum: mushroom leather coral
       Zoantharia:
         Epizoanthidae:
           Epizoanthus:
@@ -1126,8 +1144,14 @@ Animalia:
               opalescens: opalescent nudibranch
         Phyllidioidea:
           Phyllidiidae:
-            Alyta:
-              phyllidia: alyta phyllidia
+            Phyllidiopsis:
+              striata: striped phyllidiopsis nudibranch
+            Phyllidiella:
+              rosans: rose phyllidiella nudibranch
+              zeylanica: zeylan phyllidiella nudibranch
+            Phyllidia:
+              varicosa: varicose phyllidia nudibranch
+              elgans: elegant phyllidia nudibranch
         Doridoidea:
           Chromodorididae:
             Felimare:
@@ -1157,6 +1181,7 @@ Animalia:
           Polyceridae:
             Tambja:
               mullineri: mulliner doris
+              morosa: gloomy nudibranch
             Limacia:
               cockerelli: cockerell's nudibranch
             Triopha:
