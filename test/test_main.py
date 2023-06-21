@@ -274,6 +274,33 @@ class TestGallery(unittest.TestCase):
         out = gallery.find_representative(tree['barnacle'], lineage=['barnacle'])
         self.assertIsNotNone(out)
 
+    def test_key_to_subject_gallery(self):
+        '''current element to visible text'''
+
+        def key_to_subject(key):
+            return gallery._key_to_subject(key, Where.Gallery)
+
+        self.assertEqual(key_to_subject('fancy fish'), 'Fancy Fish')
+        self.assertEqual(key_to_subject('octopus'), '<em>Octopus</em>')
+
+    def test_key_to_subject_taxonomy(self):
+        '''current element to visible text'''
+
+        def key_to_subject(key):
+            return gallery._key_to_subject(key, Where.Taxonomy)
+
+        self.assertEqual(key_to_subject('octopoda octopus'), 'O. octopus')
+
+    def test_key_to_subject_sites(self):
+        '''current element to visible text'''
+
+        def key_to_subject(key):
+            return gallery._key_to_subject(key, Where.Sites)
+
+        self.assertEqual(key_to_subject('Stretch Reef'), 'Stretch Reef')
+        self.assertEqual(key_to_subject('Shallows 2021-03-06'), 'Shallows')
+        self.assertEqual(key_to_subject('2021-03-06'), 'March 6th, 2021')
+
     def test_html_tree_gallery(self):
         '''basics'''
         tree = build_image_tree()

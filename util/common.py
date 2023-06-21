@@ -119,7 +119,7 @@ def strip_date(site: str) -> str:
 
     try:
         datetime.datetime.strptime(last, '%Y-%m-%d')
-        return ' '.join(parts[:-1])
+        return ' '.join(parts[:-1]) or site
     except ValueError:
         return site
 

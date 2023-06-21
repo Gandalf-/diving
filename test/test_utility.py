@@ -125,6 +125,7 @@ class TestUtility(unittest.TestCase):
         examples = [
             ('Sund Rock 2017-01-01', 'Sund Rock'),
             ('Sund Rock 4', 'Sund Rock 4'),
+            ('2017-01-01', '2017-01-01'),
         ]
         for before, after in examples:
             self.assertEqual(utility.strip_date(before), after)
