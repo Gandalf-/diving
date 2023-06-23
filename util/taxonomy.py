@@ -11,6 +11,7 @@ taxonomy related things
 
 import enum
 import sys
+from functools import lru_cache
 from typing import Iterable, Dict, List, Optional, Callable, Any
 
 import yaml
@@ -126,6 +127,7 @@ def load_known(exact_only: bool = False) -> Iterable[str]:
 MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
 
 
+@lru_cache(None)
 def mapping(where: MappingType = MappingType.Gallery) -> Dict[str, str]:
     '''
     gallery:  mapping of common names to scientific names

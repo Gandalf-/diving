@@ -5,6 +5,7 @@ parsing data from the file system to construct trees of images
 '''
 
 import os
+from functools import lru_cache
 from typing import Iterable, Set, Dict, List, Iterator
 
 from util.image import Image, categorize, split
@@ -45,6 +46,7 @@ def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
     return out
 
 
+@lru_cache(None)
 def build_image_tree() -> ImageTree:
     '''construct a nested dictionary where each key is a unique split of a
     name (after processing) from right to left. if there's another split under
@@ -60,6 +62,7 @@ def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
     )
 
 
+@lru_cache(None)
 def delve(dive_path: str) -> List[Image]:
     '''
     Create an Image object for each labeled picture in a directory; the path

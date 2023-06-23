@@ -20,3 +20,11 @@ lint:
 .PHONY: format
 format:
 	black -S *.py */*.py
+
+.PHONY: local
+local:
+	bash macos.sh build
+
+.PHONY: serve
+serve:
+	bash macos.sh serve

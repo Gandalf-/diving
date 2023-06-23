@@ -11,6 +11,7 @@ import re
 from typing import List, Tuple, Iterable, Dict, Any, Optional
 from concurrent.futures import ThreadPoolExecutor
 
+from util import common
 from util import collection
 from util import static
 from util import taxonomy
@@ -32,9 +33,28 @@ def required_checks() -> None:
     _wrong_order()
     _yaml_duplicate_keys()
     _no_duplicate_image_keys()
+    _unusal_casing()
 
 
 # PRIVATE
+
+
+def _unusal_casing() -> None:
+    '''Look for names that are not capitalized correctly.'''
+    unusual = []
+    ignore = {'BC'}
+
+    for image in collection.named():
+        for word in image.name.split(' '):
+            if word.islower():
+                continue
+            if word == common.titlecase(word):
+                continue
+            if word in ignore:
+                continue
+            unusual.append(image.label)
+
+    assert not unusual, f'Unusual casing found in {unusual}'
 
 
 def _no_duplicate_image_keys() -> None:
