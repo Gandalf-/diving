@@ -10,7 +10,6 @@ taxonomy related things
 '''
 
 import enum
-import sys
 from functools import lru_cache
 from typing import Iterable, Dict, List, Optional, Callable, Any
 
@@ -308,13 +307,14 @@ def _ordered_simple_names(tree: ImageTree) -> Iterable[str]:
             assert False, value
 
 
-def _taxonomy_listing() -> None:
+def _listing() -> None:
     '''write out the names to a file'''
     have = set(load_known())
     everything = set(_ordered_simple_names(build_image_tree()))
     need = everything - have
+    path = source_root + 'data/taxonomy.txt'
 
-    with open(yaml_path, 'w+', encoding='utf8') as fd:
+    with open(path, 'w+', encoding='utf8') as fd:
         for name in sorted(need):
             fd.write(name + '\n')
 
@@ -328,7 +328,3 @@ def _find_imprecise() -> Iterable[str]:
         c = _to_classification(name, m)
         if ' sp.' in c:
             yield name
-
-
-if not sys.flags.interactive and __name__ == '__main__':
-    _taxonomy_listing()

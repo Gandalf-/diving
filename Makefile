@@ -1,6 +1,3 @@
-tags: *.py */*.py
-	ctags -R --fields=+l --languages=python --python-kinds=-i
-
 .PHONY: test
 test: unittest inttest
 
@@ -10,16 +7,23 @@ unittest:
 
 .PHONY: inttest
 inttest:
-	bash test_integration.sh
+	bash test/integration.sh
 
 .PHONY: lint
-lint:
+lint: mypy ruff
+
+.PHONY: mypy
+mypy:
 	mypy .
+
+.PHONY: ruff
+ruff:
 	ruff check --fix .
 
 .PHONY: format
 format:
 	black -S *.py */*.py
+
 
 .PHONY: local
 local:
