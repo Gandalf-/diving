@@ -1,15 +1,16 @@
 import unittest
 
-from util.translator import lookup, cleanup
+from util.translator import translate, cleanup
 
 
 class TestTranslator(unittest.TestCase):
     def test_load_yaml(self) -> None:
-        self.assertEqual(lookup('unguiculata'), 'Clawed')
-        self.assertIsNone(lookup('nothing'))
+        self.assertEqual(translate('unguiculata'), 'Clawed')
+        self.assertIsNone(translate('nothing'))
 
     def test_cleanup(self) -> None:
-        self.assertEqual(cleanup('polychaeta', 'Many bristles'), 'Many bristles')
+        self.assertEqual(cleanup('pilosa', 'Hairy'), 'Hairy')
+        self.assertEqual(cleanup('polychaeta', 'Many bristled'), 'Many-bristled')
         self.assertIsNone(cleanup('parasabella', 'Parasabella'))
 
 

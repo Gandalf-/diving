@@ -217,6 +217,9 @@ class TestTaxonomy(unittest.TestCase):
         self.assertIn('acanthodoris', words)
         self.assertIn('hudsoni', words)
         self.assertIn('mopaliidae', words)
+        self.assertNotIn('moon snail', words)
+        self.assertIn('polychaeta', words)
+        self.assertIn('annelida', words)
 
 
 if __name__ == '__main__':

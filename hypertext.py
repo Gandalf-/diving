@@ -13,6 +13,7 @@ import locations
 from util.collection import expand_names
 from util.common import (
     is_date,
+    flatten,
     strip_date,
     pretty_date,
     fast_exists,
@@ -21,6 +22,7 @@ from util.common import (
 )
 from util.static import stylesheet
 from util.image import categorize, uncategorize, split, Image
+from util.translator import translate
 from util import taxonomy
 
 
@@ -260,6 +262,26 @@ class GalleryTitle(Title):
 class TaxonomyTitle(Title):
     '''html head and title section for taxonomy pages'''
 
+    def translate_lineage(self) -> str:
+        lineage = reversed(flatten(word.split(' ') for word in self.lineage))
+        translated = [translate(name) for name in lineage]
+
+        names = []
+        for translation in translated:
+            if translation:
+                if translation in names:
+                    continue
+                names.append(translation)
+            else:
+                if names:
+                    names.append('...')
+                break
+
+        if names:
+            return '"' + ' '.join(names) + '"'
+        else:
+            return ''
+
     def run(self) -> Tuple[str, str]:
         _title = ' '.join(self.lineage)
         side = Side.Right
@@ -302,8 +324,10 @@ class TaxonomyTitle(Title):
             </div>
             """
         else:
+            assert not name, name
+            name = self.translate_lineage()
             html += f"""
-            <p class="scientific">{name}</p>
+            <p class="scientific" style="font-style: normal">{name}</p>
             </div>
             """
 

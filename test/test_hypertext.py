@@ -19,7 +19,6 @@ class TestHypertext(unittest.TestCase):
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
     def test_image_to_name_html(self):
-        '''it works'''
         utility._EXISTS['gallery/rock-fish.html'] = True
 
         fish = image.Image("001 - Rockfish.jpg", "2021-11-05 10 Rockaway Beach")
@@ -28,7 +27,6 @@ class TestHypertext(unittest.TestCase):
         self.assertIn('Rockfish', html)
 
     def test_image_to_name_html_pair(self):
-        '''it works'''
         utility._EXISTS['gallery/rock-fish.html'] = True
 
         fish = image.Image(
@@ -133,47 +131,6 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(indices, sorted(indices), lineage)
             self.assertEqual(title, ' '.join(lineage))
 
-    def test_title_ordinary(self):
-        '''typical common name'''
-        # gallery
-        html, title = hypertext.title(
-            ['heart', 'crab'], Where.Gallery, TestHypertext.g_scientific
-        )
-        self.assertEqual(title, 'heart crab')
-        self.assertIn('<title>Heart Crab</title>', html)
-        self.assertIn('"top">Heart<', html)
-        self.assertIn('"top">Crab<', html)
-        self.assertNotIn('<em>', html)
-
-    def test_title_scientific_common_name(self):
-        '''some gallery entries may use scientific names when there isn't a
-        common name available
-        '''
-        # gallery
-        html, title = hypertext.title(
-            ['tubastraea coccinea', 'coral'],
-            Where.Gallery,
-            TestHypertext.g_scientific,
-        )
-        self.assertEqual(title, 'tubastraea coccinea coral')
-        self.assertIn('<title>Tubastraea coccinea Coral</title>', html)
-        self.assertIn('"top"><em>Tubastraea coccinea</em><', html)
-        self.assertNotIn('Coccinea', html)
-
-    def test_title_scientific_sp(self):
-        '''it works'''
-        # taxonomy
-        html, title = hypertext.title(
-            ['Animalia', 'Cnidaria', 'Anthozoa', 'Actiniaria', 'sp.'],
-            Where.Taxonomy,
-            TestHypertext.t_scientific,
-        )
-        self.assertTrue(title.startswith('Animalia Cnidaria Anthozoa'), title)
-        self.assertTrue(title.endswith('Actiniaria sp.'), title)
-
-        self.assertIn('<title>Actiniaria sp.</title>', html)
-        self.assertIn('>Anemone<', html)
-
     def test_title_names(self):
         '''html titles top level'''
         # gallery
@@ -196,6 +153,102 @@ class TestHypertext(unittest.TestCase):
             longer = hypertext.switcher_button(where, long=True)
             self.assertIn(f'href="/{where.name.lower()}/index.html"', longer)
             self.assertIn(where.name, longer)
+
+
+class TestGalleryTitle(unittest.TestCase):
+    g_scientific = taxonomy.mapping()
+    t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
+
+    def test_title_ordinary(self):
+        '''typical common name'''
+        html, title = hypertext.title(
+            ['heart', 'crab'], Where.Gallery, TestHypertext.g_scientific
+        )
+        self.assertEqual(title, 'heart crab')
+        self.assertIn('<title>Heart Crab</title>', html)
+        self.assertIn('"top">Heart<', html)
+        self.assertIn('"top">Crab<', html)
+        self.assertNotIn('<em>', html)
+
+    def test_title_scientific_common_name(self):
+        '''some gallery entries may use scientific names when there isn't a
+        common name available
+        '''
+        html, title = hypertext.title(
+            ['tubastraea coccinea', 'coral'],
+            Where.Gallery,
+            TestHypertext.g_scientific,
+        )
+        self.assertEqual(title, 'tubastraea coccinea coral')
+        self.assertIn('<title>Tubastraea coccinea Coral</title>', html)
+        self.assertIn('"top"><em>Tubastraea coccinea</em><', html)
+        self.assertNotIn('Coccinea', html)
+
+
+class TestTaxonomyTitle(unittest.TestCase):
+    g_scientific = taxonomy.mapping()
+    t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
+
+    def test_title_scientific_sp(self):
+        html, title = hypertext.title(
+            ['Animalia', 'Cnidaria', 'Anthozoa', 'Actiniaria', 'sp.'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertTrue(title.startswith('Animalia Cnidaria Anthozoa'), title)
+        self.assertTrue(title.endswith('Actiniaria sp.'), title)
+
+        self.assertIn('<title>Actiniaria sp.</title>', html)
+        self.assertIn('>Anemone<', html)
+
+    def test_title_latin_translation(self):
+        html, title = hypertext.title(
+            ['Animalia', 'Arthropoda'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('>"Jointed-legged Animals"<', html)
+
+    def test_title_latin_translation_deeper(self):
+        html, title = hypertext.title(
+            ['Animalia', 'Arthropoda', 'Malacostraca'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('>"Soft-shelled Jointed-legged Animals"<', html)
+
+    def test_title_latin_multi_word_lineage(self):
+        html, title = hypertext.title(
+            ['Animalia', 'Annelida Polychaeta'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('>"Many bristled Ringed Animals"<', html)
+
+    def test_title_latin_translation_missing_lineage(self):
+        html, title = hypertext.title(
+            ['Animalia', 'Arthropoda', 'Void', 'Malacostraca'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('>"Soft-shelled ..."<', html)
+
+    def test_title_latin_translation_missing_final(self):
+        html, title = hypertext.title(
+            ['Animalia', 'Arthropoda', 'Void'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertNotIn('...', html)
+
+    def test_title_latin_translation_duplicates(self):
+        '''Comb-like Comb-like -> Comb-like'''
+        html, title = hypertext.title(
+            ['Animalia', 'Mollusca', 'Bivalvia', 'Pectinida', 'Pectinoidea'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('"Comb-like Two valved Soft Animals"', html)
 
 
 if __name__ == '__main__':

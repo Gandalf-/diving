@@ -125,7 +125,11 @@ def load_known(exact_only: bool = False) -> Iterable[str]:
 
 
 def all_latin_words() -> Set[str]:
-    return set(branch.lower() for branch in extract_branches(load_tree()))
+    def producer() -> Iterable[str]:
+        for branch in extract_branches(load_tree()):
+            yield from branch.split(' ')
+
+    return set(word.lower() for word in producer())
 
 
 MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')

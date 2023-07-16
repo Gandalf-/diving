@@ -92,10 +92,10 @@ bellonae: Named after Bellona
 bellus: Beautiful
 bennetti: Named after Bennett
 beringanus: From Bering
-beryciformes: Beryciforms
+beryciformes:
 bicaudalis: Two-tailed
 bilamellata: Double-ridged
-bivalvia: Two valves
+bivalvia: Two valved
 bothidae: Lefteye flounders family
 bothus: Flatfish, flounder
 botryocladia: Clustered branches
@@ -156,7 +156,7 @@ chlamys: Cloak
 chlorophyta: Green algae
 chlorurus: Green tail
 chondracanthus: Cartilage thorn
-chordata: Chordates
+chordata:
 chromista: Colored
 chromodorididae: Chromodoris family
 cidaridae: Cidaridae family
@@ -568,7 +568,7 @@ nodosa: Knotted, knobby
 norvegicus: Norwegian
 nubilus: Clouded
 nucella: Nut-like
-nudibranchia: Naked gills
+nudibranchia: Naked gilled
 nudus: Naked
 nuttallii: Named after Nuttall
 obesus: Stout, plump
@@ -680,7 +680,7 @@ plumulariidae: Plumulariidae family
 pocilloporidae: Pocillopora family
 poecilosclerida: Many-stemmed hard
 polyacanthocephalus: Many-spined
-polychaeta: Many bristles
+polychaeta: Many bristled
 polycitoridae: Polycitoridae family
 polycladida: Many plates
 polyclinidae: Polyclinidae family
@@ -915,6 +915,7 @@ zonope: Belted
 zostera: Eelgrass
 zosteraceae: Zosteraceae family
 zygophora: Yoke-bearing
+
 abietinaria:
 acabaria:
 acanthemblemaria:
@@ -955,6 +956,7 @@ apostichopus:
 armina:
 arothron:
 artedius:
+
 ascelichthys:
 ascidia:
 asper:
@@ -995,6 +997,7 @@ celleporoidea:
 cenometra:
 cephalaspidea:
 cephalopholis:
+
 ceramaster:
 ceramiales:
 chaenopsidae:
@@ -1035,6 +1038,7 @@ crangon:
 crangonoidea:
 crispatus:
 crispus:
+
 ctenogobiops:
 cucumaria:
 cyclostomatida:
@@ -1075,6 +1079,7 @@ elgans:
 enophrys:
 ephippidae:
 epinephelus:
+
 epizoanthus:
 equetus:
 esperiopsidae:
@@ -1115,6 +1120,7 @@ heathi:
 heliaster:
 hemigrapsus:
 heniochus:
+
 henricia:
 hepatus:
 heptacarpus:
@@ -1155,6 +1161,7 @@ lafoea:
 lamellicornis:
 laqueoidea:
 lebbeus:
+
 lemnalia:
 lepidonectes:
 leptothecata:
@@ -1195,6 +1202,7 @@ mullineri:
 munida:
 mycale:
 mycteroperca:
+
 myliobatiformes:
 mystes:
 myxilla:
@@ -1235,6 +1243,7 @@ palinuroidea:
 pandaloidea:
 pandalopsis:
 pandalus:
+
 panulirus:
 paracanthurus:
 paracoryphellidae:
@@ -1275,6 +1284,7 @@ pomacanthus:
 porichthys:
 porites:
 primates:
+
 proctonotidae:
 proctonotoidea:
 psolus:
@@ -1315,6 +1325,7 @@ sebastes:
 serpula:
 serranus:
 sertularioidea:
+
 sexfasciatus:
 solaster:
 solenastrea:
@@ -1355,6 +1366,7 @@ tethydidae:
 tetraodontiformes:
 tetraodontoidei:
 thor:
+
 thyrsoideus:
 trapezia:
 trapezioidea:

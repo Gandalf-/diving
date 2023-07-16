@@ -31,10 +31,22 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
     if latin.lower() == english.lower():
         return None
 
+    words = english.split(' ')
+    if len(words) == 2 and words[0] == 'Many':
+        return '-'.join(words)
+
     return english
 
 
-def create_filtered_yaml() -> None:
+def translate(word: str) -> Optional[str]:
+    '''
+    Given a word, attempt to translate it to English based on the contents of
+    data/translate.yml
+    '''
+    return _translations.get(word.lower())
+
+
+def filter_translations() -> None:
     clean = {}
     empty = set()
     all_latin = all_latin_words()
@@ -49,19 +61,20 @@ def create_filtered_yaml() -> None:
         if latin in all_latin:
             all_latin.remove(latin)
 
-    base, ext = os.path.splitext(yaml_path)
+    empty |= all_latin
 
-    with open(base + '-new' + ext, 'w+') as fd:
+    with open(yaml_path, 'w+') as fd:
         fd.write('---\n')
+
         for latin, english in sorted(clean.items()):
             fd.write(f'{latin}: {english}\n')
-        for latin in sorted(empty | all_latin):
+
+        for i, latin in enumerate(sorted(empty)):
+            if i % 40 == 0:
+                fd.write('\n')
             fd.write(f'{latin}:\n')
 
-
-def lookup(word: str) -> Optional[str]:
-    '''
-    Given a word, attempt to translate it to English based on the contents of
-    data/translate.yml
-    '''
-    return _translations.get(word)
+    known = len(clean)
+    unknown = len(empty)
+    percent_known = known / (known + unknown) * 100
+    print(f'{percent_known:.2f}% ({known}/{known + unknown}) translations known')

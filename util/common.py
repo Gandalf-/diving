@@ -57,7 +57,7 @@ def walk_spine(tree: Tree, lineage: List[str]) -> Tree:
     return tree
 
 
-def flatten(xs: List[List[Any]]) -> List[Any]:
+def flatten(xs: Iterable[Iterable[Any]]) -> List[Any]:
     '''[[a]] -> [a]'''
     return [item for sublist in xs for item in sublist]
 

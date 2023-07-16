@@ -21,6 +21,10 @@ format:
 	black --fast -S *.py */*.py
 
 
+.PHONY: translations
+translations:
+	python3 -c 'from util.translator import filter_translations; filter_translations()'
+
 .PHONY: local
 local:
 	bash macos.sh build
