@@ -11,7 +11,7 @@ taxonomy related things
 
 import enum
 from functools import lru_cache
-from typing import Iterable, Dict, List, Optional, Callable, Any
+from typing import Iterable, Dict, List, Optional, Callable, Any, Set
 
 import yaml
 
@@ -21,7 +21,7 @@ from util.collection import (
     all_names,
     ImageTree,
 )
-from util.common import extract_leaves, hmap, source_root
+from util.common import extract_leaves, hmap, source_root, extract_branches
 from util.image import uncategorize, unqualify, unsplit, Image
 
 yaml_path = source_root + 'data/taxonomy.yml'
@@ -106,6 +106,7 @@ def similar(a: str, b: str) -> bool:
     return a[:pivot] == b[:pivot]
 
 
+@lru_cache(None)
 def load_tree() -> NestedStringTree:
     '''yaml load'''
     with open(yaml_path, encoding='utf8') as fd:
@@ -121,6 +122,10 @@ def load_known(exact_only: bool = False) -> Iterable[str]:
 
     for leaf in extract_leaves(tree):
         yield from leaf.split(', ')
+
+
+def all_latin_words() -> Set[str]:
+    return set(branch.lower() for branch in extract_branches(load_tree()))
 
 
 MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')

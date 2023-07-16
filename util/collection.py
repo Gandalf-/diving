@@ -95,6 +95,7 @@ def expand_names(images: List[Image]) -> Iterator[Image]:
             yield image
 
 
+@lru_cache(None)
 def dive_listing() -> List[str]:
     """a list of all dive picture folders available"""
     return [

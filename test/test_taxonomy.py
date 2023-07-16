@@ -211,6 +211,13 @@ class TestTaxonomy(unittest.TestCase):
         self.assertNotIn('Acanthodoris', names)
         self.assertIn('Acanthodoris hudsoni', names)
 
+    def test_all_latin_words(self) -> None:
+        words = taxonomy.all_latin_words()
+
+        self.assertIn('acanthodoris', words)
+        self.assertIn('hudsoni', words)
+        self.assertIn('mopaliidae', words)
+
 
 if __name__ == '__main__':
     unittest.main()

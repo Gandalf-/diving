@@ -1,0 +1,14 @@
+Can you translate the following latin words in literal English? Please only
+include the translations, no other text. If there isn't a direct translation,
+try to determine something close. Do not use the input as part of the output.
+No latin should appear in the output.  Here are some examples:
+
+transversa: Transverse, crosswise
+pseudocerotoidea: False wax worms
+excelsa: High, elevated
+montgomery: Named after Montgomery
+sexlineatus: With six lines
+polymastiida: Many breasts
+polymastiidae: Many-breasted family
+
+Here are the words to translate:
