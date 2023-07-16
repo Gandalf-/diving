@@ -155,7 +155,7 @@ class TestHypertext(unittest.TestCase):
             self.assertIn(where.name, longer)
 
 
-class TestGalleryTitle(unittest.TestCase):
+class TestTitleGallery(unittest.TestCase):
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
@@ -185,7 +185,7 @@ class TestGalleryTitle(unittest.TestCase):
         self.assertNotIn('Coccinea', html)
 
 
-class TestTaxonomyTitle(unittest.TestCase):
+class TestTitleTaxonomy(unittest.TestCase):
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 

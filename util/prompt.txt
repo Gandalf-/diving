@@ -22,6 +22,6 @@ Can you improve the following translations of scientific names into literal Engl
 words may be Latin or Greek. Please only include the translations, no other
 text. If there isn't a direct translation, try to determine something close. Do
 not use the input as part of the output. Break the words down into parts and
-translate those if necessary.
+translate those if necessary. Ignore the original translation if its incorrect.
 
-Here are the translations to improve:
+Here are the translations to verify and improve:
