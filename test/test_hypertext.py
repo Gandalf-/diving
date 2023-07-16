@@ -223,7 +223,7 @@ class TestTaxonomyTitle(unittest.TestCase):
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>"Many bristled Ringed Animals"<', html)
+        self.assertIn('>"Many-bristled Ringed Animals"<', html)
 
     def test_title_latin_translation_missing_lineage(self):
         html, title = hypertext.title(
@@ -248,7 +248,7 @@ class TestTaxonomyTitle(unittest.TestCase):
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('"Comb-like Two valved Soft Animals"', html)
+        self.assertIn('"Comb-like Two valved Soft Bodied Animals"', html)
 
 
 if __name__ == '__main__':

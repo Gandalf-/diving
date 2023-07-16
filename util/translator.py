@@ -66,7 +66,9 @@ def filter_translations() -> None:
     with open(yaml_path, 'w+') as fd:
         fd.write('---\n')
 
-        for latin, english in sorted(clean.items()):
+        for i, (latin, english) in enumerate(sorted(clean.items())):
+            if i % 40 == 0:
+                fd.write('\n')
             fd.write(f'{latin}: {english}\n')
 
         for i, latin in enumerate(sorted(empty)):

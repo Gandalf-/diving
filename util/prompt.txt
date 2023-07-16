@@ -1,14 +1,27 @@
-Can you translate the following latin words in literal English? Please only
-include the translations, no other text. If there isn't a direct translation,
-try to determine something close. Do not use the input as part of the output.
-No latin should appear in the output.  Here are some examples:
+Can you translate the following scientific names into literal English? The
+words may be Latin or Greek. Please only include the translations, no other
+text. If there isn't a direct translation, try to determine something close. Do
+not use the input as part of the output. Break the words down into parts and
+translate those if necessary. Here are some examples:
 
 transversa: Transverse, crosswise
-pseudocerotoidea: False wax worms
+cerebratulus: Brain-like
 excelsa: High, elevated
 montgomery: Named after Montgomery
-sexlineatus: With six lines
-polymastiida: Many breasts
-polymastiidae: Many-breasted family
+sexlineatus: Six lined
+polymastiida: Many-breasted
+mollusca: Soft bodied
+neogastropoda: New stomach-footed
+solaster: Sun star
+polychaeta: Many-bristled
 
 Here are the words to translate:
+
+
+Can you improve the following translations of scientific names into literal English? The
+words may be Latin or Greek. Please only include the translations, no other
+text. If there isn't a direct translation, try to determine something close. Do
+not use the input as part of the output. Break the words down into parts and
+translate those if necessary.
+
+Here are the translations to improve:

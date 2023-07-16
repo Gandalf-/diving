@@ -129,7 +129,9 @@ def all_latin_words() -> Set[str]:
         for branch in extract_branches(load_tree()):
             yield from branch.split(' ')
 
-    return set(word.lower() for word in producer())
+    result = set(word.lower() for word in producer())
+    result.remove('sp.')
+    return result
 
 
 MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
