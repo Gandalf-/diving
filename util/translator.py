@@ -32,21 +32,21 @@ with open(v4_path) as fd:
 
 
 PARENTHETICAL = re.compile(r' \(.*\)')
+AFTER_COMMA = re.compile(r',.*')
 
 
 def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
     if not english:
         return None
 
-    # remove parenthesis groups
+    # remove parenthesis and synonyms groups
     english = PARENTHETICAL.sub('', english)
+    english = AFTER_COMMA.sub('', english)
 
     if latin.lower() == english.lower():
         return None
 
-    words = english.split(' ')
-    if len(words) == 2 and words[0] == 'Many':
-        return '-'.join(words)
+    english = '-'.join(english.split(' '))
 
     return english
 

@@ -248,7 +248,7 @@ class TestTitleTaxonomy(unittest.TestCase):
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('"Comb-like Two valved Soft Bodied Animals"', html)
+        self.assertIn('"Comb-like Two-valved Soft-Bodied Animals"', html)
 
 
 if __name__ == '__main__':
