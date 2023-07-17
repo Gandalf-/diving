@@ -6,7 +6,7 @@ from util.translator import translate, cleanup
 class TestTranslator(unittest.TestCase):
     def test_load_yaml(self) -> None:
         self.assertEqual(translate('unguiculata'), 'Small-clawed')
-        self.assertEqual(translate('acarnidae'), 'Pointless-family')
+        self.assertEqual(translate('acarnidae'), 'Pointless')
 
     def test_cleanup(self) -> None:
         self.assertEqual(cleanup('pilosa', 'Hairy'), 'Hairy')

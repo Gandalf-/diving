@@ -48,6 +48,10 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
 
     english = '-'.join(english.split(' '))
 
+    words = english.split('-')
+    if len(words) == 3 and english.startswith('Named-after-'):
+        english = f'{words[2]}\'s'
+
     return english
 
 
@@ -56,7 +60,8 @@ def translate(word: str) -> str:
     Given a word, attempt to translate it to English based on the contents of
     data/translate.yml
     '''
-    return _translations[word.lower()]
+    out = _translations[word.lower()]
+    return out.replace('-family', '').replace('-order', '')
 
 
 def filterer(translations: Dict[str, str], path: str, desc: str) -> None:

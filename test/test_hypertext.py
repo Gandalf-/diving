@@ -237,29 +237,29 @@ class TestTitleTaxonomy(unittest.TestCase):
     def test_translation_genus_species(self):
         '''skip rest of the lineage when we have genus + species'''
         html, title = hypertext.title(
-            ['Decapoda', 'Homarus americanus'],
+            ['Decapoda', 'Pacifastacus leniusculus'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>American Man-like<', html)
+        self.assertIn('>Lenient Pacific-crawfish<', html)
 
     def test_translation_species_split(self):
         '''look back one level for the genus if necessary'''
         html, title = hypertext.title(
-            ['Decapoda', 'Nephropidae Homarus', 'americanus'],
+            ['Decapoda', 'Astacidae Pacifastacus', 'leniusculus'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>American Man-like<', html)
+        self.assertIn('>Lenient Pacific-crawfish<', html)
 
     def test_translation_species_extra(self):
         '''include the rest of the previous lineage depending on the breaks'''
         html, title = hypertext.title(
-            ['Decapoda', 'Nephropidae Homarus americanus'],
+            ['Decapoda', 'Astacidae Pacifastacus leniusculus'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>American Man-like Lobster-family<', html)
+        self.assertIn('>Lenient Pacific-crawfish Lobster<', html)
 
 
 if __name__ == '__main__':
