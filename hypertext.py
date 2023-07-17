@@ -263,24 +263,24 @@ class TaxonomyTitle(Title):
     '''html head and title section for taxonomy pages'''
 
     def translate_lineage(self) -> str:
-        lineage = reversed(flatten(word.split(' ') for word in self.lineage))
-        translated = [translate(name) for name in lineage]
+        lineage: List[str] = flatten(word.split(' ') for word in self.lineage)[::-1]
+
+        translated = [translate(name) for name in lineage if name != 'sp.']
+        if lineage[0].islower():
+            size = 2
+            last = len(self.lineage[-1].split(' '))
+            size = max(size, last)
+
+            translated = translated[:size]
 
         names = []
         for translation in translated:
-            if translation:
-                if translation in names:
-                    continue
-                names.append(translation)
-            else:
-                if names:
-                    names.append('...')
-                break
+            if translation in names:
+                continue
+            names.append(translation)
 
-        if names:
-            return '"' + ' '.join(names) + '"'
-        else:
-            return ''
+        assert names, lineage
+        return ' '.join(names)
 
     def run(self) -> Tuple[str, str]:
         _title = ' '.join(self.lineage)
@@ -317,17 +317,18 @@ class TaxonomyTitle(Title):
         name = titlecase(name)
         link = split(categorize(name.lower()))
         link = sanitize_link(link)
+        english = self.translate_lineage()
 
         if link:
             html += f"""
             <a href="/gallery/{link}.html" class="scientific crosslink">{name}</a>
+            <p class="scientific">{english}</p>
             </div>
             """
         else:
             assert not name, name
-            name = self.translate_lineage()
             html += f"""
-            <p class="scientific" style="font-style: normal">{name}</p>
+            <p class="scientific">{english}</p>
             </div>
             """
 

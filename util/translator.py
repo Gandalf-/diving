@@ -51,12 +51,12 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
     return english
 
 
-def translate(word: str) -> Optional[str]:
+def translate(word: str) -> str:
     '''
     Given a word, attempt to translate it to English based on the contents of
     data/translate.yml
     '''
-    return _translations.get(word.lower())
+    return _translations[word.lower()]
 
 
 def filterer(translations: Dict[str, str], path: str, desc: str) -> None:

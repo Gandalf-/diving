@@ -189,7 +189,7 @@ class TestTitleTaxonomy(unittest.TestCase):
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
-    def test_title_scientific_sp(self):
+    def test_scientific_sp(self):
         html, title = hypertext.title(
             ['Animalia', 'Cnidaria', 'Anthozoa', 'Actiniaria', 'sp.'],
             Where.Taxonomy,
@@ -201,54 +201,65 @@ class TestTitleTaxonomy(unittest.TestCase):
         self.assertIn('<title>Actiniaria sp.</title>', html)
         self.assertIn('>Anemone<', html)
 
-    def test_title_latin_translation(self):
+    def test_translation(self):
         html, title = hypertext.title(
             ['Animalia', 'Arthropoda'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>"Jointed-legged Animals"<', html)
+        self.assertIn('>Joint-footed Animals<', html)
 
-    def test_title_latin_translation_deeper(self):
+    def test_translation_deeper(self):
         html, title = hypertext.title(
             ['Animalia', 'Arthropoda', 'Malacostraca'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>"Soft-shelled Jointed-legged Animals"<', html)
+        self.assertIn('>Soft-shelled Joint-footed Animals<', html)
 
-    def test_title_latin_multi_word_lineage(self):
+    def test_translation_multi_word_lineage(self):
         html, title = hypertext.title(
             ['Animalia', 'Annelida Polychaeta'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>"Many-bristled Ringed Animals"<', html)
+        self.assertIn('>Many-bristled Ringed Animals<', html)
 
-    def test_title_latin_translation_missing_lineage(self):
-        html, title = hypertext.title(
-            ['Animalia', 'Arthropoda', 'Void', 'Malacostraca'],
-            Where.Taxonomy,
-            TestHypertext.t_scientific,
-        )
-        self.assertIn('>"Soft-shelled ..."<', html)
-
-    def test_title_latin_translation_missing_final(self):
-        html, title = hypertext.title(
-            ['Animalia', 'Arthropoda', 'Void'],
-            Where.Taxonomy,
-            TestHypertext.t_scientific,
-        )
-        self.assertNotIn('...', html)
-
-    def test_title_latin_translation_duplicates(self):
+    def test_translation_duplicates(self):
         '''Comb-like Comb-like -> Comb-like'''
         html, title = hypertext.title(
             ['Animalia', 'Mollusca', 'Bivalvia', 'Pectinida', 'Pectinoidea'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('"Comb-like Two-valved Soft-Bodied Animals"', html)
+        self.assertIn('Comb-like Two-shelled Soft-bodied Animals', html)
+
+    def test_translation_genus_species(self):
+        '''skip rest of the lineage when we have genus + species'''
+        html, title = hypertext.title(
+            ['Decapoda', 'Homarus americanus'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('>American Man-like<', html)
+
+    def test_translation_species_split(self):
+        '''look back one level for the genus if necessary'''
+        html, title = hypertext.title(
+            ['Decapoda', 'Nephropidae Homarus', 'americanus'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('>American Man-like<', html)
+
+    def test_translation_species_extra(self):
+        '''include the rest of the previous lineage depending on the breaks'''
+        html, title = hypertext.title(
+            ['Decapoda', 'Nephropidae Homarus americanus'],
+            Where.Taxonomy,
+            TestHypertext.t_scientific,
+        )
+        self.assertIn('>American Man-like Lobster-family<', html)
 
 
 if __name__ == '__main__':
