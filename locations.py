@@ -13,6 +13,12 @@ from util import common
 from util.collection import ImageTree
 
 
+def site_list() -> str:
+    '''join the location keys into a, b, c, and d'''
+    *rest, last = list(sorted(static.locations.keys()))
+    return ', '.join(rest) + f', and {last}'
+
+
 def sites_link(when: str, where: str) -> Optional[str]:
     '''try to produce the correct /sites/ link'''
     site = add_context(where)

@@ -6,6 +6,13 @@ import locations
 class TestLocations(unittest.TestCase):
     '''locations.py'''
 
+    def test_site_list(self) -> None:
+        '''site_list'''
+        self.assertEqual(
+            locations.site_list(),
+            'Bonaire, British Columbia, Galapagos, Maldives, and Washington',
+        )
+
     def test_add_context(self) -> None:
         '''add_context'''
         samples = [

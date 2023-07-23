@@ -85,12 +85,12 @@ def head(_title: str) -> str:
             'Cnidaria, Mollusca.'
         )
     elif _title.endswith('Sites'):
-        desc = (
-            'Scuba diving pictures from Bonaire, Galapagos, British Columbia, '
-            'and Washington organized into a tree structure by dive site.'
-        )
+        sites = locations.site_list()
+        desc = f'Scuba diving pictures from {sites} organized into a tree structure by dive site.'
+
     elif _title.endswith('Timeline'):
         desc = 'Scuba diving pictures organized into a timeline and by location'
+
     else:
         _title = strip_date(_title)
         desc = f'Scuba diving pictures related to {_title}'
