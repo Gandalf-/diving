@@ -264,8 +264,10 @@ def write_all_html() -> None:
     print("done")
 
     print("writing html...                ", end="", flush=True)
-    static.stylesheet.cleanup()
-    static.stylesheet.write()
+
+    for vr in [static.search_js, static.stylesheet]:
+        vr.cleanup()
+        vr.write()
 
     with multiprocessing.Pool() as pool:
         pool.map(_pool_writer, prefix_tuples('gallery', name_htmls))
@@ -309,8 +311,8 @@ if not sys.flags.interactive and __name__ == "__main__":
     if len(sys.argv) > 1:
         util.common.image_root = sys.argv[1]
 
-    write_all_html()
     search.gallery_listing()
+    write_all_html()
 
     if not os.environ.get('DIVING_FAST'):
         print("verifying html...              ", end="", flush=True)

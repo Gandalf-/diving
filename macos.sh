@@ -61,7 +61,7 @@ sync() {
 }
 
 dev() {
-  ls ./*.py ./*.js util/*.py web/* | entr bash macos.sh build
+  ls ./*.py util/*.py web/* | entr bash macos.sh build
 }
 
 "$@"

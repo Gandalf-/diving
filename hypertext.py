@@ -20,7 +20,7 @@ from util.common import (
     titlecase,
     sanitize_link,
 )
-from util.static import stylesheet
+from util.static import stylesheet, search_js
 from util.image import categorize, uncategorize, split, Image
 from util.translator import translate
 from util import taxonomy
@@ -29,13 +29,16 @@ from util import taxonomy
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
 Side = enum.Enum('Side', 'Left Right')
 
-scripts = """
+
+scripts = (
+    f"""
     <!-- fancybox is excellent, this project is not commercial -->
     <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
-    <script src="/search.js"></script>
+    <script src="/{search_js.path}"></script>
     <script src="/gallery/search.js"></script>
-
+    """
+    + """
     <script>
     function flip(elem) {
         const label = 'is-flipped';
@@ -53,6 +56,7 @@ scripts = """
     }
     </script>
 """
+)
 
 
 def title(

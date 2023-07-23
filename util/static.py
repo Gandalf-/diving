@@ -87,3 +87,4 @@ class VersionedResource:
 
 
 stylesheet = VersionedResource(os.path.join(source_root, 'web/style.css'))
+search_js = VersionedResource(os.path.join(source_root, 'web/search.js'))

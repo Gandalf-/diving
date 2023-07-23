@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
 import os
-import shutil
-from util.common import source_root
 
 
 def gallery_listing() -> None:
@@ -23,12 +21,3 @@ def gallery_listing() -> None:
         fd.write('var gallery_pages = [')
         fd.write(','.join(f'"{page}"' for page in pages))
         fd.write('];')
-
-    shutil.copy(
-        os.path.join(source_root, 'search.js'),
-        'search.js',
-    )
-
-
-if __name__ == '__main__':
-    gallery_listing()
