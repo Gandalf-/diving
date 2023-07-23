@@ -54,6 +54,8 @@ scripts = (
             }, 1000 * seconds);
         }
     }
+
+    randomGallerySearchPlaceholder();
     </script>
 """
 )

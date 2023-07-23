@@ -29,10 +29,6 @@ function expandWords(words) {
 
 function searcher(text, skip = 0) {
     const words = expandWords(text.split(' '));
-    if (words.length === 0) {
-        return [[], false];
-    }
-
     var results = [];
     for (let i = 0; i < gallery_pages.length; i++) {
         const candidate = gallery_pages[i];
@@ -88,11 +84,16 @@ function searcher(text, skip = 0) {
 }
 
 function gallerySearch(skip = 0) {
+    document.getElementById('search_results').innerHTML = '';
+
     const text = document.getElementById('search').value.toLowerCase();
+    if (text.length === 0) {
+        return;
+    }
+
     const [results, truncated] = searcher(text, skip);
     console.log(results, truncated);
 
-    document.getElementById('search_results').innerHTML = '';
     if (results.length === 0) {
         const nothing = document.createElement('div')
         nothing.classList.add('search_result');
@@ -133,5 +134,25 @@ function gallerySearch(skip = 0) {
         more.appendChild(desc);
 
         document.getElementById('search_results').appendChild(more);
+    }
+}
+
+function toTitleCase(str) {
+    // https://stackoverflow.com/a/196991
+    return str.replace(
+        /\w\S*/g,
+        function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+    );
+}
+
+function randomGallerySearchPlaceholder() {
+    const index = Math.floor(Math.random() * gallery_pages.length);
+    const name = gallery_pages[index];
+
+    var search = document.getElementById('search');
+    if (search != null) {
+        search.placeholder = toTitleCase(name) + "...";
     }
 }
