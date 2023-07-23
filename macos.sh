@@ -60,4 +60,8 @@ sync() {
     yew:/mnt/ssd/hosts/web/diving/
 }
 
+dev() {
+  ls ./*.py ./*.js util/*.py web/* | entr bash macos.sh build
+}
+
 "$@"

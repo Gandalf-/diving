@@ -1,5 +1,34 @@
 #!/usr/bin/python3
 
-'''
-Use fuse.js or something to provide fuzzy searching for common names and labels
-'''
+import os
+import shutil
+from util.common import source_root
+
+
+def gallery_listing() -> None:
+    '''JSON site map for gallerySearch'''
+    pages = []
+
+    for page in os.listdir('gallery'):
+        if not page.endswith('.html'):
+            continue
+
+        prefixes = ('index', 'various', 'juvenile')
+        if any(page.startswith(prefix) for prefix in prefixes):
+            continue
+
+        pages.append(page.replace('.html', '').replace('-', ' '))
+
+    with open('gallery/search.js', 'w') as fd:
+        fd.write('var gallery_pages = [')
+        fd.write(','.join(f'"{page}"' for page in pages))
+        fd.write('];')
+
+    shutil.copy(
+        os.path.join(source_root, 'search.js'),
+        'search.js',
+    )
+
+
+if __name__ == '__main__':
+    gallery_listing()

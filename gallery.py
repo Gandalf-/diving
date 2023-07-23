@@ -12,11 +12,12 @@ import textwrap
 from datetime import datetime
 from typing import Tuple, Optional, List
 
+import detective
 import hypertext
 import information
 import locations
+import search
 import timeline
-import detective
 
 from util import collection
 from util import static
@@ -309,6 +310,7 @@ if not sys.flags.interactive and __name__ == "__main__":
         util.common.image_root = sys.argv[1]
 
     write_all_html()
+    search.gallery_listing()
 
     if not os.environ.get('DIVING_FAST'):
         print("verifying html...              ", end="", flush=True)

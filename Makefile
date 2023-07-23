@@ -25,10 +25,12 @@ format:
 translations:
 	python3 -c 'from util.translator import filter_translations; filter_translations()'
 
-.PHONY: local
+.PHONY: local serve dev
 local:
 	bash macos.sh build
 
-.PHONY: serve
 serve:
 	bash macos.sh serve
+
+dev:
+	bash macos.sh dev

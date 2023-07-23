@@ -33,6 +33,8 @@ scripts = """
     <!-- fancybox is excellent, this project is not commercial -->
     <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
+    <script src="/search.js"></script>
+    <script src="/gallery/search.js"></script>
 
     <script>
     function flip(elem) {
@@ -461,6 +463,24 @@ class TopTitle(Title):
     part of this is the switcher, which allows us to move between the sites
     '''
 
+    def sub_line(self) -> str:
+        if self.where == Where.Timeline:
+            return ''
+
+        if self.where != Where.Gallery:
+            return '''
+            <p class="scientific"></p>
+            '''
+
+        return '''
+        <form class="search" autocomplete="off" action="javascript:;" onsubmit="gallerySearch()">
+            <input type="text" id="search" placeholder="Copper Rockfish...">
+            <button type="submit">Search</button>
+        </form>
+        <div id="search_results" class="search_results">
+        </div>
+        '''
+
     def run(self) -> Tuple[str, str]:
         _title = titlecase(self.where.name)
 
@@ -492,11 +512,7 @@ class TopTitle(Title):
 
         html = head(display)
         html += spacer.join(parts)
-
-        if self.where != Where.Timeline:
-            html += '''
-                <p class="scientific"></p>
-            '''
+        html += self.sub_line()
 
         html += '''
         </div>

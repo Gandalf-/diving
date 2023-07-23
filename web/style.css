@@ -1,4 +1,3 @@
-
 /* Style the collapsible content. Note: hidden by default */
 .content {
   padding: 0 18px;
@@ -79,7 +78,8 @@ p {
   margin-block-end: 0em;
 }
 
-.top:hover, .where:hover {
+.top:hover,
+.where:hover {
   border: 1px solid white;
 }
 
@@ -93,6 +93,46 @@ p {
   margin-top: 0.67em;
   margin-bottom: 0.67em;
   font-style: italic;
+}
+
+.search {
+  display: block;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search_results {
+  display: block;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search_result {
+  text-transform: capitalize;
+  cursor: pointer;
+  display: inline-block;
+
+  border: 1px solid white;
+  border-radius: 2em;
+
+  padding: 0.1em 0.5em;
+  padding-bottom: 0em;
+  padding-top: 0em;
+
+  margin-block-end: 0em;
+  margin-block-start: 0em;
+  margin-bottom: 0.2em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+#search {
+  max-width: 80%;
+  min-width: 50%;
 }
 
 .crosslink {
@@ -288,18 +328,18 @@ div.skip {
 }
 
 .card_face-back a {
-    color: white;
+  color: white;
 }
 
 .elem {
-    background: black;
-    flex: 1;
-    border-radius: 1em;
-    width: 90%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0.3em;
+  background: black;
+  flex: 1;
+  border-radius: 1em;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.3em;
 }
 
 @media (max-width: 520px) {
