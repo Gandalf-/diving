@@ -35,8 +35,9 @@ scripts = (
     <!-- fancybox is excellent, this project is not commercial -->
     <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
+
+    <script src="/search-data.js"></script>
     <script src="/{search_js.path}"></script>
-    <script src="/gallery/search.js"></script>
     """
     + """
     <script>
@@ -55,7 +56,7 @@ scripts = (
         }
     }
 
-    randomGallerySearchPlaceholder();
+    randomSearchPlaceholder();
     </script>
 """
 )
@@ -473,13 +474,13 @@ class TopTitle(Title):
         if self.where == Where.Timeline:
             return ''
 
-        if self.where != Where.Gallery:
+        if self.where not in (Where.Gallery, Where.Taxonomy):
             return '''
             <p class="scientific"></p>
             '''
 
         return '''
-        <form class="search" autocomplete="off" action="javascript:;" onsubmit="gallerySearch()">
+        <form class="search" autocomplete="off" action="javascript:;" onsubmit="searcher()">
             <input type="text" id="search" placeholder="Copper Rockfish...">
             <button type="submit">Search</button>
         </form>

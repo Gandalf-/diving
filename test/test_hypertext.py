@@ -158,7 +158,7 @@ class TestHypertext(unittest.TestCase):
         html, title = hypertext.title([], Where.Timeline, TestHypertext.g_scientific)
         self.assertNotIn('scientific', html)
 
-        for other in [Where.Taxonomy, Where.Sites]:
+        for other in [Where.Sites]:
             html, title = hypertext.title([], other, TestHypertext.g_scientific)
             self.assertIn('scientific', html)
 

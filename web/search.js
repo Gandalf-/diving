@@ -1,4 +1,6 @@
 const splits = ['fish', 'coral', 'ray', 'chiton', 'snail', 'worm'];
+const where = document.title.toLowerCase();
+const pages = (where == 'gallery') ? gallery_pages : taxonomy_pages;
 
 function expandWords(words) {
     var result = [];
@@ -27,11 +29,26 @@ function expandWords(words) {
     return result;
 }
 
-function searcher(text, skip = 0) {
+function shortenName(name) {
+    if (where == 'gallery') {
+        return name;
+    }
+
+    const words = name.split(' ');
+    if (words.length > 4) {
+        // Take the last 2 words and prepend '...'
+        return '... ' + words.slice(-2).join(' ');
+    }
+
+    return name;
+}
+
+function search_inner(text, skip = 0) {
     const words = expandWords(text.split(' '));
+
     var results = [];
-    for (let i = 0; i < gallery_pages.length; i++) {
-        const candidate = gallery_pages[i];
+    for (let i = 0; i < pages.length; i++) {
+        const candidate = pages[i];
         var match = true;
 
         for (let j = 0; j < words.length; j++) {
@@ -70,20 +87,27 @@ function searcher(text, skip = 0) {
     var topResults = [];
 
     for (let result of results) {
-        const name = result[0];
+        const name = shortenName(result[0]);
+
         if (char_count + name.length > char_limit) {
             truncated = true;
             break;
         }
 
         char_count += name.length;
-        topResults.push(name);
+
+        var url = result[0].replace(/ /g, '-');
+        url = `/${where}/${url}.html`;
+
+        topResults.push([name, url]);
     }
 
     return [topResults, truncated];
 }
 
-function gallerySearch(skip = 0) {
+function searcher(skip = 0) {
+    console.log(where);
+
     document.getElementById('search_results').innerHTML = '';
 
     const text = document.getElementById('search').value.toLowerCase();
@@ -91,7 +115,7 @@ function gallerySearch(skip = 0) {
         return;
     }
 
-    const [results, truncated] = searcher(text, skip);
+    const [results, truncated] = search_inner(text, skip);
     console.log(results, truncated);
 
     if (results.length === 0) {
@@ -106,17 +130,15 @@ function gallerySearch(skip = 0) {
         return;
     }
 
-    for (let result of results) {
+    for (let [name, url] of results) {
         const link = document.createElement('a')
         link.classList.add('search_result');
-        link.classList.add('gallery');
-        link.title = result;
-
-        const url = result.replace(/ /g, '-');
-        link.href = `/gallery/${url}.html`;
+        link.classList.add(where);
+        link.title = name;
+        link.href = url;
 
         const desc = document.createElement('h3');
-        desc.innerHTML = result;
+        desc.innerHTML = name;
         link.appendChild(desc);
 
         document.getElementById('search_results').appendChild(link);
@@ -126,7 +148,7 @@ function gallerySearch(skip = 0) {
         const more = document.createElement('div')
         more.classList.add('search_result');
         more.onclick = function () {
-            gallerySearch(skip + results.length);
+            searcher(skip + results.length);
         };
 
         const desc = document.createElement('h3');
@@ -147,9 +169,9 @@ function toTitleCase(str) {
     );
 }
 
-function randomGallerySearchPlaceholder() {
-    const index = Math.floor(Math.random() * gallery_pages.length);
-    const name = gallery_pages[index];
+function randomSearchPlaceholder() {
+    const index = Math.floor(Math.random() * pages.length);
+    const name = shortenName(pages[index]);
 
     var search = document.getElementById('search');
     if (search != null) {
