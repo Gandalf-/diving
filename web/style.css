@@ -112,7 +112,7 @@ p {
 }
 
 .search_result {
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   cursor: pointer;
   display: inline-block;
 

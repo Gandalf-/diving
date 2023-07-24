@@ -24,7 +24,7 @@ def write_search_data() -> None:
 
 
 def _cleanup(name: str) -> str:
-    name = name.lower().replace('.html', '').replace('-', ' ')
+    name = name.replace('.html', '').replace('-', ' ')
     return f'"{name}"'
 
 

@@ -52,7 +52,7 @@ function search_inner(text, skip = 0) {
         var match = true;
 
         for (let j = 0; j < words.length; j++) {
-            if (!candidate.includes(words[j])) {
+            if (!candidate.toLowerCase().includes(words[j])) {
                 match = false;
                 break;
             }
@@ -138,7 +138,7 @@ function searcher(skip = 0) {
         link.href = url;
 
         const desc = document.createElement('h3');
-        desc.innerHTML = name;
+        desc.innerHTML = toTitleCase(name);
         link.appendChild(desc);
 
         document.getElementById('search_results').appendChild(link);
@@ -160,6 +160,10 @@ function searcher(skip = 0) {
 }
 
 function toTitleCase(str) {
+    if (where == 'taxonomy') {
+        return str;
+    }
+
     // https://stackoverflow.com/a/196991
     return str.replace(
         /\w\S*/g,
