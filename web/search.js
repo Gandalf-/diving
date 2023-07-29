@@ -6,6 +6,8 @@ const pages = {
     'sites': sites_pages,
 }[where];
 
+var previous_stack = [];
+
 function expandWords(words) {
     var result = [];
 
@@ -134,6 +136,22 @@ function searcher(skip = 0) {
         return;
     }
 
+    if (previous_stack.length > 0) {
+        const back = document.createElement('div')
+        back.classList.add('search_result');
+
+        back.onclick = function () {
+            let lastLocation = previous_stack.pop();
+            searcher(lastLocation);
+        };
+
+        const desc = document.createElement('h3');
+        desc.innerHTML = 'Back...';
+        back.appendChild(desc);
+
+        document.getElementById('search_results').appendChild(back);
+    }
+
     for (let [name, url] of results) {
         const link = document.createElement('a')
         link.classList.add('search_result');
@@ -151,7 +169,9 @@ function searcher(skip = 0) {
     if (truncated) {
         const more = document.createElement('div')
         more.classList.add('search_result');
+
         more.onclick = function () {
+            previous_stack.push(skip);
             searcher(skip + results.length);
         };
 
