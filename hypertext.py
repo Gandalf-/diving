@@ -20,7 +20,7 @@ from util.common import (
     titlecase,
     sanitize_link,
 )
-from util.static import stylesheet, search_js
+from util.static import stylesheet, search_js, search_data_path
 from util.image import categorize, uncategorize, split, Image
 from util.translator import translate
 from util import taxonomy
@@ -30,16 +30,10 @@ Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
 Side = enum.Enum('Side', 'Left Right')
 
 
-scripts = (
-    f"""
+scripts = """
     <!-- fancybox is excellent, this project is not commercial -->
     <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js"></script>
-
-    <script src="/search-data.js"></script>
-    <script src="/{search_js.path}"></script>
-    """
-    + """
     <script>
     function flip(elem) {
         const label = 'is-flipped';
@@ -59,7 +53,6 @@ scripts = (
     randomSearchPlaceholder();
     </script>
 """
-)
 
 
 def title(
@@ -479,7 +472,10 @@ class TopTitle(Title):
             <p class="scientific"></p>
             '''
 
-        return '''
+        return f'''
+        <script src="/{search_data_path}"></script>
+        <script src="/{search_js.path}"></script>
+
         <form class="search" autocomplete="off" action="javascript:;" onsubmit="searcher()">
             <input type="text" id="search" placeholder="Copper Rockfish...">
             <button type="submit">Search</button>

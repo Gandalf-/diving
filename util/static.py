@@ -72,7 +72,8 @@ class VersionedResource:
         the newest version is first
         '''
         name, ext = os.path.splitext(self._name)
-        versions = glob.glob(f'{self._target}/{name}-*{ext}')
+        where = os.path.join(self._target, f'{name}-*{ext}')
+        versions = glob.glob(where)
 
         def by_mtime(path: str) -> float:
             return os.stat(path).st_mtime
@@ -88,3 +89,5 @@ class VersionedResource:
 
 stylesheet = VersionedResource(os.path.join(source_root, 'web/style.css'))
 search_js = VersionedResource(os.path.join(source_root, 'web/search.js'))
+
+search_data_path = 'search-data.js'

@@ -311,8 +311,8 @@ if not sys.flags.interactive and __name__ == "__main__":
     if len(sys.argv) > 1:
         util.common.image_root = sys.argv[1]
 
-    search.write_search_data()
     write_all_html()
+    search.write_search_data()
 
     if not os.environ.get('DIVING_FAST'):
         print("verifying html...              ", end="", flush=True)

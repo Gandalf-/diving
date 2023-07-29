@@ -1,34 +1,20 @@
+# Taxonomy
 
-# timeline
+- [ ] link with https://www.eopugetsound.org/species/oregonia-gracilis ?
+- [ ] remove leading '...' from search suggestions
 
-- [x] switch to python?
-- [x] link into gallery based from zoom subtext
+# Wikipedia
 
-# gallery and taxonomy
+- [ ] some point to the wrong thing, barnacle Balanoidea is also part of the name for a snail
+- [ ] when a page has multiple names, show them in order
 
-- [x] figure out why text is sometimes giant on mobile
-- [x] center text nicely when wider than image and wrapping
+# General
 
-# taxonomy
+- [ ] https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps
+- [ ] clean up versioned files
+- [ ] make search-data.js properly versioned
+- [ ] add tests for javascript, run in the browser with a wrapper function?
 
-- [x] header spacing
-- [x] image pinning
-- [x] ... sp matching in links
-- [x] qualifier ... matching in links
-- [x] worms
-- [x] tunicates
-- [x] sponges
-- [x] barnacles
-- [x] shrimp
-- [x] coral
-- [x] figure out what to do with plants
-- [x] check out mobile usability
+# Sites
 
-
-Link with https://www.eopugetsound.org/species/oregonia-gracilis ?
-
-
-Wikipedia
-- some point to the wrong thing, barnacle Balanoidea is also part of the name
-  for a snail
-- when a page has multiple names, show them in order
+- [ ] add search for site names, not dates
