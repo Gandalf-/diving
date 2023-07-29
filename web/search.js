@@ -1,6 +1,10 @@
 const splits = ['fish', 'coral', 'ray', 'chiton', 'snail', 'worm'];
 const where = document.title.toLowerCase();
-const pages = (where == 'gallery') ? gallery_pages : taxonomy_pages;
+const pages = {
+    'gallery': gallery_pages,
+    'taxonomy': taxonomy_pages,
+    'sites': sites_pages,
+}[where];
 
 function expandWords(words) {
     var result = [];
@@ -30,21 +34,21 @@ function expandWords(words) {
 }
 
 function shortenName(name) {
-    if (where == 'gallery') {
+    if (where != 'taxonomy') {
         return name;
     }
 
     const words = name.split(' ');
     if (words.length > 4) {
         // Take the last 2 words and prepend '...'
-        return '... ' + words.slice(-2).join(' ');
+        return words.slice(-2).join(' ');
     }
 
     return name;
 }
 
 function search_inner(text, skip = 0) {
-    const words = expandWords(text.split(' '));
+    const words = expandWords(text.replace("'", '').split(' '));
 
     var results = [];
     for (let i = 0; i < pages.length; i++) {
@@ -160,7 +164,7 @@ function searcher(skip = 0) {
 }
 
 function toTitleCase(str) {
-    if (where == 'taxonomy') {
+    if (where != 'gallery') {
         return str;
     }
 

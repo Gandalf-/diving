@@ -158,10 +158,6 @@ class TestHypertext(unittest.TestCase):
         html, title = hypertext.title([], Where.Timeline, TestHypertext.g_scientific)
         self.assertNotIn('scientific', html)
 
-        for other in [Where.Sites]:
-            html, title = hypertext.title([], other, TestHypertext.g_scientific)
-            self.assertIn('scientific', html)
-
     def test_top_gallery_search_bar(self):
         html, title = hypertext.title([], Where.Gallery, TestHypertext.g_scientific)
         self.assertIn('input type="text"', html)

@@ -467,11 +467,6 @@ class TopTitle(Title):
         if self.where == Where.Timeline:
             return ''
 
-        if self.where not in (Where.Gallery, Where.Taxonomy):
-            return '''
-            <p class="scientific"></p>
-            '''
-
         return f'''
         <script src="/{search_data_path}"></script>
         <script src="/{search_js.path}"></script>
