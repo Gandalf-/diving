@@ -130,8 +130,8 @@ class TestTaxonomy(unittest.TestCase):
             (['multicolor', 'dendronotid', 'nudibranch'], 'diversicolor'),
             (['six rayed', 'star'], 'hexactis'),
             (['mossy', 'chiton'], 'muscosa'),
-            (['mossy', 'chiton'], 'muscosa'),
             (['pacific', 'stone', 'fish'], 'plumieri mystes'),
+            (['feather', 'star'], 'Echinodermata Crinoidea sp.'),
         ]
 
         for lineage, output in samples:
@@ -214,12 +214,17 @@ class TestTaxonomy(unittest.TestCase):
     def test_all_latin_words(self) -> None:
         words = taxonomy.all_latin_words()
 
-        self.assertIn('acanthodoris', words)
-        self.assertIn('hudsoni', words)
-        self.assertIn('mopaliidae', words)
+        latin_words = [
+            'acanthodoris',
+            'hudsoni',
+            'mopaliidae',
+            'polychaeta',
+            'annelida',
+        ]
+        for word in latin_words:
+            self.assertIn(word, words)
+
         self.assertNotIn('moon snail', words)
-        self.assertIn('polychaeta', words)
-        self.assertIn('annelida', words)
 
 
 if __name__ == '__main__':

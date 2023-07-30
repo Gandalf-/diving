@@ -22,6 +22,20 @@ source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 Tree = Any
 
 
+def file_content_matches(path: str, content: str) -> bool:
+    size = -1
+    try:
+        size = os.stat(path).st_size
+    except OSError:
+        pass
+
+    if size != len(content):
+        return False
+
+    with open(path) as fd:
+        return content == fd.read()
+
+
 def titlecase(xs: str) -> str:
     '''xs.title() but a bit smarter'''
     return xs.title().replace("'S", "'s")

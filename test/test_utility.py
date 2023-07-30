@@ -130,6 +130,18 @@ class TestUtility(unittest.TestCase):
         for before, after in examples:
             self.assertEqual(utility.strip_date(before), after)
 
+    def test_file_content_matches(self) -> None:
+        '''it works'''
+        with open('LICENSE') as fd:
+            license = fd.read()
+
+        self.assertTrue(utility.file_content_matches('LICENSE', license))
+
+        self.assertFalse(utility.file_content_matches('LICENSE', 'Hello there'))
+        self.assertFalse(
+            utility.file_content_matches('LICENSE', license.replace(' ', '!'))
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

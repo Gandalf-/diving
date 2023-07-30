@@ -32,6 +32,7 @@ from util.common import (
     pretty_date,
     prefix_tuples,
     titlecase,
+    file_content_matches,
     sanitize_link,
     Tree,
 )
@@ -283,15 +284,8 @@ def _pool_writer(args: Tuple[str, str, str]) -> None:
     html = textwrap.dedent(html)
     path = f"{where}/{title}"
 
-    size = 0
-    try:
-        size = os.stat(path).st_size
-    except OSError:
-        pass
-    if size == len(html):
-        with open(path) as f:
-            if html == f.read():
-                return
+    if file_content_matches(path, html):
+        return
 
     with open(path, "w+") as f:
         print(html, file=f, end='')

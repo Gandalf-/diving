@@ -31,7 +31,7 @@ def required_checks() -> None:
     _link_check()
     _misspellings()
     _wrong_order()
-    _yaml_duplicate_keys()
+    _verify_yaml_keys()
     _no_duplicate_image_keys()
     _unusal_casing()
 
@@ -79,15 +79,18 @@ def _no_duplicate_image_keys() -> None:
             seen.add(key)
 
 
-def _yaml_duplicate_keys() -> None:
+def _verify_yaml_keys() -> None:
     '''
     Read the yaml file and check for duplicate keys. Duplicates shadow previous
     definitions making things appear to be missing when they are not.
     '''
     fname = taxonomy.yaml_path
-    keys = set()
+    seen_keys = set()
     ignore = ('sp.', 'Pantopoda')
     duplicates = []
+
+    invalid_keys = ('sp',)
+    invalid = []
 
     with open(fname) as fd:
         for line in fd:
@@ -95,11 +98,15 @@ def _yaml_duplicate_keys() -> None:
                 continue
 
             key = line.split(':')[0].strip()
-            if key in keys and key not in ignore and key.istitle():
+            if key in invalid_keys:
+                invalid.append(key)
+
+            if key in seen_keys and key not in ignore and key.istitle():
                 duplicates.append(key)
-            keys.add(key)
+            seen_keys.add(key)
 
     assert not duplicates, f'duplicate keys: {duplicates}'
+    assert not invalid, f'invalid keys: {invalid}'
 
 
 def _wrong_order() -> None:
