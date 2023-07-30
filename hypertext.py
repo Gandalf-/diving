@@ -49,8 +49,6 @@ scripts = """
             }, 1000 * seconds);
         }
     }
-
-    randomSearchPlaceholder();
     </script>
 """
 
@@ -471,11 +469,19 @@ class TopTitle(Title):
         <script src="/{search_data_path}"></script>
         <script src="/{search_js.path}"></script>
 
-        <form class="search" autocomplete="off" action="javascript:;" onsubmit="searcher()">
-            <input type="text" id="search" placeholder="Copper Rockfish...">
-            <button type="submit">Search</button>
-        </form>
+        <div class="search">
+            <form class="search_random" action="javascript:;" onsubmit="randomPage()">
+                <button type="submit">Random</button>
+            </form>
+            <form class="search_text" autocomplete="off" action="javascript:;" onsubmit="searcher()">
+                <input type="text" id="search_bar" placeholder="Copper Rockfish...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
         <div id="search_results" class="search_results">
+        <script>
+            randomSearchPlaceholder();
+        </script>
         </div>
         '''
 

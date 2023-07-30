@@ -29,7 +29,9 @@ function expandWords(words) {
         }
 
         // if word didn't contain any split words, keep it as is
-        if (!found) result.push(word);
+        if (!found) {
+            result.push(word);
+        }
     }
 
     return result;
@@ -42,7 +44,7 @@ function shortenName(name) {
 
     const words = name.split(' ');
     if (words.length > 4) {
-        // Take the last 2 words and prepend '...'
+        // Take the last 2 words
         return words.slice(-2).join(' ');
     }
 
@@ -101,11 +103,7 @@ function search_inner(text, skip = 0) {
         }
 
         char_count += name.length;
-
-        var url = result[0].replace(/ /g, '-');
-        url = `/${where}/${url}.html`;
-
-        topResults.push([name, url]);
+        topResults.push([name, pageToUrl(result[0])]);
     }
 
     return [topResults, truncated];
@@ -116,13 +114,13 @@ function searcher(skip = 0) {
 
     document.getElementById('search_results').innerHTML = '';
 
-    const text = document.getElementById('search').value.toLowerCase();
+    const text = document.getElementById('search_bar').value.toLowerCase();
     if (text.length === 0) {
         return;
     }
 
     const [results, truncated] = search_inner(text, skip);
-    console.log(results, truncated);
+    console.log('search found', results, truncated);
 
     if (results.length === 0) {
         const nothing = document.createElement('div')
@@ -183,6 +181,17 @@ function searcher(skip = 0) {
     }
 }
 
+function randomPage() {
+    const index = Math.floor(Math.random() * pages.length);
+    const page = pages[index];
+    window.location.href = pageToUrl(page);
+}
+
+function pageToUrl(page) {
+    const url = page.replace(/ /g, '-');
+    return `/${where}/${url}.html`;
+}
+
 function toTitleCase(str) {
     if (where != 'gallery') {
         return str;
@@ -201,7 +210,7 @@ function randomSearchPlaceholder() {
     const index = Math.floor(Math.random() * pages.length);
     const name = shortenName(pages[index]);
 
-    var search = document.getElementById('search');
+    var search = document.getElementById('search_bar');
     if (search != null) {
         search.placeholder = toTitleCase(name) + "...";
     }

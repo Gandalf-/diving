@@ -96,11 +96,24 @@ p {
 }
 
 .search {
-  display: block;
-  margin-top: 0.67em;
-  margin-bottom: 0.67em;
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0.67em auto;
+}
+
+.search_random {
+  display: inline-flex;
+}
+
+.search_text {
+  display: inline-flex;
+  flex-grow: 1;
+}
+
+#search_bar {
+  margin: 0 1em;
+  flex-grow: 1;
 }
 
 .search_results {
@@ -128,11 +141,6 @@ p {
   margin-bottom: 0.2em;
   margin-left: 0.25em;
   margin-right: 0.25em;
-}
-
-#search {
-  max-width: 80%;
-  min-width: 50%;
 }
 
 .crosslink {
