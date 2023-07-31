@@ -57,7 +57,7 @@ def writer() -> None:
     _write_javascript()
 
     shutil.copy(
-        os.path.join(source_root, 'game.js'),
+        os.path.join(source_root, 'web', 'game.js'),
         'detective/game.js',
     )
 

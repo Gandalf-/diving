@@ -6,8 +6,9 @@ www=$HOME/working/object-publish/diving-web
 src=$HOME/google_drive/code/shell/diving
 
 start_database() {
+  # shellcheck disable=SC2317
   cleanup() {
-    [[ $pid ]] || return;
+    (( pid )) || return;
     kill "$pid"
     echo Server stopped
   }
@@ -61,7 +62,9 @@ sync() {
 }
 
 dev() {
-  ls ./*.py util/*.py web/* | entr bash macos.sh build
+  echo *.py util/*.py web/* data/*.yml \
+    | tr ' ' '\n' \
+    | entr bash macos.sh build
 }
 
 "$@"

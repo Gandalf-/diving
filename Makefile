@@ -8,8 +8,11 @@ inttest:
 	bash test/integration.sh
 
 
-.PHONY: lint mypy ruff format
-lint: mypy ruff
+.PHONY: lint mypy ruff format shellcheck
+lint: mypy ruff shellcheck
+
+shellcheck:
+	shellcheck *.sh
 
 mypy:
 	mypy .
