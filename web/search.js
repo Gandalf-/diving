@@ -6,7 +6,12 @@ const pages = {
     'sites': sites_pages,
 }[where];
 
+const CHAR_LIMIT = 100;
 var previous_stack = [];
+
+const SEARCH_RESULTS = document.getElementById('search_results');
+const SEARCH_BAR = document.getElementById('search_bar');
+
 
 function expandWords(words) {
     var result = [];
@@ -57,7 +62,7 @@ function search_inner(text, skip = 0) {
     var results = [];
     for (let i = 0; i < pages.length; i++) {
         const candidate = pages[i];
-        var match = true;
+        let match = true;
 
         for (let j = 0; j < words.length; j++) {
             if (!candidate.toLowerCase().includes(words[j])) {
@@ -89,7 +94,6 @@ function search_inner(text, skip = 0) {
     results = results.slice(skip);
 
     // Take 100 characters worth of results
-    const char_limit = 100;
     var truncated = false;
     var char_count = 0;
     var topResults = [];
@@ -97,7 +101,7 @@ function search_inner(text, skip = 0) {
     for (let result of results) {
         const name = shortenName(result[0]);
 
-        if (char_count + name.length > char_limit) {
+        if (char_count + name.length > CHAR_LIMIT) {
             truncated = true;
             break;
         }
@@ -109,12 +113,45 @@ function search_inner(text, skip = 0) {
     return [topResults, truncated];
 }
 
+function createResult(name) {
+    const div = document.createElement('div')
+    div.classList.add('search_result');
+
+    const desc = document.createElement('h3');
+    desc.innerHTML = name;
+    div.appendChild(desc);
+
+    return div;
+}
+
+function addNoResult() {
+    const nothing = createResult('No results');
+    SEARCH_RESULTS.appendChild(nothing);
+}
+
+function addPreviousResult() {
+    const back = createResult('Back...')
+    back.onclick = function () {
+        let lastLocation = previous_stack.pop();
+        searcher(lastLocation);
+    };
+    SEARCH_RESULTS.appendChild(back);
+}
+
+function addNextResult(skip, results_length) {
+    const more = createResult('More...');
+    more.onclick = function () {
+        previous_stack.push(skip);
+        searcher(skip + results_length);
+    };
+    SEARCH_RESULTS.appendChild(more);
+}
+
 function searcher(skip = 0) {
     console.log(where);
 
-    document.getElementById('search_results').innerHTML = '';
-
-    const text = document.getElementById('search_bar').value.toLowerCase();
+    SEARCH_RESULTS.innerHTML = '';
+    const text = SEARCH_BAR.value.toLowerCase();
     if (text.length === 0) {
         return;
     }
@@ -123,31 +160,12 @@ function searcher(skip = 0) {
     console.log('search found', results, truncated);
 
     if (results.length === 0) {
-        const nothing = document.createElement('div')
-        nothing.classList.add('search_result');
-
-        const desc = document.createElement('h3');
-        desc.innerHTML = 'No results';
-        nothing.appendChild(desc);
-
-        document.getElementById('search_results').appendChild(nothing);
+        addNoResult();
         return;
     }
 
     if (previous_stack.length > 0) {
-        const back = document.createElement('div')
-        back.classList.add('search_result');
-
-        back.onclick = function () {
-            let lastLocation = previous_stack.pop();
-            searcher(lastLocation);
-        };
-
-        const desc = document.createElement('h3');
-        desc.innerHTML = 'Back...';
-        back.appendChild(desc);
-
-        document.getElementById('search_results').appendChild(back);
+        addPreviousResult();
     }
 
     for (let [name, url] of results) {
@@ -161,23 +179,11 @@ function searcher(skip = 0) {
         desc.innerHTML = toTitleCase(name);
         link.appendChild(desc);
 
-        document.getElementById('search_results').appendChild(link);
+        SEARCH_RESULTS.appendChild(link);
     }
 
     if (truncated) {
-        const more = document.createElement('div')
-        more.classList.add('search_result');
-
-        more.onclick = function () {
-            previous_stack.push(skip);
-            searcher(skip + results.length);
-        };
-
-        const desc = document.createElement('h3');
-        desc.innerHTML = 'More...';
-        more.appendChild(desc);
-
-        document.getElementById('search_results').appendChild(more);
+        addNextResult(skip, results.length);
     }
 }
 
@@ -208,10 +214,6 @@ function toTitleCase(str) {
 
 function randomSearchPlaceholder() {
     const index = Math.floor(Math.random() * pages.length);
-    const name = shortenName(pages[index]);
-
-    var search = document.getElementById('search_bar');
-    if (search != null) {
-        search.placeholder = toTitleCase(name) + "...";
-    }
+    const name = toTitleCase(shortenName(pages[index]));
+    SEARCH_BAR.placeholder = `${name}...`;
 }

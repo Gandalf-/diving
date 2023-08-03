@@ -466,9 +466,6 @@ class TopTitle(Title):
             return ''
 
         return f'''
-        <script src="/{search_data_path}"></script>
-        <script src="/{search_js.path}"></script>
-
         <div class="search">
             <form class="search_random" action="javascript:;" onsubmit="randomPage()">
                 <button type="submit">Random</button>
@@ -479,6 +476,9 @@ class TopTitle(Title):
             </form>
         </div>
         <div id="search_results" class="search_results">
+
+        <script src="/{search_data_path}"></script>
+        <script src="/{search_js.path}"></script>
         <script>
             randomSearchPlaceholder();
         </script>
