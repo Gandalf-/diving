@@ -10,7 +10,7 @@ from typing import Optional, Tuple, List, Dict, Any, Type
 
 import locations
 
-from util.collection import expand_names
+from util.collection import expand_names, all_valid_names
 from util.common import (
     is_date,
     flatten,
@@ -167,13 +167,15 @@ def _image_to_gallery_link(image: Image) -> Optional[str]:
     there could be mulitple subjects in this image, just take the first for now
     """
     first = next(expand_names([image]))
-    name = sanitize_link(first.normalized())
-    url = f'gallery/{name}.html'
+    name = first.simplified()
 
-    if fast_exists(url):
-        return f'/{url}'
+    if name not in all_valid_names():
+        # if not any(name.endswith(i) for i in ignore):
+        #     print('Unknown name', name)
+        return None
 
-    return None
+    page = sanitize_link(first.normalized())
+    return f'/gallery/{page}.html'
 
 
 def _image_to_sites_link(image: Image) -> Optional[str]:

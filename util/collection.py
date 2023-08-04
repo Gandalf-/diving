@@ -25,6 +25,11 @@ def all_names() -> Set[str]:
     return {categorize(split(i.simplified())) for i in expand_names(named())}
 
 
+@lru_cache(None)
+def all_valid_names() -> Set[str]:
+    return set(single_level(build_image_tree()).keys())
+
+
 def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
     '''squash the tree into a single level name to images dict'''
     assert isinstance(tree, dict), tree
