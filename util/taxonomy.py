@@ -9,7 +9,6 @@ taxonomy related things
 - simplification of full classification into reasonable abbreviations
 '''
 
-from __future__ import annotations
 import enum
 from functools import lru_cache
 from typing import Iterable, Dict, List, Optional, Callable, Any, Set, Union
@@ -28,10 +27,11 @@ from util.image import uncategorize, unqualify, unsplit, Image
 yaml_path = source_root + 'data/taxonomy.yml'
 
 TaxiaTree = dict[str, Union[str, 'TaxiaTree']]
+NameMapping = dict[str, str]
 
 
 def gallery_scientific(
-    lineage: List[str], scientific: ImageTree, debug: bool = False
+    lineage: List[str], scientific: NameMapping, debug: bool = False
 ) -> str:
     '''attempt to find a scientific name for this page'''
 
@@ -138,7 +138,7 @@ MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
 
 
 @lru_cache(None)
-def mapping(where: MappingType = MappingType.Gallery) -> Dict[str, str]:
+def mapping(where: MappingType = MappingType.Gallery) -> NameMapping:
     '''
     gallery:  mapping of common names to scientific names
     taxonomy: mapping of scientific names to common names
@@ -203,7 +203,7 @@ def is_scientific_name(name: str) -> Optional[str]:
 
 
 @lru_cache(None)
-def names_cache() -> Dict[str, str]:
+def names_cache() -> NameMapping:
     '''cached lookup'''
     cache = {}
     for bname in binomial_names():
@@ -215,7 +215,7 @@ def names_cache() -> Dict[str, str]:
     return cache
 
 
-def _to_classification(name: str, mappings: ImageTree) -> str:
+def _to_classification(name: str, mappings: NameMapping) -> str:
     '''find a suitable classification for this common name'''
     return gallery_scientific(name.split(' '), mappings)
 
@@ -242,7 +242,7 @@ def compress_tree(tree: TaxiaTree) -> TaxiaTree:
     Collapse subtrees with only one child into their parent and update the parent's
     key for the current subtree to be "key + child key".
     '''
-    new_tree = {}
+    out = {}
 
     for key, value in tree.items():
         if isinstance(value, dict):
@@ -251,19 +251,19 @@ def compress_tree(tree: TaxiaTree) -> TaxiaTree:
             if len(sub_tree) == 1:
                 child_key, child_value = next(iter(sub_tree.items()))
                 new_key = key + ' ' + child_key
-                new_tree[new_key] = child_value
+                out[new_key] = child_value
             else:
-                new_tree[key] = sub_tree
+                out[key] = sub_tree
         else:
-            new_tree[key] = value
+            out[key] = value
 
-    return new_tree
+    return out
 
 
 def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
     '''fill in the images'''
     assert isinstance(tree, dict), tree
-    itree: ImageTree = {}
+    out: ImageTree = {}
 
     for key, value in list(tree.items()):
         if isinstance(value, str):
@@ -271,14 +271,14 @@ def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
                 assert False, f'taxonomy.yml keys must be lowercase: {key}'
 
             if value in images:
-                itree[key] = {'data': images[value]}
+                out[key] = {'data': images[value]}
         else:
-            itree[key] = _taxia_filler(value, images)
+            out[key] = _taxia_filler(value, images)
 
-    return itree
+    return out
 
 
-def _invert_known(tree: TaxiaTree) -> Dict[str, str]:
+def _invert_known(tree: TaxiaTree) -> NameMapping:
     '''leaves become roots'''
 
     result: Dict[str, str] = {}

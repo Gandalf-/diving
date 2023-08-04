@@ -4,13 +4,13 @@
 collecting dive locations
 '''
 
-from typing import Optional
+from typing import Optional, cast, List
 
 from util import collection
 from util import static
 from util import common
 
-from util.collection import ImageTree
+from util.collection import ImageTree, Image
 
 
 def site_list() -> str:
@@ -78,12 +78,12 @@ def _make_tree() -> ImageTree:
         sub = out
         for word in words:
             sub.setdefault(word, {})
-            sub = sub[word]
+            sub = cast(ImageTree, sub[word])
 
         sub.setdefault(when, {})
-        sub = sub[when]
+        sub = cast(ImageTree, sub[when])
 
         sub.setdefault("data", [])
-        sub["data"].append(image)
+        cast(List[Image], sub["data"]).append(image)
 
     return out

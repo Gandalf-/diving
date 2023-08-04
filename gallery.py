@@ -10,7 +10,7 @@ import sys
 import multiprocessing
 import textwrap
 from datetime import datetime
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional, List, cast
 
 import detective
 import hypertext
@@ -147,7 +147,7 @@ def html_direct_examples(direct: List[Image], where: Where) -> str:
 def html_tree(
     tree: collection.ImageTree,
     where: Where,
-    scientific: collection.ImageTree,
+    scientific: taxonomy.NameMapping,
     lineage: Optional[List[str]] = None,
 ) -> List[Tuple[str, str]]:
     """html version of display"""
@@ -196,13 +196,14 @@ def html_tree(
             size='{}:{}'.format(sum(1 for k in value if k != 'data') or '', size),
         )
 
+        value = cast(collection.ImageTree, value)
         results.extend(html_tree(value, where, scientific, lineage=new_lineage))
 
     if has_subcategories:
         html += "</div>"
 
     # direct examples
-    direct = tree.get("data", [])
+    direct = cast(List[Image], tree.get("data", []))
     chronological = where != Where.Sites
     direct = sorted(direct, key=lambda x: x.path(), reverse=chronological)
     assert not (direct and has_subcategories)

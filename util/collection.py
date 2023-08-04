@@ -6,13 +6,13 @@ parsing data from the file system to construct trees of images
 
 import os
 from functools import lru_cache
-from typing import Iterable, Set, Dict, List, Iterator
+from typing import Iterable, Set, Dict, List, Iterator, Union, cast
 
 from util.image import Image, categorize, split
-from util.common import flatten, tree_size, image_root, Tree
+from util.common import flatten, tree_size, image_root
 from util import static
 
-ImageTree = Tree
+ImageTree = dict[str, Union[List[Image], 'ImageTree']]
 
 
 def named() -> List[Image]:
@@ -127,10 +127,10 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
         sub = out
         for word in words:
             sub.setdefault(word, {})
-            sub = sub[word]
+            sub = cast(ImageTree, sub[word])
 
         sub.setdefault("data", [])
-        sub["data"].append(image)
+        cast(List[Image], sub["data"]).append(image)
 
     return out
 
@@ -159,15 +159,16 @@ def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
             continue
 
         if "data" not in value and len(value.keys()) == 1:
-            v = tree.pop(key)
+            v = cast(ImageTree, tree.pop(key))
             s = list(v.keys())[0]
 
             if reverse:
-                new_key = s + " " + key
+                new_key = f'{s} {key}'
             else:
-                new_key = key + " " + s
+                new_key = f'{key} {s}'
 
-            tree[new_key] = _compress(v[s], reverse)
+            child = cast(ImageTree, v[s])
+            tree[new_key] = _compress(child, reverse)
         else:
             tree[key] = _compress(value, reverse)
 
@@ -189,6 +190,6 @@ def _data_to_various(tree: ImageTree) -> ImageTree:
             tree['various'] = {'data': values}
 
         else:
-            tree[key] = _data_to_various(value)
+            tree[key] = _data_to_various(cast(ImageTree, value))
 
     return tree
