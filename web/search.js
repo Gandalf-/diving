@@ -217,3 +217,5 @@ function randomSearchPlaceholder() {
     const name = toTitleCase(shortenName(pages[index]));
     SEARCH_BAR.placeholder = `${name}...`;
 }
+
+randomSearchPlaceholder();

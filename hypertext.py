@@ -32,8 +32,10 @@ Side = enum.Enum('Side', 'Left Right')
 
 scripts = """
     <!-- fancybox is excellent, this project is not commercial -->
-    <script src="/jquery-3.6.0.min.js"></script>
-    <script src="/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
+    <script src="/jquery-3.6.0.min.js" defer></script>
+    <script src="/jquery.fancybox.min.js" defer></script>
+
     <script>
     function flip(elem) {
         const label = 'is-flipped';
@@ -104,7 +106,6 @@ def head(_title: str) -> str:
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name=description content="{desc}">
         <link rel="stylesheet" href="/{stylesheet.path}"/>
-        <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
       </head>
       <body>
       <div class="wrapper">
@@ -477,11 +478,8 @@ class TopTitle(Title):
         </div>
         <div id="search_results" class="search_results">
 
-        <script src="/{search_data_path}"></script>
-        <script src="/{search_js.path}"></script>
-        <script>
-            randomSearchPlaceholder();
-        </script>
+        <script src="/{search_data_path}" defer></script>
+        <script src="/{search_js.path}" defer></script>
         </div>
         '''
 
