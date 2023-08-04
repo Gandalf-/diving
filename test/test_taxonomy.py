@@ -51,8 +51,7 @@ class TestTaxonomy(unittest.TestCase):
 
     def test_find_representative(self):
         '''same as gallery.py but the lineage is reversed'''
-        tree = collection.build_image_tree()
-        taxia = taxonomy.gallery_tree(tree)
+        taxia = taxonomy.gallery_tree()
         lineage = [
             'Animalia',
             'Cnidaria',
@@ -69,8 +68,7 @@ class TestTaxonomy(unittest.TestCase):
 
     def test_taxia_filler(self):
         '''it doesn't lose data'''
-        tree = collection.build_image_tree()
-        images = taxonomy.single_level(tree)
+        images = collection.single_level(collection.build_image_tree())
         taxia = taxonomy.compress_tree(taxonomy.load_tree())
 
         sub_taxia = utility.walk_spine(

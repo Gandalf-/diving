@@ -9,9 +9,10 @@ taxonomy related things
 - simplification of full classification into reasonable abbreviations
 '''
 
+from __future__ import annotations
 import enum
 from functools import lru_cache
-from typing import Iterable, Dict, List, Optional, Callable, Any, Set
+from typing import Iterable, Dict, List, Optional, Callable, Any, Set, Union
 
 import yaml
 
@@ -26,8 +27,7 @@ from util.image import uncategorize, unqualify, unsplit, Image
 
 yaml_path = source_root + 'data/taxonomy.yml'
 
-NestedStringTree = Any
-TaxiaTree = NestedStringTree
+TaxiaTree = dict[str, Union[str, 'TaxiaTree']]
 
 
 def gallery_scientific(
@@ -107,7 +107,7 @@ def similar(a: str, b: str) -> bool:
 
 
 @lru_cache(None)
-def load_tree() -> NestedStringTree:
+def load_tree() -> TaxiaTree:
     '''yaml load'''
     with open(yaml_path, encoding='utf8') as fd:
         return yaml.safe_load(fd)
@@ -155,15 +155,14 @@ def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
     '''produce a tree for gallery.py to use
     the provided tree must be from collection.build_image_tree()
     '''
-    if not tree:
-        tree = build_image_tree()
+    tree = tree or build_image_tree()
 
     images = single_level(tree)
     taxia = compress_tree(load_tree())
 
-    _taxia_filler(taxia, images)
+    itree = _taxia_filler(taxia, images)
 
-    return taxia
+    return itree
 
 
 def binomial_names(
@@ -197,19 +196,23 @@ def looks_like_scientific_name(name: str) -> bool:
 
 def is_scientific_name(name: str) -> Optional[str]:
     '''cached lookup'''
-    if not _NAMES_CACHE:
-        for bname in binomial_names():
-            _NAMES_CACHE[bname.lower()] = bname
-
-            genus, _ = bname.split()
-            _NAMES_CACHE[genus.lower()] = genus
-
-    return _NAMES_CACHE.get(name.lower())
+    return names_cache().get(name.lower())
 
 
 # PRIVATE
 
-_NAMES_CACHE: Dict[str, str] = {}
+
+@lru_cache(None)
+def names_cache() -> Dict[str, str]:
+    '''cached lookup'''
+    cache = {}
+    for bname in binomial_names():
+        cache[bname.lower()] = bname
+
+        genus, _ = bname.split()
+        cache[genus.lower()] = genus
+
+    return cache
 
 
 def _to_classification(name: str, mappings: ImageTree) -> str:
@@ -217,11 +220,11 @@ def _to_classification(name: str, mappings: ImageTree) -> str:
     return gallery_scientific(name.split(' '), mappings)
 
 
-def _filter_exact(tree: NestedStringTree) -> NestedStringTree:
+def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
     '''remove all sp. entries'''
     assert isinstance(tree, dict), tree
 
-    out = {}
+    out: TaxiaTree = {}
     for key, value in tree.items():
         if key == 'sp.':
             continue
@@ -234,7 +237,7 @@ def _filter_exact(tree: NestedStringTree) -> NestedStringTree:
     return out
 
 
-def compress_tree(tree: NestedStringTree) -> NestedStringTree:
+def compress_tree(tree: TaxiaTree) -> TaxiaTree:
     '''
     Collapse subtrees with only one child into their parent and update the parent's
     key for the current subtree to be "key + child key".
@@ -260,6 +263,7 @@ def compress_tree(tree: NestedStringTree) -> NestedStringTree:
 def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
     '''fill in the images'''
     assert isinstance(tree, dict), tree
+    itree: ImageTree = {}
 
     for key, value in list(tree.items()):
         if isinstance(value, str):
@@ -267,13 +271,11 @@ def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
                 assert False, f'taxonomy.yml keys must be lowercase: {key}'
 
             if value in images:
-                tree[key] = {'data': images[value]}
-            else:
-                tree.pop(key)
+                itree[key] = {'data': images[value]}
         else:
-            tree[key] = _taxia_filler(value, images)
+            itree[key] = _taxia_filler(value, images)
 
-    return tree
+    return itree
 
 
 def _invert_known(tree: TaxiaTree) -> Dict[str, str]:
@@ -282,7 +284,7 @@ def _invert_known(tree: TaxiaTree) -> Dict[str, str]:
     result: Dict[str, str] = {}
 
     def inner(
-        tree: TaxiaTree,
+        tree: Union[str, 'TaxiaTree'],
         out: Dict[str, str],
         lineage: Optional[List[str]] = None,
     ) -> None:

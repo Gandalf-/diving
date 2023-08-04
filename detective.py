@@ -92,13 +92,12 @@ def _write_javascript() -> None:
         print('var difficulties =', ds, file=fd)
 
 
-def _distance(a: str, b: str, tree: Optional[taxonomy.TaxiaTree] = None) -> float:
+def _distance(a: str, b: str, tree: Optional[dict[str, str]] = None) -> float:
     '''similarity score, higher means more different
 
     difflib.SequenceMatcher and jellyfish were all junk
     '''
-    if not tree:
-        tree = taxonomy.mapping()
+    tree = tree or taxonomy.mapping()
 
     at = tree[a].split(' ')
     bt = tree[b].split(' ')
