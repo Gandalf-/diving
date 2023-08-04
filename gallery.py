@@ -23,6 +23,7 @@ from util import collection
 from util import static
 from util import taxonomy
 from util import verify
+from util.metrics import metrics
 from util.image import Image
 from util.common import (
     tree_size,
@@ -316,3 +317,5 @@ if not sys.flags.interactive and __name__ == "__main__":
         else:
             verify.advisory_checks()
     print("done")
+
+    metrics.summary()

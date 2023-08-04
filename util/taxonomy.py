@@ -15,6 +15,7 @@ from typing import Iterable, Dict, List, Optional, Callable, Any, Set, Union
 
 import yaml
 
+from util import static
 from util.collection import (
     build_image_tree,
     single_level,
@@ -23,6 +24,7 @@ from util.collection import (
 )
 from util.common import extract_leaves, hmap, source_root, extract_branches
 from util.image import uncategorize, unqualify, unsplit, Image
+from util.metrics import metrics
 
 yaml_path = source_root + 'data/taxonomy.yml'
 
@@ -52,14 +54,22 @@ def gallery_scientific(
         if name:
             break
 
-    if not name and debug:
-        for skip in ('various', 'egg', 'unknown', 'wreck'):
-            if skip in lineage:
-                break
-        else:
-            print('no taxonomy', ' '.join(lineage))
+    if not name and not no_taxonomy(lineage):
+        metrics.record('no scientific name', ' '.join(lineage))
 
     return name or ""
+
+
+def no_taxonomy(lineage: List[str]) -> bool:
+    '''is this lineage not in the taxonomy?'''
+    name = ' '.join(lineage)
+    if name in static.no_taxonomy_exact:
+        return True
+
+    if any(lin in static.no_taxonomy_any for lin in lineage):
+        return True
+
+    return False
 
 
 def simplify(name: str, shorten: bool = False) -> str:
@@ -159,7 +169,6 @@ def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
 
     images = single_level(tree)
     taxia = compress_tree(load_tree())
-
     itree = _taxia_filler(taxia, images)
 
     return itree

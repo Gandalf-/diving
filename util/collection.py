@@ -10,6 +10,7 @@ from typing import Iterable, Set, Dict, List, Iterator, Union, cast
 
 from util.image import Image, categorize, split
 from util.common import flatten, tree_size, image_root
+from util.metrics import metrics
 from util import static
 
 ImageTree = dict[str, Union[List[Image], 'ImageTree']]
@@ -124,9 +125,10 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
 
     for image in images:
         name = image.normalized()
-        words = name.split(" ")[::-1]
+        words = name.split(' ')[::-1]
 
         if words[0] in static.ignore:
+            metrics.counter('ignored images')
             continue
 
         sub = out
@@ -149,7 +151,7 @@ def _pruner(tree: ImageTree, too_few: int = 5) -> ImageTree:
             to_remove.append(key)
 
     for remove in to_remove:
-        # print('pruned', remove)
+        metrics.record('pruned images', remove)
         tree.pop(remove)
 
     return tree

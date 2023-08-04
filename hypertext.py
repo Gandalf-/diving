@@ -20,6 +20,7 @@ from util.common import (
     titlecase,
     sanitize_link,
 )
+from util.metrics import metrics
 from util.static import stylesheet, search_js, search_data_path
 from util.image import categorize, uncategorize, split, Image
 from util.translator import translate
@@ -139,6 +140,7 @@ def image_to_name_html(image: Image, where: Where) -> str:
     if name_url:
         name_html = f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
     else:
+        metrics.counter('image without gallery link')
         name_html = f'<p class="top elem nolink">{image.name}</p>'
 
     return name_html
@@ -150,12 +152,7 @@ def image_to_site_html(image: Image, where: Where) -> str:
         return ''
 
     site_url = _image_to_sites_link(image)
-    if site_url:
-        site_html = f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
-    else:
-        site_html = f'<p class="top elem nolink">{image.site()}</p>'
-
-    return site_html
+    return f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
 
 
 # PRIVATE
@@ -170,15 +167,13 @@ def _image_to_gallery_link(image: Image) -> Optional[str]:
     name = first.simplified()
 
     if name not in all_valid_names():
-        # if not any(name.endswith(i) for i in ignore):
-        #     print('Unknown name', name)
         return None
 
     page = sanitize_link(first.normalized())
     return f'/gallery/{page}.html'
 
 
-def _image_to_sites_link(image: Image) -> Optional[str]:
+def _image_to_sites_link(image: Image) -> str:
     """get the /sites/ link"""
     when, where = image.location().split(' ', 1)
     return locations.sites_link(when, where)
@@ -254,6 +249,7 @@ class GalleryTitle(Title):
             </div>
             """
         else:
+            metrics.counter('gallery title without taxonomy link')
             html += f"""
             <p class="scientific">{sname}</p>
             </div>
@@ -329,6 +325,7 @@ class TaxonomyTitle(Title):
             </div>
             """
         else:
+            metrics.counter('taxonomy title without gallery link')
             assert not name, name
             html += f"""
             <p class="scientific">{english}</p>

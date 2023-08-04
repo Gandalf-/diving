@@ -28,10 +28,10 @@ def advisory_checks() -> None:
 def required_checks() -> None:
     '''must pass'''
     _important_files_exist()
+    _verify_yaml_keys()
     _link_check()
     _misspellings()
     _wrong_order()
-    _verify_yaml_keys()
     _no_duplicate_image_keys()
     _unusal_casing()
 

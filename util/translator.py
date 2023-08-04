@@ -30,6 +30,20 @@ with open(v4_path) as fd:
             continue
         _translations[key] = value
 
+# Execution
+
+
+def translate(word: str) -> str:
+    '''
+    Given a word, attempt to translate it to English based on the contents of
+    data/translate.yml
+    '''
+    out = _translations[word.lower()] or ''
+    return out.replace('-family', '').replace('-order', '')
+
+
+# Updating translations
+
 
 PARENTHETICAL = re.compile(r' \(.*\)')
 AFTER_COMMA = re.compile(r',.*')
@@ -53,15 +67,6 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
         english = f'{words[2]}\'s'
 
     return english
-
-
-def translate(word: str) -> str:
-    '''
-    Given a word, attempt to translate it to English based on the contents of
-    data/translate.yml
-    '''
-    out = _translations[word.lower()]
-    return out.replace('-family', '').replace('-order', '')
 
 
 def filterer(translations: Dict[str, str], path: str, desc: str) -> None:

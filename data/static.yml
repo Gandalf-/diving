@@ -73,13 +73,56 @@ locations:
     - Rasdhoo
 
 ignore:
-  - pier
-  - rock
-  - reef
+  - bay
+  - beach
+  - bird
+  - boat
+  - bottom
+  - break
+  - bubble
+  - building
+  - camera
+  - cove
+  - debris
+  - distancing
+  - doll
+  - flag
+  - fragment
+  - friend
+  - gear
+  - kayak
+  - kayaker
   - log
-  - wood
   - marina
+  - moon
+  - pier
+  - pylon
+  - reef
+  - rock
+  - rocks
+  - shallow
   - site
+  - skeleton
+  - skink
+  - structure
+  - visibility
+  - water
+  - wood
+
+no-taxonomy-exact:
+  - coral
+  - crab
+  - snail
+  - shrimp
+  - univalve
+  - rock crab
+  - lobster
+
+no-taxonomy-any:
+  - various
+  - egg
+  - unknown
+  - wreck
 
 splits:
   - fish
@@ -168,6 +211,7 @@ categories:
     - rockweed
     - sea braid
     - sea grape
+    - sea lace
     - sea laurel
     - sea lettuce
     - seagrass

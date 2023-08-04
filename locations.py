@@ -19,7 +19,7 @@ def site_list() -> str:
     return ', '.join(rest) + f', and {last}'
 
 
-def sites_link(when: str, where: str) -> Optional[str]:
+def sites_link(when: str, where: str) -> str:
     '''try to produce the correct /sites/ link'''
     site = add_context(where)
     link = common.sanitize_link(site)

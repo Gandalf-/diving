@@ -7,23 +7,31 @@ configuration information
 import os
 import glob
 import hashlib
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
 import yaml
 
 from util.common import source_root
+from util.metrics import metrics
 
+
+ListTree = Dict[str, List[str]]
 
 with open(source_root + 'data/static.yml') as fd:
     _static = yaml.safe_load(fd)
 
+categories: ListTree = _static['categories']
+difficulty: ListTree = _static['difficulty']
+locations: ListTree = _static['locations']
+
+pinned: Dict[str, str] = _static['pinned']
+
 ignore: List[str] = _static['ignore']
 splits: List[str] = _static['splits']
 qualifiers: List[str] = _static['qualifiers']
-categories: Dict[str, List[str]] = _static['categories']
-pinned: Dict[str, str] = _static['pinned']
-difficulty: Dict[str, List[str]] = _static['difficulty']
-locations: Dict[str, List[str]] = _static['locations']
+
+no_taxonomy_exact: Set[str] = set(_static['no-taxonomy-exact'])
+no_taxonomy_any: Set[str] = set(_static['no-taxonomy-any'])
 
 
 def _invert(tree: Dict[str, List[str]]) -> Dict[str, str]:
@@ -84,6 +92,7 @@ class VersionedResource:
         '''remove all but the latest count versions of this resource'''
         for i, version in enumerate(self.versions()):
             if i >= count:
+                metrics.counter('versioned resources deleted')
                 os.remove(version)
 
 

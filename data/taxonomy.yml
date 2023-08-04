@@ -497,10 +497,13 @@ Animalia:
           Metandrocarpa:
             taylori: orange social tunicate
     Mammalia:
+      sp.: mammal
       Carnivora:
         Otariidae:
           Zalophus:
+            sp.: sea lion
             wollebaeki: galapagos sea lion
+            californianus: california sea lion
       Cetacea:
         Delphinidae:
           Tursiops:
@@ -1017,6 +1020,7 @@ Animalia:
               farcimen: metridium anemone
   Mollusca:
     Bivalvia:
+      sp.: bivalve
       Ostreida:
         Ostreoidea:
           Gryphaeidae:
