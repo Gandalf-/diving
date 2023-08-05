@@ -63,7 +63,7 @@ def gallery_scientific(
 def no_taxonomy(lineage: List[str]) -> bool:
     '''is this lineage not in the taxonomy?'''
     name = ' '.join(lineage)
-    if name in static.no_taxonomy_exact:
+    if unqualify(uncategorize(name)) in static.no_taxonomy_exact:
         return True
 
     if any(lin in static.no_taxonomy_any for lin in lineage):

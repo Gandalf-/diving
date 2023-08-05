@@ -19,10 +19,19 @@ class Metrics:
         self.data[key] += 1
 
     def summary(self) -> None:
-        for key, value in self.data.items():
+        print('metrics...')
+
+        last = []
+        for key, value in sorted(self.data.items()):
             if isinstance(value, (set, list)):
                 value = sorted(value)
-            print(f'{key}: {value}')
+                last.append(f'\t{key}: {value}')
+            else:
+                print(f'\t{value}\t{key}')
+
+        print('')
+        for line in sorted(last):
+            print(line)
 
 
 metrics = Metrics()

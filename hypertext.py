@@ -140,7 +140,7 @@ def image_to_name_html(image: Image, where: Where) -> str:
     if name_url:
         name_html = f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
     else:
-        metrics.counter('image without gallery link')
+        metrics.counter('images without gallery link')
         name_html = f'<p class="top elem nolink">{image.name}</p>'
 
     return name_html
@@ -249,7 +249,7 @@ class GalleryTitle(Title):
             </div>
             """
         else:
-            metrics.counter('gallery title without taxonomy link')
+            metrics.counter('gallery titles without taxonomy link')
             html += f"""
             <p class="scientific">{sname}</p>
             </div>
@@ -325,7 +325,7 @@ class TaxonomyTitle(Title):
             </div>
             """
         else:
-            metrics.counter('taxonomy title without gallery link')
+            metrics.counter('taxonomy titles without gallery link')
             assert not name, name
             html += f"""
             <p class="scientific">{english}</p>

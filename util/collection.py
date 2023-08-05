@@ -128,7 +128,7 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
         words = name.split(' ')[::-1]
 
         if words[0] in static.ignore:
-            metrics.counter('ignored images')
+            metrics.counter('images ignored')
             continue
 
         sub = out
@@ -151,7 +151,7 @@ def _pruner(tree: ImageTree, too_few: int = 5) -> ImageTree:
             to_remove.append(key)
 
     for remove in to_remove:
-        metrics.record('pruned images', remove)
+        metrics.record('images pruned by count', remove)
         tree.pop(remove)
 
     return tree

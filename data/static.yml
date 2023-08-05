@@ -101,6 +101,7 @@ ignore:
   - rock
   - rocks
   - shallow
+  - seagull
   - site
   - skeleton
   - skink
@@ -116,7 +117,11 @@ no-taxonomy-exact:
   - shrimp
   - univalve
   - rock crab
+  - shore crab
+  - bay shrimp
+  - prawn shrimp
   - lobster
+  - fan coral
 
 no-taxonomy-any:
   - various

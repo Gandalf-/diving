@@ -5,7 +5,6 @@ Attempt to translate Latin/Greek names to English based on roots, prefixes, and
 suffixes
 '''
 
-import copy
 import os
 import re
 import yaml
@@ -14,21 +13,11 @@ from typing import Optional, Dict
 from util.taxonomy import all_latin_words
 from util.common import source_root
 
-v3_path = os.path.join(source_root, 'data/translate-3.yml')
 v4_path = os.path.join(source_root, 'data/translate-4.yml')
 
 
-with open(v3_path) as fd:
-    _v3 = yaml.safe_load(fd)
-    _translations = copy.deepcopy(_v3)
-
 with open(v4_path) as fd:
-    _v4 = yaml.safe_load(fd)
-
-    for key, value in _v4.items():
-        if not value:
-            continue
-        _translations[key] = value
+    _translations = yaml.safe_load(fd)
 
 # Execution
 
@@ -69,7 +58,7 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
     return english
 
 
-def filterer(translations: Dict[str, str], path: str, desc: str) -> None:
+def filterer(translations: Dict[str, str]) -> None:
     clean = {}
     empty = set()
     all_latin = all_latin_words()
@@ -86,7 +75,7 @@ def filterer(translations: Dict[str, str], path: str, desc: str) -> None:
 
     empty |= all_latin
 
-    with open(path, 'w+') as fd:
+    with open(v4_path, 'w+') as fd:
         fd.write('---\n')
 
         for i, (latin, english) in enumerate(sorted(clean.items())):
@@ -102,11 +91,8 @@ def filterer(translations: Dict[str, str], path: str, desc: str) -> None:
     known = len(clean)
     unknown = len(empty)
     percent_known = known / (known + unknown) * 100
-    print(
-        f'\t{percent_known:.2f}% ({known}/{known + unknown}) {desc} translations known'
-    )
+    print(f'\t{percent_known:.2f}% ({known}/{known + unknown}) translations known')
 
 
 def filter_translations() -> None:
-    filterer(_v3, v3_path, 'fast')
-    filterer(_v4, v4_path, 'quality')
+    filterer(_translations)
