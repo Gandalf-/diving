@@ -19,8 +19,10 @@ class Metrics:
         self.data[key] += 1
 
     def summary(self) -> None:
-        print('metrics...')
+        if not self.data:
+            return
 
+        print('metrics...')
         last = []
         for key, value in sorted(self.data.items()):
             if isinstance(value, (set, list)):

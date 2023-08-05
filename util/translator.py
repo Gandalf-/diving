@@ -10,6 +10,8 @@ import re
 import yaml
 
 from typing import Optional, Dict
+
+from util.metrics import metrics
 from util.taxonomy import all_latin_words
 from util.common import source_root
 
@@ -45,10 +47,6 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
     # remove parenthesis and synonyms groups
     english = PARENTHETICAL.sub('', english)
     english = AFTER_COMMA.sub('', english)
-
-    if latin.lower() == english.lower():
-        return None
-
     english = '-'.join(english.split(' '))
 
     words = english.split('-')
@@ -96,3 +94,4 @@ def filterer(translations: Dict[str, str]) -> None:
 
 def filter_translations() -> None:
     filterer(_translations)
+    metrics.summary()
