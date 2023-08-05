@@ -128,7 +128,7 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
         words = name.split(' ')[::-1]
 
         if words[0] in static.ignore:
-            metrics.counter('images ignored')
+            metrics.counter('images ignored while building image tree')
             continue
 
         sub = out

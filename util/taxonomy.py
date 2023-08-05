@@ -64,9 +64,11 @@ def no_taxonomy(lineage: List[str]) -> bool:
     '''is this lineage not in the taxonomy?'''
     name = ' '.join(lineage)
     if unqualify(uncategorize(name)) in static.no_taxonomy_exact:
+        metrics.counter('lineages known to not have taxonomy')
         return True
 
     if any(i in name for i in static.no_taxonomy_any):
+        metrics.counter('lineages known to not have taxonomy')
         return True
 
     return False
