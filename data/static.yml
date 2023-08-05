@@ -100,8 +100,8 @@ ignore:
   - reef
   - rock
   - rocks
-  - shallow
   - seagull
+  - shallow
   - site
   - skeleton
   - skink
@@ -111,23 +111,33 @@ ignore:
   - wood
 
 no-taxonomy-exact:
+  - cleaner shrimp
+  - spinyhead shrimp
+  - conch
   - coral
+  - coral polyp
   - crab
-  - snail
-  - shrimp
-  - univalve
-  - rock crab
-  - shore crab
-  - bay shrimp
-  - prawn shrimp
-  - lobster
   - fan coral
+  - lobster
+  - limpet
+  - prawn
+  - plankton
+  - rock crab
+  - sea fan
+  - sea rod
+  - sea whip
+  - shore crab
+  - shrimp
+  - snail
+  - univalve
 
 no-taxonomy-any:
-  - various
+  - clathria
   - egg
   - unknown
+  - various
   - wreck
+  - spiky soft coral
 
 splits:
   - fish
@@ -258,6 +268,8 @@ categories:
     - scallop
     - oyster
     - mussel
+    # could be a univalve too
+    - shell
   mammal:
     - sea lion
     - dolphin

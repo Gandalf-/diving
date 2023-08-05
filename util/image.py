@@ -120,19 +120,18 @@ class Image:
 
     def thumbnail(self) -> str:
         '''URI of thumbnail image'''
-        sha1 = self.hashed()
-        assert sha1, f'{self.directory}/{self.label} has no hash'
-        return '/imgs/' + sha1 + '.webp'
+        return f'/imgs/{self.hashed()}.webp'
 
     def fullsize(self) -> str:
         '''URI of original image'''
-        sha1 = self.hashed()
-        assert sha1
-        return '/full/' + sha1 + '.webp'
+        return f'/full/{self.hashed()}.webp'
 
-    def hashed(self) -> Optional[str]:
-        '''Get the sha1sum for an original image, using the database as a cache'''
-        return self.database.get_image_hash(self.identifier())
+    def hashed(self) -> str:
+        '''Get the sha1sum for an original image, using the database as a
+        cache'''
+        sha1 = self.database.get_image_hash(self.identifier())
+        assert sha1, f'{self.directory}/{self.label} has no hash'
+        return sha1
 
     def singular(self) -> str:
         '''return singular version'''

@@ -24,16 +24,13 @@ format:
 	black --fast -S *.py */*.py
 
 
-.PHONY: translations
-translations:
-	python3 -c 'from util.translator import filter_translations; filter_translations()'
+data/translations.yml: data/taxonomy.yml
+	python3 -c 'from util.translator import main; main()'
+
 
 .PHONY: local serve dev
-local:
+local: data/translations.yml
 	bash macos.sh build
 
-serve:
-	bash macos.sh serve
-
-dev:
+dev: data/translations.yml
 	bash macos.sh dev

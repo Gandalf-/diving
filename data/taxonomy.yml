@@ -912,6 +912,7 @@ Animalia:
         Poritidae:
           Goniopora: flower pot coral
           Porites:
+            sp.: porites coral
             lobata: porites lobata coral
         Dendrophylliidae:
           Balanophyllia:
@@ -1310,6 +1311,7 @@ Animalia:
         Crangonoidea:
           Crangonidae:
             Crangon:
+              sp.: bay shrimp
               handi: squat bay shrimp
               franciscorum: california bay shrimp
             Metacrangon:

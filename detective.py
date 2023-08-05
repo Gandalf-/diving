@@ -21,9 +21,7 @@ from util.image import unqualify, categorize, split, Image
 def get_hashes(images: List[Image]) -> Iterable[str]:
     '''cache in a database'''
     for image in images:
-        sha1 = image.hashed()
-        assert sha1, f'{image.path()} has no hash'
-        yield sha1
+        yield image.hashed()
 
 
 ThumbsTable = List[List[str]]

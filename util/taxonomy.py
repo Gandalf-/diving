@@ -66,7 +66,7 @@ def no_taxonomy(lineage: List[str]) -> bool:
     if unqualify(uncategorize(name)) in static.no_taxonomy_exact:
         return True
 
-    if any(lin in static.no_taxonomy_any for lin in lineage):
+    if any(i in name for i in static.no_taxonomy_any):
         return True
 
     return False
@@ -327,18 +327,6 @@ def _ordered_simple_names(tree: ImageTree) -> Iterable[str]:
 
         else:
             assert False, value
-
-
-def _listing() -> None:
-    '''write out the names to a file'''
-    have = set(load_known())
-    everything = set(_ordered_simple_names(build_image_tree()))
-    need = everything - have
-    path = source_root + 'data/taxonomy.txt'
-
-    with open(path, 'w+', encoding='utf8') as fd:
-        for name in sorted(need):
-            fd.write(name + '\n')
 
 
 def _find_imprecise() -> Iterable[str]:

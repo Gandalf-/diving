@@ -15,7 +15,7 @@ from util.metrics import metrics
 from util.taxonomy import all_latin_words
 from util.common import source_root
 
-v4_path = os.path.join(source_root, 'data/translate-4.yml')
+v4_path = os.path.join(source_root, 'data/translations.yml')
 
 
 with open(v4_path) as fd:
@@ -92,6 +92,6 @@ def filterer(translations: Dict[str, str]) -> None:
     print(f'\t{percent_known:.2f}% ({known}/{known + unknown}) translations known')
 
 
-def filter_translations() -> None:
+def main() -> None:
     filterer(_translations)
     metrics.summary()
