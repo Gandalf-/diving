@@ -4,6 +4,8 @@
 collecting dive locations
 '''
 
+import re
+
 from typing import Optional, cast, List
 
 from util import collection
@@ -53,7 +55,17 @@ def sites() -> ImageTree:
     return collection.pipeline(_make_tree(), reverse=False)
 
 
+def where_to_words(where: str) -> List[str]:
+    '''split the input into words but do not break up dive site names'''
+    return re.findall(_SITE_PATTERN, where)
+
+
 # PRIVATE
+
+
+_SITE_PATTERN = re.compile(
+    '|'.join(map(re.escape, common.extract_leaves(static.locations))) + '|\\S+'
+)
 
 
 def _make_tree() -> ImageTree:
@@ -65,10 +77,7 @@ def _make_tree() -> ImageTree:
         when, *where = image.location().split(' ')
         where = ' '.join(where)
         where = add_context(where) or where
-
-        words = where.split(' ')
-        if words[-1] in static.ignore:
-            continue
+        words = where_to_words(where)
 
         sub = out
         for word in words:

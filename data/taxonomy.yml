@@ -598,6 +598,7 @@ Animalia:
         Lutjanidae:
           Lutjanus:
             kasmira: bluestripe snapper
+            viridis: blue gold snapper
           Ocyurus:
             chrysurus: yellowtail snapper
         Priacanthidae:
@@ -616,6 +617,8 @@ Animalia:
             melampygus: bluefin trevally jack
             sexfasciatus: bigeye trevally jack
         Cirrhitidae:
+          Paracirrhites:
+            forsteri: freckled hawkfish
           Oxycirrhites:
             typus: longnosed hawkfish
           Cirrhitichthys:
@@ -657,7 +660,8 @@ Animalia:
           Equetus:
             punctatus: spotted drum
         Serranidae:
-          # sp.: sea bass
+          Pseudanthias:
+            squamipinnis: jewel fairy basslet
           Epinephelus:
             labriformis: flag cabrilla
           Serranus:
@@ -682,7 +686,7 @@ Animalia:
             passer: king angelfish
         Grammatidae:
           Gramma:
-            royal: fairy basslet
+            royal: royal fairy basslet
         Gobiidae:
           Ctenogobiops:
             feroculus: fierce shrimp goby
@@ -740,6 +744,8 @@ Animalia:
             fucensis: slipskin snailfish
         Scorpaenidae:
           Pterois: lionfish
+          Pontinus:
+            clemensi: spotted scorpion fish
           Scorpaenopsis:
             barbatus: bearded scorpion fish
           Taenianotus:
@@ -757,6 +763,8 @@ Animalia:
            richardsonii: grunt sculpin
         Cottidae:
           sp.: sculpin
+          Icelinus:
+            tenuis: spotfin sculpin
           Cottus:
             bairdii: mottled sculpin
             asper: prickly sculpin
@@ -802,6 +810,8 @@ Animalia:
             decagrammus: kelp greenling
           Ophiodon:
             elongatus: lingcod
+          Zaniolepis:
+            latipinnis: longspine combfish
       Tetraodontiformes:
         Molidae:
           Mola:
@@ -823,6 +833,8 @@ Animalia:
           Balistes:
             vetula: queen triggerfish
             polylepis: finescale triggerfish
+          Balistapus:
+            undulatus: orange striped triggerfish
         Ostraciidae:
           Lactoria:
             cornuta: cowfish

@@ -94,6 +94,7 @@ def _key_to_subject(key: str, where: Where) -> str:
         subject = strip_date(key)
         if is_date(subject):
             subject = pretty_date(subject)
+
     else:
         subject = taxonomy.simplify(key, shorten=True)
 

@@ -96,7 +96,7 @@ def head(_title: str) -> str:
 
     else:
         _title = strip_date(_title)
-        desc = f'Scuba diving pictures related to {_title}'
+        desc = f'Scuba diving pictures of {_title}'
 
     return f"""
     <!DOCTYPE html>

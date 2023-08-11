@@ -24,6 +24,19 @@ class TestLocations(unittest.TestCase):
         for before, after in samples:
             self.assertEqual(locations.add_context(before), after)
 
+    def test_where_to_words(self) -> None:
+        '''control splitting for sites so we don't end up with 'Fort', etc'''
+        samples = [
+            ('Washington Edmonds', ['Washington', 'Edmonds']),
+            ('Washington Fort Ward', ['Washington', 'Fort Ward']),
+            (
+                'Washington Sund Rock South Wall',
+                ['Washington', 'Sund Rock', 'South', 'Wall'],
+            ),
+        ]
+        for before, after in samples:
+            self.assertEqual(locations.where_to_words(before), after)
+
 
 if __name__ == '__main__':
     unittest.main()
