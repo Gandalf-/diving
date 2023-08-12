@@ -117,7 +117,10 @@ p {
 }
 
 .search_results {
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   margin-top: 0.67em;
   margin-bottom: 0.67em;
   margin-left: auto;
@@ -127,7 +130,8 @@ p {
 .search_result {
   /* text-transform: capitalize; */
   cursor: pointer;
-  display: inline-block;
+  flex-grow: 1;
+  /* display: inline-block; */
 
   border: 1px solid white;
   border-radius: 2em;
@@ -141,6 +145,13 @@ p {
   margin-bottom: 0.2em;
   margin-left: 0.25em;
   margin-right: 0.25em;
+}
+
+.search_scroll {
+  flex-grow: 0;
+  min-width: 5em;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .crosslink {
@@ -224,6 +235,7 @@ select {
   border-radius: 2em;
   color: white;
   background-color: black;
+  text-align: center;
   height: 3em;
 }
 

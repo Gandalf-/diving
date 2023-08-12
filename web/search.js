@@ -130,20 +130,22 @@ function addNoResult() {
 }
 
 function addPreviousResult() {
-    const back = createResult('Back...')
+    const back = createResult('Back')
     back.onclick = function () {
         let lastLocation = previous_stack.pop();
         searcher(lastLocation);
     };
+    back.classList.add('search_scroll');
     SEARCH_RESULTS.appendChild(back);
 }
 
 function addNextResult(skip, results_length) {
-    const more = createResult('More...');
+    const more = createResult('More');
     more.onclick = function () {
         previous_stack.push(skip);
         searcher(skip + results_length);
     };
+    more.classList.add('search_scroll');
     SEARCH_RESULTS.appendChild(more);
 }
 
