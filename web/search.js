@@ -153,6 +153,7 @@ function searcher(skip = 0) {
     console.log(where);
 
     SEARCH_RESULTS.innerHTML = '';
+    SEARCH_RESULTS.classList.remove('have_results');
     const text = SEARCH_BAR.value.toLowerCase();
     if (text.length === 0) {
         return;
@@ -166,6 +167,7 @@ function searcher(skip = 0) {
         return;
     }
 
+    SEARCH_RESULTS.classList.add('have_results');
     if (previous_stack.length > 0) {
         addPreviousResult();
     }

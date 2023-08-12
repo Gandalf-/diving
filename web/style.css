@@ -122,9 +122,12 @@ p {
   justify-content: center;
   align-items: center;
   margin-top: 0.67em;
-  margin-bottom: 0.67em;
   margin-left: auto;
   margin-right: auto;
+}
+
+.have_results {
+  margin-bottom: 0.67em;
 }
 
 .search_result {
