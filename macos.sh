@@ -27,6 +27,11 @@ start_database() {
   done
 }
 
+clean() {
+  cd "$www"
+  find gallery sites taxonomy timeline -name '*.html' -delete
+}
+
 build() {
   start_database
 

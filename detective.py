@@ -40,7 +40,7 @@ def table_builder() -> Tuple[List[str], ThumbsTable, SimiliarityTable, Difficult
 
     for i, name in enumerate(all_names):
         where = names.index(name)
-        if len(thumbs[where]) <= 25:
+        if len(thumbs[where]) < 20:
             thumbs[where].append(hashes[i])
 
     similarity = _similarity_table(names)
