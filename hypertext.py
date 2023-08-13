@@ -170,7 +170,7 @@ def _image_to_gallery_link(image: Image) -> Optional[str]:
         return None
 
     page = sanitize_link(first.normalized())
-    return f'/gallery/{page}.html'
+    return f'/gallery/{page}'
 
 
 def _image_to_sites_link(image: Image) -> str:
@@ -227,7 +227,7 @@ class GalleryTitle(Title):
                 name = f'<em>{name}</em>'
 
             partial = self.lineage[i:]
-            _link = f'/gallery/{lineage_to_link(partial, side)}.html'.lower()
+            _link = f'/gallery/{lineage_to_link(partial, side)}'.lower()
 
             html += f"""
             <a href="{_link}">
@@ -238,14 +238,14 @@ class GalleryTitle(Title):
         html += """
             <div class="top buffer"></div>
 
-            <a href="/gallery/index.html">
+            <a href="/gallery/">
                 <h1 class="top switch gallery">Gallery</h1>
             </a>
         """
 
         if slink:
             html += f"""
-            <a href="/taxonomy/{slink}.html" class="scientific crosslink">{sname}</a>
+            <a href="/taxonomy/{slink}" class="scientific crosslink">{sname}</a>
             </div>
             """
         else:
@@ -287,7 +287,7 @@ class TaxonomyTitle(Title):
 
         html = head(' '.join(self.lineage[-2:]))
         html += """
-            <a href="/taxonomy/index.html">
+            <a href="/taxonomy/">
                 <h1 class="top switch taxonomy">Taxonomy</h1>
             </a>
             <div class="top buffer"></div>
@@ -297,7 +297,7 @@ class TaxonomyTitle(Title):
         for i, name in enumerate(self.lineage):
             name = taxonomy.simplify(name)
             partial = self.lineage[: i + 1]
-            link = f"/taxonomy/{lineage_to_link(partial, side)}.html"
+            link = f"/taxonomy/{lineage_to_link(partial, side)}"
 
             html += f"""
             <a href="{link}">
@@ -320,7 +320,7 @@ class TaxonomyTitle(Title):
 
         if link:
             html += f"""
-            <a href="/gallery/{link}.html" class="scientific crosslink">{name}</a>
+            <a href="/gallery/{link}" class="scientific crosslink">{name}</a>
             <p class="scientific">{english}</p>
             </div>
             """
@@ -344,7 +344,7 @@ class SitesTitle(Title):
 
         html = head(display)
         html += """
-            <a href="/sites/index.html">
+            <a href="/sites/">
                 <h1 class="top switch sites">Sites</h1>
             </a>
             <div class="top buffer"></div>
@@ -371,12 +371,12 @@ class SitesTitle(Title):
 
         for i, _name in enumerate(self.lineage):
             partial = self.lineage[: i + 1]
-            link = f"/sites/{lineage_to_link(partial, side)}.html"
+            link = f"/sites/{lineage_to_link(partial, side)}"
 
             # it's possible that this is the only date available for this location,
             # in which case we want the name to include the location and trim the
             # lineage one more value
-            if not fast_exists(link[1:]):
+            if not fast_exists(link[1:] + '.html'):
                 name = _name + ' ' + name
                 continue
 
@@ -406,27 +406,27 @@ class SitesTitle(Title):
 def switcher_button(where: Where, long: bool = False) -> str:
     '''Get the switcher button for this site'''
     _timeline = '''
-        <a href="/timeline/index.html">
+        <a href="/timeline/">
             <h1 class="top switch">{}</h1>
         </a>
     '''
     _gallery = '''
-        <a href="/gallery/index.html">
+        <a href="/gallery/">
             <h1 class="top switch gallery">{}</h1>
         </a>
     '''
     _detective = '''
-        <a href="/detective/index.html">
+        <a href="/detective/">
             <h1 class="top switch detective">{}</h1>
         </a>
     '''
     _sites = '''
-        <a href="/sites/index.html">
+        <a href="/sites/">
             <h1 class="top switch sites">{}</h1>
         </a>
     '''
     _taxonomy = '''
-        <a href="/taxonomy/index.html">
+        <a href="/taxonomy/">
             <h1 class="top switch taxonomy">{}</h1>
         </a>
     '''

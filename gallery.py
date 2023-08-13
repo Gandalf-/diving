@@ -190,7 +190,7 @@ def html_tree(
         """.format(
             alt=example.simplified(),
             subject=subject,
-            link="/{where}/{path}.html".format(
+            link="/{where}/{path}".format(
                 where=where.name.lower(),
                 path=hypertext.lineage_to_link(lineage, side, key),
             ),

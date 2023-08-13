@@ -255,23 +255,23 @@ body {{
     <body>
         <div class="wrapper">
             <div class="title">
-                <a href="/timeline/index.html">
+                <a href="/timeline/">
                     <h1 class="top switch timeline">📅</h1>
                 </a>
                 <div class="top buffer"></div>
-                <a href="/gallery/index.html">
+                <a href="/gallery/">
                     <h1 class="top switch gallery">📸</h1>
                 </a>
                 <div class="top buffer"></div>
-                <a href="/detective/index.html">
+                <a href="/detective/">
                     <h1 class="top switch detective">Detective</h1>
                 </a>
                 <div class="top buffer"></div>
-                <a href="/sites/index.html">
+                <a href="/sites/">
                     <h1 class="top switch sites">🌎</h1>
                 </a>
                 <div class="top buffer"></div>
-                <a href="/taxonomy/index.html">
+                <a href="/taxonomy/">
                     <h1 class="top switch taxonomy">🔬</h1>
                 </a>
                 <p class="scientific"></p>

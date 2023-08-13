@@ -226,9 +226,10 @@ def _link_check() -> None:
 
     def check_link_exists(args: Tuple[str, str]) -> Optional[str]:
         path, link = args
-        if not os.path.exists(link):
-            return f'broken {link} in {path}'
-        return None
+        for attempt in (link, link + '.html', link + 'index.html'):
+            if os.path.exists(attempt):
+                return None
+        return f'broken {link} in {path}'
 
     with ThreadPoolExecutor() as executor:
         broken = list(filter(None, executor.map(check_link_exists, _find_links())))

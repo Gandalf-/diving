@@ -9,7 +9,7 @@ inttest:
 
 
 .PHONY: lint shellcheck mypy ruff format
-lint: mypy ruff shellcheck
+lint: shellcheck mypy ruff
 
 shellcheck:
 	shellcheck *.sh */*.sh

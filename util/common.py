@@ -11,6 +11,8 @@ import os
 import pathlib
 from typing import List, Dict, Tuple, Any, Iterable, Callable
 
+from util.metrics import metrics
+
 image_root = "/mnt/zfs/Media/Pictures/Diving"
 if os.name == 'nt':
     image_root = "Z:/Media/Pictures/Diving"
@@ -159,4 +161,7 @@ def fast_exists(path: str) -> bool:
     if path in _EXISTS:
         return _EXISTS[path]
 
-    return os.path.exists(path)
+    exists = os.path.exists(path)
+    if not exists:
+        metrics.counter('paths that did not exist')
+    return exists

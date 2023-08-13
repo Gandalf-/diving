@@ -25,7 +25,7 @@ def sites_link(when: str, where: str) -> str:
     '''try to produce the correct /sites/ link'''
     site = add_context(where)
     link = common.sanitize_link(site)
-    return f'/sites/{link}-{when}.html'
+    return f'/sites/{link}-{when}'
 
 
 def get_context(site: str) -> Optional[str]:
