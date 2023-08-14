@@ -59,7 +59,7 @@ scripts = """
 def title(
     lineage: List[str], where: Where, scientific: Dict[str, Any]
 ) -> Tuple[str, str]:
-    """html head and title section"""
+    """html head and target path"""
     if not lineage:
         impl: Type[Title] = TopTitle
     else:
@@ -70,7 +70,8 @@ def title(
             Where.Sites: SitesTitle,
         }[where]
 
-    return impl(where, lineage, scientific).run()
+    html, path = impl(where, lineage, scientific).run()
+    return html, sanitize_link(path) + '.html'
 
 
 def head(_title: str) -> str:
@@ -190,7 +191,7 @@ class Title:
         self.scientific = scientific
 
     def run(self) -> Tuple[str, str]:
-        '''Produce html, title'''
+        '''Produce html, path'''
         raise NotImplementedError
 
 
@@ -255,7 +256,7 @@ class GalleryTitle(Title):
             </div>
             """
 
-        return html, _title.lower()
+        return html, f'gallery/{_title.lower()}'
 
 
 class TaxonomyTitle(Title):
@@ -332,7 +333,7 @@ class TaxonomyTitle(Title):
             </div>
             """
 
-        return html, _title
+        return html, f'taxonomy/{_title}'
 
 
 class SitesTitle(Title):
@@ -400,7 +401,7 @@ class SitesTitle(Title):
         </div>
         """
 
-        return html, _title
+        return html, f'sites/{_title}'
 
 
 def switcher_button(where: Where, long: bool = False) -> str:
@@ -519,4 +520,5 @@ class TopTitle(Title):
         </div>
         '''
 
-        return html, _title
+        path = self.where.name.lower() + '/index'
+        return html, path

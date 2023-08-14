@@ -31,10 +31,8 @@ from util.common import (
     is_date,
     strip_date,
     pretty_date,
-    prefix_tuples,
     titlecase,
     file_content_matches,
-    sanitize_link,
     Tree,
 )
 
@@ -157,7 +155,7 @@ def html_tree(
     side = Side.Left if where == Where.Gallery else Side.Right
 
     # title
-    html, title = hypertext.title(lineage, where, scientific)
+    html, path = hypertext.title(lineage, where, scientific)
 
     # body
     results = []
@@ -228,10 +226,6 @@ def html_tree(
     </html>
     """
 
-    if title in ('Gallery', 'Taxonomy', 'Sites'):
-        title = 'index'
-
-    path = sanitize_link(title) + '.html'
     results.append((path, html))
     return results
 
@@ -274,18 +268,17 @@ def write_all_html() -> None:
         vr.write()
 
     with multiprocessing.Pool() as pool:
-        pool.map(_pool_writer, prefix_tuples('gallery', name_htmls))
-        pool.map(_pool_writer, prefix_tuples('sites', sites_htmls))
-        pool.map(_pool_writer, prefix_tuples('taxonomy', taxia_htmls))
-        pool.map(_pool_writer, prefix_tuples('timeline', times_htmls))
+        pool.map(_pool_writer, name_htmls)
+        pool.map(_pool_writer, sites_htmls)
+        pool.map(_pool_writer, taxia_htmls)
+        pool.map(_pool_writer, times_htmls)
     print("done")
 
 
-def _pool_writer(args: Tuple[str, str, str]) -> None:
+def _pool_writer(args: Tuple[str, str]) -> None:
     '''callback for HTML writer pool'''
-    where, title, html = args
+    path, html = args
     html = textwrap.dedent(html)
-    path = f"{where}/{title}"
 
     if file_content_matches(path, html):
         return

@@ -216,7 +216,7 @@ def _important_files_exist() -> None:
         'timeline/2020-09-04-Metridium.html',
     ]
     for fpath in required:
-        assert os.path.exists(fpath), f'required file {fpath} does not exist'
+        assert os.path.exists(fpath), (fpath, 'is missing')
 
 
 def _link_check() -> None:

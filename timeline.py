@@ -46,7 +46,7 @@ def timeline() -> List[Tuple[str, str]]:
         ]
     )
 
-    results.append(('index.html', html))
+    results.append(('timeline/index.html', html))
     return results
 
 
@@ -118,7 +118,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
 '''
 
     path = common.sanitize_link(dive) + '.html'
-    return path, html
+    return f'timeline/{path}', html
 
 
 def _javascript(paths: List[str]) -> str:

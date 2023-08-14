@@ -71,7 +71,7 @@ class TestGallery(unittest.TestCase):
         self.assertNotEqual(htmls, [])
         (path, html) = htmls[-1]
 
-        self.assertEqual(path, 'coral.html')
+        self.assertEqual(path, 'gallery/coral.html')
         self.assertRegex(html, r'(?s)<head>.*<title>.*Coral.*</title>.*</head>')
         self.assertRegex(html, r'(?s)<h3.*Fan.*</h3>')
         self.assertRegex(html, r'(?s)<h3.*Rhizopsammia wellingtoni.*</h3>')

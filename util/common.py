@@ -163,5 +163,6 @@ def fast_exists(path: str) -> bool:
 
     exists = os.path.exists(path)
     if not exists:
+        # metrics.record('paths that did not exist', path)
         metrics.counter('paths that did not exist')
     return exists

@@ -132,13 +132,13 @@ class TestHypertext(unittest.TestCase):
     def test_title_names(self):
         '''html titles top level'''
         # gallery
-        html, title = hypertext.title([], Where.Gallery, TestHypertext.g_scientific)
-        self.assertEqual(title, 'Gallery')
+        html, path = hypertext.title([], Where.Gallery, TestHypertext.g_scientific)
+        self.assertEqual(path, 'gallery/index.html')
         self.assertIn('<title>Gallery</title>', html)
 
         # taxonomy
-        html, title = hypertext.title([], Where.Taxonomy, TestHypertext.t_scientific)
-        self.assertEqual(title, 'Taxonomy')
+        html, path = hypertext.title([], Where.Taxonomy, TestHypertext.t_scientific)
+        self.assertEqual(path, 'taxonomy/index.html')
         self.assertIn('<title>Taxonomy</title>', html)
 
     def test_switcher_button(self):
@@ -167,10 +167,10 @@ class TestTitleGallery(unittest.TestCase):
 
     def test_title_ordinary(self):
         '''typical common name'''
-        html, title = hypertext.title(
+        html, path = hypertext.title(
             ['heart', 'crab'], Where.Gallery, TestHypertext.g_scientific
         )
-        self.assertEqual(title, 'heart crab')
+        self.assertEqual(path, 'gallery/heart-crab.html')
         self.assertIn('<title>Heart Crab</title>', html)
         self.assertIn('"top">Heart<', html)
         self.assertIn('"top">Crab<', html)
@@ -180,12 +180,12 @@ class TestTitleGallery(unittest.TestCase):
         '''some gallery entries may use scientific names when there isn't a
         common name available
         '''
-        html, title = hypertext.title(
+        html, path = hypertext.title(
             ['tubastraea coccinea', 'coral'],
             Where.Gallery,
             TestHypertext.g_scientific,
         )
-        self.assertEqual(title, 'tubastraea coccinea coral')
+        self.assertEqual(path, 'gallery/tubastraea-coccinea-coral.html')
         self.assertIn('<title>Tubastraea coccinea Coral</title>', html)
         self.assertIn('"top"><em>Tubastraea coccinea</em><', html)
         self.assertNotIn('Coccinea', html)
@@ -196,13 +196,13 @@ class TestTitleTaxonomy(unittest.TestCase):
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
     def test_scientific_sp(self):
-        html, title = hypertext.title(
+        html, path = hypertext.title(
             ['Animalia', 'Cnidaria', 'Anthozoa', 'Actiniaria', 'sp.'],
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertTrue(title.startswith('Animalia Cnidaria Anthozoa'), title)
-        self.assertTrue(title.endswith('Actiniaria sp.'), title)
+        self.assertTrue(path.startswith('taxonomy/Animalia-Cnidaria-Anthozoa'), path)
+        self.assertTrue(path.endswith('Actiniaria-sp.html'), path)
 
         self.assertIn('<title>Actiniaria sp.</title>', html)
         self.assertIn('>Anemone<', html)

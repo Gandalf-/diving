@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /full/*
+Sitemap: https://diving.anardil.net/sitemap.xml
