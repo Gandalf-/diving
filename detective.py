@@ -234,6 +234,7 @@ def html_builder(css: str, data: str, game: str) -> str:
 <html>
     <head>
         <title>Diving Detective</title>
+        <link rel="canonical" href="https://diving.anardil.net/detective/" />
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description"

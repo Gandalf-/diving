@@ -15,6 +15,7 @@ from util import common
 from util import collection
 from util import static
 from util import taxonomy
+from util.metrics import metrics
 
 
 def advisory_checks() -> None:
@@ -226,15 +227,27 @@ def _link_check() -> None:
 
     def check_link_exists(args: Tuple[str, str]) -> Optional[str]:
         path, link = args
-        for attempt in (link, link + '.html', link + 'index.html'):
+        for attempt in (link + '.html', link + 'index.html', link):
             if os.path.exists(attempt):
+                metrics.counter('links verified')
                 return None
         return f'broken {link} in {path}'
 
     with ThreadPoolExecutor() as executor:
-        broken = list(filter(None, executor.map(check_link_exists, _find_links())))
+        broken = list(filter(None, executor.map(check_link_exists, _deduped_links())))
 
     assert not broken, broken
+
+
+def _deduped_links() -> Iterable[Tuple[str, str]]:
+    seen = set()
+
+    for path, link in _find_links():
+        metrics.counter('links considered')
+        if path in seen:
+            continue
+        seen.add(path)
+        yield path, link
 
 
 def _find_links() -> Iterable[Tuple[str, str]]:
@@ -245,9 +258,13 @@ def _find_links() -> Iterable[Tuple[str, str]]:
         links = []
         with open(path) as fd:
             content = fd.read()
+
             for link in re.findall(r'(?:href|src)=\"(.+?)\"', content):
                 if link.startswith('http'):
-                    continue
+                    if 'diving.anardil.net' in link:
+                        _, link = link.split('https://diving.anardil.net')
+                    else:
+                        continue
 
                 link = link[1:]
                 links.append((path, link))
@@ -261,18 +278,12 @@ def _find_links() -> Iterable[Tuple[str, str]]:
     with ThreadPoolExecutor(max_workers=workers) as executor:
         file_list = [
             (directory, filename)
-            for directory in ('taxonomy', 'gallery', 'sites')
+            for directory in ('taxonomy', 'gallery', 'sites', 'detective')
             for filename in os.listdir(directory)
             if filename.endswith(".html")
         ]
-        links = executor.map(lambda args: process_file(*args), file_list)
-
-    seen = set()
-    for result in links:
-        for path, link in result:
-            if link not in seen:
-                seen.add(link)
-                yield (path, link)
+        for result in executor.map(lambda args: process_file(*args), file_list):
+            yield from result
 
 
 if __name__ == '__main__':

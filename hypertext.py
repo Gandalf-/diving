@@ -71,10 +71,10 @@ def title(
         }[where]
 
     html, path = impl(where, lineage, scientific).run()
-    return html, sanitize_link(path) + '.html'
+    return html, path + '.html'
 
 
-def head(_title: str) -> str:
+def head(_title: str, path: str) -> str:
     """top of the document"""
     if _title.endswith('Gallery'):
         desc = (
@@ -99,11 +99,16 @@ def head(_title: str) -> str:
         _title = strip_date(_title)
         desc = f'Scuba diving pictures of {_title}'
 
+    assert '.html' not in path, path
+    path = path.replace('index', '')
+    canonical = f'https://diving.anardil.net/{path}'
+
     return f"""
     <!DOCTYPE html>
     <html lang="en">
       <head>
         <title>{_title}</title>
+        <link rel="canonical" href="{canonical}"/>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name=description content="{desc}">
@@ -220,7 +225,8 @@ class GalleryTitle(Title):
         display = uncategorize(_title)
 
         slink = sanitize_link(slink)
-        html = head(display)
+        path = sanitize_link(f'gallery/{_title.lower()}')
+        html = head(display, path)
 
         # create the buttons for each part of our name lineage
         for i, name in enumerate(self.lineage):
@@ -256,7 +262,7 @@ class GalleryTitle(Title):
             </div>
             """
 
-        return html, f'gallery/{_title.lower()}'
+        return html, path
 
 
 class TaxonomyTitle(Title):
@@ -285,8 +291,9 @@ class TaxonomyTitle(Title):
     def run(self) -> Tuple[str, str]:
         _title = ' '.join(self.lineage)
         side = Side.Right
+        path = sanitize_link(f'taxonomy/{_title}')
 
-        html = head(' '.join(self.lineage[-2:]))
+        html = head(' '.join(self.lineage[-2:]), path)
         html += """
             <a href="/taxonomy/">
                 <h1 class="top switch taxonomy">Taxonomy</h1>
@@ -333,7 +340,7 @@ class TaxonomyTitle(Title):
             </div>
             """
 
-        return html, f'taxonomy/{_title}'
+        return html, path
 
 
 class SitesTitle(Title):
@@ -342,8 +349,9 @@ class SitesTitle(Title):
     def run(self) -> Tuple[str, str]:
         display = _title = ' '.join(self.lineage)
         side = Side.Right
+        path = sanitize_link(f'sites/{_title}')
 
-        html = head(display)
+        html = head(display, path)
         html += """
             <a href="/sites/">
                 <h1 class="top switch sites">Sites</h1>
@@ -401,7 +409,7 @@ class SitesTitle(Title):
         </div>
         """
 
-        return html, f'sites/{_title}'
+        return html, path
 
 
 def switcher_button(where: Where, long: bool = False) -> str:
@@ -511,8 +519,9 @@ class TopTitle(Title):
         ]
 
         spacer = '<div class="top buffer"></div>\n'
+        path = sanitize_link(self.where.name.lower() + '/index')
 
-        html = head(display)
+        html = head(display, path)
         html += spacer.join(parts)
         html += self.sub_line()
 
@@ -520,5 +529,4 @@ class TopTitle(Title):
         </div>
         '''
 
-        path = self.where.name.lower() + '/index'
         return html, path
