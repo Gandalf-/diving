@@ -28,7 +28,7 @@ data/translations.yml: data/taxonomy.yml
 	python3 -c 'from util.translator import main; main()'
 
 
-.PHONY: clean local dev sync
+.PHONY: clean local dev sitemap sync
 clean:
 	bash macos.sh clean
 
@@ -38,5 +38,8 @@ local: data/translations.yml
 dev: data/translations.yml
 	bash macos.sh dev
 
-sync:
+sitemap:
+	bash macos.sh sitemap
+
+sync: sitemap
 	bash macos.sh sync

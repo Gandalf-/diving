@@ -72,4 +72,12 @@ dev() {
     | entr bash macos.sh build
 }
 
+sitemap() {
+  cd "$www"
+  rg --only-matching '/imgs/.*.webp' --glob '*.html' taxonomy sites gallery \
+    | awk -f "$src"/util/sitemap.awk \
+    > sitemap.xml
+  xmllint --noout sitemap.xml
+}
+
 "$@"
