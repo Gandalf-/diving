@@ -199,7 +199,7 @@ function randomPage() {
 
 function pageToUrl(page) {
     const url = page.replace(/ /g, '-');
-    return `/${where}/${url}.html`;
+    return `/${where}/${url}`;
 }
 
 function toTitleCase(str) {

@@ -128,10 +128,10 @@ def _javascript(paths: List[str]) -> str:
     var furthest = 0;
 
     function loader(elem, content) {
-      var top_of_elem = $(elem).offset().top;
-      var bot_of_elem = top_of_elem + $(elem).outerHeight();
-      var bot_of_scrn = $(window).scrollTop() + window.innerHeight;
-      var top_of_scrn = $(window).scrollTop();
+      const top_of_elem = $(elem).offset().top;
+      const bot_of_elem = top_of_elem + $(elem).outerHeight();
+      const bot_of_scrn = $(window).scrollTop() + window.innerHeight;
+      const top_of_scrn = $(window).scrollTop();
 
       if ((bot_of_scrn < top_of_elem) || (top_of_scrn > bot_of_elem)) {
         // we are not yet nearing the bottom
@@ -161,9 +161,9 @@ def _javascript(paths: List[str]) -> str:
     # preload
     first, second, third = paths[:3]
     html += f'''
-    $("#0").load("{first}" ).addClass("isloaded");
-    $("#1").load("{second}").addClass("isloaded");
-    $("#2").load("{third}" ).addClass("isloaded");
+    $("#0").load("/{first}" ).addClass("isloaded");
+    $("#1").load("/{second}").addClass("isloaded");
+    $("#2").load("/{third}" ).addClass("isloaded");
     '''
 
     # scroll function
@@ -171,12 +171,12 @@ def _javascript(paths: List[str]) -> str:
     $(window).scroll(function() {
 '''
     html += '\n'.join(
-        f'      if (loader("#{i}", "{path}")) {{ return }};'
+        f'      if (loader("#{i}", "/{path}")) {{ return }};'
         for i, path in enumerate(paths)
         if i > 2
     )
 
-    html += '''\
+    html += '''
     });
   </script>
     '''
