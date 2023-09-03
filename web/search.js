@@ -7,7 +7,7 @@ const pages = {
 }[where];
 
 const CHAR_LIMIT = 100;
-var previous_stack = [];
+var PREVIOUS_STACK = [];
 
 const SEARCH_RESULTS = document.getElementById('search_results');
 const SEARCH_BAR = document.getElementById('search_bar');
@@ -132,7 +132,7 @@ function addNoResult() {
 function addPreviousResult() {
     const back = createResult('Back')
     back.onclick = function () {
-        let lastLocation = previous_stack.pop();
+        let lastLocation = PREVIOUS_STACK.pop();
         searcher(lastLocation);
     };
     back.classList.add('search_scroll');
@@ -142,7 +142,7 @@ function addPreviousResult() {
 function addNextResult(skip, results_length) {
     const more = createResult('More');
     more.onclick = function () {
-        previous_stack.push(skip);
+        PREVIOUS_STACK.push(skip);
         searcher(skip + results_length);
     };
     more.classList.add('search_scroll');
@@ -155,6 +155,9 @@ function searcher(skip = 0) {
     SEARCH_RESULTS.innerHTML = '';
     SEARCH_RESULTS.classList.remove('have_results');
     const text = SEARCH_BAR.value.toLowerCase();
+    if (skip === 0) {
+        PREVIOUS_STACK = [];
+    }
     if (text.length === 0) {
         return;
     }
@@ -168,7 +171,7 @@ function searcher(skip = 0) {
     }
 
     SEARCH_RESULTS.classList.add('have_results');
-    if (previous_stack.length > 0) {
+    if (PREVIOUS_STACK.length > 0) {
         addPreviousResult();
     }
 

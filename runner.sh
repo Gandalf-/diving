@@ -44,15 +44,6 @@ generate_original() {
     -quality 35 \
     "$fin" \
     "$fout" || die "convert failure $fin"
-
-  # jpegoptim \
-  #   --strip-all \
-  #   --all-progressive \
-  #   --size 512 \
-  #   --quiet \
-  #   --stdout \
-  #   "$fin" \
-  #   > "$fout" || die "jpegoptim failure $fin"
   report "optimized $( basename "$fin" )"
 }
 

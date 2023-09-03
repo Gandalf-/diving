@@ -73,10 +73,16 @@ dev() {
 }
 
 sitemap() {
+  images() {
+    rg \
+      --sort path \
+      --only-matching '/imgs/.*.webp' \
+      --glob '*.html' \
+      taxonomy sites gallery
+  }
+
   cd "$www"
-  rg --only-matching '/imgs/.*.webp' --glob '*.html' taxonomy sites gallery \
-    | awk -f "$src"/util/sitemap.awk \
-    > sitemap.xml
+  images | awk -f "$src"/util/sitemap.awk > sitemap.xml
   xmllint --noout sitemap.xml
 }
 
