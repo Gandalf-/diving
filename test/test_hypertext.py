@@ -18,6 +18,63 @@ class TestHypertext(unittest.TestCase):
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
+    def test_description_sites(self):
+        pairs = [
+            ('Maldives', 'Maldives'),
+            ('British Columbia', 'British Columbia'),
+            (
+                'British Columbia Aquarium 2023-04-02',
+                'Aquarium, British Columbia on April 2nd, 2023',
+            ),
+            (
+                'Washington Rockaway Stretch Reef 2021-11-20',
+                'Rockaway Stretch Reef, Washington on November 20th, 2021',
+            ),
+            ('Galapagos Fernandina', 'Fernandina, Galapagos'),
+            (
+                'Galapagos Isabella Punta Vicente Roca 2021-08-28',
+                'Isabella Punta Vicente Roca, Galapagos on August 28th, 2021',
+            ),
+            ('Bonaire Klein M', 'Klein M, Bonaire'),
+            (
+                'Bonaire One Thousand Steps 2021-07-04',
+                'One Thousand Steps, Bonaire on July 4th, 2021',
+            ),
+        ]
+        for name, description in pairs:
+            expect = (
+                f'Explore high quality scuba diving pictures from {description}, '
+                'organized by dive site and date.'
+            )
+            self.assertEqual(hypertext.description(name, Where.Sites), expect)
+
+    def test_description_gallery(self):
+        pairs = [
+            ('Red Rock Crab', 'Red Rock Crabs'),
+            ('Heath\'s Dorid Nudibranch', 'Heath\'s Dorid Nudibranchs'),
+            ('Various Red Octopus', 'Red Octopus'),
+        ]
+        for name, description in pairs:
+            expect = (
+                f'Explore high quality scuba diving pictures of {description} '
+                'and related organisms.'
+            )
+            self.assertEqual(hypertext.description(name, Where.Gallery), expect)
+
+    def test_description_taxonomy(self):
+        pairs = [
+            ('Animalia', 'members of Animalia'),
+            ('Malacostraca Decapoda', 'members of Malacostraca Decapoda'),
+            (
+                'Alpheoidea Alpheidae Alpheus djeddensis',
+                'Alpheus djeddensis and related organisms',
+            ),
+            ('Cancer antennarius', 'Cancer antennarius and related organisms'),
+        ]
+        for name, description in pairs:
+            expect = f'Explore high quality scuba diving pictures of {description}.'
+            self.assertEqual(hypertext.description(name, Where.Taxonomy), expect)
+
     def test_image_to_name_html(self):
         utility._EXISTS['gallery/rock-fish.html'] = True
 
@@ -49,8 +106,7 @@ class TestHypertext(unittest.TestCase):
             link = hypertext.lineage_to_link(lineage, side, key)
             self.assertEqual(link, after)
 
-    @unittest.skip("needs rework")
-    def test_title_ordering(self):
+    def skip_title_ordering(self):
         '''html titles ordering'''
         samples = [
             (

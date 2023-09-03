@@ -13,12 +13,22 @@ class TestLocations(unittest.TestCase):
             'Bonaire, British Columbia, Galapagos, Maldives, and Washington',
         )
 
+    def test_get_context(self) -> None:
+        samples = [
+            ('Edmonds', 'Washington'),
+            ('Oil Slick', 'Bonaire'),
+            ('Klein M', 'Bonaire'),
+            ('Rockaway Stretch Reef', 'Washington'),
+        ]
+        for site, context in samples:
+            self.assertEqual(locations.get_context(site), context)
+
     def test_add_context(self) -> None:
         '''add_context'''
         samples = [
             ('Edmonds', 'Washington Edmonds'),
-            ('Bonaire Oil Slick', 'Bonaire Oil Slick'),
-            ('Klein Bonaire M', 'Bonaire Klein Bonaire M'),
+            ('Oil Slick', 'Bonaire Oil Slick'),
+            ('Klein M', 'Bonaire Klein M'),
             ('Rockaway Stretch Reef', 'Washington Rockaway Stretch Reef'),
         ]
         for before, after in samples:
@@ -27,6 +37,11 @@ class TestLocations(unittest.TestCase):
     def test_where_to_words(self) -> None:
         '''control splitting for sites so we don't end up with 'Fort', etc'''
         samples = [
+            ('British Columbia', ['British Columbia']),
+            (
+                'British Columbia Argonaut Point',
+                ['British Columbia', 'Argonaut Point'],
+            ),
             ('Washington Edmonds', ['Washington', 'Edmonds']),
             ('Washington Fort Ward', ['Washington', 'Fort Ward']),
             (

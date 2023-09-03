@@ -14,12 +14,12 @@ from util.collection import expand_names, all_valid_names
 from util.common import (
     is_date,
     flatten,
-    strip_date,
     pretty_date,
     fast_exists,
     titlecase,
     sanitize_link,
 )
+from util.grammar import plural
 from util.metrics import metrics
 from util.static import stylesheet, search_js, search_data_path
 from util.image import categorize, uncategorize, split, Image
@@ -55,6 +55,8 @@ scripts = """
     </script>
 """
 
+blurb = 'Explore high quality scuba diving pictures'
+
 
 def title(
     lineage: List[str], where: Where, scientific: Dict[str, Any]
@@ -74,30 +76,29 @@ def title(
     return html, path + '.html'
 
 
-def head(_title: str, path: str) -> str:
+def head(display: str, path: str, where: Where) -> str:
     """top of the document"""
-    if _title.endswith('Gallery'):
+    if display.endswith('Gallery'):
         desc = (
-            'Scuba diving pictures organized into a tree structure by '
+            f'{blurb} organized into a tree structure by '
             'subject\'s common names. Such as anemone, fish, '
             'nudibranch, octopus, sponge.'
         )
-    elif _title.endswith('Taxonomy'):
+    elif display.endswith('Taxonomy'):
         desc = (
-            'Scuba diving pictures organized into a tree structure by '
+            f'{blurb} organized into a tree structure by '
             'subject\'s scientific classification. Such as Arthropoda, '
             'Cnidaria, Mollusca.'
         )
-    elif _title.endswith('Sites'):
+    elif display.endswith('Sites'):
         sites = locations.site_list()
-        desc = f'Scuba diving pictures from {sites} organized into a tree structure by dive site.'
+        desc = f'{blurb} from {sites} organized into a tree structure by dive site.'
 
-    elif _title.endswith('Timeline'):
-        desc = 'Scuba diving pictures organized into a timeline and by location'
+    elif display.endswith('Timeline'):
+        desc = f'{blurb} organized into a timeline and by location'
 
     else:
-        _title = strip_date(_title)
-        desc = f'Scuba diving pictures of {_title}'
+        desc = description(display, where)
 
     assert '.html' not in path, path
     path = path.replace('index', '')
@@ -107,7 +108,7 @@ def head(_title: str, path: str) -> str:
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        <title>{_title}</title>
+        <title>{display}</title>
         <link rel="canonical" href="{canonical}"/>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -118,6 +119,43 @@ def head(_title: str, path: str) -> str:
       <div class="wrapper">
       <div class="title">
       """
+
+
+def description(title: str, where: Where) -> str:
+    if where == Where.Sites:
+        words = locations.where_to_words(title)
+        last = words[-1]
+        suffix = ''
+
+        if is_date(last):
+            suffix = f' on {pretty_date(last)}'
+            words = words[:-1]
+
+        if len(words) > 1:
+            # Swap the context and site
+            body = ' '.join(words[1:]) + f', {words[0]}'
+        else:
+            body = words[0]
+
+        return f'{blurb} from {body}{suffix}, organized by dive site and date.'
+
+    if where == Where.Gallery:
+        more = len(title.split(' ')) > 1
+        related = ' and related organisms' if more else ''
+
+        title = plural(title).replace('Various ', '')
+        return f'{blurb} of {title}{related}.'
+
+    if where == Where.Taxonomy:
+        words = title.split(' ')
+        if len(words) > 1 and words[-2].istitle() and words[-1].islower():
+            # ... Genus species
+            name = ' '.join(words[-2:])
+            return f'{blurb} of {name} and related organisms.'
+
+        return f'{blurb} of members of {title}.'
+
+    assert False, (where, title)
 
 
 def lineage_to_link(lineage: List[str], side: Side, key: Optional[str] = None) -> str:
@@ -226,7 +264,7 @@ class GalleryTitle(Title):
 
         slink = sanitize_link(slink)
         path = sanitize_link(f'gallery/{_title.lower()}')
-        html = head(display, path)
+        html = head(display, path, Where.Gallery)
 
         # create the buttons for each part of our name lineage
         for i, name in enumerate(self.lineage):
@@ -293,7 +331,7 @@ class TaxonomyTitle(Title):
         side = Side.Right
         path = sanitize_link(f'taxonomy/{_title}')
 
-        html = head(' '.join(self.lineage[-2:]), path)
+        html = head(' '.join(self.lineage[-2:]), path, Where.Taxonomy)
         html += """
             <a href="/taxonomy/">
                 <h1 class="top switch taxonomy">Taxonomy</h1>
@@ -351,7 +389,7 @@ class SitesTitle(Title):
         side = Side.Right
         path = sanitize_link(f'sites/{_title}')
 
-        html = head(display, path)
+        html = head(display, path, Where.Sites)
         html += """
             <a href="/sites/">
                 <h1 class="top switch sites">Sites</h1>
@@ -521,7 +559,7 @@ class TopTitle(Title):
         spacer = '<div class="top buffer"></div>\n'
         path = sanitize_link(self.where.name.lower() + '/index')
 
-        html = head(display, path)
+        html = head(display, path, self.where)
         html += spacer.join(parts)
         html += self.sub_line()
 

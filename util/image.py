@@ -5,12 +5,13 @@ base class for a diving image
 '''
 
 import os
-from typing import Optional, cast
+from typing import Optional
 
 import inflect
 
 from util import database
 from util.common import image_root, Tree
+from util.grammar import singular
 
 from util import static
 
@@ -136,21 +137,7 @@ class Image:
     def singular(self) -> str:
         '''return singular version'''
         assert self.name, self
-
-        singular = _inflect.singular_noun(self.name.lower())
-        name = cast(str, singular) if singular else self.name.lower()
-
-        # fix inflect's mistakes
-        for tofix in ("octopu", "gras", "fuscu", "dori"):
-            if tofix + "s" in name:
-                continue
-            if name.endswith(tofix) or tofix + " " in name:
-                name = name.replace(tofix, tofix + "s")
-
-        if name.endswith("alga"):
-            name += "e"
-
-        return name
+        return singular(self.name)
 
     def scientific(self, names: Tree) -> Optional[str]:
         '''do we have a scientific name?

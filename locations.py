@@ -6,7 +6,7 @@ collecting dive locations
 
 import re
 
-from typing import Optional, cast, List
+from typing import cast, List, Optional
 
 from util import collection
 from util import static
@@ -57,7 +57,12 @@ def sites() -> ImageTree:
 
 def where_to_words(where: str) -> List[str]:
     '''split the input into words but do not break up dive site names'''
-    return re.findall(_SITE_PATTERN, where)
+    words = re.findall(_SITE_PATTERN, where)
+
+    if len(words) > 1 and words[0] == 'British' and words[1] == 'Columbia':
+        words = ['British Columbia'] + words[2:]
+
+    return words
 
 
 # PRIVATE

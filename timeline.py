@@ -87,11 +87,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
     when = common.pretty_date(when)
 
     location = locations.get_context(title)
-    if not location and title.startswith('Bonaire'):
-        _, title = title.split('Bonaire ')
-        location = 'Bonaire'
-
-    assert location, f'{dive} has no location'
+    assert location, f'no location for {title}'
     if sites_link:
         name = f'''\
 <a href="{sites_link}">
