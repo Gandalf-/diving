@@ -219,7 +219,8 @@ def html_tree(
       {info}
       </div>
       <footer>
-        <p>Copyright austin@anardil.net {now.year}</p>
+        <p><a href="https://goto.anardil.net">goto.anardil.net</a></p>
+        <p>austin@anardil.net {now.year}</p>
       </footer>
       {hypertext.scripts}
     </body>

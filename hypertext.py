@@ -130,6 +130,8 @@ def description(title: str, where: Where) -> str:
         if is_date(last):
             suffix = f' on {pretty_date(last)}'
             words = words[:-1]
+        else:
+            suffix = ', organized by dive site and date'
 
         if len(words) > 1:
             # Swap the context and site
@@ -137,7 +139,7 @@ def description(title: str, where: Where) -> str:
         else:
             body = words[0]
 
-        return f'{blurb} from {body}{suffix}, organized by dive site and date.'
+        return f'{blurb} from {body}{suffix}.'
 
     if where == Where.Gallery:
         more = len(title.split(' ')) > 1

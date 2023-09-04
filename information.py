@@ -134,7 +134,8 @@ def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, s
 def reference(entry: Dict[str, Any], style: str = 'apa') -> str:
     '''reference info'''
     url = entry['url']
-    url = f'<a href="{url}">{url}</a>'
+    uri = url.replace('https://', '')
+    url = f'<a href="{url}">{uri}</a>'
 
     now = datetime.fromtimestamp(entry['time'])
     mla_date = now.strftime('%d %B %Y')
