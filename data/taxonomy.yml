@@ -920,6 +920,7 @@ Animalia:
             sinuosa: sinuose coral
         Pocilloporidae:
           Pocillopora:
+            sp.: pocillopora coral
             meandrina: pocillopora meandrina coral
         Poritidae:
           Goniopora: flower pot coral
@@ -976,6 +977,8 @@ Animalia:
         Plexauridae:
           Swiftia:
             torreyi: dwarf red gorgonian coral
+          Muricea:
+            muricata: muricea fan coral
         Ellisellidae:
           Junceella: orange sea whip
         Melithaeidae:

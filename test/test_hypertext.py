@@ -245,6 +245,18 @@ class TestTitleGallery(unittest.TestCase):
         self.assertIn('"top"><em>Tubastraea coccinea</em><', html)
         self.assertNotIn('Coccinea', html)
 
+    def test_title_sp_scientific_common_name(self):
+        '''the taxonomy.yml entry for this name is under sp.'''
+        html, path = hypertext.title(
+            ['pocillopora', 'coral'],
+            Where.Gallery,
+            TestHypertext.g_scientific,
+        )
+        self.assertEqual(path, 'gallery/pocillopora-coral.html')
+        self.assertIn('<title>Pocillopora Coral</title>', html)
+        self.assertIn('"top"><em>Pocillopora</em><', html)
+        self.assertNotIn('Coccinea', html)
+
 
 class TestTitleTaxonomy(unittest.TestCase):
     g_scientific = taxonomy.mapping()

@@ -77,8 +77,6 @@ def filterer(translations: Dict[str, str]) -> None:
         fd.write('---\n')
 
         for i, (latin, english) in enumerate(sorted(clean.items())):
-            if i % 40 == 0:
-                fd.write('\n')
             fd.write(f'{latin}: {english}\n')
 
         for i, latin in enumerate(sorted(empty)):
