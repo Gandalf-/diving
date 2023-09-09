@@ -15,10 +15,10 @@ from util.metrics import metrics
 from util.taxonomy import all_latin_words
 from util.common import source_root
 
-v4_path = os.path.join(source_root, 'data/translations.yml')
+translations_yml = os.path.join(source_root, 'data/translations.yml')
 
 
-with open(v4_path) as fd:
+with open(translations_yml) as fd:
     _translations = yaml.safe_load(fd)
 
 # Execution
@@ -73,7 +73,7 @@ def filterer(translations: Dict[str, str]) -> None:
 
     empty |= all_latin
 
-    with open(v4_path, 'w+') as fd:
+    with open(translations_yml, 'w+') as fd:
         fd.write('---\n')
 
         for i, (latin, english) in enumerate(sorted(clean.items())):
@@ -92,4 +92,4 @@ def filterer(translations: Dict[str, str]) -> None:
 
 def main() -> None:
     filterer(_translations)
-    metrics.summary()
+    metrics.summary('translator')

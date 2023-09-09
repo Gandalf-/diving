@@ -30,7 +30,7 @@ locations:
     - Saltwater State Park
     - Sund Rock
     - Tacoma North Wall
-    - Zees Reef
+    - Zee's Reef
   British Columbia:
     # Jervis Inlet
     - Argonaut Point
@@ -147,6 +147,7 @@ no-taxonomy-exact:
 no-taxonomy-any:
   - clathria
   - egg
+  - ray
   - unknown
   - various
   - wreck

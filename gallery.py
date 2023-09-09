@@ -313,4 +313,4 @@ if not sys.flags.interactive and __name__ == "__main__":
             verify.advisory_checks()
     print("done")
 
-    metrics.summary()
+    metrics.summary('gallery')

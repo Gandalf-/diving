@@ -29,6 +29,7 @@ import wikipedia
 
 from util import taxonomy
 from util.database import database
+from util.metrics import metrics
 
 db_root = (
     'diving',
@@ -196,6 +197,7 @@ def html(name: str) -> Tuple[str, str]:
 
     entry = lookup(name, False)
     if not entry:
+        metrics.counter('names without wikipedia information')
         return '', ''
 
     pgs = paragraphs(entry['summary'], 3)
