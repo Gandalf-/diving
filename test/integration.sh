@@ -61,6 +61,7 @@ html_lint="$(
       | grep -v 'missing ..DOCTYPE. declaration'
   } \
     | grep -v '.img. proprietary attribute .loading.' \
+    | grep -v '.video. proprietary attribute .disableremoteplayback.' \
     | cut -d ' ' -f 6- \
     | sort \
     | uniq -c

@@ -5,6 +5,8 @@
 
 # shellcheck disable=SC2155
 
+set -o pipefail
+
 case $(uname) in
   FreeBSD) max_workers=30; sha="sha1 -r" ;;
   Darwin)  max_workers=8;  sha=shasum    ;;
@@ -12,12 +14,10 @@ case $(uname) in
 esac
 
 report() { echo "$@" >&2; }
-die() { report "$@"; exit 1; }
-debug() { (( DEBUG )) && report "$@"; }
+die()    { report "$@"; exit 1; }
+debug()  { (( DEBUG )) && report "$@"; }
 
-generate_thumbnail() {
-  # regenerate the thumbnail if needed
-
+generate_image_thumbnail() {
   local fin="$1"
   local fout="$2"
   [[ -f "$fout" ]] && return
@@ -28,13 +28,11 @@ generate_thumbnail() {
     -resize 350 \
     -quality 60% \
     "$fin" \
-    "$fout" || die "convert failure $fin"
-  report "resized $( basename "$fin" )"
+    "$fout" || die "convert thumbnail failure $fin"
+  report "thumbnail $( basename "$fin" )"
 }
 
-generate_original() {
-  # regenerate the optimized original if needed
-
+generate_image_fullsize() {
   local fin="$1"
   local fout="$2"
   [[ -f "$fout" ]] && return
@@ -43,8 +41,66 @@ generate_original() {
     -strip \
     -quality 35 \
     "$fin" \
-    "$fout" || die "convert failure $fin"
-  report "optimized $( basename "$fin" )"
+    "$fout" || die "convert fullsize failure $fin"
+  report "fullsize $( basename "$fin" )"
+}
+
+generate_video_thumbnail() {
+  local fin="$1"
+  local fout="$2"
+  [[ -f "$fout" ]] && return
+
+  rescale() {
+    # https://superuser.com/a/624564
+    # https://stackoverflow.com/a/52675535
+    ffmpeg \
+      -loglevel fatal \
+      -nostdin \
+      -i "$fin" \
+      -ss 2 -t 4 \
+      -an -c:v libvpx-vp9 -deadline good -crf 40 \
+      -vf 'crop=1440:1080,scale=225:300' \
+      -f webm pipe:
+  }
+
+  fade() {
+    # https://stackoverflow.com/a/64907131
+    # https://trac.ffmpeg.org/wiki/Xfade
+    local filter="\
+    [0]trim=end=1,setpts=PTS-STARTPTS[begin];
+    [0]trim=start=1,setpts=PTS-STARTPTS[end];
+    [end][begin]xfade=distance:duration=1:offset=2"
+
+    ffmpeg \
+      -f webm \
+      -i pipe: \
+      -loglevel fatal \
+      -filter_complex "$filter" \
+      "$fout"
+  }
+
+  # ffmpeg is easy 😵
+  # https://stackoverflow.com/a/45902691
+  rescale | fade || die "ffmpeg thumbnail failure $fin"
+  report "video thumbnail $( basename "$fin" )"
+}
+
+generate_video_fullsize() {
+  local fin="$1"
+  local fout="$2"
+  [[ -f "$fout" ]] && return
+
+  ffmpeg \
+    -nostdin \
+    -loglevel fatal \
+    -i "$fin" \
+    -an \
+    -c:v libvpx-vp9 \
+    -deadline good \
+    -crf 40 \
+    "$fout" || die "ffmpeg fullsize failure $fin"
+
+  report "video fullsize $( basename "$fin" )"
 }
 
 scanner() {
@@ -52,9 +108,12 @@ scanner() {
   local size=$(( ${#root} + 2 ))
   local workers=0
 
-  local thumbroot="$( realpath "$PWD" )/imgs"
-  local imageroot="$( realpath "$PWD" )/full"
-  mkdir -p "$thumbroot" "$imageroot"
+  local base="$( realpath "$PWD" )"
+  local thumbroot="$base/imgs"
+  local imageroot="$base/full"
+  local clipsroot="$base/clips"
+  local videoroot="$base/video"
+  mkdir -p "$thumbroot" "$imageroot" "$clipsroot" "$videoroot"
 
   local newest; newest="$(
     # shellcheck disable=SC2010
@@ -68,28 +127,29 @@ scanner() {
       producer() {
         while read -r path; do
           case $path in
-            *.jpg)
+            *.jpg|*.mov)
               # this image changed
               echo "$path"
               ;;
 
             *)
               # this directory changed, scan its contents
-              for sub in "$path"/*.jpg; do
+              for sub in "$path"/*.jpg "$path"/*.mov; do
                 echo "$sub"
               done
               printf '%0*d%s\n' $(( size - 1 )) 0 'FOUND_RENAME'
               ;;
           esac
         done < <(
-          find "$root" \( -name '*.jpg' -o -type d \) -newer "$newest"
+          find "$root" \( -name '*.jpg' -o -name '*.mov' -o -type d \) -newer "$newest"
         ) | cut -c "$size"- | sort | uniq
       }
       ;;
 
     full)
       producer() {
-        find "$root" -type f -name '*.jpg' | cut -c "$size"-
+        # find "$root" -type f -name '*.jpg' -o -name '*.mov' | cut -c "$size"-
+        find "$root" -type f -name '*.mov' | cut -c "$size"-
       }
       ;;
   esac
@@ -100,12 +160,16 @@ scanner() {
       continue
     }
 
-    [[ $path == '*.jpg' ]] &&
+    [[ $path == '*.jpg' || $path == '.mov' ]] &&
       continue
 
+    [[ -f "$root/$path" ]] ||
+      die "$root/$path does not exist!"
+
     (
-      local directory="$( dirname "$path" )"
-      local image="$( basename "$path" )"
+      local directory image
+      directory="$( dirname "$path" )" || die "dirname failure $path"
+      image="$( basename "$path" )" || die "basename failure $path"
 
       # get the sha1sum of the original
       local hashed; hashed="$( $sha "$root/$path" )" || die "hash failure $path"
@@ -119,8 +183,13 @@ scanner() {
       label="$directory:$label"
       d diving cache "$label" hash = "$hashed" </dev/null
 
-      generate_thumbnail "$root/$path" "$thumbroot/$unique.webp"
-      generate_original  "$root/$path" "$imageroot/$unique.webp"
+      if [[ $path =~ .jpg ]]; then
+        generate_image_thumbnail "$root/$path" "$thumbroot/$unique.webp"
+        generate_image_fullsize  "$root/$path" "$imageroot/$unique.webp"
+      else
+        generate_video_thumbnail "$root/$path" "$clipsroot/$unique.webm"
+        generate_video_fullsize  "$root/$path" "$videoroot/$unique.webm"
+      fi
     ) &
 
     (( workers++ ))
@@ -139,4 +208,4 @@ copy_web() {
 }
 
 copy_web
-scanner fast "$@"
+scanner full "$@"

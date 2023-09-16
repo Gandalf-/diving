@@ -97,3 +97,25 @@ class TestImage(unittest.TestCase):
         for before, after in samples:
             picture = image.Image(before, '2020-01-01 Rockaway Beach')
             self.assertEqual(picture.simplified(), after)
+
+    def test_image_basics(self) -> None:
+        img = image.Image('001 - Clams.jpg', '2020-01-01 Rockaway Beach')
+        self.assertEqual(img.name, 'Clams')
+        self.assertEqual(img.number, '001')
+        self.assertEqual(img.directory, '2020-01-01 Rockaway Beach')
+        self.assertTrue(img.is_image)
+        self.assertFalse(img.is_video)
+
+        self.assertEqual(img.thumbnail(), '/imgs/test.webp')
+        self.assertEqual(img.fullsize(), '/full/test.webp')
+
+    def test_video_basics(self) -> None:
+        img = image.Image('001 - Clams.mov', '2020-01-01 Rockaway Beach')
+        self.assertEqual(img.name, 'Clams')
+        self.assertEqual(img.number, '001')
+        self.assertEqual(img.directory, '2020-01-01 Rockaway Beach')
+        self.assertFalse(img.is_image)
+        self.assertTrue(img.is_video)
+
+        self.assertEqual(img.thumbnail(), '/clips/test.webm')
+        self.assertEqual(img.fullsize(), '/video/test.webm')

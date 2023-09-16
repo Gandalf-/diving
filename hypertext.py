@@ -6,6 +6,7 @@ html generation
 
 import enum
 import datetime
+import string
 from typing import Optional, Tuple, List, Dict, Any, Type
 
 import locations
@@ -201,7 +202,78 @@ def image_to_site_html(image: Image, where: Where) -> str:
     return f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
 
 
+def html_direct_image(image: Image, where: Where, lazy: bool) -> str:
+    if image.is_image:
+        return _direct_image_html(image, where, lazy)
+    else:
+        return _direct_video_html(image, where)
+
+
 # PRIVATE
+
+
+def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
+    assert image.is_image
+    name_html = image_to_name_html(image, where)
+    site_html = image_to_site_html(image, where)
+
+    lazy_load = 'loading="lazy"' if lazy else ''
+    location = image.location()
+    fullsize = image.fullsize()
+    thumbnail = image.thumbnail()
+
+    return f"""
+    <div class="card" onclick="flip(this);">
+        <div class="card_face card_face-front">
+            <img height=225 width=300 {lazy_load} alt="{image.name}" src="{thumbnail}">
+        </div>
+        <div class="card_face card_face-back">
+            {name_html}
+            {site_html}
+            <a class="top elem timeline" data-fancybox="gallery" data-caption="{image.name} - {location}" href="{fullsize}">
+            Fullsize Image
+            </a>
+            <p class="top elem">Close</p>
+        </div>
+    </div>
+    """
+
+
+def _direct_video_html(image: Image, where: Where) -> str:
+    assert image.is_video
+    name_html = image_to_name_html(image, where)
+    site_html = image_to_site_html(image, where)
+
+    image.location()
+    fullsize = image.fullsize()
+    thumbnail = image.thumbnail()
+
+    allowed = string.ascii_letters + string.digits
+    unique = 'video_' + ''.join(c for c in image.identifier() if c in allowed)
+
+    return f"""
+    <div class="card" onclick="flip(this);">
+        <div class="card_face card_face-front">
+            <video class="clip" disableRemotePlayback muted autoplay loop height=225 width=300>
+                <source src="{thumbnail}" type="video/webm">
+                Your browser does not support the HTML5 video tag.
+            </video>
+        </div>
+        <div class="card_face card_face-back">
+            {name_html}
+            {site_html}
+            <a class="top elem timeline" data-fancybox href="#{unique}">
+            Fullsize Video
+            </a>
+            <p class="top elem">Close</p>
+
+            <video controls muted preload="none" id="{unique}" style="display:none;">
+                <source src="{fullsize}" type="video/webm">
+                Your browser does not support the HTML5 video tag.
+            </video>
+        </div>
+    </div>
+    """
 
 
 def _image_to_gallery_link(image: Image) -> Optional[str]:

@@ -52,7 +52,7 @@ def find_representative(tree: Tree, lineage: Optional[List[str]] = None) -> Imag
         if found:
             return found
 
-    results = extract_leaves(tree)
+    results = (leaf for leaf in extract_leaves(tree) if leaf.is_image)
     results = sorted(results, key=lambda image: image.path(), reverse=True)
 
     assert results, (tree, lineage)
@@ -110,35 +110,9 @@ def html_direct_examples(direct: List[Image], where: Where) -> str:
         identifier = tuple([image.name, image.path()])
         if identifier in seen:
             continue
-
-        name_html = hypertext.image_to_name_html(image, where)
-        site_html = hypertext.image_to_site_html(image, where)
-
-        html += """
-        <div class="card" onclick="flip(this);">
-            <div class="card_face card_face-front">
-            <img height=225 width=300 {lazy} alt="{name}" src="{thumbnail}">
-            </div>
-            <div class="card_face card_face-back">
-            {name_html}
-            {site_html}
-            <a class="top elem timeline" data-fancybox="gallery" data-caption="{name} - {location}" href="{fullsize}">
-            Fullsize Image
-            </a>
-            <p class="top elem">Close</p>
-            </div>
-        </div>
-        """.format(
-            name=image.name,
-            name_html=name_html,
-            lazy='loading="lazy"' if i > 16 else '',
-            site_html=site_html,
-            location=image.location(),
-            fullsize=image.fullsize(),
-            thumbnail=image.thumbnail(),
-        )
-
+        html += hypertext.html_direct_image(image, where, i > 16)
         seen.add(identifier)
+
     html += "</div>"
 
     return html
@@ -172,6 +146,7 @@ def html_tree(
         new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
         size = tree_size(value)
         example = find_representative(value, new_lineage)
+        assert example.is_image
         subject = _key_to_subject(key, where)
 
         html += """

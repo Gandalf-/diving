@@ -8,6 +8,7 @@ from util import collection
 from util import database
 from util import taxonomy
 
+from util.image import Image
 from util.taxonomy import MappingType
 from hypertext import Where
 
@@ -32,6 +33,16 @@ class TestGallery(unittest.TestCase):
         self.assertIn('barnacle', tree)
         out = gallery.find_representative(tree['barnacle'], lineage=['barnacle'])
         self.assertIsNotNone(out)
+
+    def test_find_representative_skips_videos(self) -> None:
+        tree = {
+            'fish': [
+                Image('001 - Blue Fish.mov', '2023-01-01 Rockaway Beach'),
+                Image('002 - Gray Fish.jpg', '2020-01-01 Rockaway Beach'),
+            ]
+        }
+        out = gallery.find_representative(tree, lineage=['fish'])
+        self.assertEqual(out.name, 'Gray Fish')
 
     def test_key_to_subject_gallery(self):
         '''current element to visible text'''

@@ -7,15 +7,10 @@ base class for a diving image
 import os
 from typing import Optional
 
-import inflect
-
 from util import database
+from util import static
 from util.common import image_root, Tree
 from util.grammar import singular
-
-from util import static
-
-_inflect = inflect.engine()
 
 
 def categorize(name: str) -> str:
@@ -79,7 +74,7 @@ class Image:
 
     def __init__(self, label: str, directory: str) -> None:
         self.label = label
-        label, _ = os.path.splitext(label)
+        label, ext = os.path.splitext(label)
 
         if " - " in label:
             number, name = label.split(" - ")
@@ -91,6 +86,8 @@ class Image:
         self.number = number
         self.directory = directory
         self.database = database.database
+        self.is_image = ext == '.jpg'
+        self.is_video = ext == '.mov'
 
     def __repr__(self) -> str:
         return self.name
@@ -121,10 +118,14 @@ class Image:
 
     def thumbnail(self) -> str:
         '''URI of thumbnail image'''
+        if self.is_video:
+            return f'/clips/{self.hashed()}.webm'
         return f'/imgs/{self.hashed()}.webp'
 
     def fullsize(self) -> str:
         '''URI of original image'''
+        if self.is_video:
+            return f'/video/{self.hashed()}.webm'
         return f'/full/{self.hashed()}.webp'
 
     def hashed(self) -> str:

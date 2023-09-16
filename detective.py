@@ -156,6 +156,10 @@ def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
         if 'Bonaire' in image.directory:
             continue
 
+        # no videos, not sure how that would make sense
+        if image.is_video:
+            continue
+
         # take the first subject when there are multiple
         for part in (" with ", " and "):
             if part in image.name:

@@ -78,7 +78,7 @@ def delve(dive_path: str) -> List[Image]:
     return [
         Image(entry, directory)
         for entry in os.listdir(dive_path)
-        if entry.endswith(".jpg") and '-' in entry
+        if (entry.endswith(".jpg") or entry.endswith('.mov')) and '-' in entry
     ]
 
 

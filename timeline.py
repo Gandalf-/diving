@@ -11,7 +11,6 @@ from typing import List, Tuple, Dict, Any
 import hypertext
 import locations
 from hypertext import Where
-from util.image import Image
 from util import collection
 from util import common
 
@@ -50,32 +49,6 @@ def timeline() -> List[Tuple[str, str]]:
     return results
 
 
-def _image_html(image: Image) -> str:
-    '''build the html for a picture'''
-    thumbnail = image.thumbnail()
-    fullsize = image.fullsize()
-    subject = image.name
-
-    name_html = hypertext.image_to_name_html(image, Where.Sites)
-    site_html = hypertext.image_to_site_html(image, Where.Sites)
-
-    return f'''
-  <div class="card" onclick="flip(this);">
-    <div class="card_face card_face-front">
-      <img width=300 alt="{subject}" loading="lazy" src="{thumbnail}">
-    </div>
-    <div class="card_face card_face-back">
-      {name_html}
-      {site_html}
-      <a class="top elem timeline" data-fancybox="gallery" data-caption="{subject}" href="{fullsize}">
-      Fullsize Image
-      </a>
-      <p class="top elem">Close</p>
-    </div>
-  </div>
-'''
-
-
 def _subpage(dive: str) -> Tuple[str, str]:
     '''build the sub page for this dive'''
     when, title = dive.split(' ', 1)
@@ -107,7 +80,9 @@ def _subpage(dive: str) -> Tuple[str, str]:
 
     path = os.path.join(common.image_root, dive)
     images = sorted(collection.delve(path), key=operator.attrgetter('number'))
-    html += '\n'.join(_image_html(image) for image in images)
+    html += '\n'.join(
+        hypertext.html_direct_image(image, Where.Sites, True) for image in images
+    )
 
     html += '''\
 </div>
