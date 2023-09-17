@@ -87,7 +87,10 @@ class Image:
         self.directory = directory
         self.database = database.database
         self.is_image = ext == '.jpg'
-        self.is_video = ext == '.mov'
+        self.is_video = ext in (
+            '.mov',
+            '.mp4',
+        )
 
     def __repr__(self) -> str:
         return self.name

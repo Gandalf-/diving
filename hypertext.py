@@ -39,20 +39,44 @@ scripts = """
     <script src="/jquery.fancybox.min.js" defer></script>
 
     <script>
+    function removeFlip(elem) {
+        elem.classList.remove('is-flipped');
+
+        // When 'is-flipped' is removed, we add the 'loop' attribute and start the timer to remove it after 5 seconds.
+        const clips = elem.querySelectorAll('video.clip');
+        clips.forEach(clip => {
+            clip.setAttribute('loop', 'true');
+            clip.currentTime = 0;
+            clip.play();
+
+            setTimeout(() => {
+                clip.removeAttribute('loop');
+            }, 7000);
+        });
+    }
+
     function flip(elem) {
         const label = 'is-flipped';
         if (elem.classList.contains(label)) {
-            elem.classList.remove(label);
+            removeFlip(elem);
         } else {
-            const seconds = 10;
             elem.classList.add(label);
-            setTimeout(function () {
+            setTimeout(() => {
                 if (elem.classList.contains(label)) {
-                    elem.classList.remove(label);
+                    removeFlip(elem);
                 }
-            }, 1000 * seconds);
+            }, 7000);
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const clips = document.querySelectorAll('video.clip');
+        clips.forEach(clip => {
+            setTimeout(() => {
+                clip.removeAttribute('loop');
+            }, 7000); // 5 seconds
+        });
+    });
     </script>
 """
 
@@ -214,6 +238,7 @@ def html_direct_image(image: Image, where: Where, lazy: bool) -> str:
 
 def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
     assert image.is_image
+    metrics.counter('html direct images')
     name_html = image_to_name_html(image, where)
     site_html = image_to_site_html(image, where)
 
@@ -241,6 +266,7 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
 
 def _direct_video_html(image: Image, where: Where) -> str:
     assert image.is_video
+    metrics.counter('html direct videos')
     name_html = image_to_name_html(image, where)
     site_html = image_to_site_html(image, where)
 

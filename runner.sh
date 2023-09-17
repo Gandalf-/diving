@@ -50,7 +50,26 @@ generate_video_thumbnail() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
+  dimensions() {
+    # https://www.bannerbear.com/blog/how-to-crop-resize-a-video-using-ffmpeg/
+    ffprobe \
+      -v error \
+      -select_streams v:0 \
+      -show_entries stream=width,height \
+      -of csv=s=x:p=0 \
+      "$1"
+  }
+
+  declare -A sizes
+  sizes[1920x1080]=1440:1080  # mov
+  sizes[1280x720]=960:720     # mp4
+  sizes[320x240]=320:240      # mp4, old camera
+
   rescale() {
+    local size; size="$( dimensions "$fin" )"
+    local target="${sizes[$size]}"
+    [[ -z $target ]] && die "unexpected video size $size"
+
     # https://superuser.com/a/624564
     # https://stackoverflow.com/a/52675535
     ffmpeg \
@@ -59,7 +78,7 @@ generate_video_thumbnail() {
       -i "$fin" \
       -ss 2 -t 4 \
       -an -c:v libvpx-vp9 -deadline good -crf 40 \
-      -vf 'crop=1440:1080,scale=225:300' \
+      -vf "crop=$target,scale=225:300" \
       -f webm pipe:
   }
 
@@ -72,9 +91,8 @@ generate_video_thumbnail() {
     [end][begin]xfade=distance:duration=1:offset=2"
 
     ffmpeg \
-      -f webm \
-      -i pipe: \
       -loglevel fatal \
+      -f webm -i pipe: \
       -filter_complex "$filter" \
       "$fout"
   }
@@ -127,29 +145,41 @@ scanner() {
       producer() {
         while read -r path; do
           case $path in
-            *.jpg|*.mov)
+            *.jpg)
               # this image changed
               echo "$path"
               ;;
 
             *)
               # this directory changed, scan its contents
-              for sub in "$path"/*.jpg "$path"/*.mov; do
+              for sub in "$path"/*.jpg; do
                 echo "$sub"
               done
               printf '%0*d%s\n' $(( size - 1 )) 0 'FOUND_RENAME'
               ;;
           esac
         done < <(
-          find "$root" \( -name '*.jpg' -o -name '*.mov' -o -type d \) -newer "$newest"
+          find "$root" \( -name '*.jpg' -o -type d \) -newer "$newest"
         ) | cut -c "$size"- | sort | uniq
       }
       ;;
 
     full)
       producer() {
-        # find "$root" -type f -name '*.jpg' -o -name '*.mov' | cut -c "$size"-
-        find "$root" -type f -name '*.mov' | cut -c "$size"-
+        find "$root" \
+          -name '*.jpg' -o \
+          -name '*.mov' -o \
+          -name '*.mp4' \
+          | cut -c "$size"-
+      }
+      ;;
+
+    video)
+      producer() {
+        find "$root" \
+          -name '*.mov' -o \
+          -name '*.mp4' \
+          | cut -c "$size"-
       }
       ;;
   esac
@@ -160,7 +190,7 @@ scanner() {
       continue
     }
 
-    [[ $path == '*.jpg' || $path == '.mov' ]] &&
+    [[ $path == '*.jpg' || $path == '.mov' || $path == '.mp4' ]] &&
       continue
 
     [[ -f "$root/$path" ]] ||
@@ -208,4 +238,4 @@ copy_web() {
 }
 
 copy_web
-scanner full "$@"
+scanner fast "$@"

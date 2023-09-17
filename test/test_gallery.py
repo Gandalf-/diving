@@ -38,7 +38,8 @@ class TestGallery(unittest.TestCase):
         tree = {
             'fish': [
                 Image('001 - Blue Fish.mov', '2023-01-01 Rockaway Beach'),
-                Image('002 - Gray Fish.jpg', '2020-01-01 Rockaway Beach'),
+                Image('002 - Fast Fish.mov', '2023-01-01 Rockaway Beach'),
+                Image('003 - Gray Fish.jpg', '2020-01-01 Rockaway Beach'),
             ]
         }
         out = gallery.find_representative(tree, lineage=['fish'])

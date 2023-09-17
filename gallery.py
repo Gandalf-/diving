@@ -107,8 +107,9 @@ def html_direct_examples(direct: List[Image], where: Where) -> str:
     html = '<div class="grid">'
 
     for i, image in enumerate(direct):
-        identifier = tuple([image.name, image.path()])
+        identifier = image.identifier()
         if identifier in seen:
+            # This prevents 'b fish and b fish eggs' showing up twice on taxonomy pages
             continue
         html += hypertext.html_direct_image(image, where, i > 16)
         seen.add(identifier)

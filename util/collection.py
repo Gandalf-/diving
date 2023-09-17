@@ -75,10 +75,11 @@ def delve(dive_path: str) -> List[Image]:
     provided must be absolute
     '''
     directory = os.path.basename(dive_path)
+    exts = ('.jpg', '.mov', '.mp4')
     return [
         Image(entry, directory)
         for entry in os.listdir(dive_path)
-        if (entry.endswith(".jpg") or entry.endswith('.mov')) and '-' in entry
+        if any(entry.endswith(ext) for ext in exts) and '-' in entry
     ]
 
 
