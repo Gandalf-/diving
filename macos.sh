@@ -9,8 +9,11 @@ start_database() {
   # shellcheck disable=SC2317
   cleanup() {
     (( pid )) || return;
-    kill "$pid"
-    echo Server stopped
+    (
+      sleep 1.1
+      kill "$pid"
+    ) &
+    disown
   }
   trap cleanup EXIT
 

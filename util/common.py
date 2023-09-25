@@ -8,6 +8,7 @@ import datetime
 import itertools
 import functools
 import os
+import time
 import pathlib
 from typing import List, Dict, Tuple, Any, Iterable, Callable
 
@@ -166,3 +167,18 @@ def fast_exists(path: str) -> bool:
         # metrics.record('paths that did not exist', path)
         metrics.counter('paths that did not exist')
     return exists
+
+
+class Progress:
+    def __init__(self, name: str) -> None:
+        name += '...'
+        self.name = name + ' ' * (30 - len(name))
+        self.start = 0.0
+
+    def __enter__(self) -> None:
+        self.start = time.time()
+        print(f'{self.name}', end='', flush=True)
+
+    def __exit__(self, *args: Any) -> None:
+        duration = time.time() - self.start
+        print(f'done, {duration:.2f}s')

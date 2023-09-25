@@ -1,10 +1,14 @@
 import unittest
 
+from util import database
 from util import image
 
 
 class TestImage(unittest.TestCase):
     '''image.py'''
+
+    def setUp(self) -> None:
+        database.use_test_database()
 
     def test_categorize(self) -> None:
         '''subjects are recategorized, but that needs to be undone for some

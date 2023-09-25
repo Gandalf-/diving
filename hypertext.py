@@ -277,11 +277,15 @@ def _direct_video_html(image: Image, where: Where) -> str:
     allowed = string.ascii_letters + string.digits
     unique = 'video_' + ''.join(c for c in image.identifier() if c in allowed)
 
+    # disableRemotePlayback is to stop Android from suggesting a cast
+    # playsinline is get iOS to play the video at all
+    # <source src="{thumbnail}" type="video/webm">
+
     return f"""
     <div class="card" onclick="flip(this);">
         <div class="card_face card_face-front">
-            <video class="clip" disableRemotePlayback muted autoplay loop height=225 width=300>
-                <source src="{thumbnail}" type="video/webm">
+            <video class="clip" disableRemotePlayback preload playsinline muted autoplay loop height=225 width=300>
+                <source src="{thumbnail.replace('.webm', '.mp4')}" type="video/mp4">
                 Your browser does not support the HTML5 video tag.
             </video>
         </div>
@@ -295,6 +299,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
 
             <video controls muted preload="none" id="{unique}" style="display:none;">
                 <source src="{fullsize}" type="video/webm">
+                <source src="{fullsize.replace('.webm', '.mp4')}" type="video/mp4">
                 Your browser does not support the HTML5 video tag.
             </video>
         </div>

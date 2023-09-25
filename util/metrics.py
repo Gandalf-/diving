@@ -15,9 +15,9 @@ class Metrics:
         self.data.setdefault(key, set())
         self.data[key].add(value)
 
-    def counter(self, key: str) -> None:
+    def counter(self, key: str, n: int = 1) -> None:
         self.data.setdefault(key, 0)
-        self.data[key] += 1
+        self.data[key] += n
 
     def summary(self, label: str) -> None:
         if not self.data:

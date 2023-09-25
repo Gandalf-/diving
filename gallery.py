@@ -26,6 +26,7 @@ from util import verify
 from util.metrics import metrics
 from util.image import Image
 from util.common import (
+    Progress,
     tree_size,
     extract_leaves,
     is_date,
@@ -42,7 +43,9 @@ from hypertext import Where, Side
 # pylint: disable=line-too-long
 
 
-def find_representative(tree: Tree, lineage: Optional[List[str]] = None) -> Image:
+def find_representative(
+    tree: Tree, where: Where, lineage: Optional[List[str]] = None
+) -> Image:
     """Find one image to represent this tree."""
     lineage = lineage or []
     pinned = static.pinned.get(' '.join(lineage))
@@ -53,9 +56,13 @@ def find_representative(tree: Tree, lineage: Optional[List[str]] = None) -> Imag
             return found
 
     results = (leaf for leaf in extract_leaves(tree) if leaf.is_image)
-    results = sorted(results, key=lambda image: image.path(), reverse=True)
-
     assert results, (tree, lineage)
+
+    if where == where.Sites:
+        items = list(results)
+        return items[len(items) // 2]
+
+    results = sorted(results, key=lambda image: image.path(), reverse=True)
     return results[0]
 
 
@@ -146,7 +153,7 @@ def html_tree(
 
         new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
         size = tree_size(value)
-        example = find_representative(value, new_lineage)
+        example = find_representative(value, where, new_lineage)
         assert example.is_image
         subject = _key_to_subject(key, where)
 
@@ -209,47 +216,45 @@ def html_tree(
 
 def write_all_html() -> None:
     '''main'''
+    with Progress("loading images"):
+        tree = collection.build_image_tree()
+        scientific = taxonomy.mapping()
+        taxia = taxonomy.gallery_tree(tree)
 
-    print("loading images...              ", end="", flush=True)
-    tree = collection.build_image_tree()
-    scientific = taxonomy.mapping()
-    taxia = taxonomy.gallery_tree(tree)
-    print("done", tree_size(tree), "images loaded")
+    with Progress("building /gallery"):
+        name_htmls = html_tree(tree, Where.Gallery, scientific)
 
-    print("building /gallery...           ", end="", flush=True)
-    name_htmls = html_tree(tree, Where.Gallery, scientific)
-    print("done", len(name_htmls), "pages prepared")
+    with Progress("building /sites"):
+        sites = locations.sites()
+        sites_htmls = html_tree(sites, Where.Sites, scientific)
 
-    print("building /sites...             ", end="", flush=True)
-    sites = locations.sites()
-    sites_htmls = html_tree(sites, Where.Sites, scientific)
-    print("done", len(sites_htmls), "pages prepared")
+    with Progress("building /taxonomy"):
+        scientific = {v: k for k, v in scientific.items()}
+        taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
 
-    print("building /taxonomy...          ", end="", flush=True)
-    scientific = {v: k for k, v in scientific.items()}
-    taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
-    print("done", len(taxia_htmls), "pages prepared")
+    with Progress("building /timeline"):
+        times_htmls = timeline.timeline()
 
-    print("building /timeline...          ", end="", flush=True)
-    times_htmls = timeline.timeline()
-    print("done", len(times_htmls), "pages prepared")
+    with Progress("building /detective"):
+        detective.writer()
 
-    print("building /detective...         ", end="", flush=True)
-    detective.writer()
-    print("done")
-
-    print("writing html...                ", end="", flush=True)
+    metrics.counter('images loaded', tree_size(tree))
+    metrics.counter('pages in gallery', len(name_htmls))
+    metrics.counter('pages in sites', len(sites_htmls))
+    metrics.counter('pages in taxonomy', len(taxia_htmls))
+    metrics.counter('pages in timeline', len(times_htmls))
 
     for vr in [static.search_js, static.stylesheet]:
         vr.cleanup()
         vr.write()
 
-    with multiprocessing.Pool() as pool:
+    with Progress("writing html"), multiprocessing.Pool() as pool:
         pool.map(_pool_writer, name_htmls)
         pool.map(_pool_writer, sites_htmls)
         pool.map(_pool_writer, taxia_htmls)
         pool.map(_pool_writer, times_htmls)
-    print("done")
+
+    search.write_search_data()
 
 
 def _pool_writer(args: Tuple[str, str]) -> None:
@@ -279,14 +284,12 @@ if not sys.flags.interactive and __name__ == "__main__":
         util.common.image_root = sys.argv[1]
 
     write_all_html()
-    search.write_search_data()
 
     if not os.environ.get('DIVING_FAST'):
-        print("verifying html...              ", end="", flush=True)
-        if os.environ.get('DIVING_VERIFY'):
-            verify.required_checks()
-        else:
-            verify.advisory_checks()
-    print("done")
+        with Progress("verifying html"):
+            if os.environ.get('DIVING_VERIFY'):
+                verify.required_checks()
+            else:
+                verify.advisory_checks()
 
     metrics.summary('gallery')

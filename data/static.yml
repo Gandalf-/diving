@@ -33,12 +33,14 @@ locations:
     - Zee's Reef
   British Columbia:
     # Jervis Inlet
+    - Agnew
     - Argonaut Point
     - Captain Island Light
     - HMCS Chaudiere
     - Jaggy Crack
     - Jervis Point
     - Nemo's Leap
+    - Stag Wall
     - Observation Wall
     - Power Lines
     - Wingy Dingy
@@ -248,7 +250,7 @@ categories:
     - turkish towel
     - diatom
   crab:
-    - reef spider
+    - spider
   nudibranch:
     - dendronotid
     - dorid
@@ -330,16 +332,6 @@ pinned:
       '2019-10-31 Klein Bonaire M/017 - Divers.jpg'
     Animalia Echinodermata:
       '2020-03-01 Jaggy Crack/022 - Rose Star.jpg'
-    Galapagos:
-      '2021-08-28 2 Fernandina Iguanas/008 - Marine Iguana.jpg'
-    British Columbia:
-      '2020-03-01 Power Lines/017 - Yellow Eye Rockfish'
-    British Columbia Power Lines:
-      '2022-09-17 1 Power Lines/004 - Dwarf Red Gorgonian Coral.jpg'
-    British Columbia HMCS Chaudiere:
-      '2022-09-16 2 HMCS Chaudiere/013 - Diver and Ship Wreck.jpg'
-    British Columbia Observation Wall:
-      '2022-09-17 3 Observation Wall/032 - Granular Claw Crab.jpg'
     Washington:
       '2020-06-17 Rockaway Beach/005 - Dungeness Crab.jpg'
     Bonaire:

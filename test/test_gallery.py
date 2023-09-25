@@ -27,11 +27,13 @@ class TestGallery(unittest.TestCase):
         tree = collection.build_image_tree()
 
         self.assertIn('fish', tree)
-        out = gallery.find_representative(tree['fish'], lineage=['fish'])
+        out = gallery.find_representative(tree['fish'], Where.Gallery, lineage=['fish'])
         self.assertEqual(out.name, 'Yellow Eye Rockfish')
 
         self.assertIn('barnacle', tree)
-        out = gallery.find_representative(tree['barnacle'], lineage=['barnacle'])
+        out = gallery.find_representative(
+            tree['barnacle'], Where.Gallery, lineage=['barnacle']
+        )
         self.assertIsNotNone(out)
 
     def test_find_representative_skips_videos(self) -> None:
@@ -42,8 +44,19 @@ class TestGallery(unittest.TestCase):
                 Image('003 - Gray Fish.jpg', '2020-01-01 Rockaway Beach'),
             ]
         }
-        out = gallery.find_representative(tree, lineage=['fish'])
+        out = gallery.find_representative(tree, Where.Gallery, lineage=['fish'])
         self.assertEqual(out.name, 'Gray Fish')
+
+    def test_find_representative_sites(self) -> None:
+        tree = {
+            'Rockaway Beach': [
+                Image('001 - Blue Fish.jpg', '2023-01-01 Rockaway Beach'),
+                Image('002 - Fast Fish.jpg', '2023-01-01 Rockaway Beach'),
+                Image('003 - Gray Fish.jpg', '2020-01-01 Rockaway Beach'),
+            ]
+        }
+        out = gallery.find_representative(tree, Where.Sites)
+        self.assertEqual(out.name, 'Fast Fish')
 
     def test_key_to_subject_gallery(self):
         '''current element to visible text'''

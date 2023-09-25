@@ -75,10 +75,10 @@ generate_video_thumbnail() {
     ffmpeg \
       -loglevel fatal \
       -nostdin \
+      -threads 1 \
       -i "$fin" \
       -ss 2 -t 4 \
-      -an -c:v libvpx-vp9 -deadline good -crf 40 \
-      -vf "crop=$target,scale=225:300" \
+      -vf "crop=$target, scale=224:300" \
       -f webm pipe:
   }
 
@@ -91,32 +91,60 @@ generate_video_thumbnail() {
     [end][begin]xfade=distance:duration=1:offset=2"
 
     ffmpeg \
+      -threads 1 \
       -loglevel fatal \
       -f webm -i pipe: \
       -filter_complex "$filter" \
+      -f webm pipe:
+  }
+
+  mp4() {
+    ffmpeg \
+      -loglevel fatal \
+      -f webm -i pipe: \
+      -an -c:v libx264 -profile:v main \
+      -movflags faststart \
+      -vf "format=yuv420p, fps=30" \
+      -crf 26 \
       "$fout"
   }
 
   # ffmpeg is easy 😵
   # https://stackoverflow.com/a/45902691
-  rescale | fade || die "ffmpeg thumbnail failure $fin"
+  rescale | fade | mp4 || die "ffmpeg thumbnail failure $fin"
   report "video thumbnail $( basename "$fin" )"
 }
 
 generate_video_fullsize() {
   local fin="$1"
   local fout="$2"
-  [[ -f "$fout" ]] && return
+  [[ -f "$fout.webm" && -f "$fout.mp4" ]] && return
 
-  ffmpeg \
-    -nostdin \
-    -loglevel fatal \
-    -i "$fin" \
-    -an \
-    -c:v libvpx-vp9 \
-    -deadline good \
-    -crf 40 \
-    "$fout" || die "ffmpeg fullsize failure $fin"
+  webm() {
+    ffmpeg \
+      -nostdin \
+      -loglevel fatal \
+      -i "$fin" \
+      -an \
+      -c:v libvpx-vp9 \
+      -deadline good \
+      -crf 40 \
+      -f webm pipe:
+  }
+
+  mp4() {
+    ffmpeg \
+      -loglevel fatal \
+      -f webm -i pipe: \
+      -movflags faststart \
+      -crf 28 \
+      "$fout.mp4"
+  }
+
+  webm \
+    | tee "$fout.webm" \
+    | mp4 \
+    || die "ffmpeg fullsize failure $fin"
 
   report "video fullsize $( basename "$fin" )"
 }
@@ -152,7 +180,11 @@ scanner() {
 
             *)
               # this directory changed, scan its contents
-              for sub in "$path"/*.jpg; do
+              for sub in "$path"/*.{jpg,mov}; do
+                [[ -f "$sub" ]] || {
+                  "$sub missing!" >&2
+                  continue
+                }
                 echo "$sub"
               done
               printf '%0*d%s\n' $(( size - 1 )) 0 'FOUND_RENAME'
@@ -190,9 +222,6 @@ scanner() {
       continue
     }
 
-    [[ $path == '*.jpg' || $path == '.mov' || $path == '.mp4' ]] &&
-      continue
-
     [[ -f "$root/$path" ]] ||
       die "$root/$path does not exist!"
 
@@ -217,8 +246,8 @@ scanner() {
         generate_image_thumbnail "$root/$path" "$thumbroot/$unique.webp"
         generate_image_fullsize  "$root/$path" "$imageroot/$unique.webp"
       else
-        generate_video_thumbnail "$root/$path" "$clipsroot/$unique.webm"
-        generate_video_fullsize  "$root/$path" "$videoroot/$unique.webm"
+        generate_video_thumbnail "$root/$path" "$clipsroot/$unique.mp4"
+        generate_video_fullsize  "$root/$path" "$videoroot/$unique"
       fi
     ) &
 

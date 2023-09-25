@@ -183,6 +183,7 @@ californiensis: From-California
 callioplanidae: Beautiful-plankton-family
 callyspongia: Beautiful-sponge
 callyspongiidae: Beautiful-sponge-family
+calyx: Cup
 camarodonta: Chamber-toothed
 campanulariidae: Bell-shaped-family
 camtschatica: From-Kamchatka
@@ -367,6 +368,7 @@ dermasterias: Skin-star
 diadema: Diadem
 diadematidae: Diadem-or-crown-family
 diadematoida: Crown-like
+diadumene: Through-bound
 diadumenidae: Across-the-head-family
 diaphorodoris: Differently-gifted
 diaulula: Double-furrow
@@ -473,6 +475,7 @@ flectens: Bending
 floridana: From-Florida
 florideophyceae: Flower-red-algae
 florometra: Flower-mother
+foraminatus: Perforated
 forcipulatida: Forceps-bearing
 forreri: Forrer's
 forsteri: Forster's
@@ -494,6 +497,7 @@ fuscus: Dark
 galapagensis: From-Galapagos
 galatheidae: Galatea-family
 galatheoidea: Galatea-like
+galloprovincialis: Of-Gallo
 gardneri: Gardner's
 gasterosteiformes: Belly-bone-shaped
 gastropoda: Stomach-foot
@@ -560,6 +564,7 @@ halocynthia: Sea-Cynthia
 halodeima: Sea-skin
 hamigera: Hook-bearer
 handi: Handy
+hapalogaster: Simple-stomach
 haplosclerida: Simple-sponge
 harmothoe: Pleasant-passage
 harringtoni: Harrington's
@@ -579,6 +584,7 @@ hepatus: Liver-colored
 heptacarpus: Seven-fruited
 hermodice: Gift-of-Hermes
 heteractis: Different-rayed
+heterochone: Different-sponge
 heterocongrinae: Different-conger-subfamily
 heteronemertea: Different-thread-animal
 heteropora: Different-pore
@@ -644,6 +650,7 @@ isostichopus: Equal-row-foot
 jacobus: Jacob's
 japonica: Japanese
 javanicus: From-Java
+jordani: Jordan's
 jordania: Jordan's
 junceella: Reed-like
 kaburakia: Kaburaki's
@@ -763,6 +770,7 @@ membranacea: Membrane-like
 membranipora: Membrane-bearing
 membraniporidae: Membrane-pore-family
 membraniporoidea: Thin-pore-bearing
+mertensii: Merten's
 mesocrangon: Middle-crangon
 metacarcinus: Beyond-crab
 metacrangon: Beyond-crangon
@@ -812,6 +820,7 @@ munitella: Little-fortified
 muraenidae: Moray-eel-family
 muricata: Roughened
 muricdae: Murex-snail-family
+muricea: Murex-like
 muricoidea: Murex-like
 murrayana: Murray's
 muscosa: Mossy
@@ -827,6 +836,10 @@ myoxocephalus: Mouse-headed
 myripristis: Soldierfish
 myrrhinidae: Myrrhina-family
 mystes: Hidden
+mytilida: Mussel-like
+mytilidae: Mussel-family
+mytiloidea: Mussel-like
+mytilus: Mussel
 myxicola: Slime-dwelling
 myxilla: Slime-like
 myxillidae: Myxilla-family
@@ -866,6 +879,9 @@ nudibranchia: Naked-gill
 nudus: Naked
 nugator: Swimmer
 nuttallii: Nuttall's
+nymphon: Nymph
+nymphonidae: Nymph
+nymphonoidea: Nymph-like
 obesus: Obese
 ocellatus: Eye-spotted
 ochraceus: Ochre-colored
@@ -958,6 +974,8 @@ papposus: Downy
 paracanthurus: Near-thorn-tail
 paracirrhites: Near-tendril
 paracoryphellidae: Near-coryphella-family
+paragorgia: Beside-gorgon
+paragorgiidae: Beside-gorgon-family
 parapagurodes: Beside-hermit-crab-like
 parasabella: Beside-Sabella
 paratropa: Turned-aside
@@ -1237,6 +1255,7 @@ stenopodidae: Narrow-foot-family
 stenopus: Narrow-foot
 stenorhynchus: Narrow-snout
 stephanometra: Crown-measurer
+stephencairnsi: Stephen-Cairn's
 stevensae: Stevens'
 stichaeidae: Ribbon-family
 stichodactylidae: Thread-finger-family
@@ -1393,7 +1412,7 @@ zygophora: Yoke-bearing
 
 hermissenda:
 igaboja:
-muricea:
+pixellae:
 scyra:
 tambja:
 zaniolepis:

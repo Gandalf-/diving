@@ -7,6 +7,7 @@ import gallery
 from util import collection
 from util import database
 from util import taxonomy
+from hypertext import Where
 
 from util.taxonomy import MappingType
 
@@ -63,7 +64,9 @@ class TestTaxonomy(unittest.TestCase):
         self.assertIn('Cnidaria', taxia['Animalia'])
 
         for i in range(len(lineage)):
-            out = gallery.find_representative(taxia, lineage=lineage[:i])
+            out = gallery.find_representative(
+                taxia, Where.Taxonomy, lineage=lineage[:i]
+            )
             self.assertIsNotNone(out)
 
     def test_taxia_filler(self):

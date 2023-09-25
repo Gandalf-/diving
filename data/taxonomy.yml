@@ -47,6 +47,8 @@ Animalia:
             dowlingi: round lipped boot sponge
       Sceptrulophora:
         Aphrocallistidae:
+          Heterochone:
+            calyx: fingered goblet sponge
           Aphrocallistes:
             vastus: cloud sponge
     Demospongiae:
@@ -808,6 +810,7 @@ Animalia:
             pictus: painted greenling
           Hexagrammos:
             decagrammus: kelp greenling
+            stelleri: whitespotted greenling
           Ophiodon:
             elongatus: lingcod
           Zaniolepis:
@@ -962,6 +965,9 @@ Animalia:
             undulatus: ptilosarcus undulatus sea pen
       Alcyonacea:
         sp.: soft coral
+        Paragorgiidae:
+          Paragorgia:
+            stephencairnsi: bubblegum coral
         Nephtheidae:
           Lemnalia: bushy lemnalia coral
           Scleronephthya: orange mouthed soft coral
@@ -1030,13 +1036,20 @@ Animalia:
             Halcampa:
               decemtentaculata: ten tentacled burrowing anemone
           Metridiidae:
-            Diadumenidae: tiny orange anemone
+            Diadumenidae:
+              Diadumene: diadumene anemone
+              sp.: tiny orange anemone
             Metridium:
               senile: short plumose anemone
               farcimen: metridium anemone
   Mollusca:
     Bivalvia:
       sp.: bivalve
+      Mytilida:
+        Mytiloidea:
+          Mytilidae:
+            Mytilus:
+              galloprovincialis: mediterranean mussel
       Ostreida:
         Ostreoidea:
           Gryphaeidae:
@@ -1271,9 +1284,13 @@ Animalia:
               gigantea: orange peel nudibranch
   Arthropoda:
     Pantopoda:
-      Chelicerata:
-        Pycnogonida:
-          Pantopoda: reef spider
+      Nymphonoidea:
+        Nymphonidae:
+          Nymphon:
+            pixellae: giant sea spider
+      # Chelicerata:
+      #   Pycnogonida:
+      #     Pantopoda: reef spider
     Maxillopoda:
       Sessilia:
         Balanoidea:
@@ -1389,6 +1406,8 @@ Animalia:
               quadrispina: squat lobster
         Paguroidea:
           Lithodidae:
+            Hapalogaster:
+              mertensii: hairy crab
             Phyllolithodes:
               papillosus: heart crab
             Acantholithodes:
@@ -1397,6 +1416,7 @@ Animalia:
               wosnessenskii: rhinoceros crab
             Lopholithodes:
               mandtii: puget sound king crab
+              foraminatus: brown box crab
             Placetron:
               wosnessenskii: scaled crab
             Cryptolithodes:
@@ -1429,6 +1449,7 @@ Animalia:
               gracilis: graceful crab
               productus: red rock crab
               antennarius: brown rock crab
+              jordani: hairy rock crab
         Majoidea:
           sp.: decorator crab
           Inachoididae:
