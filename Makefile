@@ -12,7 +12,7 @@ inttest:
 lint: shellcheck mypy ruff
 
 shellcheck:
-	shellcheck *.sh */*.sh
+	shellcheck */*.sh
 
 mypy:
 	mypy .
@@ -30,16 +30,16 @@ data/translations.yml: data/taxonomy.yml
 
 .PHONY: clean local dev sitemap sync
 clean:
-	bash macos.sh clean
+	bash util/macos.sh clean
 
 local: data/translations.yml
-	bash macos.sh build
+	bash util/macos.sh build
 
 dev: data/translations.yml
-	bash macos.sh dev
+	bash util/macos.sh dev
 
 sitemap:
-	bash macos.sh sitemap
+	bash util/macos.sh sitemap
 
 sync: sitemap
-	bash macos.sh sync
+	bash util/macos.sh sync

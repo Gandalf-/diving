@@ -43,8 +43,69 @@ build() {
   esac
 
   cd "$www"
-  bash    "$src"/runner.sh  ~/Pictures/diving/
-  python3 "$src"/gallery.py ~/Pictures/diving/
+  bash    "$src"/util/runner.sh  ~/Pictures/diving/
+  python3 "$src"/gallery.py      ~/Pictures/diving/
+}
+
+prune() {
+  start_database
+  cd "$www"
+
+  expected-keys() {
+    (
+      cd ~/Pictures/diving || exit 1
+      find . -type f \
+        | awk '
+      BEGIN { FS="/"; OFS=":" }
+      /jpg|mov|mp4/ {
+        gsub(/ - .*/, "");
+        gsub(/\....$/, "");
+        print $2, $3
+      }' \
+        | sort
+    )
+  }
+
+  actual-keys() {
+    d diving cache --keys | sort
+  }
+
+  stale-keys() {
+    while read -r key; do
+      echo d diving cache "$key" -d
+      d diving cache "$key" -d </dev/null
+    done < <(
+      comm -1 -3 <( expected-keys ) <( actual-keys )
+    )
+  }
+
+  expected-hashes() {
+    d diving cache \
+      | awk '/"hash"/ { gsub(/"/, ""); print $2 }' \
+      | sort -u
+  }
+
+  actual-hashes() {
+    (
+      cd "$www" || exit 1
+      find imgs full clips video -type f \
+        | cut -d / -f 2 \
+        | cut -d . -f 1 \
+        | grep . \
+        | sort -u
+    )
+  }
+
+  stale-hashes() {
+    while read -r fingerprint; do
+      rm -v "$www"/*/"$fingerprint"*
+    done < <(
+      comm -1 -3 <( expected-hashes ) <( actual-hashes )
+    )
+  }
+
+  stale-keys
+  stale-hashes
 }
 
 wikipedia() {
@@ -52,11 +113,6 @@ wikipedia() {
 
   echo ">>> updater()"
   python3 -i "$src"/information.py
-}
-
-serve() {
-  cd "$www"
-  sws --public --local
 }
 
 sync() {
@@ -72,7 +128,7 @@ sync() {
 dev() {
   echo *.py util/*.py web/* data/*.yml \
     | tr ' ' '\n' \
-    | entr bash macos.sh build
+    | entr bash util/macos.sh build
 }
 
 sitemap() {
