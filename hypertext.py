@@ -279,7 +279,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
 
     # disableRemotePlayback is to stop Android from suggesting a cast
     # playsinline is get iOS to play the video at all
-    # <source src="{thumbnail}" type="video/webm">
+    # Safari always chooses the first element regardless of support with autoplay
 
     return f"""
     <div class="card" onclick="flip(this);">
@@ -293,7 +293,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
             {name_html}
             {site_html}
             <a class="top elem timeline" data-fancybox href="#{unique}">
-            Fullsize Video
+            Full Video
             </a>
             <p class="top elem">Close</p>
 

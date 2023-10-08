@@ -39,9 +39,6 @@ from util.common import (
 
 from hypertext import Where, Side
 
-# pylint: disable=too-many-locals
-# pylint: disable=line-too-long
-
 
 def find_representative(
     tree: Tree, where: Where, lineage: Optional[List[str]] = None

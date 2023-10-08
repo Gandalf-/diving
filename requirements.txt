@@ -6,6 +6,6 @@ types-PyYaml
 types-beautifulsoup4
 
 mypy
-pylint
 flake8
 black
+ruff

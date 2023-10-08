@@ -17,8 +17,6 @@ since the content of the article may contain non-ascii characters (greek
 letters, etc), the data is base64 encoded before inserted into the database
 '''
 
-# pylint: disable=too-few-public-methods
-
 import base64
 import operator
 from datetime import datetime

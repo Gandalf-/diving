@@ -171,6 +171,5 @@ database: Database = RealDatabase()
 
 def use_test_database() -> None:
     """Switch to TestDatabase"""
-    # pylint: disable=global-statement
     global database
     database = TestDatabase()
