@@ -13,6 +13,7 @@ import locations
 from hypertext import Where
 from util import collection
 from util import common
+from util import uddf
 
 
 def timeline() -> List[Tuple[str, str]]:
@@ -49,6 +50,27 @@ def timeline() -> List[Tuple[str, str]]:
     return results
 
 
+def _info_html(info: Dict[str, Any]) -> str:
+    '''build the html for this dive'''
+    parts = []
+    parts.append(f'{info["depth"]}\' max')
+    parts.append(f'{info["duration"] // 60} minutes')
+
+    temp_high = info['temp_high']
+    temp_low = info['temp_low']
+    if temp_low <= temp_high:
+        parts.append(f'{temp_low} &rarr; {temp_high}&deg;F')
+
+    start = info['tank_start']
+    end = info['tank_end']
+    if start != 0 and end != 0:
+        parts.append(f'{start} &rarr; {end} PSI')
+
+    return f'''\
+<h3>{' &nbsp; '.join(parts)}</h3>
+'''
+
+
 def _subpage(dive: str) -> Tuple[str, str]:
     '''build the sub page for this dive'''
     when, title = dive.split(' ', 1)
@@ -75,6 +97,12 @@ def _subpage(dive: str) -> Tuple[str, str]:
     html = f'''\
 {name}
 <h3>{when} - {location}</h3>
+'''
+    info = uddf.lookup(dive)
+    if info:
+        html += _info_html(info)
+
+    html += '''\
 <div class="grid">
 '''
 

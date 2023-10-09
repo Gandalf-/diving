@@ -6,15 +6,45 @@ from util import common
 
 
 class TestUDDF(unittest.TestCase):
-    def test_parse(self) -> None:
+    def test_parse_short(self) -> None:
         fname = 'Perdix AI[385834A0]#43_2021-10-22.uddf'
         expected = {
             'date': datetime.fromisoformat('2021-10-22T20:24:03Z'),
             'number': 43,
             'depth': 11,
             'duration': 584,
-            'tank_start': 15251209,
-            'tank_end': 13858467,
+            'tank_start': 2212,
+            'tank_end': 1994,
+            'temp_high': 78,
+            'temp_low': 78,
+        }
+        self.assertEqual(expected, parse(fname))
+
+    def test_parse_long(self) -> None:
+        fname = 'Perdix AI[385834A0]#169_2023-09-24.uddf'
+        expected = {
+            'date': datetime.fromisoformat('2023-09-24T09:26:24Z'),
+            'number': 169,
+            'depth': 140,
+            'duration': 2564,
+            'tank_start': 2978,
+            'tank_end': 740,
+            'temp_high': 59,
+            'temp_low': 46,
+        }
+        self.assertEqual(expected, parse(fname))
+
+    def test_parse_zero_start_pressure(self) -> None:
+        fname = 'Perdix AI[385834A0]#165_2023-09-22.uddf'
+        expected = {
+            'date': datetime.fromisoformat('2023-09-22T15:20:14Z'),
+            'number': 165,
+            'depth': 84,
+            'duration': 2823,
+            'tank_start': 3500,
+            'tank_end': 1120,
+            'temp_high': 59,
+            'temp_low': 48,
         }
         self.assertEqual(expected, parse(fname))
 

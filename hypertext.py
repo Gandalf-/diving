@@ -546,7 +546,6 @@ class SitesTitle(Title):
         elif is_date(name):
             name = pretty_date(name)
 
-        # ???
         html += f"""
         <h3 class="tight">{name}</h3>
         </div>
