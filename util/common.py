@@ -25,6 +25,18 @@ source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 Tree = Any
 
 
+def meters_to_feet(m: float) -> int:
+    return int(m * 3.28084)
+
+
+def pascal_to_psi(m: float) -> int:
+    return int(m * 0.000145038)
+
+
+def kelvin_to_fahrenheit(m: float) -> int:
+    return int((m - 273.15) * 1.8 + 32)
+
+
 def file_content_matches(path: str, content: str) -> bool:
     size = -1
     try:

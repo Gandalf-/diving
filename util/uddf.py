@@ -15,22 +15,12 @@ from datetime import datetime
 import lxml
 
 from util import collection
+from util.metrics import metrics
+from util.common import meters_to_feet, pascal_to_psi, kelvin_to_fahrenheit
 
 DiveInfo = Dict[str, Any]
 
 root = '/Users/leaf/Desktop/Perdix/'
-
-
-def meters_to_feet(m: float) -> int:
-    return int(m * 3.28084)
-
-
-def pascal_to_psi(m: float) -> int:
-    return int(m * 0.000145038)
-
-
-def kelvin_to_fahrenheit(m: float) -> int:
-    return int((m - 273.15) * 1.8 + 32)
 
 
 @lru_cache(None)
@@ -60,6 +50,7 @@ def parse(file: str) -> DiveInfo:
     if not math.isnan(tank_start):
         tank_end = last
     else:
+        metrics.counter('uddf dives without pressure')
         tank_start = 0
         tank_end = 0
 
@@ -114,9 +105,11 @@ def match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
     for info in sorted(infos, key=lambda i: i['number']):
         date = info['date'].strftime('%Y-%m-%d')
         if date not in history:
+            metrics.counter('uddf dives without match')
             continue
 
         dirs = history[date]
+        # TODO should just be dirs.pop(0) always, but that breaks, suspicous
         if len(dirs) > 1:
             directory = dirs.pop(0)
         else:
@@ -126,6 +119,8 @@ def match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
         dive['site'] = directory
         dive['directory'] = f'{date} {directory}'
         yield dive
+
+        metrics.counter('uddf dives matched')
 
 
 def lookup(dive: str) -> Optional[DiveInfo]:
