@@ -4,6 +4,7 @@ apocrypha
 pyyaml
 types-PyYaml
 types-beautifulsoup4
+lxml
 
 mypy
 flake8
