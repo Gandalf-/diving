@@ -19,18 +19,54 @@ from util import static
 from util.metrics import metrics
 from util.common import meters_to_feet, pascal_to_psi, kelvin_to_fahrenheit
 
+# PUBLIC
+
 DiveInfo = Dict[str, Any]
 
-root = '/Users/leaf/working/dives/Perdix/'
+
+def lookup(dive: str) -> Optional[DiveInfo]:
+    return _matched_dives().get(dive)
+
+
+def dive_info_html(info: DiveInfo) -> str:
+    '''build a snippet from the dive computer information available'''
+    parts = []
+    parts.append(f'{info["depth"]}\'')
+    parts.append(f'{info["duration"] // 60}min')
+
+    temp_high = info['temp_high']
+    temp_low = info['temp_low']
+    if temp_low <= temp_high:
+        parts.append(f'{temp_low}&rarr;{temp_high}&deg;F')
+
+    start = info['tank_start']
+    end = info['tank_end']
+    if start != 0 and end != 0:
+        parts.append(f'{start}&rarr;{end} PSI')
+
+    return f'''\
+<h3>{' &nbsp; '.join(parts)}</h3>
+'''
+
+
+# PRIVATE
+
+
+_UDDF_ROOT = '/Users/leaf/working/dives/Perdix/'
+_XML_NS = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
+
+
+def _parse_number(tree: lxml.etree, path: str) -> float:  # type: ignore
+    return tree.xpath(f'number({path})', namespaces=_XML_NS)
 
 
 @lru_cache(None)
-def parse(file: str) -> DiveInfo:
-    tree = lxml.etree.parse(os.path.join(root, file))  # type: ignore
+def _parse(file: str) -> DiveInfo:
+    tree = lxml.etree.parse(os.path.join(_UDDF_ROOT, file))  # type: ignore
 
     date = datetime.fromisoformat(
         tree.xpath(
-            '//uddf:informationbeforedive/uddf:datetime/text()', namespaces=NAMESPACES
+            '//uddf:informationbeforedive/uddf:datetime/text()', namespaces=_XML_NS
         )[0]
     )
 
@@ -41,7 +77,7 @@ def parse(file: str) -> DiveInfo:
     tank_start = float('nan')
     tank_end = float('nan')
     for start in tree.xpath(
-        '//uddf:waypoint/uddf:tankpressure[@ref="T1"]', namespaces=NAMESPACES
+        '//uddf:waypoint/uddf:tankpressure[@ref="T1"]', namespaces=_XML_NS
     ):
         value = float(start.text)
         last = value
@@ -57,7 +93,7 @@ def parse(file: str) -> DiveInfo:
 
     temp_high = 0.0
     temp_low = 9999.0
-    for temp in tree.xpath('//uddf:waypoint/uddf:temperature', namespaces=NAMESPACES):
+    for temp in tree.xpath('//uddf:waypoint/uddf:temperature', namespaces=_XML_NS):
         value = float(temp.text)
         temp_high = max(temp_high, value)
         temp_low = min(temp_low, value)
@@ -74,12 +110,12 @@ def parse(file: str) -> DiveInfo:
     }
 
 
-def load_dive_info() -> Iterator[DiveInfo]:
-    for candidate in os.listdir(root):
+def _load_dive_info() -> Iterator[DiveInfo]:
+    for candidate in os.listdir(_UDDF_ROOT):
         if not candidate.endswith('.uddf'):
             continue
 
-        info = parse(candidate)
+        info = _parse(candidate)
         if info['duration'] <= 900:
             continue
         if info['depth'] <= 10:
@@ -88,7 +124,7 @@ def load_dive_info() -> Iterator[DiveInfo]:
         yield info
 
 
-def build_dive_history() -> Dict[str, List[str]]:
+def _build_dive_history() -> Dict[str, List[str]]:
     '''No caching possible here since the consumer modifies the result to
     track progress through multi-dive days. Plus, dive_listing is already cached
     '''
@@ -105,7 +141,7 @@ def build_dive_history() -> Dict[str, List[str]]:
     return history
 
 
-def update(info: DiveInfo, directory: str) -> DiveInfo:
+def _update_info(info: DiveInfo, directory: str) -> DiveInfo:
     _, name = directory.split(' ', 1)
     dive = {k: v for k, v in info.items()}
     dive['site'] = name
@@ -115,12 +151,12 @@ def update(info: DiveInfo, directory: str) -> DiveInfo:
     return dive
 
 
-def match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
-    history = build_dive_history()
+def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
+    history = _build_dive_history()
 
     for info in sorted(infos, key=lambda i: i['number']):
         if info['number'] in static.dives:
-            yield update(info, static.dives[info['number']])
+            yield _update_info(info, static.dives[info['number']])
             continue
 
         date = info['date'].strftime('%Y-%m-%d')
@@ -135,45 +171,12 @@ def match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
         else:
             directory = dirs[0]
 
-        yield update(info, f'{date} {directory}')
-
-
-def lookup(dive: str) -> Optional[DiveInfo]:
-    return _matched_dives().get(dive)
+        yield _update_info(info, f'{date} {directory}')
 
 
 @lru_cache(None)
 def _matched_dives() -> Dict[str, DiveInfo]:
     dives = {}
-    for dive in match_dive_info(load_dive_info()):
+    for dive in _match_dive_info(_load_dive_info()):
         dives[dive['directory']] = dive
     return dives
-
-
-def _parse_number(tree: lxml.etree, path: str) -> float:  # type: ignore
-    return tree.xpath(f'number({path})', namespaces=NAMESPACES)
-
-
-NAMESPACES = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
-
-MALDIVES = {
-    120: '2022-11-12 2 Male North Manta Point',
-    119: '2022-11-12 1 Male South Kuda Giri Wreck',
-    118: '2022-11-11 3 Male South Vilivaru Giri',
-    117: '2022-11-11 2 Vaavu Dhiggiri Giri',
-    116: '2022-11-11 1 Ari South Kudhi Maa Wreck',
-    115: '2022-11-10 4 Ari South Maihi Beyru',
-    114: '2022-11-10 3 Ari South Rangali Madivaru',
-    113: '2022-11-10 2 Ari South Sun Island Beyru',
-    112: '2022-11-10 1 Ari South Seventh Heaven',
-    111: '2022-11-09 3 Ari South Kudarah Thila',
-    110: '2022-11-09 2 Ari South Lily Bay',
-    109: '2022-11-09 1 Ari North Fish Head',
-    108: '2022-11-08 4 Ari North Fesdu Lagoon',
-    107: '2022-11-08 3 Ari North Hohola Thila',
-    106: '2022-11-08 2 Ari North Bathala Thila',
-    105: '2022-11-08 1 Rasdhoo Madivaru',
-    104: '2022-11-07 3 Male North Fish Factory',
-    103: '2022-11-07 2 Male North Manta Point',
-    102: '2022-11-07 1 Male North Kurumba',
-}
