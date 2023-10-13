@@ -65,17 +65,17 @@ def _subpage(dive: str) -> Tuple[str, str]:
     if sites_link:
         name = f'''\
 <a href="{sites_link}">
-    <h2 class="where sites">{title}</h2>
+    <h2 class="where sites pad-down">{title}</h2>
 </a>
 '''
     else:
         name = f'''\
-    <h2>{title}</h2>
+    <h2 class="tight">{title}</h2>
 '''
 
     html = f'''\
 {name}
-<h3>{when} - {location}</h3>
+<h3 class="tight">{when} - {location}</h3>
 '''
     info = uddf.lookup(dive)
     if info:

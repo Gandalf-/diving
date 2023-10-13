@@ -76,6 +76,7 @@ p {
 
 .tight {
   margin-top: 0px;
+  margin-bottom: 0.5em;
 }
 
 .top {
@@ -382,6 +383,10 @@ div.skip {
   align-items: center;
   justify-content: center;
   margin: 0.3em;
+}
+
+.pad-down {
+  margin-bottom: 0.5em;
 }
 
 @media (max-width: 520px) {

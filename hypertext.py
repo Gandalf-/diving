@@ -26,6 +26,7 @@ from util.static import stylesheet, search_js, search_data_path
 from util.image import categorize, uncategorize, split, Image
 from util.translator import translate
 from util import taxonomy
+from util import uddf
 
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
@@ -501,6 +502,7 @@ class SitesTitle(Title):
             </a>
             <div class="top buffer"></div>
         """
+        dive_info = None
 
         # create the buttons for each part of our name lineage
         name = ""
@@ -512,12 +514,15 @@ class SitesTitle(Title):
             else:
                 rest = None
 
-            d = datetime.datetime.strptime(last, '%Y-%m-%d')
-            assert d
+            date = datetime.datetime.strptime(last, '%Y-%m-%d')
+            assert date
+            hint = rest or self.lineage[-2]
 
             name = last
             if rest:
                 self.lineage = self.lineage[:-1] + [rest]
+
+            dive_info = uddf.search(last, hint)
         except ValueError:
             pass
 
@@ -546,8 +551,12 @@ class SitesTitle(Title):
         elif is_date(name):
             name = pretty_date(name)
 
-        html += f"""
+        html += f"""\
         <h3 class="tight">{name}</h3>
+        """
+        if dive_info:
+            html += uddf.dive_info_html(dive_info)
+        html += """\
         </div>
         """
 

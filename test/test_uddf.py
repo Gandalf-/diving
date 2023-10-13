@@ -2,7 +2,13 @@ import os
 import unittest
 from datetime import datetime
 
-from util.uddf import _load_dive_info, _parse, _match_dive_info, _build_dive_history
+from util.uddf import (
+    _load_dive_info,
+    _parse,
+    _match_dive_info,
+    _build_dive_history,
+    search,
+)
 from util import common
 from util import collection
 
@@ -112,3 +118,29 @@ class TestUDDF(unittest.TestCase):
         self.assertEqual(e102['site'], '1 Male North Kurumba')
         self.assertEqual(e119['site'], '1 Male South Kuda Giri Wreck')
         self.assertEqual(e120['site'], '2 Male North Manta Point')
+
+    '''
+    SitesTitle doesn't have exact information on which directory it
+    represents and can represent multiple dives if they occurred on
+    the same day, so it needs some help
+    '''
+
+    def test_search_failure(self) -> None:
+        self.assertIsNone(search('2000-01-01', 'Rockaway Beach'))
+
+    def test_search_single(self) -> None:
+        self.assertIsNotNone(search('2022-12-03', 'Fort Ward'))
+
+    def test_search_multi_unique(self) -> None:
+        info = search('2023-03-11', 'Elephant Wall')
+        assert info
+        self.assertEqual(info['directory'], '2023-03-11 2 Elephant Wall')
+
+        info = search('2023-04-03', 'Seven Trees')
+        assert info
+        self.assertEqual(info['directory'], '2023-04-03 2 Seven Trees')
+
+    def test_search_multi_duplicate(self) -> None:
+        info = search('2023-09-04', 'Keystone Jetty')
+        assert info
+        self.assertEqual(info['directory'], '2023-09-04 1 Keystone Jetty')

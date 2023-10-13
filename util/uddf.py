@@ -28,6 +28,20 @@ def lookup(dive: str) -> Optional[DiveInfo]:
     return _matched_dives().get(dive)
 
 
+def search(date: str, hint: str) -> Optional[DiveInfo]:
+    dates_only: Dict[str, List[str]] = {}
+    for dive in _matched_dives():
+        _date, _ = dive.split(' ', 1)
+        dates_only.setdefault(_date, [])
+        dates_only[_date].append(dive)
+
+    try:
+        dive = next(dive for dive in dates_only.get(date, []) if hint in dive)
+        return lookup(dive)
+    except StopIteration:
+        return None
+
+
 def dive_info_html(info: DiveInfo) -> str:
     '''build a snippet from the dive computer information available'''
     parts = []
@@ -44,8 +58,9 @@ def dive_info_html(info: DiveInfo) -> str:
     if start != 0 and end != 0:
         parts.append(f'{start}&rarr;{end} PSI')
 
+    metrics.counter('uddf html snippets added')
     return f'''\
-<h3>{' &nbsp; '.join(parts)}</h3>
+<p class="tight">{' &nbsp; '.join(parts)}</p>
 '''
 
 
@@ -56,7 +71,7 @@ _UDDF_ROOT = '/Users/leaf/working/dives/Perdix/'
 _XML_NS = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
 
 
-def _parse_number(tree: lxml.etree, path: str) -> float:  # type: ignore
+def _parse_number(tree: Any, path: str) -> float:  # type: ignore
     return tree.xpath(f'number({path})', namespaces=_XML_NS)
 
 
