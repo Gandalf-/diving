@@ -132,8 +132,7 @@ def load_known(exact_only: bool = False) -> Iterable[str]:
     if exact_only:
         tree = _filter_exact(tree)
 
-    for leaf in extract_leaves(tree):
-        yield from leaf.split(', ')
+    yield from extract_leaves(tree)
 
 
 def all_latin_words() -> Set[str]:

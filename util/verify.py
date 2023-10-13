@@ -30,6 +30,7 @@ def required_checks() -> None:
     '''must pass'''
     _important_files_exist()
     _verify_yaml_keys()
+    _duplicate_common_names()
     _link_check()
     _misspellings()
     _wrong_order()
@@ -108,6 +109,18 @@ def _verify_yaml_keys() -> None:
 
     assert not duplicates, f'duplicate keys: {duplicates}'
     assert not invalid, f'invalid keys: {invalid}'
+
+
+def _duplicate_common_names() -> None:
+    seen = set()
+    duplicates = []
+    for name in taxonomy.load_known():
+        if name not in seen:
+            seen.add(name)
+        else:
+            duplicates.append(name)
+
+    assert not duplicates, f'duplicate common names: {duplicates}'
 
 
 def _wrong_order() -> None:

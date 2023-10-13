@@ -1,5 +1,25 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
+Floating:
+  Niphatidae:
+    Niphates:
+      digitalis: pink vases sponge
+  Aplysinidae:
+    Aiolochroia:
+      crassa: branching tube sponge
+    Aplysina:
+      archeri: stovepipe sponge
+      cauliformis: row pore rope sponge
+  Microcionidae:
+    Clathria:
+      juniperina: thin rope sponge
+  Scopalinidae:
+    Scopalina:
+      ruetzleri: orange lumpy encrusting sponge
+  Agelasidae:
+    Agelas:
+      conifera: brown tube sponge
+
 Animalia:
   Ctenophora: comb jelly
   Brachiopoda:
@@ -90,6 +110,7 @@ Animalia:
         Mycalidae:
           Mycale:
             toporoki: bristly yellow clump sponge
+            # laxissima: strawberry vase sponge
       Haplosclerida:
         Chalinidae:
           Chalinula:
@@ -97,6 +118,7 @@ Animalia:
         Callyspongiidae:
           Callyspongia:
             vaginalis: branching vase sponge
+            plicifera: azure vase sponge
         Petrosiidae:
           Xestospongia:
             hispida: hard gnarled clump sponge
@@ -158,6 +180,8 @@ Animalia:
             cementarium: cemented sandmason tube worm
         Sabellidae:
           sp.: feather duster worm
+          Anamobaea:
+            oerstedi: splitcrown feather duster worm
           Parasabella:
             media: parasol feather duster worm
           Sabellastarte: brown white crowned tube worm
@@ -1016,6 +1040,8 @@ Animalia:
             Heteractis:
               magnifica: magnificent anemone
           Actiniidae:
+            Condylactis:
+              gigantea: giant anemone
             Entacmaea:
               quadricolor: bulb tentacle anemone
             Epiactis:
@@ -1359,6 +1385,8 @@ Animalia:
             hispidus: banded coral shrimp
         Palaemonoidea:
           Palaemonidae:
+            Ancylomenes:
+              Pedersoni: pederson cleaner shrimp
             Periclimenes:
               yucatanicus: spotted cleaner shrimp
         Alpheoidea:

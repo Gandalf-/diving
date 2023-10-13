@@ -399,7 +399,7 @@ class GalleryTitle(Title):
             </div>
             """
         else:
-            metrics.counter('gallery titles without taxonomy link')
+            metrics.counter('titles in gallery without taxonomy link')
             html += f"""
             <p class="scientific">{sname}</p>
             </div>
@@ -476,7 +476,7 @@ class TaxonomyTitle(Title):
             </div>
             """
         else:
-            metrics.counter('taxonomy titles without gallery link')
+            metrics.counter('titles in taxonomy without gallery link')
             assert not name, name
             html += f"""
             <p class="scientific">{english}</p>

@@ -1,8 +1,10 @@
+import os
 import unittest
 from datetime import datetime
 
 from util.uddf import load_dive_info, parse, match_dive_info, build_dive_history
 from util import common
+from util import collection
 
 
 class TestUDDF(unittest.TestCase):
@@ -61,6 +63,7 @@ class TestUDDF(unittest.TestCase):
         history = build_dive_history()
         self.assertEqual(history['2023-09-24'], ['1 Power Lines', '2 Jaggy Crack'])
         self.assertEqual(history['2023-09-10'], ['Rockaway Beach'])
+        self.assertNotIn('5 Ari South Maihi Beyru', history['2022-11-10'])
 
     def test_match_single(self) -> None:
         fname = 'Perdix AI[385834A0]#161_2023-09-10.uddf'
@@ -91,9 +94,21 @@ class TestUDDF(unittest.TestCase):
     def test_integration(self) -> None:
         dives = common.take(match_dive_info(load_dive_info()), 100)
         self.assertEqual(len(dives), 100)
+        directories = set(os.path.basename(d) for d in collection.dive_listing())
 
         for dive in dives:
             self.assertGreater(dive['number'], 0)
             self.assertGreater(dive['depth'], 10)
             self.assertGreater(dive['duration'], 900)
             self.assertIn('site', dive)
+            self.assertIn(dive['directory'], directories)
+
+    def test_maldives(self) -> None:
+        f120 = 'Perdix AI[385834A0]#120_2022-11-11.uddf'
+        f119 = 'Perdix AI[385834A0]#119_2022-11-11.uddf'
+        f102 = 'Perdix AI[385834A0]#102_2022-11-06.uddf'
+        e102, e119, e120 = list(match_dive_info(parse(f) for f in [f102, f119, f120]))
+
+        self.assertEqual(e102['site'], '1 Male North Kurumba')
+        self.assertEqual(e119['site'], '1 Male South Kuda Giri Wreck')
+        self.assertEqual(e120['site'], '2 Male North Manta Point')

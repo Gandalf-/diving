@@ -15,12 +15,13 @@ from datetime import datetime
 import lxml
 
 from util import collection
+from util import static
 from util.metrics import metrics
 from util.common import meters_to_feet, pascal_to_psi, kelvin_to_fahrenheit
 
 DiveInfo = Dict[str, Any]
 
-root = '/Users/leaf/Desktop/Perdix/'
+root = '/Users/leaf/working/dives/Perdix/'
 
 
 @lru_cache(None)
@@ -91,18 +92,37 @@ def build_dive_history() -> Dict[str, List[str]]:
     '''No caching possible here since the consumer modifies the result to
     track progress through multi-dive days. Plus, dive_listing is already cached
     '''
+    dives_without_computer = ('5 Ari South Maihi Beyru',)
     history: Dict[str, List[str]] = {}
+
     for dive in [os.path.basename(dive) for dive in collection.dive_listing()]:
         date, name = dive.split(' ', 1)
+        if name in dives_without_computer:
+            continue
         history.setdefault(date, [])
         history[date].append(name)
+
     return history
+
+
+def update(info: DiveInfo, directory: str) -> DiveInfo:
+    _, name = directory.split(' ', 1)
+    dive = {k: v for k, v in info.items()}
+    dive['site'] = name
+    dive['directory'] = directory
+
+    metrics.counter('uddf dives matched')
+    return dive
 
 
 def match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
     history = build_dive_history()
 
     for info in sorted(infos, key=lambda i: i['number']):
+        if info['number'] in static.dives:
+            yield update(info, static.dives[info['number']])
+            continue
+
         date = info['date'].strftime('%Y-%m-%d')
         if date not in history:
             metrics.counter('uddf dives without match')
@@ -115,12 +135,7 @@ def match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
         else:
             directory = dirs[0]
 
-        dive = {k: v for k, v in info.items()}
-        dive['site'] = directory
-        dive['directory'] = f'{date} {directory}'
-        yield dive
-
-        metrics.counter('uddf dives matched')
+        yield update(info, f'{date} {directory}')
 
 
 def lookup(dive: str) -> Optional[DiveInfo]:
@@ -140,3 +155,25 @@ def _parse_number(tree: lxml.etree, path: str) -> float:  # type: ignore
 
 
 NAMESPACES = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
+
+MALDIVES = {
+    120: '2022-11-12 2 Male North Manta Point',
+    119: '2022-11-12 1 Male South Kuda Giri Wreck',
+    118: '2022-11-11 3 Male South Vilivaru Giri',
+    117: '2022-11-11 2 Vaavu Dhiggiri Giri',
+    116: '2022-11-11 1 Ari South Kudhi Maa Wreck',
+    115: '2022-11-10 4 Ari South Maihi Beyru',
+    114: '2022-11-10 3 Ari South Rangali Madivaru',
+    113: '2022-11-10 2 Ari South Sun Island Beyru',
+    112: '2022-11-10 1 Ari South Seventh Heaven',
+    111: '2022-11-09 3 Ari South Kudarah Thila',
+    110: '2022-11-09 2 Ari South Lily Bay',
+    109: '2022-11-09 1 Ari North Fish Head',
+    108: '2022-11-08 4 Ari North Fesdu Lagoon',
+    107: '2022-11-08 3 Ari North Hohola Thila',
+    106: '2022-11-08 2 Ari North Bathala Thila',
+    105: '2022-11-08 1 Rasdhoo Madivaru',
+    104: '2022-11-07 3 Male North Fish Factory',
+    103: '2022-11-07 2 Male North Manta Point',
+    102: '2022-11-07 1 Male North Kurumba',
+}

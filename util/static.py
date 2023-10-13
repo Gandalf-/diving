@@ -20,6 +20,7 @@ ListTree = Dict[str, List[str]]
 with open(source_root + 'data/static.yml') as fd:
     _static = yaml.safe_load(fd)
 
+dives: Dict[int, str] = _static['dives']
 categories: ListTree = _static['categories']
 difficulty: ListTree = _static['difficulty']
 locations: ListTree = _static['locations']
