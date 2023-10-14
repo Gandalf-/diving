@@ -4,9 +4,9 @@ from datetime import datetime
 
 from util.uddf import (
     _load_dive_info,
-    _parse,
     _match_dive_info,
     _build_dive_history,
+    _parse,
     search,
 )
 from util import common
@@ -14,11 +14,11 @@ from util import collection
 
 
 class TestUDDF(unittest.TestCase):
-    def test_parse_short(self) -> None:
+    def test_parse_uddf_short(self) -> None:
         fname = 'Perdix AI[385834A0]#43_2021-10-22.uddf'
         expected = {
             'date': datetime.fromisoformat('2021-10-22T20:24:03Z'),
-            'number': 43,
+            'number': 243,
             'depth': 11,
             'duration': 584,
             'tank_start': 2212,
@@ -28,11 +28,11 @@ class TestUDDF(unittest.TestCase):
         }
         self.assertEqual(expected, _parse(fname))
 
-    def test_parse_long(self) -> None:
+    def test_parse_uddf_long(self) -> None:
         fname = 'Perdix AI[385834A0]#169_2023-09-24.uddf'
         expected = {
             'date': datetime.fromisoformat('2023-09-24T09:26:24Z'),
-            'number': 169,
+            'number': 369,
             'depth': 140,
             'duration': 2564,
             'tank_start': 2978,
@@ -42,11 +42,11 @@ class TestUDDF(unittest.TestCase):
         }
         self.assertEqual(expected, _parse(fname))
 
-    def test_parse_zero_start_pressure(self) -> None:
+    def test_parse_uddf_zero_start_pressure(self) -> None:
         fname = 'Perdix AI[385834A0]#165_2023-09-22.uddf'
         expected = {
             'date': datetime.fromisoformat('2023-09-22T15:20:14Z'),
-            'number': 165,
+            'number': 365,
             'depth': 84,
             'duration': 2823,
             'tank_start': 3500,
@@ -56,14 +56,28 @@ class TestUDDF(unittest.TestCase):
         }
         self.assertEqual(expected, _parse(fname))
 
+    def test_parse_sml(self) -> None:
+        fname = '99809020-2021-01-09T10_39_00-0.sml'
+        expected = {
+            'date': datetime.fromisoformat('2021-01-09T10:39:00'),
+            'number': 1,
+            'depth': 93,
+            'duration': 3620,
+            'tank_start': 3190,
+            'tank_end': 928,
+            'temp_high': 46,
+            'temp_low': 44,
+        }
+        self.assertEqual(expected, _parse(fname))
+
     def test_load(self) -> None:
         dives = list(_load_dive_info())
         self.assertGreater(len(dives), 0)
 
         # too short
         numbers = sorted([d['number'] for d in dives])
-        self.assertIn(170, numbers)
-        self.assertNotIn(43, numbers)
+        self.assertIn(370, numbers)
+        self.assertNotIn(243, numbers)
 
     def test_build_history(self) -> None:
         history = _build_dive_history()

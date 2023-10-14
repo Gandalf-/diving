@@ -17,7 +17,7 @@ import lxml
 from util import collection
 from util import static
 from util.metrics import metrics
-from util.common import meters_to_feet, pascal_to_psi, kelvin_to_fahrenheit
+from util.common import meters_to_feet, pascal_to_psi, kelvin_to_fahrenheit, Counter
 
 # PUBLIC
 
@@ -39,6 +39,12 @@ def search(date: str, hint: str) -> Optional[DiveInfo]:
         dive = next(dive for dive in dates_only.get(date, []) if hint in dive)
         return lookup(dive)
     except StopIteration:
+        time = datetime.strptime(date, '%Y-%m-%d')
+        first_perdix_dive = datetime.strptime('2021-08-13', '%Y-%m-%d')
+
+        if time > first_perdix_dive:
+            metrics.counter('dive logs missing that should exist')
+
         return None
 
 
@@ -58,7 +64,7 @@ def dive_info_html(info: DiveInfo) -> str:
     if start != 0 and end != 0:
         parts.append(f'{start}&rarr;{end} PSI')
 
-    metrics.counter('uddf html snippets added')
+    metrics.counter('dive log html snippets added')
     return f'''\
 <p class="tight">{' &nbsp; '.join(parts)}</p>
 '''
@@ -67,8 +73,11 @@ def dive_info_html(info: DiveInfo) -> str:
 # PRIVATE
 
 
-_UDDF_ROOT = '/Users/leaf/working/dives/Perdix/'
+_UDDF_ROOT = '/Users/leaf/working/dives/'
 _XML_NS = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
+
+
+suunto_counter = Counter()
 
 
 def _parse_number(tree: Any, path: str) -> float:  # type: ignore
@@ -77,7 +86,12 @@ def _parse_number(tree: Any, path: str) -> float:  # type: ignore
 
 @lru_cache(None)
 def _parse(file: str) -> DiveInfo:
-    tree = lxml.etree.parse(os.path.join(_UDDF_ROOT, file))  # type: ignore
+    parser = _parse_uddf if file.endswith('.uddf') else _parse_sml
+    return parser(file)
+
+
+def _parse_uddf(file: str) -> DiveInfo:
+    tree = lxml.etree.parse(os.path.join(_UDDF_ROOT, 'Perdix', file))  # type: ignore
 
     date = datetime.fromisoformat(
         tree.xpath(
@@ -102,7 +116,7 @@ def _parse(file: str) -> DiveInfo:
     if not math.isnan(tank_start):
         tank_end = last
     else:
-        metrics.counter('uddf dives without pressure')
+        metrics.counter('dive logs without pressure')
         tank_start = 0
         tank_end = 0
 
@@ -115,7 +129,7 @@ def _parse(file: str) -> DiveInfo:
 
     return {
         'date': date,
-        'number': int(number),
+        'number': 200 + int(number),
         'depth': meters_to_feet(depth),
         'duration': int(duration),
         'tank_start': pascal_to_psi(tank_start),
@@ -125,11 +139,68 @@ def _parse(file: str) -> DiveInfo:
     }
 
 
-def _load_dive_info() -> Iterator[DiveInfo]:
-    for candidate in os.listdir(_UDDF_ROOT):
-        if not candidate.endswith('.uddf'):
-            continue
+def _parse_sml(file: str) -> DiveInfo:
+    root = lxml.etree.parse(os.path.join(_UDDF_ROOT, 'Suunto', file))  # type: ignore
 
+    # Define the XML namespace
+    ns = {'sml': 'http://www.suunto.com/schemas/sml'}
+
+    # Extract data from XML using XPath
+    date_str = root.xpath(
+        './sml:DeviceLog/sml:Header/sml:DateTime/text()', namespaces=ns
+    )[0]
+    depth = root.xpath(
+        './sml:DeviceLog/sml:Header/sml:Depth/sml:Max/text()', namespaces=ns
+    )[0]
+    duration = root.xpath(
+        './sml:DeviceLog/sml:Header/sml:Duration/text()', namespaces=ns
+    )[0]
+    tank_start = root.xpath(
+        './sml:DeviceLog/sml:Header/sml:Diving/sml:Gases/sml:Gas/sml:StartPressure/text()',
+        namespaces=ns,
+    )[0]
+    tank_end = root.xpath(
+        './sml:DeviceLog/sml:Header/sml:Diving/sml:Gases/sml:Gas/sml:EndPressure/text()',
+        namespaces=ns,
+    )[0]
+    temp_start = float(
+        root.xpath(
+            './sml:DeviceLog/sml:Header/sml:Diving/sml:TempAtStart/text()',
+            namespaces=ns,
+        )[0]
+    )
+    temp_dive = float(
+        root.xpath(
+            './sml:DeviceLog/sml:Header/sml:Diving/sml:TempAtMaxDepth/text()',
+            namespaces=ns,
+        )[0]
+    )
+
+    return {
+        'date': datetime.fromisoformat(date_str),
+        'number': suunto_counter.next(),
+        'depth': meters_to_feet(float(depth)),
+        'duration': int(duration),
+        'tank_start': pascal_to_psi(int(tank_start)),
+        'tank_end': pascal_to_psi(int(tank_end)),
+        'temp_high': kelvin_to_fahrenheit(max(temp_start, temp_dive)),
+        'temp_low': kelvin_to_fahrenheit(min(temp_start, temp_dive)),
+    }
+
+
+def _load_dive_info() -> Iterator[DiveInfo]:
+    def candidates() -> Iterator[str]:
+        for candidate in os.listdir(os.path.join(_UDDF_ROOT, 'Perdix')):
+            if not candidate.endswith('.uddf'):
+                continue
+            yield candidate
+
+        for candidate in sorted(os.listdir(os.path.join(_UDDF_ROOT, 'Suunto'))):
+            if not candidate.endswith('.sml'):
+                continue
+            yield candidate
+
+    for candidate in candidates():
         info = _parse(candidate)
         if info['duration'] <= 900:
             continue
@@ -162,7 +233,7 @@ def _update_info(info: DiveInfo, directory: str) -> DiveInfo:
     dive['site'] = name
     dive['directory'] = directory
 
-    metrics.counter('uddf dives matched')
+    metrics.counter('dive logs matched')
     return dive
 
 
@@ -176,7 +247,7 @@ def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
 
         date = info['date'].strftime('%Y-%m-%d')
         if date not in history:
-            metrics.counter('uddf dives without match')
+            metrics.counter('dive logs without match')
             continue
 
         dirs = history[date]

@@ -194,3 +194,12 @@ class Progress:
     def __exit__(self, *args: Any) -> None:
         duration = time.time() - self.start
         print(f'done, {duration:.2f}s')
+
+
+class Counter:
+    def __init__(self) -> None:
+        self.value = 0
+
+    def next(self) -> int:
+        self.value += 1
+        return self.value

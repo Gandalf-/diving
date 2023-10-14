@@ -89,25 +89,25 @@ locations:
 
 dives:
   # these foiled automatic matching in uddf.py because of timezone madness
-  120: 2022-11-12 2 Male North Manta Point
-  119: 2022-11-12 1 Male South Kuda Giri Wreck
-  118: 2022-11-11 3 Male South Vilivaru Giri
-  117: 2022-11-11 2 Vaavu Dhiggiri Giri
-  116: 2022-11-11 1 Ari South Kudhi Maa Wreck
-  115: 2022-11-10 4 Ari South Maihi Beyru
-  114: 2022-11-10 3 Ari South Rangali Madivaru
-  113: 2022-11-10 2 Ari South Sun Island Beyru
-  112: 2022-11-10 1 Ari South Seventh Heaven
-  111: 2022-11-09 3 Ari South Kudarah Thila
-  110: 2022-11-09 2 Ari South Lily Bay
-  109: 2022-11-09 1 Ari North Fish Head
-  108: 2022-11-08 4 Ari North Fesdu Lagoon
-  107: 2022-11-08 3 Ari North Hohola Thila
-  106: 2022-11-08 2 Ari North Bathala Thila
-  105: 2022-11-08 1 Rasdhoo Madivaru
-  104: 2022-11-07 3 Male North Fish Factory
-  103: 2022-11-07 2 Male North Manta Point
-  102: 2022-11-07 1 Male North Kurumba
+  320: 2022-11-12 2 Male North Manta Point
+  319: 2022-11-12 1 Male South Kuda Giri Wreck
+  318: 2022-11-11 3 Male South Vilivaru Giri
+  317: 2022-11-11 2 Vaavu Dhiggiri Giri
+  316: 2022-11-11 1 Ari South Kudhi Maa Wreck
+  315: 2022-11-10 4 Ari South Maihi Beyru
+  314: 2022-11-10 3 Ari South Rangali Madivaru
+  313: 2022-11-10 2 Ari South Sun Island Beyru
+  312: 2022-11-10 1 Ari South Seventh Heaven
+  311: 2022-11-09 3 Ari South Kudarah Thila
+  310: 2022-11-09 2 Ari South Lily Bay
+  309: 2022-11-09 1 Ari North Fish Head
+  308: 2022-11-08 4 Ari North Fesdu Lagoon
+  307: 2022-11-08 3 Ari North Hohola Thila
+  306: 2022-11-08 2 Ari North Bathala Thila
+  305: 2022-11-08 1 Rasdhoo Madivaru
+  304: 2022-11-07 3 Male North Fish Factory
+  303: 2022-11-07 2 Male North Manta Point
+  302: 2022-11-07 1 Male North Kurumba
 
 ignore:
   - bay
