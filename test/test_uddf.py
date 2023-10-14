@@ -59,7 +59,7 @@ class TestUDDF(unittest.TestCase):
         fname = '99809020-2021-01-09T10_39_00-0.sml'
         expected = {
             'date': datetime.fromisoformat('2021-01-09T10:39:00'),
-            'number': 1,
+            'number': 23,
             'depth': 93,
             'duration': 3620,
             'tank_start': 3190,
@@ -73,9 +73,10 @@ class TestUDDF(unittest.TestCase):
         dives = list(_load_dive_info())
         self.assertGreater(len(dives), 0)
 
-        # too short
         numbers = sorted([d['number'] for d in dives])
         self.assertIn(370, numbers)
+
+        # too short
         self.assertNotIn(243, numbers)
 
     def test_build_history(self) -> None:

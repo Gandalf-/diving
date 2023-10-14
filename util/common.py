@@ -203,3 +203,6 @@ class Counter:
     def next(self) -> int:
         self.value += 1
         return self.value
+
+    def reset(self) -> None:
+        self.value = 0

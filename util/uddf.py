@@ -30,9 +30,9 @@ def lookup(dive: str) -> Optional[DiveInfo]:
 def search(date: str, hint: str) -> Optional[DiveInfo]:
     dates_only: Dict[str, List[str]] = {}
     for dive in _matched_dives():
-        _date, _ = dive.split(' ', 1)
-        dates_only.setdefault(_date, [])
-        dates_only[_date].append(dive)
+        ymd, _ = dive.split(' ', 1)
+        dates_only.setdefault(ymd, [])
+        dates_only[ymd].append(dive)
 
     try:
         dive = next(dive for dive in dates_only.get(date, []) if hint in dive)
@@ -115,6 +115,7 @@ def _parse_uddf(file: str) -> DiveInfo:
     if not math.isnan(tank_start):
         tank_end = last
     else:
+        # This accounts for dives 0-2 which didn't have a transmitter
         metrics.counter('dive logs without pressure')
         tank_start = 0
         tank_end = 0
@@ -188,16 +189,13 @@ def _parse_sml(file: str) -> DiveInfo:
 
 
 def _load_dive_info() -> Iterator[DiveInfo]:
-    def candidates() -> Iterator[str]:
-        for candidate in os.listdir(os.path.join(_UDDF_ROOT, 'Perdix')):
-            if not candidate.endswith('.uddf'):
-                continue
-            yield candidate
+    log_types = [('Perdix', '.uddf'), ('Suunto', '.sml')]
 
-        for candidate in sorted(os.listdir(os.path.join(_UDDF_ROOT, 'Suunto'))):
-            if not candidate.endswith('.sml'):
-                continue
-            yield candidate
+    def candidates() -> Iterator[str]:
+        for directory, extension in log_types:
+            for candidate in os.listdir(os.path.join(_UDDF_ROOT, directory)):
+                assert candidate.endswith(extension)
+                yield candidate
 
     for candidate in candidates():
         info = _parse(candidate)
@@ -246,7 +244,6 @@ def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
 
         date = info['date'].strftime('%Y-%m-%d')
         if date not in history:
-            metrics.counter('dive logs without match')
             continue
 
         dirs = history[date]
