@@ -4,30 +4,24 @@
 html generation
 '''
 
-import enum
 import datetime
+import enum
 import string
-from typing import Optional, Tuple, List, Dict, Any, Type
+from typing import Any, Dict, List, Optional, Tuple, Type
 
 import locations
-
-from util.collection import expand_names, all_valid_names
+from util import collection, grammar, taxonomy, translator, uddf
 from util.common import (
-    is_date,
-    flatten,
-    pretty_date,
     fast_exists,
-    titlecase,
+    flatten,
+    is_date,
+    pretty_date,
     sanitize_link,
+    titlecase,
 )
-from util.grammar import plural
+from util.image import Image, categorize, split, uncategorize
 from util.metrics import metrics
-from util.static import stylesheet, search_js, search_data_path
-from util.image import categorize, uncategorize, split, Image
-from util.translator import translate
-from util import taxonomy
-from util import uddf
-
+from util.static import search_data_path, search_js, stylesheet
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
 Side = enum.Enum('Side', 'Left Right')
@@ -171,7 +165,7 @@ def description(title: str, where: Where) -> str:
         more = len(title.split(' ')) > 1
         related = ' and related organisms' if more else ''
 
-        title = plural(title).replace('Various ', '')
+        title = grammar.plural(title).replace('Various ', '')
         return f'{blurb} of {title}{related}.'
 
     if where == Where.Taxonomy:
@@ -313,10 +307,10 @@ def _image_to_gallery_link(image: Image) -> Optional[str]:
 
     there could be mulitple subjects in this image, just take the first for now
     """
-    first = next(expand_names([image]))
+    first = next(collection.expand_names([image]))
     name = first.simplified()
 
-    if name not in all_valid_names():
+    if name not in collection.all_valid_names():
         return None
 
     page = sanitize_link(first.normalized())
@@ -415,7 +409,7 @@ class TaxonomyTitle(Title):
     def translate_lineage(self) -> str:
         lineage: List[str] = flatten(word.split(' ') for word in self.lineage)[::-1]
 
-        translated = [translate(name) for name in lineage if name != 'sp.']
+        translated = [translator.translate(name) for name in lineage if name != 'sp.']
         if lineage[0].islower():
             size = 2
             last = len(self.lineage[-1].split(' '))

@@ -19,9 +19,9 @@ letters, etc), the data is base64 encoded before inserted into the database
 
 import base64
 import operator
-from datetime import datetime
 from collections import Counter
-from typing import Dict, List, Tuple, Any
+from datetime import datetime
+from typing import Any, Dict, List, Tuple
 
 import wikipedia
 

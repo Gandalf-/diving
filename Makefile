@@ -21,6 +21,7 @@ ruff:
 	ruff check --fix .
 
 format:
+	isort --jobs -1 *.py */*.py
 	black --fast -S *.py */*.py
 
 

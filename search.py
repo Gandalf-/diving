@@ -1,13 +1,12 @@
 #!/usr/bin/python3
 
+import glob
 import os
 import re
-import glob
 import subprocess
-
 from typing import Iterable
 
-from util.static import search_data_path, VersionedResource
+from util.static import VersionedResource, search_data_path
 
 
 def write_search_data() -> None:

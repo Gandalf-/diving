@@ -7,9 +7,8 @@ base class for a diving image
 import os
 from typing import Optional
 
-from util import database
-from util import static
-from util.common import image_root, Tree
+from util import database, static
+from util.common import Tree, image_root
 from util.grammar import singular
 
 

@@ -3,7 +3,7 @@ Database interface
 '''
 
 import copy
-from typing import Any, Dict, List, Optional, Callable
+from typing import Any, Callable, Dict, List, Optional
 
 from apocrypha.client import Client
 

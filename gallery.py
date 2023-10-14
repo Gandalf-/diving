@@ -5,12 +5,12 @@ search through diving pictures to produce a 'taxonomy tree', then convert that
 tree into HTML pages for diving.anardil.net
 '''
 
+import multiprocessing
 import os
 import sys
-import multiprocessing
 import textwrap
 from datetime import datetime
-from typing import Tuple, Optional, List, cast
+from typing import List, Optional, Tuple, cast
 
 import detective
 import hypertext
@@ -18,26 +18,21 @@ import information
 import locations
 import search
 import timeline
-
-from util import collection
-from util import static
-from util import taxonomy
-from util import verify
-from util.metrics import metrics
-from util.image import Image
+from hypertext import Side, Where
+from util import collection, static, taxonomy, verify
 from util.common import (
     Progress,
-    tree_size,
-    extract_leaves,
-    is_date,
-    strip_date,
-    pretty_date,
-    titlecase,
-    file_content_matches,
     Tree,
+    extract_leaves,
+    file_content_matches,
+    is_date,
+    pretty_date,
+    strip_date,
+    titlecase,
+    tree_size,
 )
-
-from hypertext import Where, Side
+from util.image import Image
+from util.metrics import metrics
 
 
 def find_representative(

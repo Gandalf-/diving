@@ -3,13 +3,10 @@
 import unittest
 
 import hypertext
-
-from util import image
-from util import taxonomy
-from util.taxonomy import MappingType
-from hypertext import Where, Side
-
 import util.common as utility
+from hypertext import Side, Where
+from util import image, taxonomy
+from util.taxonomy import MappingType
 
 
 class TestHypertext(unittest.TestCase):

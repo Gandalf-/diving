@@ -1,6 +1,9 @@
 [tool.ruff]
 ignore = ["E501"]
 
+[tool.isort]
+profile = "black"
+
 [tool.mypy]
 allow_redefinition = true
 disallow_untyped_defs = true

@@ -4,18 +4,14 @@
 identification game
 '''
 
-import shutil
 import os
+import shutil
+from typing import Iterable, List, Optional, Tuple
 
-from typing import List, Optional, Iterable, Tuple
-
-from util import collection
-from util import static
-from util import taxonomy
-
+from util import collection, static, taxonomy
+from util.common import source_root, titlecase
+from util.image import Image, categorize, split, unqualify
 from util.static import VersionedResource, stylesheet
-from util.common import titlecase, source_root
-from util.image import unqualify, categorize, split, Image
 
 
 def get_hashes(images: List[Image]) -> Iterable[str]:

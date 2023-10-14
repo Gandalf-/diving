@@ -3,14 +3,10 @@
 import unittest
 
 import gallery
-
-from util import collection
-from util import database
-from util import taxonomy
-
+from hypertext import Where
+from util import collection, database, taxonomy
 from util.image import Image
 from util.taxonomy import MappingType
-from hypertext import Where
 
 
 class TestGallery(unittest.TestCase):

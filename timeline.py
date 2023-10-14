@@ -4,16 +4,14 @@
 Python implementation of runner.sh
 '''
 
-import os
 import operator
-from typing import List, Tuple, Dict, Any
+import os
+from typing import Any, Dict, List, Tuple
 
 import hypertext
 import locations
 from hypertext import Where
-from util import collection
-from util import common
-from util import uddf
+from util import collection, common, uddf
 
 
 def timeline() -> List[Tuple[str, str]]:

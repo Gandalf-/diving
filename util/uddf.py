@@ -6,18 +6,17 @@ Parsing UDDF files
 https://www.streit.cc/extern/uddf_v321/en/index.html
 '''
 
-import os
 import math
-from functools import lru_cache
-from typing import Dict, Any, Iterator, List, Optional
+import os
 from datetime import datetime
+from functools import lru_cache
+from typing import Any, Dict, Iterator, List, Optional
 
 import lxml
 
-from util import collection
-from util import static
+from util import collection, static
+from util.common import Counter, kelvin_to_fahrenheit, meters_to_feet, pascal_to_psi
 from util.metrics import metrics
-from util.common import meters_to_feet, pascal_to_psi, kelvin_to_fahrenheit, Counter
 
 # PUBLIC
 

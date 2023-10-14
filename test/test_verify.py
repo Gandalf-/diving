@@ -2,9 +2,7 @@
 
 import unittest
 
-from util import collection
-from util import verify
-from util import database
+from util import collection, database, verify
 
 
 class TestVerify(unittest.TestCase):

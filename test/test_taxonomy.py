@@ -3,15 +3,10 @@
 import unittest
 
 import gallery
-
-from util import collection
-from util import database
-from util import taxonomy
-from hypertext import Where
-
-from util.taxonomy import MappingType
-
 import util.common as utility
+from hypertext import Where
+from util import collection, database, taxonomy
+from util.taxonomy import MappingType
 
 
 class TestTaxonomy(unittest.TestCase):

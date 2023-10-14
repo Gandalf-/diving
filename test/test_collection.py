@@ -1,7 +1,6 @@
 import unittest
 
-from util import image
-from util import collection
+from util import collection, image
 
 
 class TestCollection(unittest.TestCase):

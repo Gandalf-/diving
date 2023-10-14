@@ -1,7 +1,6 @@
 import unittest
 
-from util import database
-from util import image
+from util import database, image
 
 
 class TestImage(unittest.TestCase):

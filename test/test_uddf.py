@@ -2,15 +2,14 @@ import os
 import unittest
 from datetime import datetime
 
+from util import collection, common
 from util.uddf import (
+    _build_dive_history,
     _load_dive_info,
     _match_dive_info,
-    _build_dive_history,
     _parse,
     search,
 )
-from util import common
-from util import collection
 
 
 class TestUDDF(unittest.TestCase):

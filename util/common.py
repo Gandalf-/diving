@@ -5,12 +5,12 @@ dict and list functions
 '''
 
 import datetime
-import itertools
 import functools
+import itertools
 import os
-import time
 import pathlib
-from typing import List, Dict, Tuple, Any, Iterable, Callable
+import time
+from typing import Any, Callable, Dict, Iterable, List, Tuple
 
 from util.metrics import metrics
 

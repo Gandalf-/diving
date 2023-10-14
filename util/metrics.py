@@ -4,6 +4,7 @@ be displayed at the end of gallery.py's execution.
 '''
 
 from typing import Any
+
 from util.database import database
 
 

@@ -1,6 +1,6 @@
 import unittest
 
-from util.translator import translate, cleanup
+from util.translator import cleanup, translate
 
 
 class TestTranslator(unittest.TestCase):

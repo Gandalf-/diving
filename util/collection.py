@@ -6,12 +6,12 @@ parsing data from the file system to construct trees of images
 
 import os
 from functools import lru_cache
-from typing import Iterable, Set, Dict, List, Iterator, Union, cast
+from typing import Dict, Iterable, Iterator, List, Set, Union, cast
 
-from util.image import Image, categorize, split
-from util.common import flatten, tree_size, image_root
-from util.metrics import metrics
 from util import static
+from util.common import flatten, image_root, tree_size
+from util.image import Image, categorize, split
+from util.metrics import metrics
 
 ImageTree = dict[str, Union[List[Image], 'ImageTree']]
 

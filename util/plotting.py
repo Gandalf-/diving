@@ -4,8 +4,8 @@
 https://matplotlib.org/stable/gallery/misc/packed_bubbles.html
 '''
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class BubbleChart:

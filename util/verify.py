@@ -7,14 +7,10 @@ Check for broken links, misspelled names, and more
 import difflib
 import os
 import re
-
-from typing import List, Tuple, Iterable, Dict, Any, Optional
 from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-from util import common
-from util import collection
-from util import static
-from util import taxonomy
+from util import collection, common, static, taxonomy
 from util.metrics import metrics
 
 

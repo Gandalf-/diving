@@ -7,13 +7,13 @@ suffixes
 
 import os
 import re
+from typing import Dict, Optional
+
 import yaml
 
-from typing import Optional, Dict
-
+from util.common import source_root
 from util.metrics import metrics
 from util.taxonomy import all_latin_words
-from util.common import source_root
 
 translations_yml = os.path.join(source_root, 'data/translations.yml')
 

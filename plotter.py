@@ -6,14 +6,10 @@ import matplotlib.pyplot as m
 import numpy as np
 
 import detective
-
-from util.database import database
-from util import collection
-from util import taxonomy
-
+from util import collection, taxonomy
 from util.common import flatten, tree_size
+from util.database import database
 from util.plotting import BubbleChart
-
 
 m.rcParams['figure.dpi'] = 175
 

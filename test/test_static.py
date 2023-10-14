@@ -1,6 +1,5 @@
 import os
 import unittest
-
 from typing import List
 
 import util.common as utility

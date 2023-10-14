@@ -11,19 +11,14 @@ taxonomy related things
 
 import enum
 from functools import lru_cache
-from typing import Iterable, Dict, List, Optional, Callable, Any, Set, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
 import yaml
 
 from util import static
-from util.collection import (
-    build_image_tree,
-    single_level,
-    all_names,
-    ImageTree,
-)
-from util.common import extract_leaves, hmap, source_root, extract_branches
-from util.image import uncategorize, unqualify, unsplit, Image
+from util.collection import ImageTree, all_names, build_image_tree, single_level
+from util.common import extract_branches, extract_leaves, hmap, source_root
+from util.image import Image, uncategorize, unqualify, unsplit
 from util.metrics import metrics
 
 yaml_path = source_root + 'data/taxonomy.yml'

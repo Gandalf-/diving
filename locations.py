@@ -5,14 +5,10 @@ collecting dive locations
 '''
 
 import re
+from typing import List, Optional, cast
 
-from typing import cast, List, Optional
-
-from util import collection
-from util import static
-from util import common
-
-from util.collection import ImageTree, Image
+from util import collection, common, static
+from util.collection import Image, ImageTree
 
 
 def site_list() -> str:

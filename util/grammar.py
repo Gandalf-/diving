@@ -1,6 +1,6 @@
-import inflect
-
 from typing import cast
+
+import inflect
 
 _inflect = inflect.engine()
 

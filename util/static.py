@@ -4,16 +4,15 @@
 configuration information
 '''
 
-import os
 import glob
 import hashlib
+import os
 from typing import Dict, List, Optional, Set
 
 import yaml
 
 from util.common import source_root
 from util.metrics import metrics
-
 
 ListTree = Dict[str, List[str]]
 
