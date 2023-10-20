@@ -25,8 +25,9 @@ def advisory_checks() -> None:
 def required_checks() -> None:
     '''must pass'''
     _important_files_exist()
-    _verify_yaml_keys()
+    _verify_taxonomy_keys()
     _duplicate_common_names()
+    _duplicate_sites()
     _link_check()
     _misspellings()
     _wrong_order()
@@ -77,7 +78,7 @@ def _no_duplicate_image_keys() -> None:
             seen.add(key)
 
 
-def _verify_yaml_keys() -> None:
+def _verify_taxonomy_keys() -> None:
     '''
     Read the yaml file and check for duplicate keys. Duplicates shadow previous
     definitions making things appear to be missing when they are not.
@@ -117,6 +118,19 @@ def _duplicate_common_names() -> None:
             duplicates.append(name)
 
     assert not duplicates, f'duplicate common names: {duplicates}'
+
+
+def _duplicate_sites() -> None:
+    seen = set()
+    duplicates = []
+    for sites in static.locations.values():
+        for site in sites:
+            if site not in seen:
+                seen.add(site)
+            else:
+                duplicates.append(site)
+
+    assert not duplicates, f'duplicate sites: {duplicates}'
 
 
 def _wrong_order() -> None:

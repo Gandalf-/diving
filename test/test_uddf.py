@@ -9,6 +9,7 @@ from util.uddf import (
     _match_dive_info,
     _parse,
     search,
+    series_match,
 )
 
 
@@ -158,3 +159,20 @@ class TestUDDF(unittest.TestCase):
         info = search('2023-09-04', 'Keystone Jetty')
         assert info
         self.assertEqual(info['directory'], '2023-09-04 1 Keystone Jetty')
+
+    def test_series_match(self) -> None:
+        series = list(range(0, 100))
+        others = list(range(0, 10))
+
+        self.assertEqual(series_match(series, others, 0), 0)
+        self.assertEqual(series_match(series, others, 1), 10)
+        self.assertEqual(series_match(series, others, 5), 50)
+        self.assertEqual(series_match(series, others, 9), 90)
+
+    def test_series_match_non_contiguous(self) -> None:
+        series = [1, 2, 3, 4, 5, 15, 16, 17, 18]
+        others = [5, 6, 7]
+
+        self.assertEqual(series_match(series, others, 5), 1)
+        self.assertEqual(series_match(series, others, 6), 4)
+        self.assertEqual(series_match(series, others, 7), 16)

@@ -10,7 +10,7 @@ class TestLocations(unittest.TestCase):
         '''site_list'''
         self.assertEqual(
             locations.site_list(),
-            'Bonaire, British Columbia, Galapagos, Maldives, and Washington',
+            'Bonaire, British Columbia, Curacao, Galapagos, Maldives, and Washington',
         )
 
     def test_get_context(self) -> None:

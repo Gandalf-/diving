@@ -69,6 +69,16 @@ def dive_info_html(info: DiveInfo) -> str:
 '''
 
 
+def series_match(series: List[int], others: List[int], target: int) -> int:
+    assert target in others
+
+    position = others.index(target)
+    step_size = len(series) / len(others)
+
+    index = round(position * step_size)
+    return series[index]
+
+
 # PRIVATE
 
 

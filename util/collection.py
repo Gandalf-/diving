@@ -146,12 +146,15 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
 def _pruner(tree: ImageTree, too_few: int = 5) -> ImageTree:
     """remove top level keys with too few elements"""
     to_remove = []
+    allow = {'squid'}
 
     for key, value in tree.items():
         if tree_size(value) <= too_few:
             to_remove.append(key)
 
     for remove in to_remove:
+        if remove in allow:
+            continue
         metrics.record('images pruned by count', remove)
         tree.pop(remove)
 

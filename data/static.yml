@@ -65,27 +65,39 @@ locations:
     - Seymour Norte
     - Wolf
   Bonaire:
-    - One Thousand Steps
-    - Hamaka Beach
-    - Weber's Joy
     - Alice in Wonderland
+    - Angel City
     - Cliff
-    - Salt Pier
-    - White Hole
+    - Hamaka Beach
     - Hilma Hooker
     - Karpata
-    - Oil Slick
     - Klein M
-    - Angel City
+    - Oil Slick
+    - One Thousand Steps
     - Playa Funchi
+    - Salt Pier
     - Wayaka
+    - Weber's Joy
+    - White Hole
+  Curacao:
+    - Barracuda Point
+    - Beacon Point
+    - Booby Trap
+    - Cornelius Bay
+    - Kathy's Paradise
+    - New Port
+    - Saba
+    - Shipwreck Point
+    - Small Wall
+    - Sunscape
+    - Tugboat
   Maldives:
-    - Male North
-    - Male South
     - Ari North
     - Ari South
-    - Vaavu
+    - Male North
+    - Male South
     - Rasdhoo
+    - Vaavu
 
 dives:
   # these foiled automatic matching in uddf.py because of timezone madness

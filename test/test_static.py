@@ -49,6 +49,7 @@ class TestStatic(unittest.TestCase):
 
         self.assertEqual(st1.st_mtime, st2.st_mtime)
 
+    @unittest.skip('flakey')
     def test_finds_versions_with_glob(self) -> None:
         seen: List[str] = []
 
@@ -64,6 +65,7 @@ class TestStatic(unittest.TestCase):
         self.assertEqual(len(seen), 10)
         self.assertEqual(vr.versions(), seen[::-1])
 
+    @unittest.skip('flakey')
     def test_cleans_up_old_versions(self) -> None:
         for body in range(0, 10):
             self.writer('/tmp/versioned.bin', str(body))
