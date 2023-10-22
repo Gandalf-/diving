@@ -221,12 +221,11 @@ def _build_dive_history() -> Dict[str, List[str]]:
     '''No caching possible here since the consumer modifies the result to
     track progress through multi-dive days. Plus, dive_listing is already cached
     '''
-    dives_without_computer = ('5 Ari South Maihi Beyru',)
     history: Dict[str, List[str]] = {}
 
     for dive in [os.path.basename(dive) for dive in collection.dive_listing()]:
         date, name = dive.split(' ', 1)
-        if name in dives_without_computer:
+        if name in static.dives_without_computer:
             continue
         history.setdefault(date, [])
         history[date].append(name)

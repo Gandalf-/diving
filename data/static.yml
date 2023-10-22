@@ -86,6 +86,7 @@ locations:
     - Cornelius Bay
     - Kathy's Paradise
     - New Port
+    - Playa Grandi
     - Saba
     - Shipwreck Point
     - Small Wall
@@ -120,6 +121,10 @@ dives:
   304: 2022-11-07 3 Male North Fish Factory
   303: 2022-11-07 2 Male North Manta Point
   302: 2022-11-07 1 Male North Kurumba
+
+dives-without-computer:
+  - Playa Grandi
+  - 5 Ari South Maihi Beyru
 
 ignore:
   - bay

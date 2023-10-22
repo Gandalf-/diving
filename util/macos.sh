@@ -116,11 +116,17 @@ wikipedia() {
 }
 
 sync() {
-  rsync \
-    --exclude .DS_Store \
-    --delete \
+  mirror() {
+    rsync --exclude .DS_Store --delete -av --info=progress2 "$@"
+  }
+
+  mirror \
+    --exclude '*.html' \
+    "$www"/ \
+    yew:/mnt/ssd/hosts/web/diving/
+
+  mirror \
     --delete-excluded \
-    -av --info=progress2 \
     "$www"/ \
     yew:/mnt/ssd/hosts/web/diving/
 }

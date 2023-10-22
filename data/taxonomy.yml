@@ -1,25 +1,5 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
-Floating:
-  Niphatidae:
-    Niphates:
-      digitalis: pink vases sponge
-  Aplysinidae:
-    Aiolochroia:
-      crassa: branching tube sponge
-    Aplysina:
-      archeri: stovepipe sponge
-      cauliformis: row pore rope sponge
-  Microcionidae:
-    Clathria:
-      juniperina: thin rope sponge
-  Scopalinidae:
-    Scopalina:
-      ruetzleri: orange lumpy encrusting sponge
-  Agelasidae:
-    Agelas:
-      conifera: brown tube sponge
-
 Animalia:
   Ctenophora: comb jelly
   Brachiopoda:
@@ -73,6 +53,21 @@ Animalia:
             vastus: cloud sponge
     Demospongiae:
       sp.: sponge
+      Scopalinida:
+        Scopalinidae:
+          Scopalina:
+            ruetzleri: orange lumpy encrusting sponge
+      Agelasida:
+        Agelasidae:
+          Agelas:
+            conifera: brown tube sponge
+      Verongiida:
+        Aplysinidae:
+          Aiolochroia:
+            crassa: branching tube sponge
+        Aplysina:
+          archeri: stovepipe sponge
+          cauliformis: row pore rope sponge
       Tethyida:
         Tethyidae:
           Tethya:
@@ -91,6 +86,9 @@ Animalia:
             californiana: yellow boring sponge
       Poecilosclerida:
         sp.: encrusting sponge
+        Microcionidae:
+          Clathria:
+            juniperina: thin rope sponge
         Crambeidae:
           Monanchora:
             unguiculata: unguiculate sponge
@@ -112,6 +110,9 @@ Animalia:
             toporoki: bristly yellow clump sponge
             # laxissima: strawberry vase sponge
       Haplosclerida:
+        Niphatidae:
+          Niphates:
+            digitalis: pink vases sponge
         Chalinidae:
           Chalinula:
             nematifera: coral eating sponge
@@ -238,8 +239,10 @@ Animalia:
       sp.: brittle star
       Euryalida:
         Gorgonocephalidae:
+          Astrophyton:
+            muricatum: giant basket star
           Gorgonocephalus:
-            eucnemis: basket star
+            eucnemis: pacific basket star
       Ophiurida:
         Ophiuridae:
           Ophiura:
@@ -393,6 +396,7 @@ Animalia:
           Holothuria:
             kefersteini: kefersteini sea cucumber
             edulis: edible sea cucumber
+            mexicana: mexican sea cucumber
       Dendrochirotida:
         # branched tentacle sea cucumber
         Sclerodactylidae:
@@ -417,12 +421,17 @@ Animalia:
             californicus: california sea cucumber
     Echinoidea:
       sp.: urchin
+      Spatangoida:
+        Brissidae:
+          Meoma:
+            ventricosa: red heart urchin
       Clypeasteroida: sand dollar
       Cidaroida:
         Cidaroidea:
           Cidaridae:
             Eucidaris:
-              thouarsii: slate pencil urchin
+              thouarsii: pacific slate pencil urchin
+              tribuloides: caribbean slate pencil urchin
       Diadematoida:
         Diadematidae:
           Centrostephanus:
@@ -438,11 +447,14 @@ Animalia:
               gibbosus: brown sea urchin
             Echinostrephus:
               molaris: burrowing sea urchin
+            Echinometra:
+              lucunter: rock boring urchin
           Toxopneustidae:
             Toxopneustes:
               roseus: flower sea urchin
             Tripneustes:
               depressus: white urchin
+              ventricosus: west indian sea egg urchin
           Strongylocentrotidae:
             Strongylocentrotus:
               pallidus: white sea urchin
@@ -1140,7 +1152,8 @@ Animalia:
             Octopus:
               rubescens: red octopus
               oculifer: galapagos octopus
-              cyanea: reef octopus
+              cyanea: indian reef octopus
+              briareus: caribbean reef octopus
           Enteroctopodidae:
             Enteroctopus:
               dofleini: giant pacific octopus
@@ -1177,6 +1190,9 @@ Animalia:
               pulligo: dusky turban snail
       Littorinimorpha:
         Cypraeoidea:
+          Ovulidae:
+            Cyphoma:
+              gibbosum: flamingo tongue snail
           Veluntinidae:
             Coriocella:
               hibyae: sponge snail
@@ -1329,6 +1345,9 @@ Animalia:
     Malacostraca:
       Stomatopoda:
         sp.: mantis shrimp
+        Gonodactylidae:
+          Neogonodactylus:
+            curacoensis: dark mantis shrimp
         Odonotodactylidae:
           Odontodactylus:
             scyllarus: peacock mantis shrimp
@@ -1347,9 +1366,15 @@ Animalia:
               alaskana: alaskan skeleton shrimp
       Decapoda:
         Palinuroidea:
+          sp.: lobster
+          Scyllaridae:
+            Parribacus:
+              antarcticus: sculptured slipper lobster
           Palinuridae:
             Panulirus:
+              argus: caribbean spiny lobster
               versicolor: painted rock lobster
+              guttatus: spotted spiny lobster
         Trapezioidea:
           Trapeziidae:
             Trapezia:
@@ -1386,7 +1411,7 @@ Animalia:
         Palaemonoidea:
           Palaemonidae:
             Ancylomenes:
-              Pedersoni: pederson cleaner shrimp
+              pedersoni: pederson cleaner shrimp
             Periclimenes:
               yucatanicus: spotted cleaner shrimp
         Alpheoidea:
@@ -1400,6 +1425,7 @@ Animalia:
               amboinensis: squat shrimp
             Lysmata:
               amboinensis: white banded cleaner shrimp
+              pederseni: sponge peppermint shrimp
             Eualus:
               pusiolus: sponge eualid shrimp
             Spirontocaris:
@@ -1452,10 +1478,14 @@ Animalia:
             Oedignathus:
               inermis: granular claw crab
           Diogenidae:
+            Paguristes:
+              cadenati: red reef hermit crab
             Calcinus:
               latens: blue sock hermit crab
           Paguridae:
             sp.: hermit crab
+            Iridopagurus:
+              reticulatus: reticulated hermit crab
             Elassochirus:
               tenuimanus: widehand hermit crab
             Parapagurodes:
@@ -1484,8 +1514,11 @@ Animalia:
             Stenorhynchus:
               seticornis: arrow crab
           Mithracidae:
+            sp.: clinging crab
+            Mitraculus:
+              forceps: red ridged clinging crab
             Mithrax:
-              spinosissimus: clinging crab
+              spinosissimus: channel clinging crab
           Oregoniidae:
             Oregonia:
               gracilis: graceful decorator crab
