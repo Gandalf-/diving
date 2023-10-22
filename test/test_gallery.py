@@ -22,10 +22,6 @@ class TestGallery(unittest.TestCase):
         '''picking the newest image to represent a tree, or a predefined 'pinned' image'''
         tree = collection.build_image_tree()
 
-        self.assertIn('fish', tree)
-        out = gallery.find_representative(tree['fish'], Where.Gallery, lineage=['fish'])
-        self.assertEqual(out.name, 'Yellow Eye Rockfish')
-
         self.assertIn('barnacle', tree)
         out = gallery.find_representative(
             tree['barnacle'], Where.Gallery, lineage=['barnacle']

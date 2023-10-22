@@ -55,6 +55,7 @@ def find_representative(
         return items[len(items) // 2]
 
     results = sorted(results, key=lambda image: image.path(), reverse=True)
+    assert results, (tree, lineage)
     return results[0]
 
 

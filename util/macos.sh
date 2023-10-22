@@ -117,7 +117,7 @@ wikipedia() {
 
 sync() {
   mirror() {
-    rsync --exclude .DS_Store --delete -av --info=progress2 "$@"
+    rsync --exclude .DS_Store -av --info=progress2 "$@"
   }
 
   mirror \
@@ -126,6 +126,7 @@ sync() {
     yew:/mnt/ssd/hosts/web/diving/
 
   mirror \
+    --delete \
     --delete-excluded \
     "$www"/ \
     yew:/mnt/ssd/hosts/web/diving/

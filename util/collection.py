@@ -146,7 +146,7 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
 def _pruner(tree: ImageTree, too_few: int = 5) -> ImageTree:
     """remove top level keys with too few elements"""
     to_remove = []
-    allow = {'squid'}
+    allow = {'reef squid'}
 
     for key, value in tree.items():
         if tree_size(value) <= too_few:

@@ -630,6 +630,9 @@ Animalia:
           remora: remora
       Perciformes:
         # perch-like fish
+        Opistognathidae:
+          Opistognathus:
+            aurifrons: yellowhead jawfish
         Ephippidae:
           Platax:
             teira: longfish batfish
@@ -698,6 +701,8 @@ Animalia:
           Equetus:
             punctatus: spotted drum
         Serranidae:
+          Rypticus:
+            saponaceus: greater soapfish
           Pseudanthias:
             squamipinnis: jewel fairy basslet
           Epinephelus:
@@ -783,7 +788,7 @@ Animalia:
         Scorpaenidae:
           Pterois: lionfish
           Pontinus:
-            clemensi: spotted scorpion fish
+            clemensi: mottled scorpion fish
           Scorpaenopsis:
             barbatus: bearded scorpion fish
           Taenianotus:
@@ -793,6 +798,8 @@ Animalia:
           Scorpaena:
             plumieri:
               mystes: pacific stonefish
+        Hemiramphidae:
+          Hemiramphus: needlefish
         Hemitripteridae:
           Nautichthys:
             oculofasciatus: sailfin sculpin
@@ -852,12 +859,17 @@ Animalia:
           Zaniolepis:
             latipinnis: longspine combfish
       Tetraodontiformes:
+        Monacanthidae:
+          Cantherhines:
+            macrocerus: whitespotted filefish
         Molidae:
           Mola:
             mola: mola mola
         Diodontidae:
           Diodon:
-            holocanthus: masked porcupine fish
+            liturosus: masked porcupine fish
+            holocanthus: balloonfish
+            hystrix: porcupine fish
         Tetraodontoidei:
           Tetraodontoidae:
             # sp.: pufferfish
@@ -875,8 +887,8 @@ Animalia:
           Balistapus:
             undulatus: orange striped triggerfish
         Ostraciidae:
-          Lactoria:
-            cornuta: cowfish
+          Acanthostracion:
+            polygonius: honeycomb cowfish
           Lactophrys:
             bicaudalis: spotted trunkfish
             triqueter: smooth trunkfish
@@ -941,6 +953,16 @@ Animalia:
           Lafoea:
             dumosa: muff hydroid
     Anthozoa:
+      Corallimorpharia:
+        sp.: corallimorph
+        Discosomatidae:
+          Rhodactis:
+            osculifera: warty corallimorph
+          Discosoma:
+            carlgreni: forked tentacle corallimorph
+        Corallimorphidae:
+          Corynactis:
+            caribbeorum: orangeball corallimorph
       Antipatharia:
         Antipathidae:
           # Cirrhipathes: black whip coral
@@ -951,6 +973,13 @@ Animalia:
         Cavernulina:
           darwini: cavernulina darwini coral
       Scleractinia:
+        Favuidae:
+          Mussinae:
+            Scolymia:
+              cubensis: artichoke coral
+        Meandrinidae:
+          Dendrogyra:
+            crylindrus: pillar coral
         Fungiidae:
           Fungia:
             fungites: common mushroom coral
@@ -971,6 +1000,7 @@ Animalia:
             elegans: orange cup coral
           Rhizopsammia:
             wellingtoni: rhizopsammia wellingtoni coral
+            goesi: orange solitary coral
           Tubastraea:
             coccinea: tubastraea coccinea coral
             faulkneri: faulkner's coral
@@ -984,7 +1014,9 @@ Animalia:
           bournoni: smooth star coral
         Acroporidae:
           Acropora:
+            palmata: elkhorn coral
             cervicornis: staghorn coral
+            prolifera: fused staghorn coral
             solitaryensis: solitary islands coral
       Spirularia:
         Cerianthidae:
@@ -1070,6 +1102,12 @@ Animalia:
               piscivora: fish eating anemone
               lofotensis: white spotted rose anemone
         Metridioidea:
+          Aiptasiidae:
+            Bartholomea:
+              annulata: corkscrew anemone
+          Andvakiidae:
+            Telmatactis:
+              cricoides: club tipped anemone
           Halcampidae:
             Halcampa:
               decemtentaculata: ten tentacled burrowing anemone
@@ -1145,6 +1183,10 @@ Animalia:
             Cryptochiton:
               stelleri: gumboot chiton
     Cephalopoda:
+      Myopsida:
+        Loliginidae:
+          Sepioteuthis:
+            sepioidea: reef squid
       Octopoda:
         Octopodoidea:
           sp.: octopus
