@@ -10,7 +10,7 @@ from typing import Dict, Iterable, Iterator, List, Set, Union, cast
 
 from util import static
 from util.common import flatten, image_root, tree_size
-from util.image import Image, categorize, split
+from util.image import Image, split
 from util.metrics import metrics
 
 ImageTree = dict[str, Union[List[Image], 'ImageTree']]
@@ -23,7 +23,7 @@ def named() -> List[Image]:
 
 def all_names() -> Set[str]:
     '''all simplified, split names'''
-    return {categorize(split(i.simplified())) for i in expand_names(named())}
+    return {split(i.simplified()) for i in expand_names(named())}
 
 
 @lru_cache(None)

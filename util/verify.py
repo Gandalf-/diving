@@ -8,7 +8,7 @@ import difflib
 import os
 import re
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple
 
 from util import collection, common, static, taxonomy
 from util.common import Progress
@@ -19,13 +19,13 @@ def verify_before() -> None:
     _verify(
         'verify before',
         [
-            _verify_taxonomy_keys,
-            _duplicate_common_names,
-            _duplicate_sites,
-            _misspellings,
-            _wrong_order,
-            _no_duplicate_image_keys,
-            _unusal_casing,
+            _taxonomy_keys,
+            _common_names,
+            _site_names,
+            _spelling,
+            _word_order,
+            _image_keys,
+            _name_casing,
         ],
     )
 
@@ -34,8 +34,8 @@ def verify_after() -> None:
     _verify(
         'verify after',
         [
-            _important_files_exist,
-            _link_check,
+            _important_files,
+            _links,
         ],
     )
 
@@ -48,8 +48,9 @@ def _verify(label: str, checks: List[Callable[[], None]]) -> None:
         return
 
     try:
-        with Progress(label):
-            for check in checks:
+        for check in checks:
+            name = check.__name__.replace('_', ' ')
+            with Progress(f'verify{name}'):
                 check()
     except AssertionError as e:
         if os.environ.get('DIVING_VERIFY'):
@@ -57,7 +58,7 @@ def _verify(label: str, checks: List[Callable[[], None]]) -> None:
         print(e)
 
 
-def _unusal_casing() -> None:
+def _name_casing() -> None:
     '''Look for names that are not capitalized correctly.'''
     unusual = []
     ignore = {'BC'}
@@ -75,7 +76,7 @@ def _unusal_casing() -> None:
     assert not unusual, f'Unusual casing found in {unusual}'
 
 
-def _no_duplicate_image_keys() -> None:
+def _image_keys() -> None:
     '''
     Ensure that no two files in the same dive directory have the same key.
     Images with the same name are fine, but the key must be different.
@@ -97,7 +98,7 @@ def _no_duplicate_image_keys() -> None:
             seen.add(key)
 
 
-def _verify_taxonomy_keys() -> None:
+def _taxonomy_keys() -> None:
     '''
     Read the yaml file and check for duplicate keys. Duplicates shadow previous
     definitions making things appear to be missing when they are not.
@@ -127,7 +128,7 @@ def _verify_taxonomy_keys() -> None:
     assert not invalid, f'invalid keys: {invalid}'
 
 
-def _duplicate_common_names() -> None:
+def _common_names() -> None:
     seen = set()
     duplicates = []
     for name in taxonomy.load_known():
@@ -139,7 +140,7 @@ def _duplicate_common_names() -> None:
     assert not duplicates, f'duplicate common names: {duplicates}'
 
 
-def _duplicate_sites() -> None:
+def _site_names() -> None:
     seen = set()
     duplicates = []
     for sites in static.locations.values():
@@ -152,7 +153,7 @@ def _duplicate_sites() -> None:
     assert not duplicates, f'duplicate sites: {duplicates}'
 
 
-def _wrong_order() -> None:
+def _word_order() -> None:
     '''actual check'''
     tree = collection.build_image_tree()
     for value in _find_wrong_name_order(tree):
@@ -185,14 +186,14 @@ def _find_wrong_name_order(tree: Any) -> Iterable[Tuple[str, str]]:
         yield from _find_wrong_name_order(value)
 
 
-def _misspellings() -> None:
+def _spelling() -> None:
     '''actual check'''
-    found = set(_find_misspellings())
+    found = set(_find_misspellings(collection.all_names()))
     if found:
         assert False, f'{found} may be mispelled'
 
 
-def _find_misspellings(names: Optional[List[str]] = None) -> Iterable[str]:
+def _find_misspellings(names: Set[str]) -> Iterable[str]:
     '''check for misspellings'''
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
@@ -213,21 +214,18 @@ def _find_misspellings(names: Optional[List[str]] = None) -> Iterable[str]:
             yield candidate
 
 
-def _possible_misspellings(
-    names: Optional[List[str]] = None,
-) -> Iterable[List[str]]:
+def _possible_misspellings(names: Set[str]) -> Iterable[List[str]]:
     '''look for edit distance
 
     prune based on taxonomy.load_known()
     '''
-    all_names = names or collection.all_names()
+    skip = set(static.ignore + ['unknown'])
+    names = {name for name in names if not any(name.endswith(i) for i in skip)}
 
-    while all_names:
-        name = all_names.pop()
-        if any(name.endswith(i) for i in static.ignore + ['unknown']):
-            continue
+    while names:
+        name = names.pop()
 
-        similars = difflib.get_close_matches(name, all_names, cutoff=0.8)
+        similars = difflib.get_close_matches(name, names, cutoff=0.8)
         similars = [
             other for other in similars if other not in name and name not in other
         ]
@@ -238,7 +236,7 @@ def _possible_misspellings(
 # AFTER
 
 
-def _important_files_exist() -> None:
+def _important_files() -> None:
     '''basic sanity'''
     required = ['index.html', static.stylesheet.path, 'favicon.ico', 'imgs']
     required += [
@@ -265,7 +263,7 @@ def _important_files_exist() -> None:
         assert os.path.exists(fpath), (fpath, 'is missing')
 
 
-def _link_check() -> None:
+def _links() -> None:
     """check the html directory for broken links by extracting all the
     internal links from the written files and looking for those as paths
     """
