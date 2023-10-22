@@ -8,34 +8,53 @@ import difflib
 import os
 import re
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
 
 from util import collection, common, static, taxonomy
+from util.common import Progress
 from util.metrics import metrics
 
 
-def advisory_checks() -> None:
-    '''informational'''
-    try:
-        required_checks()
-    except AssertionError as e:
-        print(e)
+def verify_before() -> None:
+    _verify(
+        'verify before',
+        [
+            _verify_taxonomy_keys,
+            _duplicate_common_names,
+            _duplicate_sites,
+            _misspellings,
+            _wrong_order,
+            _no_duplicate_image_keys,
+            _unusal_casing,
+        ],
+    )
 
 
-def required_checks() -> None:
-    '''must pass'''
-    _important_files_exist()
-    _verify_taxonomy_keys()
-    _duplicate_common_names()
-    _duplicate_sites()
-    _link_check()
-    _misspellings()
-    _wrong_order()
-    _no_duplicate_image_keys()
-    _unusal_casing()
+def verify_after() -> None:
+    _verify(
+        'verify after',
+        [
+            _important_files_exist,
+            _link_check,
+        ],
+    )
 
 
 # PRIVATE
+
+
+def _verify(label: str, checks: List[Callable[[], None]]) -> None:
+    if os.environ.get('DIVING_FAST'):
+        return
+
+    try:
+        with Progress(label):
+            for check in checks:
+                check()
+    except AssertionError as e:
+        if os.environ.get('DIVING_VERIFY'):
+            raise e
+        print(e)
 
 
 def _unusal_casing() -> None:
@@ -216,6 +235,9 @@ def _possible_misspellings(
             yield [name] + similars
 
 
+# AFTER
+
+
 def _important_files_exist() -> None:
     '''basic sanity'''
     required = ['index.html', static.stylesheet.path, 'favicon.ico', 'imgs']
@@ -307,7 +329,3 @@ def _find_links() -> Iterable[Tuple[str, str]]:
         ]
         for result in executor.map(lambda args: process_file(*args), file_list):
             yield from result
-
-
-if __name__ == '__main__':
-    required_checks()

@@ -6,7 +6,6 @@ tree into HTML pages for diving.anardil.net
 '''
 
 import multiprocessing
-import os
 import sys
 import textwrap
 from datetime import datetime
@@ -207,7 +206,7 @@ def html_tree(
     return results
 
 
-def write_all_html() -> None:
+def main() -> None:
     '''main'''
     with Progress("loading images"):
         tree = collection.build_image_tree()
@@ -276,13 +275,8 @@ if not sys.flags.interactive and __name__ == "__main__":
     if len(sys.argv) > 1:
         util.common.image_root = sys.argv[1]
 
-    write_all_html()
-
-    if not os.environ.get('DIVING_FAST'):
-        with Progress("verifying html"):
-            if os.environ.get('DIVING_VERIFY'):
-                verify.required_checks()
-            else:
-                verify.advisory_checks()
+    verify.verify_before()
+    main()
+    verify.verify_after()
 
     metrics.summary('gallery')
