@@ -9,9 +9,9 @@ import shutil
 from typing import Iterable, List, Optional, Tuple
 
 from util import collection, static, taxonomy
-from util.common import source_root, titlecase
+from util.common import titlecase
 from util.image import Image, categorize, split, unqualify
-from util.static import VersionedResource, stylesheet
+from util.static import VersionedResource, source_root, stylesheet
 
 
 def get_hashes(images: List[Image]) -> Iterable[str]:

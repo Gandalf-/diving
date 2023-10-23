@@ -11,14 +11,14 @@ from typing import Any, Dict, List, Tuple
 import hypertext
 import locations
 from hypertext import Where
-from util import collection, common, uddf
+from util import collection, common, static, uddf
 
 
 def timeline() -> List[Tuple[str, str]]:
     '''generate all the timeline html'''
     dives = [
         d
-        for d in sorted(os.listdir(common.image_root), reverse=True)
+        for d in sorted(os.listdir(static.image_root), reverse=True)
         if d.startswith('20')
     ]
     results = []
@@ -83,7 +83,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
 <div class="grid">
 '''
 
-    path = os.path.join(common.image_root, dive)
+    path = os.path.join(static.image_root, dive)
     images = sorted(collection.delve(path), key=operator.attrgetter('number'))
     html += '\n'.join(
         hypertext.html_direct_image(image, Where.Sites, True) for image in images

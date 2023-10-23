@@ -252,6 +252,7 @@ def main() -> None:
 def _pool_writer(args: Tuple[str, str]) -> None:
     '''callback for HTML writer pool'''
     path, html = args
+    # TODO make this ASCII once I have the escape codes for the emojis
     html = textwrap.dedent(html)
 
     if file_content_matches(path, html):
@@ -273,7 +274,7 @@ if not sys.flags.interactive and __name__ == "__main__":
     import util.common
 
     if len(sys.argv) > 1:
-        util.common.image_root = sys.argv[1]
+        util.static.image_root = sys.argv[1]
 
     verify.verify_before()
     main()

@@ -7,14 +7,18 @@ configuration information
 import glob
 import hashlib
 import os
+import pathlib
 from typing import Dict, List, Optional, Set
 
 import yaml
 
-from util.common import source_root
 from util.metrics import metrics
 
 ListTree = Dict[str, List[str]]
+
+
+source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
+image_root = "/Users/leaf/Pictures/Diving"
 
 with open(source_root + 'data/static.yml') as fd:
     _static = yaml.safe_load(fd)

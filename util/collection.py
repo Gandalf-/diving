@@ -9,7 +9,7 @@ from functools import lru_cache
 from typing import Dict, Iterable, Iterator, List, Set, Union, cast
 
 from util import static
-from util.common import flatten, image_root, tree_size
+from util.common import flatten, tree_size
 from util.image import Image, split
 from util.metrics import metrics
 
@@ -106,8 +106,8 @@ def expand_names(images: List[Image]) -> Iterator[Image]:
 def dive_listing() -> List[str]:
     """a list of all dive picture folders available"""
     return [
-        os.path.join(image_root, dive)
-        for dive in os.listdir(image_root)
+        os.path.join(static.image_root, dive)
+        for dive in os.listdir(static.image_root)
         if not dive.startswith(".")
     ]
 

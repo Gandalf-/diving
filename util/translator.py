@@ -11,11 +11,11 @@ from typing import Dict, Optional
 
 import yaml
 
-from util.common import source_root
+from util import static
 from util.metrics import metrics
 from util.taxonomy import all_latin_words
 
-translations_yml = os.path.join(source_root, 'data/translations.yml')
+translations_yml = os.path.join(static.source_root, 'data/translations.yml')
 
 
 with open(translations_yml) as fd:
@@ -30,7 +30,8 @@ def translate(word: str) -> str:
     data/translate.yml
     '''
     out = _translations[word.lower()] or ''
-    return out.replace('-family', '').replace('-order', '')
+    out = out.replace('-family', '').replace('-order', '')
+    return out.encode('ascii', 'xmlcharrefreplace').decode('ascii')
 
 
 # Updating translations

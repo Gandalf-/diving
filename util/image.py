@@ -8,7 +8,7 @@ import os
 from typing import Optional
 
 from util import database, static
-from util.common import Tree, image_root
+from util.common import Tree
 from util.grammar import singular
 
 
@@ -116,7 +116,7 @@ class Image:
 
     def path(self) -> str:
         '''where this is on the file system'''
-        return os.path.join(image_root, self.directory, self.label)
+        return os.path.join(static.image_root, self.directory, self.label)
 
     def thumbnail(self) -> str:
         '''URI of thumbnail image'''

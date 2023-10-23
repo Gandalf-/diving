@@ -2,7 +2,6 @@ import os
 import unittest
 from typing import List
 
-import util.common as utility
 from util import static
 
 
@@ -29,7 +28,7 @@ class TestStatic(unittest.TestCase):
                 pass
 
     def test_versioned_css(self) -> None:
-        vr = static.VersionedResource(utility.source_root + 'web/style.css')
+        vr = static.VersionedResource(static.source_root + 'web/style.css')
         self.assertEqual(vr._name, 'style.css')
         self.assertIn('display: inline-block;', vr._body)
         self.assertEqual(len(vr._hash), 10)

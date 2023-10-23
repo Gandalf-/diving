@@ -8,17 +8,8 @@ import datetime
 import functools
 import itertools
 import os
-import pathlib
 import time
 from typing import Any, Callable, Iterable, List, Tuple
-
-image_root = "/mnt/zfs/Media/Pictures/Diving"
-if os.name == 'nt':
-    image_root = "Z:/Media/Pictures/Diving"
-if os.uname().sysname == 'Darwin':
-    image_root = "/Users/leaf/Pictures/Diving"
-
-source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
 
 Tree = Any
 
