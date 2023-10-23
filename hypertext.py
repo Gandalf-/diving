@@ -492,9 +492,15 @@ class SitesTitle(Title):
         assert is_date(last), last
         return last
 
-    def run(self) -> Tuple[str, str]:
-        side = Side.Right
+    def get_hint(self) -> str:
+        last = self.lineage[-1]
+        if ' ' in last:
+            *parts, _ = last.split(' ')
+            return ' '.join(parts)
 
+        return self.lineage[-2]
+
+    def run(self) -> Tuple[str, str]:
         _title = ' '.join(self.lineage)
         path = sanitize_link(f'sites/{_title}')
 
@@ -509,18 +515,9 @@ class SitesTitle(Title):
         name = ""
 
         if self.is_dive():
-            last = self.lineage[-1]
-            if ' ' in last:
-                *parts, last = last.split(' ')
-                rest = ' '.join(parts)
-            else:
-                rest = None
-
-            hint = rest or self.lineage[-2]
             date = self.get_date()
-
-            name = date
-            dive_info = uddf.search(date, hint)
+            dive_info = uddf.search(date, self.get_hint())
+            name = pretty_date(date)
 
         # create the buttons for each part of our name lineage
         for i, _name in enumerate(self.lineage):
@@ -528,16 +525,13 @@ class SitesTitle(Title):
                 continue
 
             partial = self.lineage[: i + 1]
-            link = f"/sites/{lineage_to_link(partial, side)}"
+            link = f"/sites/{lineage_to_link(partial, Side.Right)}"
 
             html += f"""
             <a href="{link}">
                 <h1 class="top">{strip_date(_name)}</h1>
             </a>
             """
-
-        if is_date(name):
-            name = pretty_date(name)
 
         html += f"""\
         <h3 class="tight">{name}</h3>
