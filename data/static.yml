@@ -126,6 +126,11 @@ dives-without-computer:
   - Playa Grandi
   - 5 Ari South Maihi Beyru
 
+dives-without-camera:
+  # days with some camera dives but not all
+  - 227
+  - 237
+
 ignore:
   - bay
   - beach

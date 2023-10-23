@@ -105,11 +105,13 @@ def expand_names(images: List[Image]) -> Iterator[Image]:
 @lru_cache(None)
 def dive_listing() -> List[str]:
     """a list of all dive picture folders available"""
-    return [
-        os.path.join(static.image_root, dive)
-        for dive in os.listdir(static.image_root)
-        if not dive.startswith(".")
-    ]
+    return sorted(
+        [
+            os.path.join(static.image_root, dive)
+            for dive in os.listdir(static.image_root)
+            if not dive.startswith(".")
+        ]
+    )
 
 
 # PRIVATE

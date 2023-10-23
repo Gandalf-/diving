@@ -1,7 +1,7 @@
 # Taxonomy
 
 - [ ] link with https://www.eopugetsound.org/species/oregonia-gracilis ?
-- [ ] remove leading '...' from search suggestions
+- [x] remove leading '...' from search suggestions
 
 # Wikipedia
 
@@ -10,11 +10,20 @@
 
 # General
 
-- [ ] https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps
-- [ ] clean up versioned files
-- [ ] make search-data.js properly versioned
+- [x] https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps
+- [x] clean up versioned files
+- [x] make search-data.js properly versioned
 - [ ] add tests for javascript, run in the browser with a wrapper function?
+- [ ] textwrap.dedent on all HTML output is expensive
+
+# Verify
+- [ ] n^2 spell check is expensive
 
 # Sites
 
-- [ ] add search for site names, not dates
+- [x] add search for site names, not dates
+
+
+# Dive Log
+- [ ] match pictures with approximate depth
+- [ ] cache XML parsing results in database for next time

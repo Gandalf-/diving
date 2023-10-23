@@ -60,7 +60,7 @@ class TestUDDF(unittest.TestCase):
         fname = '99809020-2021-01-09T10_39_00-0.sml'
         expected = {
             'date': datetime.fromisoformat('2021-01-09T10:39:00'),
-            'number': 23,
+            'number': 22,
             'depth': 93,
             'duration': 3620,
             'tank_start': 3190,

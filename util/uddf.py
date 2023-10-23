@@ -213,6 +213,8 @@ def _load_dive_info() -> Iterator[DiveInfo]:
             continue
         if info['depth'] <= 10:
             continue
+        if info['number'] in static.dives_without_camera:
+            continue
 
         yield info
 
@@ -256,11 +258,8 @@ def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
             continue
 
         dirs = history[date]
-        # TODO should just be dirs.pop(0) always, but that breaks, suspicous
-        if len(dirs) > 1:
-            directory = dirs.pop(0)
-        else:
-            directory = dirs[0]
+        assert dirs, f'dive {info["number"]} on {date} may be a no camera dive'
+        directory = dirs.pop(0)
 
         yield _update_info(info, f'{date} {directory}')
 

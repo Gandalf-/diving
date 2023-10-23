@@ -25,6 +25,7 @@ with open(source_root + 'data/static.yml') as fd:
 
 dives: Dict[int, str] = _static['dives']
 dives_without_computer: List[str] = _static['dives-without-computer']
+dives_without_camera: List[int] = _static['dives-without-camera']
 categories: ListTree = _static['categories']
 difficulty: ListTree = _static['difficulty']
 locations: ListTree = _static['locations']
