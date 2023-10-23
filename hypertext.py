@@ -4,7 +4,6 @@
 html generation
 '''
 
-import datetime
 import enum
 import string
 from typing import Any, Dict, List, Optional, Tuple, Type
@@ -12,11 +11,11 @@ from typing import Any, Dict, List, Optional, Tuple, Type
 import locations
 from util import collection, grammar, taxonomy, translator, uddf
 from util.common import (
-    fast_exists,
     flatten,
     is_date,
     pretty_date,
     sanitize_link,
+    strip_date,
     titlecase,
 )
 from util.image import Image, categorize, split, uncategorize
@@ -484,12 +483,22 @@ class TaxonomyTitle(Title):
 class SitesTitle(Title):
     '''html head and title section for sites pages'''
 
+    def is_dive(self) -> bool:
+        *_, last = ' '.join(self.lineage).split(' ')
+        return is_date(last)
+
+    def get_date(self) -> str:
+        *_, last = ' '.join(self.lineage).split(' ')
+        assert is_date(last), last
+        return last
+
     def run(self) -> Tuple[str, str]:
-        display = _title = ' '.join(self.lineage)
         side = Side.Right
+
+        _title = ' '.join(self.lineage)
         path = sanitize_link(f'sites/{_title}')
 
-        html = head(display, path, Where.Sites)
+        html = head(_title, path, Where.Sites)
         html += """
             <a href="/sites/">
                 <h1 class="top switch sites">Sites</h1>
@@ -497,10 +506,9 @@ class SitesTitle(Title):
             <div class="top buffer"></div>
         """
         dive_info = None
-
-        # create the buttons for each part of our name lineage
         name = ""
-        try:
+
+        if self.is_dive():
             last = self.lineage[-1]
             if ' ' in last:
                 *parts, last = last.split(' ')
@@ -508,41 +516,27 @@ class SitesTitle(Title):
             else:
                 rest = None
 
-            date = datetime.datetime.strptime(last, '%Y-%m-%d')
-            assert date
             hint = rest or self.lineage[-2]
+            date = self.get_date()
 
-            name = last
-            if rest:
-                self.lineage = self.lineage[:-1] + [rest]
+            name = date
+            dive_info = uddf.search(date, hint)
 
-            dive_info = uddf.search(last, hint)
-        except ValueError:
-            pass
-
+        # create the buttons for each part of our name lineage
         for i, _name in enumerate(self.lineage):
+            if is_date(_name):
+                continue
+
             partial = self.lineage[: i + 1]
             link = f"/sites/{lineage_to_link(partial, side)}"
 
-            # it's possible that this is the only date available for this location,
-            # in which case we want the name to include the location and trim the
-            # lineage one more value
-            if not fast_exists(link[1:] + '.html'):
-                name = _name + ' ' + name
-                continue
-
             html += f"""
             <a href="{link}">
-                <h1 class="top">{_name}</h1>
+                <h1 class="top">{strip_date(_name)}</h1>
             </a>
             """
 
-        if ' ' in name:
-            rest, last = name.rsplit(' ', maxsplit=1)
-            if is_date(last):
-                when = pretty_date(last)
-                name = f'{rest} - {when}'
-        elif is_date(name):
+        if is_date(name):
             name = pretty_date(name)
 
         html += f"""\

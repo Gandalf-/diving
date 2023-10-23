@@ -10,9 +10,7 @@ import itertools
 import os
 import pathlib
 import time
-from typing import Any, Callable, Dict, Iterable, List, Tuple
-
-from util.metrics import metrics
+from typing import Any, Callable, Iterable, List, Tuple
 
 image_root = "/mnt/zfs/Media/Pictures/Diving"
 if os.name == 'nt':
@@ -163,22 +161,6 @@ def pretty_date(when: str) -> str:
         suffix = day_suffixes[date.day % 10]
 
     return date.strftime(f'%B {date.day}{suffix}, %Y')
-
-
-_EXISTS: Dict[str, bool] = {}
-
-
-@functools.cache
-def fast_exists(path: str) -> bool:
-    '''cached os.path.exists'''
-    if path in _EXISTS:
-        return _EXISTS[path]
-
-    exists = os.path.exists(path)
-    if not exists:
-        # metrics.record('paths that did not exist', path)
-        metrics.counter('paths that did not exist')
-    return exists
 
 
 class Progress:

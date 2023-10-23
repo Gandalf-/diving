@@ -3,7 +3,6 @@
 import unittest
 
 import hypertext
-import util.common as utility
 from hypertext import Side, Where
 from util import image, taxonomy
 from util.taxonomy import MappingType
@@ -72,16 +71,12 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(hypertext.description(name, Where.Taxonomy), expect)
 
     def test_image_to_name_html(self):
-        utility._EXISTS['gallery/rock-fish.html'] = True
-
         fish = image.Image("001 - Rockfish.jpg", "2021-11-05 10 Rockaway Beach")
         html = hypertext.image_to_name_html(fish, Where.Sites)
         self.assertIn('href="/gallery/rock-fish"', html)
         self.assertIn('Rockfish', html)
 
     def test_image_to_name_html_pair(self):
-        utility._EXISTS['gallery/rock-fish.html'] = True
-
         fish = image.Image(
             "001 - Rockfish and Coral.jpg", "2021-11-05 10 Rockaway Beach"
         )
@@ -330,6 +325,36 @@ class TestTitleTaxonomy(unittest.TestCase):
             TestHypertext.t_scientific,
         )
         self.assertIn('>Lenient Pacific-crawfish Lobster<', html)
+
+
+class TestTitleSites(unittest.TestCase):
+    def test_is_dive(self) -> None:
+        examples = [
+            (True, ['Sund Rock', 'South', 'Shallows 2021-03-06']),
+            (True, ['Washington', 'Fort Ward', '2022-12-03']),
+            (False, ['Washington', 'Fort Ward']),
+            (False, ['Washington']),
+        ]
+        for expect, lineage in examples:
+            title = hypertext.SitesTitle(
+                Where.Sites,
+                lineage,
+                TestHypertext.t_scientific,
+            )
+            self.assertEqual(title.is_dive(), expect, lineage)
+
+    def test_get_date(self) -> None:
+        examples = [
+            ('2021-03-06', ['Sund Rock', 'South', 'Shallows 2021-03-06']),
+            ('2022-12-03', ['Washington', 'Fort Ward', '2022-12-03']),
+        ]
+        for date, lineage in examples:
+            title = hypertext.SitesTitle(
+                Where.Sites,
+                lineage,
+                TestHypertext.t_scientific,
+            )
+            self.assertEqual(title.get_date(), date, lineage)
 
 
 if __name__ == '__main__':
