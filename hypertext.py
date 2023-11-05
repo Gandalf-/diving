@@ -114,7 +114,7 @@ def head(display: str, path: str, where: Where) -> str:
         desc = f'{blurb} from {sites} organized into a tree structure by dive site.'
 
     elif display.endswith('Timeline'):
-        desc = f'{blurb} organized into a timeline and by location'
+        desc = f'{blurb} organized into a timeline by location'
 
     else:
         desc = description(display, where)
