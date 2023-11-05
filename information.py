@@ -229,7 +229,7 @@ def missing_list() -> List[str]:
     complete = set()
     complete.update(database.keys(*db_root, 'valid'))
     complete.update(database.keys(*db_root, 'maps'))
-    complete.update(database.get(*db_root, 'invalid', default=[], cast=list))
+    complete.update(database.get(*db_root, 'invalid'))
 
     for name in names:
         parts = [p for p in name.split(' ') if p not in ('sp', 'sp.')]

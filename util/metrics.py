@@ -5,8 +5,6 @@ be displayed at the end of gallery.py's execution.
 
 from typing import Any
 
-from util.database import database
-
 
 class Metrics:
     def __init__(self) -> None:
@@ -45,6 +43,8 @@ class Metrics:
         self._persist(label)
 
     def _persist(self, label: str) -> None:
+        from util.database import database
+
         data = {}
         for k, v in self.data.items():
             if isinstance(v, int):
@@ -52,6 +52,8 @@ class Metrics:
         database.set('diving', 'metrics', label, value=data)
 
     def _restore(self, label: str) -> dict[str, Any]:
+        from util.database import database
+
         return database.get('diving', 'metrics', label, default={})
 
 

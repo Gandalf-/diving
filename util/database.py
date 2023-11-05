@@ -3,9 +3,11 @@ Database interface
 '''
 
 import copy
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import apocrypha.client
+
+from util.metrics import metrics
 
 
 class Database:
@@ -31,9 +33,7 @@ class Database:
 
     # Low Level
 
-    def get(
-        self, *keys: str, default: Optional[Any] = None, cast: Optional[Callable] = None
-    ) -> Any:
+    def get(self, *keys: str, default: Optional[Any] = None) -> Any:
         '''Retrieve a value'''
         raise NotImplementedError
 
@@ -63,59 +63,50 @@ class RealDatabase(Database):
 
     def __init__(self) -> None:
         self.database = apocrypha.client.Client()
-        self.hash_cache: Dict[str, Dict[str, str]] = {}
-        self.wiki_cache: Dict[str, Any] = {}
-
-    def _fill_hash_cache(self) -> None:
-        '''populate the hash cache'''
-        if not self.hash_cache:
-            self.hash_cache = self.database.get('diving', 'cache')
-            assert self.hash_cache
-
-    def _fill_wiki_cache(self) -> None:
-        '''populate the wiki cache'''
-        if not self.wiki_cache:
-            self.wiki_cache = self.database.get(
-                'diving',
-                'wikipedia',
-            )
-            assert self.wiki_cache
+        self.level_cache: Dict[str, Any] = {}
 
     def _invalidate_cache(self) -> None:
         '''invalidate the cache'''
-        self.hash_cache = {}
-        self.wiki_cache = {}
+        self.level_cache = {}
 
     def get_image_hash(self, identifier: str) -> Optional[str]:
-        self._fill_hash_cache()
-        return self.hash_cache.get(identifier, {}).get('hash')
+        return self.get('diving', 'cache', identifier, default={}).get('hash')
 
     def is_invalid_subject(self, key: str) -> bool:
-        self._fill_wiki_cache()
-        return key in self.wiki_cache.get('invalid', [])
+        values = self.get('diving', 'wikipedia', 'invalid')
+        return key in values
 
     def get_mapped_subject(self, key: str) -> Optional[str]:
-        self._fill_wiki_cache()
-        return self.wiki_cache['maps'].get(key)
+        return self.get('diving', 'wikipedia', 'maps', key)
 
     def get_valid_subject(self, key: str) -> Optional[Dict[str, Any]]:
-        self._fill_wiki_cache()
-        return copy.deepcopy(self.wiki_cache['valid'].get(key))
+        value = self.get('diving', 'wikipedia', 'valid', key)
+        return copy.deepcopy(value)
 
-    def get(
-        self, *keys: str, default: Optional[Any] = None, cast: Optional[Callable] = None
-    ) -> Any:
-        return self.database.get(*keys, default=default, cast=cast)
+    def get(self, *keys: str, default: Optional[Any] = None) -> Any:
+        *context, target = keys
+        ckey = ' '.join(context)
+
+        if ckey not in self.level_cache:
+            metrics.counter('database gets')
+            value = self.database.get(*context, default={})
+            assert isinstance(value, dict), f'{ckey} is not a dictionary'
+            self.level_cache[ckey] = self.database.get(*context)
+
+        return self.level_cache[ckey].get(target, default)
 
     def set(self, *keys: str, value: Any) -> None:
         self._invalidate_cache()
+        metrics.counter('database sets')
         self.database.set(*keys, value=value)
 
     def delete(self, *keys: str) -> None:
+        metrics.counter('database dels')
         self._invalidate_cache()
         self.database.delete(*keys)
 
     def keys(self, *keys: str) -> List[str]:
+        metrics.counter('database keys')
         return self.database.keys(*keys)
 
     def append(self, *keys: str, value: Any) -> None:
@@ -145,9 +136,7 @@ class TestDatabase(Database):
     def get_valid_subject(self, key: str) -> Optional[Dict[str, Any]]:
         return None
 
-    def get(
-        self, *keys: str, default: Optional[Any] = None, cast: Optional[Callable] = None
-    ) -> Any:
+    def get(self, *keys: str, default: Optional[Any] = None) -> Any:
         return None
 
     def set(self, *keys: str, value: Any) -> None:
