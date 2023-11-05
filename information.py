@@ -18,10 +18,11 @@ letters, etc), the data is base64 encoded before inserted into the database
 '''
 
 import base64
+import copy
 import operator
 from collections import Counter
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import wikipedia
 
@@ -105,16 +106,16 @@ def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, s
     '''get the subject from the database'''
     key = subject.lower()
 
-    if database.is_invalid_subject(key):
+    if is_invalid_subject(key):
         # no page for this name at all
         return {}
 
-    mapped_key = database.get_mapped_subject(key)
+    mapped_key = get_mapped_subject(key)
     if mapped_key:
         # metacarcinus magister -> dungeness crab
         key = mapped_key
 
-    out = database.get_valid_subject(key)
+    out = get_valid_subject(key)
     if not out and not update:
         # didn't find it, don't ask wikipedia
         return {}
@@ -312,3 +313,18 @@ def link(subject: str, title: str) -> None:
         database.set(*db_root, 'maps', subject, value=title)
 
     database.remove(*db_root, 'invalid', value=subject)
+
+
+def get_valid_subject(subject: str) -> Dict[str, Any]:
+    '''get the entry for this valid subject'''
+    value = database.get('diving', 'wikipedia', 'valid', subject)
+    return copy.deepcopy(value)
+
+
+def get_mapped_subject(key: str) -> Optional[str]:
+    return database.get('diving', 'wikipedia', 'maps', key)
+
+
+def is_invalid_subject(key: str) -> bool:
+    values = database.get('diving', 'wikipedia', 'invalid')
+    return key in values

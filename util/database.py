@@ -2,7 +2,6 @@
 Database interface
 '''
 
-import copy
 from typing import Any, Dict, List, Optional
 
 import apocrypha.client
@@ -17,18 +16,6 @@ class Database:
 
     def get_image_hash(self, identifier: str) -> Optional[str]:
         '''Get an image's hash'''
-        raise NotImplementedError
-
-    def is_invalid_subject(self, key: str) -> bool:
-        '''Check if this subject is in the invalid list'''
-        raise NotImplementedError
-
-    def get_mapped_subject(self, key: str) -> Optional[str]:
-        '''Check if this subject is mapped to another name'''
-        raise NotImplementedError
-
-    def get_valid_subject(self, key: str) -> Optional[Dict[str, Any]]:
-        '''Get the entry for this valid subject'''
         raise NotImplementedError
 
     # Low Level
@@ -71,17 +58,6 @@ class RealDatabase(Database):
 
     def get_image_hash(self, identifier: str) -> Optional[str]:
         return self.get('diving', 'cache', identifier, default={}).get('hash')
-
-    def is_invalid_subject(self, key: str) -> bool:
-        values = self.get('diving', 'wikipedia', 'invalid')
-        return key in values
-
-    def get_mapped_subject(self, key: str) -> Optional[str]:
-        return self.get('diving', 'wikipedia', 'maps', key)
-
-    def get_valid_subject(self, key: str) -> Optional[Dict[str, Any]]:
-        value = self.get('diving', 'wikipedia', 'valid', key)
-        return copy.deepcopy(value)
 
     def get(self, *keys: str, default: Optional[Any] = None) -> Any:
         *context, target = keys
@@ -126,15 +102,6 @@ class TestDatabase(Database):
 
     def get_image_hash(self, identifier: str) -> Optional[str]:
         return 'test'
-
-    def is_invalid_subject(self, key: str) -> bool:
-        return True
-
-    def get_mapped_subject(self, key: str) -> Optional[str]:
-        return None
-
-    def get_valid_subject(self, key: str) -> Optional[Dict[str, Any]]:
-        return None
 
     def get(self, *keys: str, default: Optional[Any] = None) -> Any:
         return None
