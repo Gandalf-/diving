@@ -5,7 +5,7 @@ Database interface
 import copy
 from typing import Any, Callable, Dict, List, Optional
 
-from apocrypha.client import Client
+import apocrypha.client
 
 
 class Database:
@@ -62,7 +62,7 @@ class RealDatabase(Database):
     '''Real implementation that requires a database to be running'''
 
     def __init__(self) -> None:
-        self.database = Client()
+        self.database = apocrypha.client.Client()
         self.hash_cache: Dict[str, Dict[str, str]] = {}
         self.wiki_cache: Dict[str, Any] = {}
 
@@ -148,7 +148,7 @@ class TestDatabase(Database):
     def get(
         self, *keys: str, default: Optional[Any] = None, cast: Optional[Callable] = None
     ) -> Any:
-        return 'test'
+        return None
 
     def set(self, *keys: str, value: Any) -> None:
         pass

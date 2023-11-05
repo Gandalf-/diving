@@ -14,7 +14,7 @@ from typing import Any, Dict, Iterator, List, Optional
 
 import lxml
 
-from util import collection, static
+from util import collection, database, static
 from util.common import Counter, kelvin_to_fahrenheit, meters_to_feet, pascal_to_psi
 from util.metrics import metrics
 
@@ -95,8 +95,28 @@ def _parse_number(tree: Any, path: str) -> float:  # type: ignore
 
 @lru_cache(None)
 def _parse(file: str) -> DiveInfo:
-    parser = _parse_uddf if file.endswith('.uddf') else _parse_sml
-    return parser(file)
+    info = _db_decode(database.database.get('diving', 'log', 'cache', file))
+    if not info:
+        parser = _parse_uddf if file.endswith('.uddf') else _parse_sml
+        info = parser(file)
+        database.database.set('diving', 'log', 'cache', file, value=_db_encode(info))
+    return info
+
+
+def _db_encode(info: DiveInfo) -> DiveInfo:
+    if not info:
+        return {}
+    encoded = {k: v for k, v in info.items()}
+    encoded['date'] = datetime.isoformat(info['date'])
+    return encoded
+
+
+def _db_decode(encoded: DiveInfo) -> DiveInfo:
+    if not encoded:
+        return {}
+    info = {k: v for k, v in encoded.items()}
+    info['date'] = datetime.fromisoformat(encoded['date'])
+    return info
 
 
 def _parse_uddf(file: str) -> DiveInfo:

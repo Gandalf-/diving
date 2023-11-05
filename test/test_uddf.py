@@ -2,9 +2,11 @@ import os
 import unittest
 from datetime import datetime
 
-from util import collection, common
+from util import collection, common, database
 from util.uddf import (
     _build_dive_history,
+    _db_decode,
+    _db_encode,
     _load_dive_info,
     _match_dive_info,
     _parse,
@@ -14,6 +16,24 @@ from util.uddf import (
 
 
 class TestUDDF(unittest.TestCase):
+    def setUp(self) -> None:
+        database.use_test_database()
+
+    def test_db_encode(self) -> None:
+        info = {
+            'date': datetime.utcnow(),
+            'number': 243,
+            'depth': 11,
+            'duration': 584,
+            'tank_start': 2212,
+            'tank_end': 1994,
+            'temp_high': 78,
+            'temp_low': 78,
+        }
+        self.assertEqual(info, _db_decode(_db_encode(info)))
+        self.assertEqual({}, _db_encode({}))
+        self.assertEqual({}, _db_decode({}))
+
     def test_parse_uddf_short(self) -> None:
         fname = 'Perdix AI[385834A0]#43_2021-10-22.uddf'
         expected = {
