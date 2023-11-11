@@ -5,6 +5,7 @@ html generation
 '''
 
 import enum
+import statistics
 import string
 from typing import Any, Dict, List, Optional, Tuple, Type
 
@@ -240,6 +241,19 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
     location = image.location()
     fullsize = image.fullsize()
     thumbnail = image.thumbnail()
+    caption = f'{image.name}, {location}'
+
+    depth = image.approximate_depth()
+    extra = 'Close'
+
+    if depth:
+        low, high = depth
+        if high - low < 10:
+            average = int(statistics.mean(depth))
+            extra = f"~{average}'"
+        else:
+            extra = f"{low}' ~ {high}'"
+        caption += f', {extra}'
 
     return f"""
     <div class="card" onclick="flip(this);">
@@ -249,10 +263,10 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
         <div class="card_face card_face-back">
             {name_html}
             {site_html}
-            <a class="top elem timeline" data-fancybox="gallery" data-caption="{image.name} - {location}" href="{fullsize}">
+            <a class="top elem timeline" data-fancybox="gallery" data-caption="{caption}" href="{fullsize}">
             Fullsize Image
             </a>
-            <p class="top elem">Close</p>
+            <p class="top elem">{extra}</p>
         </div>
     </div>
     """
@@ -264,9 +278,19 @@ def _direct_video_html(image: Image, where: Where) -> str:
     name_html = image_to_name_html(image, where)
     site_html = image_to_site_html(image, where)
 
-    image.location()
     fullsize = image.fullsize()
     thumbnail = image.thumbnail()
+
+    depth = image.approximate_depth()
+    extra = 'Close'
+
+    if depth:
+        low, high = depth
+        if high - low < 10:
+            average = int(statistics.mean(depth))
+            extra = f"~{average}'"
+        else:
+            extra = f"{low}' ~ {high}'"
 
     allowed = string.ascii_letters + string.digits
     unique = 'video_' + ''.join(c for c in image.identifier() if c in allowed)
@@ -289,7 +313,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
             <a class="top elem timeline" data-fancybox href="#{unique}">
             Full Video
             </a>
-            <p class="top elem">Close</p>
+            <p class="top elem">{extra}</p>
 
             <video controls muted preload="none" id="{unique}" style="display:none;">
                 <source src="{fullsize}" type="video/webm">

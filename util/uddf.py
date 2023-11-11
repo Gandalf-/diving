@@ -24,6 +24,7 @@ DiveInfo = Dict[str, Any]
 
 
 def lookup(dive: str) -> Optional[DiveInfo]:
+    # this should be the exact directory
     return _matched_dives().get(dive)
 
 

@@ -5,9 +5,10 @@ base class for a diving image
 '''
 
 import os
-from typing import Optional
+from functools import lru_cache
+from typing import List, Optional, Tuple
 
-from util import database, static
+from util import database, static, uddf
 from util.common import Tree
 from util.grammar import singular
 
@@ -159,5 +160,28 @@ class Image:
         name = self.singular()
         name = split(name)
         name = categorize(name)
-
         return name
+
+    @lru_cache(None)
+    def approximate_depth(self) -> Optional[Tuple[int, int]]:
+        '''approximate depth of this image'''
+        info = uddf.lookup(self.directory)
+        if not info or not info['depths']:
+            return None
+
+        depths = info['depths']
+        before = _depth_at(depths, max(self.position * 0.9, 0.0))
+        exact = _depth_at(depths, self.position)
+        after = _depth_at(depths, min(self.position * 1.1, 1.0))
+
+        return (min(before, exact, after), max(before, exact, after))
+
+
+# PRIVATE
+
+
+def _depth_at(depths: List[Tuple[float, int]], position: float) -> int:
+    for index, depth in depths:
+        if index >= position:
+            return depth
+    assert False
