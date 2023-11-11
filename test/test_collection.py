@@ -1,10 +1,14 @@
+import os
 import unittest
 
-from util import collection, image
+from util import collection, database, image, static
 
 
 class TestCollection(unittest.TestCase):
     '''collection.py'''
+
+    def setUp(self) -> None:
+        database.use_test_database()
 
     def test_expand_names(self) -> None:
         '''it works'''
@@ -28,6 +32,20 @@ class TestCollection(unittest.TestCase):
 
         self.assertEqual(fish.name, 'Fish')
         self.assertEqual(fish.number, '001')
+
+    def test_position(self) -> None:
+        '''it works'''
+        path = os.path.join(static.image_root, '2023-10-19 3 Sunscape')
+        images = collection.delve(path)
+        self.assertEqual(len(images), 9)
+
+        first, *_ = images
+        *_, last = images
+        self.assertGreaterEqual(first.position, 0.0)
+        self.assertLessEqual(last.position, 1.0)
+
+        positions = [i.position for i in images]
+        self.assertEqual(positions, sorted(positions))
 
 
 if __name__ == '__main__':

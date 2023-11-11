@@ -71,7 +71,7 @@ def unsplit(name: str) -> str:
 class Image:
     '''container for a diving picture'''
 
-    def __init__(self, label: str, directory: str) -> None:
+    def __init__(self, label: str, directory: str, position: float = 0.0) -> None:
         self.label = label
         label, ext = os.path.splitext(label)
 
@@ -84,6 +84,7 @@ class Image:
         self.name = name
         self.number = number
         self.directory = directory
+        self.position = position
         self.database = database.database
         self.is_image = ext == '.jpg'
         self.is_video = ext in (

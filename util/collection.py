@@ -76,10 +76,14 @@ def delve(dive_path: str) -> List[Image]:
     '''
     directory = os.path.basename(dive_path)
     exts = ('.jpg', '.mov', '.mp4')
-    return [
-        Image(entry, directory)
+    entries = [
+        entry
         for entry in os.listdir(dive_path)
         if any(entry.endswith(ext) for ext in exts) and '-' in entry
+    ]
+    return [
+        Image(entry, directory, (i + 1) / len(entries))
+        for i, entry in enumerate(entries)
     ]
 
 
