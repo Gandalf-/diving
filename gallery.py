@@ -6,6 +6,7 @@ tree into HTML pages for diving.anardil.net
 '''
 
 import multiprocessing
+import statistics
 import sys
 import textwrap
 from datetime import datetime
@@ -58,24 +59,43 @@ def find_representative(
     return results[0]
 
 
-def get_info(where: Where, lineage: List[str]) -> str:
+def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
     """wikipedia information if available"""
-    if where != Where.Taxonomy:
+    if where == Where.Taxonomy:
+        htmls = []
+        seen = set()
+
+        for part in information.lineage_to_names(lineage):
+            html, url = information.html(part)
+            if url in seen:
+                continue
+            seen.add(url)
+            htmls.append(html)
+        return '<br>'.join(htmls)
+
+    elif where == Where.Gallery and direct:
+        measurements = [image.approximate_depth() for image in direct]
+        depths = [measurement for measurement in measurements if measurement]
+
+        if not depths:
+            metrics.counter('lineages without depth samples')
+            return ''
+        if len(depths) / len(measurements) < 0.5 and len(depths) < 5:
+            metrics.counter('lineages without enough depth samples')
+            return ''
+
+        # questionable math going on here
+        low = int(statistics.mean(low for low, _ in depths))
+        high = max(h for _, h in depths)
+
+        metrics.counter('lineages with depth distribution')
+        return f'''
+        <div class="info">
+        <h3>Distribution: {low}' ~ {high}'</h3>
+        </div>'''
+
+    else:
         return ''
-
-    htmls = []
-    seen = set()
-
-    for part in information.lineage_to_names(lineage):
-        html, url = information.html(part)
-
-        if url in seen:
-            continue
-        seen.add(url)
-
-        htmls.append(html)
-
-    return '<br>'.join(htmls)
 
 
 def _key_to_subject(key: str, where: Where) -> str:
@@ -186,8 +206,8 @@ def html_tree(
     if direct:
         html += html_direct_examples(direct, where)
 
-    # wikipedia info
-    info = get_info(where, lineage)
+    # additional info, like wikipedia and depth distribution
+    info = get_info(where, lineage, direct)
     now = datetime.now()
 
     html += f"""
