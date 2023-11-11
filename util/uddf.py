@@ -129,7 +129,7 @@ def _parse_uddf(file: str) -> DiveInfo:
     )
 
     number = _parse_number(tree, '//uddf:informationbeforedive/uddf:divenumber')
-    depth = _parse_number(tree, '//uddf:informationafterdive/uddf:greatestdepth')
+    max_depth = _parse_number(tree, '//uddf:informationafterdive/uddf:greatestdepth')
     duration = _parse_number(tree, '//uddf:informationafterdive/uddf:diveduration')
 
     tank_start = float('nan')
@@ -157,10 +157,21 @@ def _parse_uddf(file: str) -> DiveInfo:
         temp_high = max(temp_high, value)
         temp_low = min(temp_low, value)
 
+    timeseries = tree.xpath('//uddf:waypoint/uddf:depth', namespaces=_XML_NS)
+    depths = []
+
+    # Iterate over each waypoint and extract depth data
+    for index, depth in enumerate(timeseries):
+        depth_meters = float(depth.text)
+        depth_feet = meters_to_feet(depth_meters)
+        position = (index + 1) / len(timeseries)
+        depths.append((position, depth_feet))
+
     return {
         'date': date,
         'number': 200 + int(number),
-        'depth': meters_to_feet(depth),
+        'depth': meters_to_feet(max_depth),
+        'depths': depths,
         'duration': int(duration),
         'tank_start': pascal_to_psi(tank_start),
         'tank_end': pascal_to_psi(tank_end),
@@ -210,6 +221,7 @@ def _parse_sml(file: str) -> DiveInfo:
         'date': datetime.fromisoformat(date_str),
         'number': suunto_counter.next(),
         'depth': meters_to_feet(float(depth)),
+        'depths': [],
         'duration': int(duration),
         'tank_start': pascal_to_psi(int(tank_start)),
         'tank_end': pascal_to_psi(int(tank_end)),

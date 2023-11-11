@@ -46,7 +46,10 @@ class TestUDDF(unittest.TestCase):
             'temp_high': 78,
             'temp_low': 78,
         }
-        self.assertEqual(expected, _parse(fname))
+        parsed = _parse(fname)
+        depths = parsed.pop('depths')
+        self.assertEqual(expected, parsed)
+        self.assertNotEqual(depths, [])
 
     def test_parse_uddf_long(self) -> None:
         fname = 'Perdix AI[385834A0]#169_2023-09-24.uddf'
@@ -60,7 +63,10 @@ class TestUDDF(unittest.TestCase):
             'temp_high': 59,
             'temp_low': 46,
         }
-        self.assertEqual(expected, _parse(fname))
+        parsed = _parse(fname)
+        depths = parsed.pop('depths')
+        self.assertEqual(expected, parsed)
+        self.assertNotEqual(depths, [])
 
     def test_parse_uddf_zero_start_pressure(self) -> None:
         fname = 'Perdix AI[385834A0]#165_2023-09-22.uddf'
@@ -74,7 +80,10 @@ class TestUDDF(unittest.TestCase):
             'temp_high': 59,
             'temp_low': 48,
         }
-        self.assertEqual(expected, _parse(fname))
+        parsed = _parse(fname)
+        depths = parsed.pop('depths')
+        self.assertEqual(expected, parsed)
+        self.assertNotEqual(depths, [])
 
     def test_parse_sml(self) -> None:
         fname = '99809020-2021-01-09T10_39_00-0.sml'
@@ -82,6 +91,7 @@ class TestUDDF(unittest.TestCase):
             'date': datetime.fromisoformat('2021-01-09T10:39:00'),
             'number': 22,
             'depth': 93,
+            'depths': [],
             'duration': 3620,
             'tank_start': 3190,
             'tank_end': 928,

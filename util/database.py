@@ -67,7 +67,7 @@ class RealDatabase(Database):
             metrics.counter('database gets')
             value = self.database.get(*context, default={})
             assert isinstance(value, dict), f'{ckey} is not a dictionary'
-            self.level_cache[ckey] = self.database.get(*context)
+            self.level_cache[ckey] = value
 
         return self.level_cache[ckey].get(target, default)
 
