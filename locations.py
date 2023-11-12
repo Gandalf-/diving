@@ -5,7 +5,7 @@ collecting dive locations
 '''
 
 import re
-from typing import List, Optional, cast
+from typing import List, cast
 
 from util import collection, common, static
 from util.collection import Image, ImageTree
@@ -24,8 +24,8 @@ def sites_link(when: str, where: str) -> str:
     return f'/sites/{link}-{when}'
 
 
-def get_context(site: str) -> Optional[str]:
-    '''try to find a dive site in the larger collection of locations'''
+def get_region(site: str) -> str:
+    '''find a dive site in the larger collection of locations'''
     for name, places in static.locations.items():
         for place in places:
             if place == site:
@@ -34,16 +34,12 @@ def get_context(site: str) -> Optional[str]:
             if site.startswith(place):
                 return name
 
-    return None
+    assert False, f'no location for {site}'
 
 
 def add_context(site: str) -> str:
-    '''try to place a dive site into a larger collection of locations'''
-    name = get_context(site)
-    if name:
-        return ' '.join([name, site])
-
-    return site
+    '''place a dive site into a larger collection of locations'''
+    return f'{get_region(site)} {site}'
 
 
 def sites() -> ImageTree:

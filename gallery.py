@@ -59,6 +59,30 @@ def find_representative(
     return results[0]
 
 
+def get_gallery_info(direct: List[Image]) -> str:
+    parts = []
+    measurements = [image.approximate_depth() for image in direct]
+    depths = [measurement for measurement in measurements if measurement]
+
+    if not depths or (len(depths) / len(measurements) < 0.5 and len(depths) < 5):
+        metrics.counter('lineages without depth distribution')
+    else:
+        # questionable math going on here
+        low = int(statistics.mean(low for low, _ in depths))
+        high = max(h for _, h in depths)
+        metrics.counter('lineages with depth distribution')
+        parts.append(f"{low}' ~ {high}'")
+
+    regions = sorted({locations.get_region(image.site()) for image in direct})
+    parts.append(', '.join(regions))
+
+    distribution = ' '.join(parts)
+    return f'''
+    <div class="info">
+    <p><b>Distribution:</b> {distribution}</p>
+    </div>'''
+
+
 def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
     """wikipedia information if available"""
     if where == Where.Taxonomy:
@@ -74,25 +98,7 @@ def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
         return '<br>'.join(htmls)
 
     elif where == Where.Gallery and direct:
-        measurements = [image.approximate_depth() for image in direct]
-        depths = [measurement for measurement in measurements if measurement]
-
-        if not depths:
-            metrics.counter('lineages without depth samples')
-            return ''
-        if len(depths) / len(measurements) < 0.5 and len(depths) < 5:
-            metrics.counter('lineages without enough depth samples')
-            return ''
-
-        # questionable math going on here
-        low = int(statistics.mean(low for low, _ in depths))
-        high = max(h for _, h in depths)
-
-        metrics.counter('lineages with depth distribution')
-        return f'''
-        <div class="info">
-        <h3>Distribution: {low}' ~ {high}'</h3>
-        </div>'''
+        return get_gallery_info(direct)
 
     else:
         return ''

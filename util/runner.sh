@@ -173,6 +173,11 @@ scanner() {
       producer() {
         while read -r path; do
           case $path in
+            */diving)
+              # not interested in whether the root changed
+              continue
+              ;;
+
             *.jpg)
               # this image changed
               echo "$path"

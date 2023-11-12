@@ -1,10 +1,10 @@
 .vscode
 __pycache__
+util/__pycache__
+data/db.json.tmp
 .mypy_cache
 .ruff_cache
-web/detective/data.js
 tags
-node_modules
 *.pyc
 profile.*
 .DS_Store

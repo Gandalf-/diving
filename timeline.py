@@ -58,8 +58,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
     sites_link = locations.sites_link(when, title)
     when = common.pretty_date(when)
 
-    location = locations.get_context(title)
-    assert location, f'no location for {title}'
+    region = locations.get_region(title)
     if sites_link:
         name = f'''\
 <a href="{sites_link}">
@@ -73,7 +72,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
 
     html = f'''\
 {name}
-<h3 class="tight">{when} - {location}</h3>
+<h3 class="tight">{when} - {region}</h3>
 '''
     info = uddf.lookup(dive)
     if info:

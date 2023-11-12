@@ -13,7 +13,7 @@ class TestLocations(unittest.TestCase):
             'Bonaire, British Columbia, Curacao, Galapagos, Maldives, and Washington',
         )
 
-    def test_get_context(self) -> None:
+    def test_get_region(self) -> None:
         samples = [
             ('Edmonds', 'Washington'),
             ('Oil Slick', 'Bonaire'),
@@ -21,7 +21,7 @@ class TestLocations(unittest.TestCase):
             ('Rockaway Stretch Reef', 'Washington'),
         ]
         for site, context in samples:
-            self.assertEqual(locations.get_context(site), context)
+            self.assertEqual(locations.get_region(site), context)
 
     def test_add_context(self) -> None:
         '''add_context'''

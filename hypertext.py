@@ -244,7 +244,6 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
     caption = f'{image.name}, {location}'
 
     depth = image.approximate_depth()
-    extra = 'Close'
 
     if depth:
         low, high = depth
@@ -266,7 +265,7 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
             <a class="top elem timeline" data-fancybox="gallery" data-caption="{caption}" href="{fullsize}">
             Fullsize Image
             </a>
-            <p class="top elem">{extra}</p>
+            <p class="top elem">Close</p>
         </div>
     </div>
     """
@@ -280,17 +279,6 @@ def _direct_video_html(image: Image, where: Where) -> str:
 
     fullsize = image.fullsize()
     thumbnail = image.thumbnail()
-
-    depth = image.approximate_depth()
-    extra = 'Close'
-
-    if depth:
-        low, high = depth
-        if high - low < 10:
-            average = int(statistics.mean(depth))
-            extra = f"~{average}'"
-        else:
-            extra = f"{low}' ~ {high}'"
 
     allowed = string.ascii_letters + string.digits
     unique = 'video_' + ''.join(c for c in image.identifier() if c in allowed)
@@ -313,7 +301,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
             <a class="top elem timeline" data-fancybox href="#{unique}">
             Full Video
             </a>
-            <p class="top elem">{extra}</p>
+            <p class="top elem">Close</p>
 
             <video controls muted preload="none" id="{unique}" style="display:none;">
                 <source src="{fullsize}" type="video/webm">
