@@ -178,7 +178,9 @@ def html_tree(
         html += """
         <div class="image">
         <a href="{link}">
-            <img height=225 width=300 alt="{alt}" src="{thumbnail}">
+            <div class="zoom-wrapper">
+              <img class="zoom" height=225 width=300 alt="{alt}" src="{thumbnail}">
+            </div>
             <h3 class="tight">
               <span class="sneaky">{size}</span>
               {subject}

@@ -1,3 +1,21 @@
+/* Ensure the container of the image doesn't let the zoomed image overflow */
+.zoom-wrapper {
+  overflow: hidden;
+  /* Optional: Add a transition for the container to handle when the image gets zoomed in */
+  transition: overflow 0.5s;
+}
+
+/* This class should be applied to the thumbnail images themselves */
+.zoom {
+  transition: transform 0.5s ease;
+  /* Smooth transition for the transform */
+}
+
+.zoom:hover {
+  transform: scale(1.05);
+  /* Slightly enlarge the image on hover */
+}
+
 /* Style the collapsible content. Note: hidden by default */
 .content {
   padding: 0 18px;

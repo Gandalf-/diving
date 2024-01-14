@@ -256,8 +256,8 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
 
     return f"""
     <div class="card" onclick="flip(this);">
-        <div class="card_face card_face-front">
-            <img height=225 width=300 {lazy_load} alt="{image.name}" src="{thumbnail}">
+        <div class="card_face card_face-front zoom-wrapper">
+            <img class="zoom" height=225 width=300 {lazy_load} alt="{image.name}" src="{thumbnail}">
         </div>
         <div class="card_face card_face-back">
             {name_html}
