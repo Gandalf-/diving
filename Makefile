@@ -39,6 +39,9 @@ prune:
 local: data/translations.yml
 	bash util/macos.sh build
 
+fast: data/translations.yml
+	bash util/macos.sh build --fast
+
 dev: data/translations.yml
 	bash util/macos.sh dev
 

@@ -123,13 +123,13 @@ sync() {
   mirror \
     --exclude '*.html' \
     "$www"/ \
-    yew:/mnt/ssd/hosts/web/diving/
+    aspen:/mnt/ssd/hosts/web/diving/
 
   mirror \
     --delete \
     --delete-excluded \
     "$www"/ \
-    yew:/mnt/ssd/hosts/web/diving/
+    aspen:/mnt/ssd/hosts/web/diving/
 }
 
 dev() {

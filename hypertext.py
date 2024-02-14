@@ -263,9 +263,9 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
             {name_html}
             {site_html}
             <a class="top elem timeline" data-fancybox="gallery" data-caption="{caption}" href="{fullsize}">
-            Fullsize Image
+            <h3>Zoom</h3>
             </a>
-            <p class="top elem">Close</p>
+            <h3 class="top elem">Close</h3>
         </div>
     </div>
     """
