@@ -152,4 +152,9 @@ sitemap() {
   xmllint --noout sitemap.xml
 }
 
+serve() {
+  cd "$www" || exit 1
+  python3 -m http.server
+}
+
 "$@"

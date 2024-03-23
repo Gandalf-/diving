@@ -35,6 +35,7 @@ pinned: Dict[str, str] = _static['pinned']
 ignore: List[str] = _static['ignore']
 splits: List[str] = _static['splits']
 qualifiers: List[str] = _static['qualifiers']
+reef_organisms: List[str] = _static['reef-organisms']
 
 no_taxonomy_exact: Set[str] = set(_static['no-taxonomy-exact'])
 no_taxonomy_any: Set[str] = set(_static['no-taxonomy-any'])

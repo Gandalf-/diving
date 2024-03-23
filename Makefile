@@ -50,3 +50,6 @@ sitemap:
 
 sync: sitemap
 	bash util/macos.sh sync
+
+serve:
+	bash util/macos.sh serve

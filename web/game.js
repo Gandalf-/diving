@@ -4,6 +4,11 @@ var g_incorrect = 0;
 var g_points = 0;
 var g_made_mistake = false;
 
+var names = [];
+var thumbs = [];
+var similarities = [];
+var difficulties = [];
+
 const g_lower_bound_table = [0, 15, 25, 40, 80];
 const g_upper_bound_table = [10, 25, 35, 40, 100];
 const g_count_table = [2, 2, 4, 6, 8];
@@ -16,6 +21,7 @@ const g_sample_table = [2, 2, 2, 1, 1];
  * options below
  */
 function image_game() {
+    choose_dataset('main');
     const difficulty = get_difficulty();
     const correct = choose_correct(difficulty);
     console.log(names[correct]);
@@ -26,7 +32,6 @@ function image_game() {
     const options = find_similar(correct, lower_bound, upper_bound, count - 1);
 
     set_correct_image(correct);
-
     const actual = random(count);
 
     for (let i = 0, w = 0; i < count; i++) {
@@ -47,19 +52,20 @@ function image_game() {
  * options below
  */
 function name_game() {
-    var difficulty = get_difficulty();
+    choose_dataset('main');
 
-    var correct = choose_correct(difficulty);
+    const difficulty = get_difficulty();
+    const correct = choose_correct(difficulty);
     console.log(names[correct]);
 
-    var lower_bound = g_lower_bound_table[difficulty];
-    var upper_bound = g_upper_bound_table[difficulty];
-    var count = g_count_table[difficulty];
-    var options = find_similar(correct, lower_bound, upper_bound, count - 1);
+    const lower_bound = g_lower_bound_table[difficulty];
+    const upper_bound = g_upper_bound_table[difficulty];
+    const count = g_count_table[difficulty];
+    const options = find_similar(correct, lower_bound, upper_bound, count - 1);
 
     set_correct_name(correct);
+    const actual = random(count);
 
-    var actual = random(count);
     for (i = 0, w = 0; i < count; i++) {
 
         var child = document.createElement('div');
@@ -79,6 +85,57 @@ function name_game() {
     add_new_correct_thumbnail(correct);
 }
 
+/*
+ * the same as the image_game but with a different dataset
+ */
+function reef_game() {
+    choose_dataset('reef');
+    set_difficulty(4); // Very Hard!
+
+    const difficulty = get_difficulty();
+    const correct = choose_correct(difficulty);
+    console.log(names[correct]);
+
+    const lower_bound = g_lower_bound_table[difficulty];
+    const upper_bound = g_upper_bound_table[difficulty];
+    const count = g_count_table[difficulty];
+    const options = find_similar(correct, lower_bound, upper_bound, count - 1);
+
+    set_correct_name(correct);
+    const actual = random(count);
+
+    for (i = 0, w = 0; i < count; i++) {
+
+        var child = document.createElement('div');
+        child.setAttribute('id', 'option' + i);
+        byId('options').appendChild(child);
+
+        if (i == actual) {
+            set_text('option' + i, correct, 'success();');
+        } else {
+            set_text('option' + i, options[w], 'failure(this);');
+            w++;
+        }
+    }
+
+    add_zoom();
+    add_skip();
+    add_new_correct_thumbnail(correct);
+}
+
+function choose_dataset(dataset) {
+    if (dataset == 'main') {
+        names = main_names;
+        thumbs = main_thumbs;
+        similarities = main_similarities;
+        difficulties = main_difficulties;
+    } else if (dataset == 'reef') {
+        names = reef_names;
+        thumbs = reef_thumbs;
+        similarities = reef_similarities;
+        difficulties = reef_difficulties;
+    }
+}
 
 /* HTML modifying utilities */
 
@@ -88,12 +145,12 @@ function choose_game() {
     reset_options();
 
     var game = byId('game').value;
-    if (game == "images") {
+    if (game == 'images') {
         image_game();
-    } else if (game == "names") {
+    } else if (game == 'names') {
         name_game();
-    } else {
-        name_game();
+    } else if (game == 'reef') {
+        reef_game();
     }
 }
 
@@ -286,6 +343,10 @@ function add_zoom() {
 
 function get_difficulty() {
     return parseInt(byId('difficulty').value);
+}
+
+function set_difficulty(value) {
+    byId('difficulty').value = value;
 }
 
 /**

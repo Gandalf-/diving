@@ -11,7 +11,8 @@ from typing import Iterable, List, Optional, Tuple
 from util import collection, static, taxonomy
 from util.common import titlecase
 from util.image import Image, categorize, split, unqualify
-from util.static import VersionedResource, source_root, stylesheet
+from util.metrics import metrics
+from util.static import VersionedResource, reef_organisms, source_root, stylesheet
 
 
 def get_hashes(images: List[Image]) -> Iterable[str]:
@@ -25,9 +26,11 @@ SimiliarityTable = List[List[int]]
 DifficultyTable = List[int]
 
 
-def table_builder() -> Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
+def table_builder(
+    images: List[Image],
+) -> Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
     '''Build the tables.'''
-    images = reversed(list(collection.named()))
+    images = reversed(images)
     all_names, images = _filter_images(images)
 
     hashes = list(get_hashes(images))
@@ -48,42 +51,62 @@ def table_builder() -> Tuple[List[str], ThumbsTable, SimiliarityTable, Difficult
 
 def writer() -> None:
     '''Write out all the game artifacts'''
-    _write_javascript()
+    _write_data_js(collection.named(), 'main')
+    _write_data_js(_reef_images(), 'reef')
 
     shutil.copy(
         os.path.join(source_root, 'web', 'game.js'),
         'detective/game.js',
     )
 
-    data = VersionedResource('detective/data.js', 'detective')
     game = VersionedResource('detective/game.js', 'detective')
+    data = VersionedResource('detective/main.js', 'detective')
+    reef = VersionedResource('detective/reef.js', 'detective')
 
-    for vr in [data, game]:
+    for vr in [game, data, reef]:
         vr.cleanup()
         vr.write()
 
     with open('detective/index.html', 'w+') as fd:
-        html = html_builder(stylesheet.path, data.path, game.path)
+        html = _html_builder(stylesheet.path, game.path, data.path, reef.path)
         print(html, file=fd, end='')
 
 
 # PRIVATE
 
 
-def _write_javascript() -> None:
+def _write_data_js(images: List[Image], name: str) -> None:
     '''write out the tables to a file'''
-    ns, ts, ss, ds = table_builder()
+    ns, ts, ss, ds = table_builder(images)
 
     # This saves 100KB of data, ~20% of the total
     ts = str(ts).replace(' ', '')
     ss = str(ss).replace(' ', '')
     ds = str(ds).replace(' ', '')
 
-    with open('detective/data.js', 'w+') as fd:
-        print('var names =', ns, file=fd)
-        print('var thumbs =', ts, file=fd)
-        print('var similarities =', ss, file=fd)
-        print('var difficulties =', ds, file=fd)
+    with open(f'detective/{name}.js', 'w+') as fd:
+        print(f'var {name}_names =', ns, file=fd)
+        print(f'var {name}_thumbs =', ts, file=fd)
+        print(f'var {name}_similarities =', ss, file=fd)
+        print(f'var {name}_difficulties =', ds, file=fd)
+
+
+def _reef_images() -> List[Image]:
+    '''images of REEF organisms'''
+    reef = set(reef_organisms)
+    named = collection.named()
+    found = set()
+
+    result = []
+    for image in named:
+        name = image.simplified()
+        if name in reef:
+            result.append(image)
+            found.add(name)
+
+    metrics.counter('reef organisms found', len(found))
+    metrics.counter('reef organisms missing', len(reef) - len(found))
+    return result
 
 
 def _distance(a: str, b: str, tree: Optional[dict[str, str]] = None) -> float:
@@ -202,31 +225,7 @@ def _similarity_table(names: List[str]) -> SimiliarityTable:
     return similarity
 
 
-# INFORMATIONAL
-
-
-def _inspect_choices() -> None:
-    '''build a directory tree of chosen thumbnails for visual inspection'''
-    ns, ts, _, _ = table_builder()
-
-    oroot = '/mnt/zfs/working'
-    source = os.path.join(oroot, 'object-publish/diving-web/imgs')
-    output = os.path.join(oroot, 'tmp/detective')
-
-    if os.path.exists(output):
-        shutil.rmtree(output)
-    os.mkdir(output)
-
-    for i, name in enumerate(ns):
-        os.mkdir(os.path.join(output, name))
-
-        for j, thumb in enumerate(ts[i]):
-            src = os.path.join(source, thumb + '.jpg')
-            dst = os.path.join(output, name, f'{j:02} ' + thumb + '.jpg')
-            os.link(src, dst)
-
-
-def html_builder(css: str, data: str, game: str) -> str:
+def _html_builder(css: str, game: str, data: str, reef: str) -> str:
     '''Insert dynamic content into the HTML template'''
     desc = "Scuba diving picture identification game, identify a picture or choose the image for a name"
     return f'''
@@ -243,6 +242,7 @@ def html_builder(css: str, data: str, game: str) -> str:
         <link rel="stylesheet" href="/jquery.fancybox.min.css" />
         <script src="/{data}"></script>
         <script src="/{game}"></script>
+        <script src="/{reef}" defer></script>
         <style>
 body {{
     max-width: 1080px;
@@ -281,6 +281,7 @@ body {{
                 <select id="game" onchange="choose_game();">
                     <option value="names">Names</option>
                     <option value="images">Images</option>
+                    <option value="reef">REEF</option>
                 </select>
                 <div class="scoring">
                     <h3 id="score"></h3>

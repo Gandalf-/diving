@@ -393,3 +393,85 @@ difficulty:
     - hydroid
     - barnacle
     - limpet
+
+reef-organisms:
+  # rockfish
+  - black rockfish
+  - blue rockfish
+  - deacon rockfish
+  - yellowtail rockfish
+  - brown rockfish
+  - copper rockfish
+  - gopher rockfish
+  - grass rockfish
+  - canary rockfish
+  - vermilion rockfish
+  - quillback rockfish
+  - china rockfish
+  - puget sound rockfish
+  - yellow eye rockfish
+  - young of year rockfish
+  # perch
+  - pile perch
+  - striped perch
+  - shiner perch
+  - kelp perch
+  # greenlings
+  - kelp greenling
+  - lingcod
+  - whitespotted greenling
+  # sculpins
+  - cabezon sculpin
+  - buffalo sculpin
+  - red irish lord sculpin
+  # other
+  - spiny dogfish shark
+  - bluntnose sixgill shark
+  - ratfish
+  - wolf eel
+  # sea stars
+  - blood star
+  - sunflower star
+  - leather star
+  - ochre star
+  - mottled star
+  - rainbow star
+  - giant pink star
+  - great spined star
+  - morning sun star
+  - purple sea urchin
+  - red sea urchin
+  - green sea urchin
+  # crabs
+  - kelp crab
+  - red rock crab
+  - brown rock crab
+  - slender graceful crab
+  - dungeness crab
+  - european green crab
+  # other
+  - hairy triton
+  - pinto abalone
+  - rough piddock clam
+  - rock scallop
+  - gumboot chiton
+  - giant pacific octopus
+  - california sea cucumber
+  - red sea cucumber
+  - metridium anemone
+  - painted anemone
+  - stubby rose anemone
+  - fish eating anemone
+  - white spotted rose anemone
+  # kelp
+  - bull kelp
+  - torn kelp
+  - wire weed algae
+  - walking kelp
+  - broad ribbed kelp
+  - sieve kelp
+  - sugar kelp
+  - three ribbed kelp
+  - winged kelp
+  - five ribbed kelp
+  - acid weed algae
