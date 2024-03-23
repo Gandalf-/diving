@@ -4,10 +4,10 @@ var g_incorrect = 0;
 var g_points = 0;
 var g_made_mistake = false;
 
-var names = [];
-var thumbs = [];
-var similarities = [];
-var difficulties = [];
+var g_names = [];
+var g_thumbs = [];
+var g_similarities = [];
+var g_difficulties = [];
 
 const g_lower_bound_table = [0, 15, 25, 40, 80];
 const g_upper_bound_table = [10, 25, 35, 40, 100];
@@ -24,7 +24,7 @@ function image_game() {
     choose_dataset('main');
     const difficulty = get_difficulty();
     const correct = choose_correct(difficulty);
-    console.log(names[correct]);
+    console.log(g_names[correct]);
 
     const lower_bound = g_lower_bound_table[difficulty];
     const upper_bound = g_upper_bound_table[difficulty];
@@ -56,7 +56,7 @@ function name_game() {
 
     const difficulty = get_difficulty();
     const correct = choose_correct(difficulty);
-    console.log(names[correct]);
+    console.log(g_names[correct]);
 
     const lower_bound = g_lower_bound_table[difficulty];
     const upper_bound = g_upper_bound_table[difficulty];
@@ -94,7 +94,7 @@ function reef_game() {
 
     const difficulty = get_difficulty();
     const correct = choose_correct(difficulty);
-    console.log(names[correct]);
+    console.log(g_names[correct]);
 
     const lower_bound = g_lower_bound_table[difficulty];
     const upper_bound = g_upper_bound_table[difficulty];
@@ -125,15 +125,15 @@ function reef_game() {
 
 function choose_dataset(dataset) {
     if (dataset == 'main') {
-        names = main_names;
-        thumbs = main_thumbs;
-        similarities = main_similarities;
-        difficulties = main_difficulties;
+        g_names = main_names;
+        g_thumbs = main_thumbs;
+        g_similarities = main_similarities;
+        g_difficulties = main_difficulties;
     } else if (dataset == 'reef') {
-        names = reef_names;
-        thumbs = reef_thumbs;
-        similarities = reef_similarities;
-        difficulties = reef_difficulties;
+        g_names = reef_names;
+        g_thumbs = reef_thumbs;
+        g_similarities = reef_similarities;
+        g_difficulties = reef_difficulties;
     }
 }
 
@@ -156,7 +156,7 @@ function choose_game() {
 
 function set_text(where, what, onclick) {
     var option = byId(where);
-    var name = names[what];
+    var name = g_names[what];
 
     if (onclick) {
         option.setAttribute('onclick', onclick);
@@ -170,7 +170,7 @@ function set_text(where, what, onclick) {
 }
 
 function set_thumbnail(where, what, onclick, thumb) {
-    thumb = thumb || thumbs[what][random(thumbs[what].length)];
+    thumb = thumb || g_thumbs[what][random(g_thumbs[what].length)];
 
     var img = document.createElement('img');
     img.src = '/imgs/' + thumb + '.webp';
@@ -237,7 +237,7 @@ function set_correct_image(correct) {
     outer.innerHTML = '';
 
     var child = document.createElement('h2');
-    child.innerHTML = 'Select the ' + names[correct];
+    child.innerHTML = 'Select the ' + g_names[correct];
     outer.appendChild(child);
 }
 
@@ -252,7 +252,7 @@ function set_correct_name(correct, previous) {
     outer.classList.add('grid', 'correct_name');
     outer.innerHTML = '';
 
-    const images = shuffle([...thumbs[correct]]);
+    const images = shuffle([...g_thumbs[correct]]);
 
     var i = 0;
     while (i < images.length && images[i] === previous) {
@@ -295,7 +295,7 @@ function add_skip() {
  * @param {number} correct - The index of the correct creature.
  */
 function add_new_correct_thumbnail(correct) {
-    if (thumbs[correct].length < 2) {
+    if (g_thumbs[correct].length < 2) {
         return;
     }
 
@@ -361,17 +361,17 @@ function choose_correct(difficulty) {
 
     if (typeof variable !== 'undefined') {
         // In case we have cache mismatches between data.js and game.js.
-        return random(names.length);
+        return random(g_names.length);
     }
 
     for (let i = 0; i < attempts; i++) {
-        candidate = random(names.length);
+        candidate = random(g_names.length);
 
-        if (difficulties[candidate] <= difficulty) {
+        if (g_difficulties[candidate] <= difficulty) {
             break;
         }
 
-        console.log(names[candidate], 'is too difficult');
+        console.log(g_names[candidate], 'is too difficult');
     }
 
     return candidate;
@@ -395,9 +395,9 @@ function choose_correct(difficulty) {
  */
 function find_similar(target, lowerBound, upperBound, required) {
     const found = [];
-    var shuffledIndices = shuffle([...Array(names.length).keys()]);
+    var shuffledIndices = shuffle([...Array(g_names.length).keys()]);
 
-    console.log("Search limits", lowerBound, upperBound, names[target]);
+    console.log("Search limits", lowerBound, upperBound, g_names[target]);
 
     while (found.length < required) {
         if (shuffledIndices.length === 0) {
@@ -411,7 +411,7 @@ function find_similar(target, lowerBound, upperBound, required) {
             lowerBound = Math.max(0, lowerBound - 5);
             upperBound = Math.min(100, upperBound + 5);
             console.log("New limits", lowerBound, upperBound);
-            shuffledIndices = shuffle([...Array(names.length).keys()]);
+            shuffledIndices = shuffle([...Array(g_names.length).keys()]);
         }
 
         const candidate = shuffledIndices.pop();
@@ -421,8 +421,8 @@ function find_similar(target, lowerBound, upperBound, required) {
 
         const i = Math.max(candidate, target);
         const j = Math.min(candidate, target);
-        console.log('getting score for', candidate, target, i, j, names.length, shuffledIndices.length);
-        const score = similarities[i][j];
+        console.log('getting score for', candidate, target, i, j, g_names.length, shuffledIndices.length);
+        const score = g_similarities[i][j];
 
         if (score >= lowerBound && score <= upperBound) {
             found.push(candidate);
@@ -430,7 +430,7 @@ function find_similar(target, lowerBound, upperBound, required) {
     }
 
     found.forEach((creatureIndex, i) => {
-        console.log(i, creatureIndex, names[creatureIndex]);
+        console.log(i, creatureIndex, g_names[creatureIndex]);
     });
 
     return found;
