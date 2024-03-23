@@ -186,10 +186,7 @@ scanner() {
             *)
               # this directory changed, scan its contents
               for sub in "$path"/*.{jpg,mov}; do
-                [[ -f "$sub" ]] || {
-                  "$sub missing!" >&2
-                  continue
-                }
+                [[ -f "$sub" ]] || continue
                 echo "$sub"
               done
               printf '%0*d%s\n' $(( size - 1 )) 0 'FOUND_RENAME'
