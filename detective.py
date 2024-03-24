@@ -124,8 +124,7 @@ def _distance(a: str, b: str, tree: Optional[dict[str, str]] = None) -> float:
 
     for x, y in zip(at, bt):
         total += 1
-        if x == y:
-            match += 1
+        match += 1 if x == y else 0
 
     return match / total
 
