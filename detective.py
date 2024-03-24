@@ -12,7 +12,8 @@ from util import collection, static, taxonomy
 from util.common import titlecase
 from util.image import Image, categorize, split, unqualify
 from util.metrics import metrics
-from util.static import VersionedResource, reef_organisms, source_root, stylesheet
+from util.resource import VersionedResource
+from util.static import reef_organisms, source_root, stylesheet
 
 
 def get_hashes(images: List[Image]) -> Iterable[str]:

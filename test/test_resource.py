@@ -3,10 +3,11 @@ import unittest
 from typing import List, Set
 
 from util import static
+from util.resource import VersionedResource
 
 
-class TestStatic(unittest.TestCase):
-    '''static.py'''
+class TestResource(unittest.TestCase):
+    '''resource.py'''
 
     def writer(self, path: str, body: str) -> None:
         '''write a file, track it for cleanup'''
@@ -27,14 +28,14 @@ class TestStatic(unittest.TestCase):
                 pass
 
     def test_versioned_css(self) -> None:
-        vr = static.VersionedResource(static.source_root + 'web/style.css')
+        vr = VersionedResource(static.source_root + 'web/style.css')
         self.assertEqual(vr._name, 'style.css')
         self.assertIn('display: inline-block;', vr._body)
         self.assertEqual(len(vr._hash), 10)
         self.assertEqual(vr.path, f'style-{vr._hash}.css')
 
     def test_does_not_overwrite_identical(self) -> None:
-        vr = static.VersionedResource('/tmp/versioned.bin', '/tmp')
+        vr = VersionedResource('/tmp/versioned.bin', '/tmp')
         self.assertEqual(vr.path, '/tmp/versioned-404a6e35ea.bin')
 
         self.writer(vr.path, 'applesauce')
@@ -53,7 +54,7 @@ class TestStatic(unittest.TestCase):
         for body in range(0, 10):
             self.writer('/tmp/versioned.bin', str(body))
 
-            vr = static.VersionedResource('/tmp/versioned.bin', '/tmp')
+            vr = VersionedResource('/tmp/versioned.bin', '/tmp')
             self.assertNotIn(vr.path, seen)
             seen.append(vr.path)
 
@@ -69,7 +70,7 @@ class TestStatic(unittest.TestCase):
         for body in range(0, 10):
             self.writer('/tmp/versioned.bin', str(body))
 
-            vr = static.VersionedResource('/tmp/versioned.bin', '/tmp')
+            vr = VersionedResource('/tmp/versioned.bin', '/tmp')
             wrote.append(vr.path)
 
             self.written.add(vr.path)

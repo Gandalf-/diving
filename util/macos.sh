@@ -10,7 +10,7 @@ start_database() {
   cleanup() {
     (( pid )) || return;
     (
-      sleep 1.1
+      d --flush
       kill "$pid"
     ) &
     disown
