@@ -79,6 +79,7 @@ anguilliformes: Eel-shaped
 animalia: Animals
 annelida: Ringed
 annulata: Ringed
+annulatum: Ringed
 antarcticus: Southern
 antedonidae: Flower-giver-family
 antennarius: Antenna-bearer
@@ -134,6 +135,7 @@ astropecten: Star-comb
 astropectinidae: Star-comb-family
 astrophyton: Star-plant
 atra: Black
+atrogriseata: Dark-grey
 aulorhynchidae: Channel-nose-family
 aulorhynchus: Channel-nose
 aulostomidae: Flute-mouth-family
@@ -176,6 +178,7 @@ bodianus: Of-Bodianus
 bothidae: Flatfish-family
 bothus: Flatfish
 botryocladia: Cluster-branch
+bougainvilliidae: Bougainville's
 bournoni: Bourne's
 bowerbanki: Bowerbank's
 brachiopoda: Arm-footed
@@ -202,6 +205,8 @@ californicum: Californian
 californicus: Californian
 californiensis: From-California
 callioplanidae: Beautiful-plankton-family
+calliostoma: Beautiful-mouth
+calliostomatidae: Beautiful-mouth-family
 callyspongia: Beautiful-sponge
 callyspongiidae: Beautiful-sponge-family
 calyx: Cup
@@ -315,6 +320,7 @@ comasteridae: Comaster-family
 comatulida: Hairy-star
 comissa: Joined
 complanata: Flattened
+concinna: Elegant
 condylactis: Knob-action
 congridae: Conger-family
 conifera: Cone-bearing
@@ -391,6 +397,7 @@ decoratus: Decorated
 decorus: Graceful
 delphinidae: Dolphin-family
 demospongiae: Common-sponges
+dendritica: Tree-like
 dendriticus: Tree-like
 dendrobeania: Tree-like-purse
 dendrochirotida: Tree-hand
@@ -450,6 +457,7 @@ echinometra: Hedgehog-measurer
 echinometridae: Measuring-spine-family
 echinostrephus: Spiny-turning
 ectopleura: On-the-side-tentacle
+edaphus: Ground-dweller
 edulis: Edible
 edwardsia: Edwards's
 edwardsiidae: Edwards's-family
@@ -463,6 +471,7 @@ ellisellidae: Ellis's-family
 elongatus: Elongated
 elopiformes: Elope-shaped
 embiotocidae: Viviparous-family
+emphaeus: Conspicuous
 endeca: Eleven
 enophrys: Eyebrow-in
 entacmaea: Point-marked
@@ -538,12 +547,15 @@ funebris: Funereal
 fungia: Mushroom
 fungiidae: Mushroom-family
 fungites: Mushroom-like
+furcilliger: Fork-bearing
+fuscovittatus: Dark-brown-striped
 fuscus: Dark
 galapagensis: From-Galapagos
 galatheidae: Galatea-family
 galatheoidea: Galatea-like
 galloprovincialis: Of-Gallo
 gardneri: Gardner's
+garveia: Garveia's
 gasterosteiformes: Belly-bone-shaped
 gastropoda: Stomach-foot
 gastropteridae: Belly-wing-family
@@ -603,6 +615,7 @@ halcampa: Sea-caterpillar
 halcampidae: Sea-caterpillar-family
 halichondria: Sea-sponge
 halichondriidae: Sea-sponge-family
+haliclona: Salt-branch
 haliotidae: Sea-ear-family
 haliotis: Sea-ear
 haliotoidea: Sea-ear-like
@@ -710,6 +723,7 @@ jordania: Jordan's
 junceella: Reed-like
 juniperina: Juniper-like
 kaburakia: Kaburaki's
+kamchaticus: From-Kamchatka
 kamtschatkana: From-Kamchatka
 kasmira: From-Kashmir
 katharina: Pure
@@ -757,6 +771,7 @@ lichenopora: Lichen-bearer
 lichenoporidae: Lichen-bearer-family
 lignosa: Woody
 limacia: Slug-like
+limapontiidae: Slug-bridge-family
 limneria: Artist
 linckia: Linck's
 lineidae: Line-family
@@ -774,6 +789,7 @@ loliginidae: Calamari-family
 longipes: Long-legged
 longispina: Long-spined
 lopha: Tufted
+lophaster: Crested-star
 lophiiformes: Tuft-shaped
 lopholithodes: Tufted-Lithodes
 lophopanopeus: Tufted-Panopeus
@@ -853,6 +869,7 @@ milleporella: Thousand-pored
 milleporidae: Thousand-pore-family
 miniata: Vermilion
 miniatus: Vermilion
+minimus: Smallest
 mirabilis: Miraculous
 mithracidae: Mithracid-family
 mithrax: Mithras's
@@ -1008,6 +1025,7 @@ orienthella: Eastern-beauty
 ornata: Ornate
 orsaki: Orsak's
 orthasterias: Straight-star
+orthopagurus: Straight-hermit-crab
 orthopyxis: Straight-box
 osculifera: Mouth-bearing
 osmunda: Divine-strength
@@ -1120,6 +1138,9 @@ pisaster: Starfish
 piscivora: Fish-eater
 pixellae: Little-spot
 placetron: Broad-shield
+placida: Calm
+plakobranchoidea: Flat-gilled
+plantae: Plant
 platax: Flatfish
 platyceros: Flat-horn
 platyhelminthes: Flat-worm
@@ -1236,6 +1257,7 @@ richardsonii: Richardson's
 richii: Rich's
 rigida: Rigid
 rivulatus: Small-streamed
+robilliardi: Robilliard's
 robustipinna: Strong-feathered
 rosans: Rosy
 roseus: Rose-colored
@@ -1247,7 +1269,9 @@ rubescens: Becoming-red
 rubida: Reddish
 rubiformis: Red-shaped
 ruetzleri: Ruetzler's
+rufopunctata: Red-spotted
 rufus: Red
+rustyus: Rusty-colored
 rypticus: Hidden
 sabellariidae: Sabella-like-family
 sabellastarte: Sabella-star
@@ -1514,7 +1538,10 @@ zostera: Girdle
 zosteraceae: Girdle-like
 zygophora: Yoke-bearing
 
-emphaeus:
+catriona:
+cuthonella:
+cuthonellidae:
 sepioidea:
 sepioteuthis:
+stiliger:
 telmatactis:

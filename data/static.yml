@@ -54,8 +54,15 @@ locations:
     - God's Pocket
     - Hoodi Nudi
     - Hussar Bay
-    - Lucan Shoot
-    - Seven Trees
+    - Hussar East
+    - Hussar Point
+    - Hunt's Rock
+    - Lucan Chute
+    - Northwest Passage Wall
+    - Seven Tree
+    - Ruth's Rocks
+    - Snowfall
+    - Buttertart
   Galapagos:
     - Baltra
     - Cousin's Rock
@@ -297,6 +304,7 @@ categories:
   crab:
     - spider
   nudibranch:
+    - aeolid
     - dendronotid
     - dorid
     - doris

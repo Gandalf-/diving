@@ -270,6 +270,7 @@ def _links() -> None:
 
     def check_link_exists(args: Tuple[str, str]) -> Optional[str]:
         path, link = args
+
         for attempt in (link + '.html', link + 'index.html', link):
             if os.path.exists(attempt):
                 metrics.counter('links verified')

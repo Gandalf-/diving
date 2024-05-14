@@ -159,7 +159,6 @@ def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
     - vague, like "sponge"
     - no taxonomy, suggesting things like "dive site"
     '''
-    debug = False
     knowns = set(taxonomy.load_known(exact_only=True))
     all_names = []
     new_images = []
@@ -188,15 +187,14 @@ def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
         # no qualified subjects: fish eggs, juvenile rock fish
         simple = image.singular().lower()
         if unqualify(simple) != simple:
-            if debug:
-                print(simple, 'has qualifiers')
+            metrics.counter('detective qualified')
             continue
 
         if simple not in knowns:
-            if debug:
-                print(simple, 'no taxonomy')
+            metrics.counter('detective no taxonomy')
             continue
 
+        metrics.counter('detective included')
         all_names.append(simple)
         new_images.append(image)
 

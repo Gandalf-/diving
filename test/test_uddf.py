@@ -181,9 +181,9 @@ class TestUDDF(unittest.TestCase):
         assert info
         self.assertEqual(info['directory'], '2023-03-11 2 Elephant Wall')
 
-        info = search('2023-04-03', 'Seven Trees')
+        info = search('2023-04-03', 'Seven Tree')
         assert info
-        self.assertEqual(info['directory'], '2023-04-03 2 Seven Trees')
+        self.assertEqual(info['directory'], '2023-04-03 2 Seven Tree')
 
     def test_search_multi_duplicate(self) -> None:
         info = search('2023-09-04', 'Keystone Jetty')

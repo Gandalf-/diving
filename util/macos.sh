@@ -124,12 +124,14 @@ sync() {
     --exclude '*.html' \
     "$www"/ \
     aspen:/mnt/ssd/hosts/web/diving/
+    # walnut:/mnt/web/diving/
 
   mirror \
     --delete \
     --delete-excluded \
     "$www"/ \
     aspen:/mnt/ssd/hosts/web/diving/
+    # walnut:/mnt/web/diving/
 }
 
 dev() {

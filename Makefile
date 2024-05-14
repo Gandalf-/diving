@@ -1,11 +1,32 @@
-.PHONY: test unittest inttest
-test: unittest inttest
+.PHONY: clean local dev prune sitemap sync
 
-unittest:
-	python3 -m unittest
+local: data/translations.yml
+	bash util/macos.sh build
 
-inttest:
-	bash test/integration.sh
+fast: data/translations.yml
+	bash util/macos.sh build --fast
+
+dev: data/translations.yml
+	bash util/macos.sh dev
+
+sitemap:
+	bash util/macos.sh sitemap
+
+sync: sitemap
+	bash util/macos.sh sync
+
+serve:
+	@serve ~/working/object-publish/diving-web
+
+clean:
+	bash util/macos.sh clean
+
+prune:
+	bash util/macos.sh prune
+
+
+data/translations.yml: data/taxonomy.yml
+	python3 -c 'from util.translator import main; main()'
 
 
 .PHONY: lint shellcheck mypy ruff format
@@ -25,31 +46,12 @@ format:
 	black --fast -S *.py */*.py
 
 
-data/translations.yml: data/taxonomy.yml
-	python3 -c 'from util.translator import main; main()'
 
+.PHONY: test unittest inttest
+test: unittest inttest
 
-.PHONY: clean local dev prune sitemap sync
-clean:
-	bash util/macos.sh clean
+unittest:
+	python3 -m unittest
 
-prune:
-	bash util/macos.sh prune
-
-local: data/translations.yml
-	bash util/macos.sh build
-
-fast: data/translations.yml
-	bash util/macos.sh build --fast
-
-dev: data/translations.yml
-	bash util/macos.sh dev
-
-sitemap:
-	bash util/macos.sh sitemap
-
-sync: sitemap
-	bash util/macos.sh sync
-
-serve:
-	bash util/macos.sh serve
+inttest:
+	bash test/integration.sh

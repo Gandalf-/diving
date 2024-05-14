@@ -127,6 +127,8 @@ Animalia:
         Halichondriidae:
           Halichondria:
             bowerbanki: bread crumb sponge
+          Haliclona:
+            edaphus: elephant ear sponge
         Suberitidae:
           Homaxinella:
             amphispicula: tough yellow branching sponge
@@ -355,6 +357,8 @@ Animalia:
           Choriaster:
             granulatus: granulated sea star
         Solasteridae:
+          Lophaster:
+            furcilliger: crested star
           Crossaster:
             papposus: rose star
           Solaster:
@@ -910,6 +914,9 @@ Animalia:
     Hydrozoa:
       sp.: hydroid
       Anthoathecata:
+        Bougainvilliidae:
+          Garveia:
+            annulata: orange hydroid
         Corymorphidae:
           Euphysa:
             flammea: tiny red sausage jelly
@@ -1202,6 +1209,13 @@ Animalia:
             Enteroctopus:
               dofleini: giant pacific octopus
     Gastropoda:
+      Plakobranchoidea:
+        Limapontiidae:
+          sp.: sapsucker
+          Placida:
+            dendritica: placida dendritica sapsucker
+          Stiliger:
+            fuscovittatus: brown streaked sapsucker
       Cephalaspidea:
         Philinoidea:
           Gastropteridae:
@@ -1229,6 +1243,9 @@ Animalia:
             Nucella: dogwinkle snail
       Trochida:
         Trochoidea:
+          Calliostomatidae:
+            Calliostoma:
+              annulatum: purple ringed top snail
           Tegulidae:
             Tegula:
               pulligo: dusky turban snail
@@ -1321,18 +1338,24 @@ Animalia:
               albolineata: alabaster nudibranch
               pellucida: golden dirona nudibranch
         Fionoidea:
+          Cuthonellidae:
+            Cuthonella:
+              concinna: neat aeolid
           Trinchesiidae:
+            Catriona:
+              columbiana: british columbia aeolid
             Zelentia:
-              pustulata: pustulate aeolid nudibranch
+              pustulata: pustulate aeolid
           Eubranchidae:
             Eubranchus:
-              sanjuanensis: san juan aeolid nudibranch
+              sanjuanensis: san juan aeolid
+              rustyus: rustic aeolid
           Paracoryphellidae:
             Ziminella:
               japonica: pearly nudibranch
           Apataidae:
             Apata:
-              pricei: price's aeolid nudibranch
+              pricei: price's aeolid
           Coryphellidae:
             Orienthella:
               trilineata: three lined nudibranch
@@ -1350,6 +1373,8 @@ Animalia:
               rufus: red dendronotid
               albus: white dendronotid
               diversicolor: multicolor dendronotid
+              kamchaticus: kamchatka dendronotid
+              robilliardi: robilliard's dendronotid
         Onchidoridoidea:
           Onchidorididae:
             Diaphorodoris:
@@ -1363,6 +1388,7 @@ Animalia:
               lutea: sandalwood nudibranch
               hudsoni: yellow margin dorid
               pilosa: pilose dorid
+              atrogriseata: hairy horned dorid
         Tritonioidea:
           Tritoniidae:
             Tritonia:
@@ -1422,7 +1448,9 @@ Animalia:
         Trapezioidea:
           Trapeziidae:
             Trapezia:
+              sp.: coral crab
               cymodoce: red dotted coral crab
+              rufopunctata: rust spotted coral crab
         Xanthoidea:
           Panopeidae:
             Lophopanopeus:
@@ -1528,6 +1556,8 @@ Animalia:
               latens: blue sock hermit crab
           Paguridae:
             sp.: hermit crab
+            Orthopagurus:
+              minimus: toothshell hermit crab
             Iridopagurus:
               reticulatus: reticulated hermit crab
             Elassochirus:
@@ -1579,8 +1609,7 @@ Animalia:
               crispatus: moss crab
             Scyra:
               acutifrons: sharp nosed crab
-Chromista:
-  sp.: algae
+Plantae:
   Tracheophytes:
     Angiosperms:
       Monocots:
@@ -1588,6 +1617,8 @@ Chromista:
           Zosteraceae:
             Zostera:
               marina: eelgrass
+Chromista:
+  sp.: algae
   Chlorophyta:
     # sp.: green algae
     Ulvophyceae:

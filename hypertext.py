@@ -625,7 +625,7 @@ class TopTitle(Title):
                 <button type="submit">Random</button>
             </form>
             <form class="search_text" autocomplete="off" action="javascript:;" onsubmit="searcher()">
-                <input type="text" id="search_bar" placeholder="">
+                <input type="text" id="search_bar" placeholder="" autofocus>
                 <button type="submit">Search</button>
             </form>
         </div>

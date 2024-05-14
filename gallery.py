@@ -62,7 +62,7 @@ def find_representative(
 def get_gallery_info(direct: List[Image]) -> str:
     parts = []
     measurements = [image.approximate_depth() for image in direct]
-    depths = [measurement for measurement in measurements if measurement]
+    depths = [m for m in measurements if m]
 
     if not depths or (len(depths) / len(measurements) < 0.5 and len(depths) < 5):
         metrics.counter('lineages without depth distribution')
