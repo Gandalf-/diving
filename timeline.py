@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Tuple
 import hypertext
 import locations
 from hypertext import Where
-from util import collection, common, static, uddf
+from util import collection, common, log, static
 
 
 def timeline() -> List[Tuple[str, str]]:
@@ -74,9 +74,9 @@ def _subpage(dive: str) -> Tuple[str, str]:
 {name}
 <h3 class="tight">{when} - {region}</h3>
 '''
-    info = uddf.lookup(dive)
+    info = log.lookup(dive)
     if info:
-        html += uddf.dive_info_html(info)
+        html += log.dive_info_html(info)
 
     html += '''\
 <div class="grid">

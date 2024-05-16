@@ -1,9 +1,9 @@
 import os
 import unittest
-from datetime import datetime
+from datetime import UTC, datetime
 
 from util import collection, common, database
-from util.uddf import (
+from util.log import (
     _build_dive_history,
     _db_decode,
     _db_encode,
@@ -21,7 +21,7 @@ class TestUDDF(unittest.TestCase):
 
     def test_db_encode(self) -> None:
         info = {
-            'date': datetime.utcnow(),
+            'date': datetime.now(UTC),
             'number': 243,
             'depth': 11,
             'duration': 584,
@@ -164,11 +164,11 @@ class TestUDDF(unittest.TestCase):
         self.assertEqual(e119['site'], '1 Male South Kuda Giri Wreck')
         self.assertEqual(e120['site'], '2 Male North Manta Point')
 
-    '''
+    """
     SitesTitle doesn't have exact information on which directory it
     represents and can represent multiple dives if they occurred on
     the same day, so it needs some help
-    '''
+    """
 
     def test_search_failure(self) -> None:
         self.assertIsNone(search('2000-01-01', 'Rockaway Beach'))

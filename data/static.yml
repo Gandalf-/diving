@@ -108,7 +108,7 @@ locations:
     - Vaavu
 
 dives:
-  # these foiled automatic matching in uddf.py because of timezone madness
+  # these foiled automatic matching in log.py because of timezone madness
   320: 2022-11-12 2 Male North Manta Point
   319: 2022-11-12 1 Male South Kuda Giri Wreck
   318: 2022-11-11 3 Male South Vilivaru Giri
@@ -139,42 +139,47 @@ dives-without-camera:
   - 237
 
 ignore:
+  # places
   - bay
   - beach
-  - bird
-  - boat
   - bottom
   - break
   - bubble
-  - building
-  - camera
   - cove
-  - debris
-  - distancing
-  - doll
-  - flag
-  - fragment
-  - friend
-  - gear
-  - kayak
-  - kayaker
-  - log
   - marina
-  - moon
   - pier
   - pylon
   - reef
+  - site
+  # descriptions
+  - distancing
+  - shallow
+  - visibility
+  # things
+  - boat
+  - building
+  - camera
+  - debris
+  - doll
+  - flag
+  - fragment
+  - gear
+  - log
+  - moon
   - rock
   - rocks
-  - seagull
-  - shallow
-  - site
   - skeleton
-  - skink
   - structure
-  - visibility
   - water
   - wood
+  # creatures
+  - bird
+  - friend
+  - kayak
+  - kayaker
+  - pelican
+  - seagull
+  - skink
 
 no-taxonomy-exact:
   - cleaner shrimp

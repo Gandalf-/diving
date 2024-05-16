@@ -10,7 +10,7 @@ import string
 from typing import Any, Dict, List, Optional, Tuple, Type
 
 import locations
-from util import collection, grammar, taxonomy, translator, uddf
+from util import collection, grammar, log, taxonomy, translator
 from util.common import (
     flatten,
     is_date,
@@ -528,7 +528,7 @@ class SitesTitle(Title):
 
         if self.is_dive():
             date = self.get_date()
-            dive_info = uddf.search(date, self.get_hint())
+            dive_info = log.search(date, self.get_hint())
             name = pretty_date(date)
 
         # create the buttons for each part of our name lineage
@@ -549,7 +549,7 @@ class SitesTitle(Title):
         <h3 class="tight">{name}</h3>
         """
         if dive_info:
-            html += uddf.dive_info_html(dive_info)
+            html += log.dive_info_html(dive_info)
         html += """\
         </div>
         """

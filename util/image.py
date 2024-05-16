@@ -8,7 +8,7 @@ import os
 from functools import lru_cache
 from typing import List, Optional, Tuple
 
-from util import database, static, uddf
+from util import database, log, static
 from util.common import Tree
 from util.grammar import singular
 
@@ -165,7 +165,7 @@ class Image:
     @lru_cache(None)
     def approximate_depth(self) -> Optional[Tuple[int, int]]:
         '''approximate depth of this image'''
-        info = uddf.lookup(self.directory)
+        info = log.lookup(self.directory)
         if not info or not info['depths']:
             return None
 
