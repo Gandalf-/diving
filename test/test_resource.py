@@ -7,10 +7,10 @@ from util.resource import VersionedResource
 
 
 class TestResource(unittest.TestCase):
-    '''resource.py'''
+    """resource.py"""
 
     def writer(self, path: str, body: str) -> None:
-        '''write a file, track it for cleanup'''
+        """write a file, track it for cleanup"""
         self.written.add(path)
 
         with open(path, 'w+') as fd:

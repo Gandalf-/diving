@@ -11,7 +11,7 @@ from util.static import search_data_path
 
 
 def write_search_data() -> None:
-    '''JSON site map for gallerySearch'''
+    """JSON site map for gallerySearch"""
     gallery_pages = _reader('gallery')
     taxonomy_pages = _reader('taxonomy')
     sites_pages = _reader('sites')

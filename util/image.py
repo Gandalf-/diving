@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 base class for a diving image
-'''
+"""
 
 import os
 from functools import lru_cache
@@ -14,7 +14,7 @@ from util.grammar import singular
 
 
 def categorize(name: str) -> str:
-    '''add special categorization labels'''
+    """add special categorization labels"""
     for category, values in static.categories.items():
         for value in values:
             if name.endswith(value):
@@ -23,7 +23,7 @@ def categorize(name: str) -> str:
 
 
 def uncategorize(name: str) -> str:
-    '''remove the special categorization labels added earlier'''
+    """remove the special categorization labels added earlier"""
     for category, values in static.categories.items():
         assert isinstance(values, list)
 
@@ -35,7 +35,7 @@ def uncategorize(name: str) -> str:
 
 
 def unqualify(name: str) -> str:
-    '''remove qualifiers'''
+    """remove qualifiers"""
     for qualifier in static.qualifiers:
         if name.startswith(qualifier):
             name = name[len(qualifier) + 1 :]
@@ -50,19 +50,19 @@ def unqualify(name: str) -> str:
 
 
 def split(name: str) -> str:
-    '''add splits
+    """add splits
     rockfish -> rock fish
-    '''
+    """
     for s in static.splits:
-        if name != s and name.endswith(s) and not name.endswith(" " + s):
-            name = name.replace(s, " " + s)
+        if name != s and name.endswith(s) and not name.endswith(' ' + s):
+            name = name.replace(s, ' ' + s)
     return name
 
 
 def unsplit(name: str) -> str:
-    '''remove splits
+    """remove splits
     rock fish -> rockfish
-    '''
+    """
     for s in static.splits:
         if name != s and name.endswith(' ' + s):
             name = name.replace(' ' + s, s)
@@ -70,17 +70,17 @@ def unsplit(name: str) -> str:
 
 
 class Image:
-    '''container for a diving picture'''
+    """container for a diving picture"""
 
     def __init__(self, label: str, directory: str, position: float = 0.0) -> None:
         self.label = label
         label, ext = os.path.splitext(label)
 
-        if " - " in label:
-            number, name = label.split(" - ")
+        if ' - ' in label:
+            number, name = label.split(' - ')
         else:
             number = label
-            name = ""
+            name = ''
 
         self.name = name
         self.number = number
@@ -97,7 +97,7 @@ class Image:
         return self.name
 
     def location(self) -> str:
-        '''directory minus numbering'''
+        """directory minus numbering"""
         when, where = self.directory.split(' ', 1)
 
         i = 0
@@ -108,54 +108,54 @@ class Image:
         return when + ' ' + where[i:]
 
     def site(self) -> str:
-        '''directory minus numbering and date'''
+        """directory minus numbering and date"""
         _, where = self.location().split(' ', 1)
         return where
 
     def identifier(self) -> str:
-        '''unique ID'''
+        """unique ID"""
         return self.directory + ':' + self.number
 
     def path(self) -> str:
-        '''where this is on the file system'''
+        """where this is on the file system"""
         return os.path.join(static.image_root, self.directory, self.label)
 
     def thumbnail(self) -> str:
-        '''URI of thumbnail image'''
+        """URI of thumbnail image"""
         if self.is_video:
             return f'/clips/{self.hashed()}.webm'
         return f'/imgs/{self.hashed()}.webp'
 
     def fullsize(self) -> str:
-        '''URI of original image'''
+        """URI of original image"""
         if self.is_video:
             return f'/video/{self.hashed()}.webm'
         return f'/full/{self.hashed()}.webp'
 
     def hashed(self) -> str:
-        '''Get the sha1sum for an original image, using the database as a
-        cache'''
+        """Get the sha1sum for an original image, using the database as a
+        cache"""
         sha1 = self.database.get_image_hash(self.identifier())
         assert sha1, f'{self.directory}/{self.label} has no hash'
         return sha1
 
     def singular(self) -> str:
-        '''return singular version'''
+        """return singular version"""
         assert self.name, self
         return singular(self.name)
 
     def scientific(self, names: Tree) -> Optional[str]:
-        '''do we have a scientific name?
+        """do we have a scientific name?
         names should be taxonomy.mapping()
-        '''
+        """
         return names.get(self.simplified())
 
     def simplified(self) -> str:
-        '''remove qualifiers from name'''
+        """remove qualifiers from name"""
         return unqualify(self.singular())
 
     def normalized(self) -> str:
-        '''lower case, remove plurals, split and expand'''
+        """lower case, remove plurals, split and expand"""
         # simplify name
         name = self.singular()
         name = split(name)
@@ -164,7 +164,7 @@ class Image:
 
     @lru_cache(None)
     def approximate_depth(self) -> Optional[Tuple[int, int]]:
-        '''approximate depth of this image'''
+        """approximate depth of this image"""
         info = log.lookup(self.directory)
         if not info or not info['depths']:
             return None

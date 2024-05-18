@@ -6,26 +6,26 @@ _inflect = inflect.engine()
 
 
 def singular(noun: str) -> str:
-    '''return singular version'''
+    """return singular version"""
 
     singular = _inflect.singular_noun(noun.lower())
     noun = cast(str, singular) if singular else noun.lower()
 
     # fix inflect's mistakes
-    for tofix in ("octopu", "gras", "fuscu", "dori"):
-        if tofix + "s" in noun:
+    for tofix in ('octopu', 'gras', 'fuscu', 'dori'):
+        if tofix + 's' in noun:
             continue
-        if noun.endswith(tofix) or tofix + " " in noun:
-            noun = noun.replace(tofix, tofix + "s")
+        if noun.endswith(tofix) or tofix + ' ' in noun:
+            noun = noun.replace(tofix, tofix + 's')
 
-    if noun.endswith("alga"):
-        noun += "e"
+    if noun.endswith('alga'):
+        noun += 'e'
 
     return noun
 
 
 def plural(noun: str) -> str:
-    '''return plural version'''
+    """return plural version"""
 
     ignore = ('algae', 'eelgrass', 'octopus')
     lower = noun.lower()

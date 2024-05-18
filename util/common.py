@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 dict and list functions
-'''
+"""
 
 import datetime
 import functools
@@ -41,30 +41,28 @@ def file_content_matches(path: str, content: str) -> bool:
 
 
 def titlecase(xs: str) -> str:
-    '''xs.title() but a bit smarter'''
+    """xs.title() but a bit smarter"""
     return xs.title().replace("'S", "'s")
 
 
 def sanitize_link(xs: str) -> str:
-    '''cleanup names and lineages to links'''
+    """cleanup names and lineages to links"""
     return xs.replace(' sp.', ' sp').replace(' ', '-').replace("'", '')
 
 
-def prefix_tuples(
-    first: Any, ts: List[Tuple[Any, Any]]
-) -> Iterable[Tuple[Any, Any, Any]]:
-    '''add a value to the beginning of each tuple in a list'''
+def prefix_tuples(first: Any, ts: List[Tuple[Any, Any]]) -> Iterable[Tuple[Any, Any, Any]]:
+    """add a value to the beginning of each tuple in a list"""
     for a, b in ts:
         yield (first, a, b)
 
 
 def take(xs: Iterable[Any], n: int) -> List[Any]:
-    '''pull n items from xs'''
+    """pull n items from xs"""
     return list(itertools.islice(xs, n))
 
 
 def walk_spine(tree: Tree, lineage: List[str]) -> Tree:
-    '''walk the spine of a tree'''
+    """walk the spine of a tree"""
     lineage = lineage[::-1]
 
     while lineage:
@@ -76,12 +74,12 @@ def walk_spine(tree: Tree, lineage: List[str]) -> Tree:
 
 
 def flatten(xs: Iterable[Iterable[Any]]) -> List[Any]:
-    '''[[a]] -> [a]'''
+    """[[a]] -> [a]"""
     return [item for sublist in xs for item in sublist]
 
 
 def tree_size(tree: Tree) -> int:
-    '''number of leaves'''
+    """number of leaves"""
     if not isinstance(tree, dict):
         return len(tree)
 
@@ -89,7 +87,7 @@ def tree_size(tree: Tree) -> int:
 
 
 def extract_leaves(tree: Tree) -> Iterable[Any]:
-    '''get all the leaves in a tree of trees'''
+    """get all the leaves in a tree of trees"""
     assert isinstance(tree, dict), tree
 
     for value in tree.values():
@@ -102,7 +100,7 @@ def extract_leaves(tree: Tree) -> Iterable[Any]:
 
 
 def extract_branches(tree: Tree) -> Iterable[str]:
-    '''get everything but the leaves'''
+    """get everything but the leaves"""
     assert isinstance(tree, dict), tree
 
     for key, value in tree.items():
@@ -112,17 +110,17 @@ def extract_branches(tree: Tree) -> Iterable[str]:
 
 
 def hmap(arg: Any, *fns: Callable[[Any], Any]) -> Any:
-    '''Apply a sequence of functions to an argument, returning the result.
+    """Apply a sequence of functions to an argument, returning the result.
 
     Example:
         >>> hmap(3, lambda x: x + 1, lambda x: x * 2)
         8
-    '''
+    """
     return functools.reduce(lambda x, f: f(x), fns, arg)
 
 
 def is_date(x: str) -> bool:
-    '''is this a date?'''
+    """is this a date?"""
     try:
         _ = datetime.datetime.strptime(x, '%Y-%m-%d')
         return True
@@ -131,7 +129,7 @@ def is_date(x: str) -> bool:
 
 
 def strip_date(site: str) -> str:
-    '''Remove the date from a string, unless it's only a date.'''
+    """Remove the date from a string, unless it's only a date."""
     parts = site.split(' ')
     last = parts[-1]
 

@@ -43,8 +43,7 @@ ruff:
 
 format:
 	isort --jobs -1 *.py */*.py
-	black --fast -S *.py */*.py
-
+	ruff format *.py */*.py
 
 
 .PHONY: test unittest inttest

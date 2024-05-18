@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 Python implementation of runner.sh
-'''
+"""
 
 import operator
 import os
@@ -15,12 +15,8 @@ from util import collection, common, log, static
 
 
 def timeline() -> List[Tuple[str, str]]:
-    '''generate all the timeline html'''
-    dives = [
-        d
-        for d in sorted(os.listdir(static.image_root), reverse=True)
-        if d.startswith('20')
-    ]
+    """generate all the timeline html"""
+    dives = [d for d in sorted(os.listdir(static.image_root), reverse=True) if d.startswith('20')]
     results = []
 
     for dive in dives:
@@ -49,7 +45,7 @@ def timeline() -> List[Tuple[str, str]]:
 
 
 def _subpage(dive: str) -> Tuple[str, str]:
-    '''build the sub page for this dive'''
+    """build the sub page for this dive"""
     when, title = dive.split(' ', 1)
 
     while title[0].isdigit() or title[0] == ' ':
@@ -60,45 +56,43 @@ def _subpage(dive: str) -> Tuple[str, str]:
 
     region = locations.get_region(title)
     if sites_link:
-        name = f'''\
+        name = f"""\
 <a href="{sites_link}">
     <h2 class="where sites pad-down">{title}</h2>
 </a>
-'''
+"""
     else:
-        name = f'''\
+        name = f"""\
     <h2 class="tight">{title}</h2>
-'''
+"""
 
-    html = f'''\
+    html = f"""\
 {name}
 <h3 class="tight">{when} - {region}</h3>
-'''
+"""
     info = log.lookup(dive)
     if info:
         html += log.dive_info_html(info)
 
-    html += '''\
+    html += """\
 <div class="grid">
-'''
+"""
 
     path = os.path.join(static.image_root, dive)
     images = sorted(collection.delve(path), key=operator.attrgetter('number'))
-    html += '\n'.join(
-        hypertext.html_direct_image(image, Where.Sites, True) for image in images
-    )
+    html += '\n'.join(hypertext.html_direct_image(image, Where.Sites, True) for image in images)
 
-    html += '''\
+    html += """\
 </div>
-'''
+"""
 
     path = common.sanitize_link(dive) + '.html'
     return f'timeline/{path}', html
 
 
 def _javascript(paths: List[str]) -> str:
-    '''build the javascript lazy loader'''
-    html = '''\
+    """build the javascript lazy loader"""
+    html = """\
   <script>
     var furthest = 0;
 
@@ -131,28 +125,28 @@ def _javascript(paths: List[str]) -> str:
       return true;
     }
     // preload three groups to fill the screen
-    '''
+    """
 
     # preload
     first, second, third = paths[:3]
-    html += f'''
+    html += f"""
     $("#0").load("/{first}" ).addClass("isloaded");
     $("#1").load("/{second}").addClass("isloaded");
     $("#2").load("/{third}" ).addClass("isloaded");
-    '''
+    """
 
     # scroll function
-    html += '''
+    html += """
     $(window).scroll(function() {
-'''
+"""
     html += '\n'.join(
         f'      if (loader("#{i}", "/{path}")) {{ return }};'
         for i, path in enumerate(paths)
         if i > 2
     )
 
-    html += '''
+    html += """
     });
   </script>
-    '''
+    """
     return html

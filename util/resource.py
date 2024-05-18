@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 configuration information
-'''
+"""
 
 import glob
 import hashlib
@@ -13,13 +13,13 @@ from util.metrics import metrics
 
 
 class VersionedResource:
-    '''
+    """
     Wraps a file like style.css, returns the hashed content as the name, and
     can write out the file to the filesystem.
 
     This is useful for cache busting, so that we can set a long cache time on
     the resource, but still have it update when the content changes.
-    '''
+    """
 
     def __init__(self, path: str, target: Optional[str] = None) -> None:
         self._name = os.path.basename(path)
@@ -33,7 +33,7 @@ class VersionedResource:
         self.path = os.path.join(self._target, f'{name}-{self._hash}{ext}')
 
     def write(self) -> None:
-        '''write out the versioned resource'''
+        """write out the versioned resource"""
         if os.path.exists(self.path):
             return
 
@@ -41,10 +41,10 @@ class VersionedResource:
             vr.write(self._body)
 
     def versions(self) -> List[str]:
-        '''
+        """
         get all output versions of this resource, ordered by mtime, so that
         the newest version is first
-        '''
+        """
         name, ext = os.path.splitext(self._name)
         where = os.path.join(self._target, f'{name}-*{ext}')
         versions = glob.glob(where)
@@ -55,7 +55,7 @@ class VersionedResource:
         return list(sorted(versions, key=by_mtime, reverse=True))
 
     def cleanup(self, count: int = 5) -> None:
-        '''remove all but the latest count versions of this resource'''
+        """remove all but the latest count versions of this resource"""
         for i, version in enumerate(self.versions()):
             if i >= count:
                 metrics.counter('versioned resources deleted')

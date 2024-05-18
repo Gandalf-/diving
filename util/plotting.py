@@ -1,8 +1,8 @@
 # type: ignore
 
-'''
+"""
 https://matplotlib.org/stable/gallery/misc/packed_bubbles.html
-'''
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -129,9 +129,7 @@ class BubbleChart:
         texts = []
         for i in range(len(self.bubbles)):
             if colors:
-                circ = plt.Circle(
-                    self.bubbles[i, :2], self.bubbles[i, 2], color=colors[i]
-                )
+                circ = plt.Circle(self.bubbles[i, :2], self.bubbles[i, 2], color=colors[i])
             else:
                 circ = plt.Circle(self.bubbles[i, :2], self.bubbles[i, 2])
             ax.add_patch(circ)
@@ -140,7 +138,7 @@ class BubbleChart:
                     *self.bubbles[i, :2],
                     labels[i],
                     horizontalalignment='center',
-                    verticalalignment='center'
+                    verticalalignment='center',
                 )
             )
         return texts

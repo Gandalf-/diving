@@ -9,7 +9,7 @@ from util.taxonomy import MappingType
 
 
 class TestHypertext(unittest.TestCase):
-    '''hypertext.py'''
+    """hypertext.py"""
 
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
@@ -45,7 +45,7 @@ class TestHypertext(unittest.TestCase):
     def test_description_gallery(self):
         pairs = [
             ('Red Rock Crab', 'Red Rock Crabs'),
-            ('Heath\'s Dorid Nudibranch', 'Heath\'s Dorid Nudibranchs'),
+            ("Heath's Dorid Nudibranch", "Heath's Dorid Nudibranchs"),
             ('Various Red Octopus', 'Red Octopus'),
             ('Tubastraea coccinea Coral', 'Tubastraea coccinea Corals'),
         ]
@@ -71,26 +71,24 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(hypertext.description(name, Where.Taxonomy), expect)
 
     def test_image_to_name_html(self):
-        fish = image.Image("001 - Rockfish.jpg", "2021-11-05 10 Rockaway Beach")
+        fish = image.Image('001 - Rockfish.jpg', '2021-11-05 10 Rockaway Beach')
         html = hypertext.image_to_name_html(fish, Where.Sites)
         self.assertIn('href="/gallery/rock-fish"', html)
         self.assertIn('Rockfish', html)
 
     def test_image_to_name_html_pair(self):
-        fish = image.Image(
-            "001 - Rockfish and Coral.jpg", "2021-11-05 10 Rockaway Beach"
-        )
+        fish = image.Image('001 - Rockfish and Coral.jpg', '2021-11-05 10 Rockaway Beach')
         html = hypertext.image_to_name_html(fish, Where.Sites)
         self.assertIn('href="/gallery/rock-fish"', html)
         self.assertIn('Rockfish', html)
 
     def test_lineage_to_link(self):
-        '''converting lineage to links between sites'''
+        """converting lineage to links between sites"""
         samples = [
-            (None, False, ["a", "b", "c"], "a-b-c"),
-            (None, True, ["a", "b", "c"], "a-b-c"),
-            ("d", False, ["a", "b", "c"], "d-a-b-c"),
-            ("d", True, ["a", "b", "c"], "a-b-c-d"),
+            (None, False, ['a', 'b', 'c'], 'a-b-c'),
+            (None, True, ['a', 'b', 'c'], 'a-b-c'),
+            ('d', False, ['a', 'b', 'c'], 'd-a-b-c'),
+            ('d', True, ['a', 'b', 'c'], 'a-b-c-d'),
         ]
         for key, right_side, lineage, after in samples:
             side = Side.Right if right_side else Side.Left
@@ -98,7 +96,7 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(link, after)
 
     def skip_title_ordering(self):
-        '''html titles ordering'''
+        """html titles ordering"""
         samples = [
             (
                 # gallery simple case
@@ -177,7 +175,7 @@ class TestHypertext(unittest.TestCase):
             self.assertEqual(title, ' '.join(lineage))
 
     def test_title_names(self):
-        '''html titles top level'''
+        """html titles top level"""
         # gallery
         html, path = hypertext.title([], Where.Gallery, TestHypertext.g_scientific)
         self.assertEqual(path, 'gallery/index.html')
@@ -189,7 +187,7 @@ class TestHypertext(unittest.TestCase):
         self.assertIn('<title>Taxonomy</title>', html)
 
     def test_switcher_button(self):
-        '''See that the correct HTML is generated for each site's button'''
+        """See that the correct HTML is generated for each site's button"""
         for where in Where:
             shorter = hypertext.switcher_button(where)
             self.assertIn(f'href="/{where.name.lower()}/"', shorter)
@@ -213,10 +211,8 @@ class TestTitleGallery(unittest.TestCase):
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
     def test_title_ordinary(self):
-        '''typical common name'''
-        html, path = hypertext.title(
-            ['heart', 'crab'], Where.Gallery, TestHypertext.g_scientific
-        )
+        """typical common name"""
+        html, path = hypertext.title(['heart', 'crab'], Where.Gallery, TestHypertext.g_scientific)
         self.assertEqual(path, 'gallery/heart-crab.html')
         self.assertIn('<title>Heart Crab</title>', html)
         self.assertIn('"top">Heart<', html)
@@ -224,9 +220,9 @@ class TestTitleGallery(unittest.TestCase):
         self.assertNotIn('<em>', html)
 
     def test_title_scientific_common_name(self):
-        '''some gallery entries may use scientific names when there isn't a
+        """some gallery entries may use scientific names when there isn't a
         common name available
-        '''
+        """
         html, path = hypertext.title(
             ['tubastraea coccinea', 'coral'],
             Where.Gallery,
@@ -238,7 +234,7 @@ class TestTitleGallery(unittest.TestCase):
         self.assertNotIn('Coccinea', html)
 
     def test_title_sp_scientific_common_name(self):
-        '''the taxonomy.yml entry for this name is under sp.'''
+        """the taxonomy.yml entry for this name is under sp."""
         html, path = hypertext.title(
             ['pocillopora', 'coral'],
             Where.Gallery,
@@ -291,7 +287,7 @@ class TestTitleTaxonomy(unittest.TestCase):
         self.assertIn('>Many-bristled Ringed Animals<', html)
 
     def test_translation_duplicates(self):
-        '''Comb-like Comb-like -> Comb-like'''
+        """Comb-like Comb-like -> Comb-like"""
         html, title = hypertext.title(
             ['Animalia', 'Mollusca', 'Bivalvia', 'Pectinida', 'Pectinoidea'],
             Where.Taxonomy,
@@ -300,7 +296,7 @@ class TestTitleTaxonomy(unittest.TestCase):
         self.assertIn('Comb-like Two-shelled Soft-bodied Animals', html)
 
     def test_translation_genus_species(self):
-        '''skip rest of the lineage when we have genus + species'''
+        """skip rest of the lineage when we have genus + species"""
         html, title = hypertext.title(
             ['Decapoda', 'Pacifastacus leniusculus'],
             Where.Taxonomy,
@@ -309,7 +305,7 @@ class TestTitleTaxonomy(unittest.TestCase):
         self.assertIn('>Lenient Pacific-crawfish<', html)
 
     def test_translation_species_split(self):
-        '''look back one level for the genus if necessary'''
+        """look back one level for the genus if necessary"""
         html, title = hypertext.title(
             ['Decapoda', 'Astacidae Pacifastacus', 'leniusculus'],
             Where.Taxonomy,
@@ -318,7 +314,7 @@ class TestTitleTaxonomy(unittest.TestCase):
         self.assertIn('>Lenient Pacific-crawfish<', html)
 
     def test_translation_species_extra(self):
-        '''include the rest of the previous lineage depending on the breaks'''
+        """include the rest of the previous lineage depending on the breaks"""
         html, title = hypertext.title(
             ['Decapoda', 'Astacidae Pacifastacus leniusculus'],
             Where.Taxonomy,

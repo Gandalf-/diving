@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-'''
+"""
 Attempt to translate Latin/Greek names to English based on roots, prefixes, and
 suffixes
-'''
+"""
 
 import os
 import re
@@ -25,10 +25,10 @@ with open(translations_yml) as fd:
 
 
 def translate(word: str) -> str:
-    '''
+    """
     Given a word, attempt to translate it to English based on the contents of
     data/translate.yml
-    '''
+    """
     out = _translations[word.lower()] or ''
     out = out.replace('-family', '').replace('-order', '')
     return out.encode('ascii', 'xmlcharrefreplace').decode('ascii')
@@ -52,7 +52,7 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
 
     words = english.split('-')
     if len(words) == 3 and english.startswith('Named-after-'):
-        english = f'{words[2]}\'s'
+        english = f"{words[2]}'s"
 
     return english
 

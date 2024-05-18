@@ -1,7 +1,7 @@
-'''
+"""
 An interface for other modules to record interesting information that can then
 be displayed at the end of gallery.py's execution.
-'''
+"""
 
 from typing import Any
 

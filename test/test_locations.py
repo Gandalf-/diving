@@ -4,10 +4,10 @@ import locations
 
 
 class TestLocations(unittest.TestCase):
-    '''locations.py'''
+    """locations.py"""
 
     def test_site_list(self) -> None:
-        '''site_list'''
+        """site_list"""
         self.assertEqual(
             locations.site_list(),
             'Bonaire, British Columbia, Curacao, Galapagos, Maldives, and Washington',
@@ -24,7 +24,7 @@ class TestLocations(unittest.TestCase):
             self.assertEqual(locations.get_region(site), context)
 
     def test_add_context(self) -> None:
-        '''add_context'''
+        """add_context"""
         samples = [
             ('Edmonds', 'Washington Edmonds'),
             ('Oil Slick', 'Bonaire Oil Slick'),
@@ -35,7 +35,7 @@ class TestLocations(unittest.TestCase):
             self.assertEqual(locations.add_context(before), after)
 
     def test_where_to_words(self) -> None:
-        '''control splitting for sites so we don't end up with 'Fort', etc'''
+        """control splitting for sites so we don't end up with 'Fort', etc"""
         samples = [
             ('British Columbia', ['British Columbia']),
             (

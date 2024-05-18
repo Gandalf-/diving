@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-'''
+"""
 search through diving pictures to produce a 'taxonomy tree', then convert that
 tree into HTML pages for diving.anardil.net
-'''
+"""
 
 import multiprocessing
 import statistics
@@ -35,9 +35,7 @@ from util.image import Image
 from util.metrics import metrics
 
 
-def find_representative(
-    tree: Tree, where: Where, lineage: Optional[List[str]] = None
-) -> Image:
+def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] = None) -> Image:
     """Find one image to represent this tree."""
     lineage = lineage or []
     pinned = static.pinned.get(' '.join(lineage))
@@ -77,10 +75,10 @@ def get_gallery_info(direct: List[Image]) -> str:
     parts.append(', '.join(regions))
 
     distribution = ' '.join(parts)
-    return f'''
+    return f"""
     <div class="info">
     <p><b>Distribution:</b> {distribution}</p>
-    </div>'''
+    </div>"""
 
 
 def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
@@ -105,7 +103,7 @@ def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
 
 
 def _key_to_subject(key: str, where: Where) -> str:
-    '''helper!'''
+    """helper!"""
     if where == Where.Gallery:
         subject = taxonomy.is_scientific_name(key)
         if not subject:
@@ -125,9 +123,9 @@ def _key_to_subject(key: str, where: Where) -> str:
 
 
 def html_direct_examples(direct: List[Image], where: Where) -> str:
-    '''
+    """
     Generate the HTML for the direct examples of a tree.
-    '''
+    """
     seen = set()
     html = '<div class="grid">'
 
@@ -139,7 +137,7 @@ def html_direct_examples(direct: List[Image], where: Where) -> str:
         html += hypertext.html_direct_image(image, where, i > 16)
         seen.add(identifier)
 
-    html += "</div>"
+    html += '</div>'
 
     return html
 
@@ -159,14 +157,14 @@ def html_tree(
 
     # body
     results = []
-    has_subcategories = any(key != "data" for key in tree.keys())
+    has_subcategories = any(key != 'data' for key in tree.keys())
     if has_subcategories:
         html += '<div class="grid">'
 
     # categories
     flip = where == Where.Sites and any(is_date(v) for v in tree.keys())
     for key, value in sorted(tree.items(), reverse=flip):
-        if key == "data":
+        if key == 'data':
             continue
 
         new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
@@ -191,7 +189,7 @@ def html_tree(
         """.format(
             alt=example.simplified(),
             subject=subject,
-            link="/{where}/{path}".format(
+            link='/{where}/{path}'.format(
                 where=where.name.lower(),
                 path=hypertext.lineage_to_link(lineage, side, key),
             ),
@@ -203,10 +201,10 @@ def html_tree(
         results.extend(html_tree(value, where, scientific, lineage=new_lineage))
 
     if has_subcategories:
-        html += "</div>"
+        html += '</div>'
 
     # direct examples
-    direct = cast(List[Image], tree.get("data", []))
+    direct = cast(List[Image], tree.get('data', []))
     chronological = where != Where.Sites
     direct = sorted(direct, key=lambda x: x.path(), reverse=chronological)
     assert not (direct and has_subcategories)
@@ -235,27 +233,27 @@ def html_tree(
 
 
 def main() -> None:
-    '''main'''
-    with Progress("loading images"):
+    """main"""
+    with Progress('loading images'):
         tree = collection.build_image_tree()
         scientific = taxonomy.mapping()
         taxia = taxonomy.gallery_tree(tree)
 
-    with Progress("building /gallery"):
+    with Progress('building /gallery'):
         name_htmls = html_tree(tree, Where.Gallery, scientific)
 
-    with Progress("building /sites"):
+    with Progress('building /sites'):
         sites = locations.sites()
         sites_htmls = html_tree(sites, Where.Sites, scientific)
 
-    with Progress("building /taxonomy"):
+    with Progress('building /taxonomy'):
         scientific = {v: k for k, v in scientific.items()}
         taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
 
-    with Progress("building /timeline"):
+    with Progress('building /timeline'):
         times_htmls = timeline.timeline()
 
-    with Progress("building /detective"):
+    with Progress('building /detective'):
         detective.writer()
 
     metrics.counter('images loaded', tree_size(tree))
@@ -268,7 +266,7 @@ def main() -> None:
         vr.cleanup()
         vr.write()
 
-    with Progress("writing html"), multiprocessing.Pool() as pool:
+    with Progress('writing html'), multiprocessing.Pool() as pool:
         pool.map(_pool_writer, name_htmls)
         pool.map(_pool_writer, sites_htmls)
         pool.map(_pool_writer, taxia_htmls)
@@ -278,7 +276,7 @@ def main() -> None:
 
 
 def _pool_writer(args: Tuple[str, str]) -> None:
-    '''callback for HTML writer pool'''
+    """callback for HTML writer pool"""
     path, html = args
     # TODO make this ASCII once I have the escape codes for the emojis
     html = textwrap.dedent(html)
@@ -286,7 +284,7 @@ def _pool_writer(args: Tuple[str, str]) -> None:
     if file_content_matches(path, html):
         return
 
-    with open(path, "w+") as f:
+    with open(path, 'w+') as f:
         print(html, file=f, end='')
 
 
@@ -298,7 +296,7 @@ def _find_by_path(tree: Tree, needle: str) -> Optional[Image]:
     return None
 
 
-if not sys.flags.interactive and __name__ == "__main__":
+if not sys.flags.interactive and __name__ == '__main__':
     import util.common
 
     if len(sys.argv) > 1:

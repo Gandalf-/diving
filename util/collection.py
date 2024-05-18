@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 parsing data from the file system to construct trees of images
-'''
+"""
 
 import os
 from functools import lru_cache
@@ -17,12 +17,12 @@ ImageTree = dict[str, Union[List[Image], 'ImageTree']]
 
 
 def named() -> List[Image]:
-    '''all named images from all directories'''
+    """all named images from all directories"""
     return flatten([[y for y in z if y.name] for z in _collect_all_images()])
 
 
 def all_names() -> Set[str]:
-    '''all simplified, split names'''
+    """all simplified, split names"""
     return {split(i.simplified()) for i in expand_names(named())}
 
 
@@ -32,7 +32,7 @@ def all_valid_names() -> Set[str]:
 
 
 def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
-    '''squash the tree into a single level name to images dict'''
+    """squash the tree into a single level name to images dict"""
     assert isinstance(tree, dict), tree
 
     def inner(where: ImageTree) -> Iterator[List[Image]]:
@@ -54,15 +54,15 @@ def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
 
 @lru_cache(None)
 def build_image_tree() -> ImageTree:
-    '''construct a nested dictionary where each key is a unique split of a
+    """construct a nested dictionary where each key is a unique split of a
     name (after processing) from right to left. if there's another split under
     this one, the value is another dictionary, otherwise, it's a list of Images
-    '''
+    """
     return pipeline(_make_tree(expand_names(named())))
 
 
 def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
-    '''intermediate steps!'''
+    """intermediate steps!"""
     return _data_to_various(
         _pruner(_compress(_compress(_compress(tree, reverse), reverse), reverse))
     )
@@ -70,10 +70,10 @@ def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
 
 @lru_cache(None)
 def delve(dive_path: str) -> List[Image]:
-    '''
+    """
     Create an Image object for each labeled picture in a directory; the path
     provided must be absolute
-    '''
+    """
     directory = os.path.basename(dive_path)
     exts = ('.jpg', '.mov', '.mp4')
     entries = [
@@ -81,16 +81,13 @@ def delve(dive_path: str) -> List[Image]:
         for entry in os.listdir(dive_path)
         if any(entry.endswith(ext) for ext in exts) and '-' in entry
     ]
-    return [
-        Image(entry, directory, i / len(entries))
-        for i, entry in enumerate(sorted(entries))
-    ]
+    return [Image(entry, directory, i / len(entries)) for i, entry in enumerate(sorted(entries))]
 
 
 def expand_names(images: List[Image]) -> Iterator[Image]:
     """split out `a and b` into separate elements"""
     for image in images:
-        for part in (" with ", " and "):
+        for part in (' with ', ' and '):
             if part not in image.name:
                 continue
 
@@ -113,7 +110,7 @@ def dive_listing() -> List[str]:
         [
             os.path.join(static.image_root, dive)
             for dive in os.listdir(static.image_root)
-            if not dive.startswith(".")
+            if not dive.startswith('.')
         ]
     )
 
@@ -143,8 +140,8 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
             sub.setdefault(word, {})
             sub = cast(ImageTree, sub[word])
 
-        sub.setdefault("data", [])
-        cast(List[Image], sub["data"]).append(image)
+        sub.setdefault('data', [])
+        cast(List[Image], sub['data']).append(image)
 
     return out
 
@@ -175,7 +172,7 @@ def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
         if not isinstance(value, dict):
             continue
 
-        if "data" not in value and len(value.keys()) == 1:
+        if 'data' not in value and len(value.keys()) == 1:
             v = cast(ImageTree, tree.pop(key))
             s = list(v.keys())[0]
 
@@ -193,7 +190,7 @@ def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
 
 
 def _data_to_various(tree: ImageTree) -> ImageTree:
-    '''rebucket data into various'''
+    """rebucket data into various"""
     assert isinstance(tree, dict), tree
 
     for key, value in list(tree.items()):

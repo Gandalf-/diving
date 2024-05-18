@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-'''
+"""
 collect information on subjects from wikipedia
 
 we query based on scientific names, but many wikipedia articles are for common
@@ -15,7 +15,7 @@ user) could reconsider at a later time or manually fix with link()
 
 since the content of the article may contain non-ascii characters (greek
 letters, etc), the data is base64 encoded before inserted into the database
-'''
+"""
 
 import base64
 import copy
@@ -38,7 +38,7 @@ wikipedia.set_rate_limiting(True)
 
 
 class bcolors:
-    '''terminal colors'''
+    """terminal colors"""
 
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -52,7 +52,7 @@ class bcolors:
 
 
 def fetch(subject: str, suggest: bool = True) -> None:
-    '''get summary from wikipedia'''
+    """get summary from wikipedia"""
     now = datetime.now().timestamp()
     try:
         print('fetching', subject)
@@ -103,7 +103,7 @@ def fetch(subject: str, suggest: bool = True) -> None:
 
 
 def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, str]:
-    '''get the subject from the database'''
+    """get the subject from the database"""
     key = subject.lower()
 
     if is_invalid_subject(key):
@@ -132,7 +132,7 @@ def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, s
 
 
 def reference(entry: Dict[str, Any], style: str = 'apa') -> str:
-    '''reference info'''
+    """reference info"""
     url = entry['url']
     uri = url.replace('https://', '')
     url = f'<a href="{url}">{uri}</a>'
@@ -152,7 +152,7 @@ def reference(entry: Dict[str, Any], style: str = 'apa') -> str:
 
 
 def cleanup(text: str) -> str:
-    '''remove artifacts from simplification the wikipedia package does'''
+    """remove artifacts from simplification the wikipedia package does"""
     return (
         text.replace(' ()', '')
         .replace('(, ', '(')
@@ -166,12 +166,12 @@ def cleanup(text: str) -> str:
 
 
 def paragraphs(text: str, count: int) -> List[str]:
-    '''take count number of paragraphs'''
+    """take count number of paragraphs"""
     return text.split('\n')[:count]
 
 
 def lineage_to_names(lineage: List[str]) -> List[str]:
-    '''lineage list to names to look up'''
+    """lineage list to names to look up"""
     if not lineage:
         return []
 
@@ -191,7 +191,7 @@ def lineage_to_names(lineage: List[str]) -> List[str]:
 
 
 def html(name: str) -> Tuple[str, str]:
-    '''html fit for use by gallery.py'''
+    """html fit for use by gallery.py"""
     reasonable_number_of_characters = 400
 
     entry = lookup(name, False)
@@ -214,16 +214,16 @@ def html(name: str) -> Tuple[str, str]:
     ref = reference(entry)
 
     return (
-        f'''<div class="info">
+        f"""<div class="info">
     {text}
     <p class="ref">{ref}</p>
-    </div>''',
+    </div>""",
         entry['url'],
     )
 
 
 def missing_list() -> List[str]:
-    '''what subjects are we missing?'''
+    """what subjects are we missing?"""
     names = set(taxonomy.mapping().values())
     out = []
 
@@ -249,7 +249,7 @@ def missing_list() -> List[str]:
 
 
 def check() -> bool:
-    '''should we stop?'''
+    """should we stop?"""
     print('? ', end='')
     i = input()
     if i and i in 'nN':
@@ -258,7 +258,7 @@ def check() -> bool:
 
 
 def updater(*targets: str) -> None:
-    '''interactive update
+    """interactive update
 
     attempts to do as much as possible automatically. unclear cases will stop
     and ask for confirmation. the ordering is by number of instances available
@@ -267,7 +267,7 @@ def updater(*targets: str) -> None:
 
     so you can run this as long as your interest holds, get the largest impact
     for your time, and continue later
-    '''
+    """
     if not targets:
         missings = missing_list()
     else:
@@ -303,7 +303,7 @@ def updater(*targets: str) -> None:
 
 
 def link(subject: str, title: str) -> None:
-    '''manually link a subject name (taxonomy) to a page'''
+    """manually link a subject name (taxonomy) to a page"""
     subject = subject.lower()
     title = title.lower()
     fetch(title, False)
@@ -316,7 +316,7 @@ def link(subject: str, title: str) -> None:
 
 
 def get_valid_subject(subject: str) -> Dict[str, Any]:
-    '''get the entry for this valid subject'''
+    """get the entry for this valid subject"""
     value = database.get('diving', 'wikipedia', 'valid', subject)
     return copy.deepcopy(value)
 

@@ -6,10 +6,10 @@ import information
 
 
 class TestInformation(unittest.TestCase):
-    '''information.py'''
+    """information.py"""
 
     def test_lineage_to_names(self):
-        '''extract the right parts for look up'''
+        """extract the right parts for look up"""
         samples = [
             ([], []),
             (['Animalia'], ['Animalia']),

@@ -5,17 +5,17 @@ import util.common as utility
 
 
 class TestUtility(unittest.TestCase):
-    '''utility.py'''
+    """utility.py"""
 
     def test_walk_spine(self) -> None:
-        '''it works'''
+        """it works"""
         tree = {'a': {'b': {'c': 1}}}
         self.assertEqual(utility.walk_spine(tree, ['a']), {'b': {'c': 1}})
         self.assertEqual(utility.walk_spine(tree, ['a', 'b']), {'c': 1})
         self.assertEqual(utility.walk_spine(tree, ['a', 'b', 'c']), 1)
 
     def test_prefix_tuples(self) -> None:
-        '''it works'''
+        """it works"""
         out = utility.prefix_tuples(1, [(2, 3), (3, 4), (4, 5)])
         out = list(out)
         self.assertEqual(out, [(1, 2, 3), (1, 3, 4), (1, 4, 5)])
@@ -37,7 +37,7 @@ class TestUtility(unittest.TestCase):
             self.assertEqual(utility.pretty_date(before), after)
 
     def test_take(self) -> None:
-        '''it works'''
+        """it works"""
         xs = [1, 2, 3, 4, 5]
         n = 3
         expected = [1, 2, 3]
@@ -59,12 +59,12 @@ class TestUtility(unittest.TestCase):
         self.assertEqual(utility.take(xs, n), expected)
 
     def test_flatten(self) -> None:
-        '''it works'''
+        """it works"""
         self.assertEqual([0, 1, 2], utility.flatten([[0], [1, 2]]))
         self.assertEqual([], utility.flatten([[]]))
 
     def test_tree_size(self) -> None:
-        '''Test the tree_size function with various inputs.'''
+        """Test the tree_size function with various inputs."""
         # Test a tree with no leaves
         tree = {'a': {'b': {}, 'c': {}}, 'd': {}}
         self.assertEqual(utility.tree_size(tree), 0)
@@ -86,34 +86,32 @@ class TestUtility(unittest.TestCase):
         self.assertEqual(utility.tree_size(tree), 5)
 
     def test_extract_leaves(self) -> None:
-        '''grab the leaves for this tree'''
+        """grab the leaves for this tree"""
         tree = {'a': {'b': 3}, 'c': 4}
         leaves = list(utility.extract_leaves(tree))
         wanted = [3, 4]
         self.assertEqual(sorted(leaves), sorted(wanted))
 
     def test_extract_branches(self) -> None:
-        '''grab the branches for this tree'''
+        """grab the branches for this tree"""
         tree = {'a': {'b': 3}, 'c': 4}
         branches = list(utility.extract_branches(tree))
         wanted = ['a', 'b', 'c']
         self.assertEqual(sorted(branches), sorted(wanted))
 
     def test_hmap(self) -> None:
-        '''fold-ish thing'''
+        """fold-ish thing"""
         out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5)
         self.assertEqual(out, 5)
 
         out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5, lambda x: x - 1)
         self.assertEqual(out, 4)
 
-        out = utility.hmap(
-            0, lambda x: x + 1, lambda x: x * 5, lambda x: x - 1, lambda x: x / 2
-        )
+        out = utility.hmap(0, lambda x: x + 1, lambda x: x * 5, lambda x: x - 1, lambda x: x / 2)
         self.assertEqual(out, 2.0)
 
     def test_is_date(self) -> None:
-        '''it works'''
+        """it works"""
         for positive in ('2017-01-01', '2000-11-21'):
             self.assertTrue(utility.is_date(positive))
 
@@ -121,7 +119,7 @@ class TestUtility(unittest.TestCase):
             self.assertFalse(utility.is_date(negative))
 
     def test_strip_date(self) -> None:
-        '''it works'''
+        """it works"""
         examples = [
             ('Sund Rock 2017-01-01', 'Sund Rock'),
             ('Sund Rock 4', 'Sund Rock 4'),
@@ -131,16 +129,14 @@ class TestUtility(unittest.TestCase):
             self.assertEqual(utility.strip_date(before), after)
 
     def test_file_content_matches(self) -> None:
-        '''it works'''
+        """it works"""
         with open('LICENSE') as fd:
             license = fd.read()
 
         self.assertTrue(utility.file_content_matches('LICENSE', license))
 
         self.assertFalse(utility.file_content_matches('LICENSE', 'Hello there'))
-        self.assertFalse(
-            utility.file_content_matches('LICENSE', license.replace(' ', '!'))
-        )
+        self.assertFalse(utility.file_content_matches('LICENSE', license.replace(' ', '!')))
 
 
 if __name__ == '__main__':

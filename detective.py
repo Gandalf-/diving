@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 identification game
-'''
+"""
 
 import os
 import shutil
@@ -17,7 +17,7 @@ from util.static import reef_organisms, source_root, stylesheet
 
 
 def get_hashes(images: List[Image]) -> Iterable[str]:
-    '''cache in a database'''
+    """cache in a database"""
     for image in images:
         yield image.hashed()
 
@@ -30,7 +30,7 @@ DifficultyTable = List[int]
 def table_builder(
     images: List[Image],
 ) -> Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
-    '''Build the tables.'''
+    """Build the tables."""
     images = reversed(images)
     all_names, images = _filter_images(images)
 
@@ -51,7 +51,7 @@ def table_builder(
 
 
 def writer() -> None:
-    '''Write out all the game artifacts'''
+    """Write out all the game artifacts"""
     _write_data_js(collection.named(), 'main')
     _write_data_js(_reef_images(), 'reef')
 
@@ -77,7 +77,7 @@ def writer() -> None:
 
 
 def _write_data_js(images: List[Image], name: str) -> None:
-    '''write out the tables to a file'''
+    """write out the tables to a file"""
     ns, ts, ss, ds = table_builder(images)
 
     # This saves 100KB of data, ~20% of the total
@@ -93,7 +93,7 @@ def _write_data_js(images: List[Image], name: str) -> None:
 
 
 def _reef_images() -> List[Image]:
-    '''images of REEF organisms'''
+    """images of REEF organisms"""
     reef = set(reef_organisms)
     named = collection.named()
     found = set()
@@ -111,10 +111,10 @@ def _reef_images() -> List[Image]:
 
 
 def _distance(a: str, b: str, tree: Optional[dict[str, str]] = None) -> float:
-    '''similarity score, higher means more different
+    """similarity score, higher means more different
 
     difflib.SequenceMatcher and jellyfish were all junk
-    '''
+    """
     tree = tree or taxonomy.mapping()
 
     at = tree[a].split(' ')
@@ -131,7 +131,7 @@ def _distance(a: str, b: str, tree: Optional[dict[str, str]] = None) -> float:
 
 
 def _difficulties(names: List[str]) -> DifficultyTable:
-    '''get difficulty overrides'''
+    """get difficulty overrides"""
     lookup = {
         'very easy': 0,
         'easy': 0,
@@ -154,11 +154,11 @@ def _difficulties(names: List[str]) -> DifficultyTable:
 
 
 def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
-    '''strip out images that are poor fits for the game
+    """strip out images that are poor fits for the game
     - multiple subjects
     - vague, like "sponge"
     - no taxonomy, suggesting things like "dive site"
-    '''
+    """
     knowns = set(taxonomy.load_known(exact_only=True))
     all_names = []
     new_images = []
@@ -179,7 +179,7 @@ def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
             continue
 
         # take the first subject when there are multiple
-        for part in (" with ", " and "):
+        for part in (' with ', ' and '):
             if part in image.name:
                 left, _ = image.name.split(part)
                 image.name = left
@@ -202,7 +202,7 @@ def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
 
 
 def _similarity_table(names: List[str]) -> SimiliarityTable:
-    '''how alike is every name pair'''
+    """how alike is every name pair"""
     tree = taxonomy.mapping()
     similarity: SimiliarityTable = [[] for _ in names]
 
@@ -224,9 +224,9 @@ def _similarity_table(names: List[str]) -> SimiliarityTable:
 
 
 def _html_builder(css: str, game: str, data: str, reef: str) -> str:
-    '''Insert dynamic content into the HTML template'''
-    desc = "Scuba diving picture identification game, identify a picture or choose the image for a name"
-    return f'''
+    """Insert dynamic content into the HTML template"""
+    desc = 'Scuba diving picture identification game, identify a picture or choose the image for a name'
+    return f"""
 <!DOCTYPE html>
 <html>
     <head>
@@ -319,4 +319,4 @@ body {{
         </script>
     </body>
 </html>
-'''
+"""

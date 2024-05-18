@@ -15,7 +15,7 @@ m.rcParams['figure.dpi'] = 175
 
 
 def packed_bubble(names, counts, spacing=5):
-    '''plot'''
+    """plot"""
     chart = BubbleChart(area=counts, bubble_spacing=spacing)
     chart.collapse()
 
@@ -32,9 +32,9 @@ def packed_bubble(names, counts, spacing=5):
 
 # %%
 # similiarity distances between all subjects
-print("loading... ", end="", flush=True)
+print('loading... ', end='', flush=True)
 ns, ts, ss, _ = detective.table_builder(False)
-print("done")
+print('done')
 
 
 def scatterer():
@@ -144,11 +144,7 @@ for k, v in sizes.items():
 if other:
     sizes['other'] = other
 
-sizes = {
-    f'{k.title().split(" ")[0]}\n{v}': 2 * v
-    for k, v in sizes.items()
-    if k not in to_drop
-}
+sizes = {f'{k.title().split(" ")[0]}\n{v}': 2 * v for k, v in sizes.items() if k not in to_drop}
 
 names, counts = list(zip(*sizes.items()))
 packed_bubble(names, counts, 1)

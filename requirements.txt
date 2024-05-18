@@ -7,6 +7,4 @@ types-beautifulsoup4
 lxml
 
 mypy
-flake8
-black
 ruff

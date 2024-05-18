@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
-'''
+"""
 taxonomy related things
 
 - parsing and dealing with taxonomy.yml
 - updating taxonomy.txt so it's clear what's missing
 - searching the classification tree for fuzzy matches to common names
 - simplification of full classification into reasonable abbreviations
-'''
+"""
 
 import enum
 import os
@@ -28,10 +28,8 @@ TaxiaTree = dict[str, Union[str, 'TaxiaTree']]
 NameMapping = dict[str, str]
 
 
-def gallery_scientific(
-    lineage: List[str], scientific: NameMapping, debug: bool = False
-) -> str:
-    '''attempt to find a scientific name for this page'''
+def gallery_scientific(lineage: List[str], scientific: NameMapping, debug: bool = False) -> str:
+    """attempt to find a scientific name for this page"""
 
     def lookup(names: List[str], *fns: Callable) -> Optional[str]:
         base = ' '.join(names).lower()
@@ -53,11 +51,11 @@ def gallery_scientific(
     if not name and not no_taxonomy(lineage):
         metrics.record('no scientific name', ' '.join(lineage))
 
-    return name or ""
+    return name or ''
 
 
 def no_taxonomy(lineage: List[str]) -> bool:
-    '''is this lineage not in the taxonomy?'''
+    """is this lineage not in the taxonomy?"""
     name = ' '.join(lineage)
     if unqualify(uncategorize(name)) in static.no_taxonomy_exact:
         metrics.counter('lineages known to not have taxonomy')
@@ -105,9 +103,9 @@ def simplify(name: str, shorten: bool = False) -> str:
 
 
 def similar(a: str, b: str) -> bool:
-    '''determine if two words are similar, usually a super family and family,
+    """determine if two words are similar, usually a super family and family,
     or something to that effect
-    '''
+    """
     length = (len(a) + len(b)) // 2
     pivot = length // 2
 
@@ -116,13 +114,13 @@ def similar(a: str, b: str) -> bool:
 
 @lru_cache(None)
 def load_tree() -> TaxiaTree:
-    '''yaml load'''
+    """yaml load"""
     with open(yaml_path, encoding='utf8') as fd:
         return yaml.safe_load(fd)
 
 
 def load_known(exact_only: bool = False) -> Iterable[str]:
-    '''load taxonomy.yml'''
+    """load taxonomy.yml"""
 
     tree = load_tree()
     if exact_only:
@@ -146,10 +144,10 @@ MappingType = enum.Enum('MappingType', 'Gallery Taxonomy')
 
 @lru_cache(None)
 def mapping(where: MappingType = MappingType.Gallery) -> NameMapping:
-    '''
+    """
     gallery:  mapping of common names to scientific names
     taxonomy: mapping of scientific names to common names
-    '''
+    """
     tree = _invert_known(load_tree())
 
     if where == MappingType.Gallery:
@@ -159,9 +157,9 @@ def mapping(where: MappingType = MappingType.Gallery) -> NameMapping:
 
 
 def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
-    '''produce a tree for gallery.py to use
+    """produce a tree for gallery.py to use
     the provided tree must be from collection.build_image_tree()
-    '''
+    """
     tree = tree or build_image_tree()
 
     images = single_level(tree)
@@ -171,10 +169,8 @@ def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
     return itree
 
 
-def binomial_names(
-    tree: Optional[Any] = None, parent: Optional[str] = None
-) -> Iterable[str]:
-    '''scientific binomial names'''
+def binomial_names(tree: Optional[Any] = None, parent: Optional[str] = None) -> Iterable[str]:
+    """scientific binomial names"""
     tree = tree or load_tree()
 
     if not isinstance(tree, dict):
@@ -189,7 +185,7 @@ def binomial_names(
 
 
 def looks_like_scientific_name(name: str) -> bool:
-    '''Genus species Other Other'''
+    """Genus species Other Other"""
     parts = name.split(' ')
     if len(parts) < 2:
         return False
@@ -201,7 +197,7 @@ def looks_like_scientific_name(name: str) -> bool:
 
 
 def is_scientific_name(name: str) -> Optional[str]:
-    '''cached lookup'''
+    """cached lookup"""
     return names_cache().get(name.lower())
 
 
@@ -210,7 +206,7 @@ def is_scientific_name(name: str) -> Optional[str]:
 
 @lru_cache(None)
 def names_cache() -> NameMapping:
-    '''cached lookup'''
+    """cached lookup"""
     cache = {}
     for bname in binomial_names():
         cache[bname.lower()] = bname
@@ -222,12 +218,12 @@ def names_cache() -> NameMapping:
 
 
 def _to_classification(name: str, mappings: NameMapping) -> str:
-    '''find a suitable classification for this common name'''
+    """find a suitable classification for this common name"""
     return gallery_scientific(name.split(' '), mappings)
 
 
 def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
-    '''remove all sp. entries'''
+    """remove all sp. entries"""
     assert isinstance(tree, dict), tree
 
     out: TaxiaTree = {}
@@ -244,10 +240,10 @@ def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
 
 
 def compress_tree(tree: TaxiaTree) -> TaxiaTree:
-    '''
+    """
     Collapse subtrees with only one child into their parent and update the parent's
     key for the current subtree to be "key + child key".
-    '''
+    """
     out = {}
 
     for key, value in tree.items():
@@ -267,7 +263,7 @@ def compress_tree(tree: TaxiaTree) -> TaxiaTree:
 
 
 def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
-    '''fill in the images'''
+    """fill in the images"""
     assert isinstance(tree, dict), tree
     out: ImageTree = {}
 
@@ -285,7 +281,7 @@ def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
 
 
 def _invert_known(tree: TaxiaTree) -> NameMapping:
-    '''leaves become roots'''
+    """leaves become roots"""
 
     result: Dict[str, str] = {}
 
@@ -312,7 +308,7 @@ def _invert_known(tree: TaxiaTree) -> NameMapping:
 
 
 def _ordered_simple_names(tree: ImageTree) -> Iterable[str]:
-    '''taxonomy names'''
+    """taxonomy names"""
     assert isinstance(tree, dict), tree
 
     for value in tree.values():
@@ -327,7 +323,7 @@ def _ordered_simple_names(tree: ImageTree) -> Iterable[str]:
 
 
 def _find_imprecise() -> Iterable[str]:
-    '''find names with classifications that could be more specific'''
+    """find names with classifications that could be more specific"""
     names = all_names()
     m = mapping()
 

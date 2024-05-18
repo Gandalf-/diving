@@ -10,7 +10,7 @@ from util.taxonomy import MappingType
 
 
 class TestGallery(unittest.TestCase):
-    '''gallery.py'''
+    """gallery.py"""
 
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
@@ -19,13 +19,11 @@ class TestGallery(unittest.TestCase):
         database.use_test_database()
 
     def test_find_representative(self):
-        '''picking the newest image to represent a tree, or a predefined 'pinned' image'''
+        """picking the newest image to represent a tree, or a predefined 'pinned' image"""
         tree = collection.build_image_tree()
 
         self.assertIn('barnacle', tree)
-        out = gallery.find_representative(
-            tree['barnacle'], Where.Gallery, lineage=['barnacle']
-        )
+        out = gallery.find_representative(tree['barnacle'], Where.Gallery, lineage=['barnacle'])
         self.assertIsNotNone(out)
 
     def test_find_representative_skips_videos(self) -> None:
@@ -51,7 +49,7 @@ class TestGallery(unittest.TestCase):
         self.assertEqual(out.name, 'Fast Fish')
 
     def test_key_to_subject_gallery(self):
-        '''current element to visible text'''
+        """current element to visible text"""
 
         def key_to_subject(key):
             return gallery._key_to_subject(key, Where.Gallery)
@@ -60,7 +58,7 @@ class TestGallery(unittest.TestCase):
         self.assertEqual(key_to_subject('octopus'), '<em>Octopus</em>')
 
     def test_key_to_subject_taxonomy(self):
-        '''current element to visible text'''
+        """current element to visible text"""
 
         def key_to_subject(key):
             return gallery._key_to_subject(key, Where.Taxonomy)
@@ -68,7 +66,7 @@ class TestGallery(unittest.TestCase):
         self.assertEqual(key_to_subject('octopoda octopus'), 'O. octopus')
 
     def test_key_to_subject_sites(self):
-        '''current element to visible text'''
+        """current element to visible text"""
 
         def key_to_subject(key):
             return gallery._key_to_subject(key, Where.Sites)
@@ -78,12 +76,10 @@ class TestGallery(unittest.TestCase):
         self.assertEqual(key_to_subject('2021-03-06'), 'March 6th, 2021')
 
     def test_html_tree_gallery(self):
-        '''basics'''
+        """basics"""
         tree = collection.build_image_tree()
         sub_tree = tree['coral']
-        htmls = gallery.html_tree(
-            sub_tree, Where.Gallery, TestGallery.g_scientific, ['coral']
-        )
+        htmls = gallery.html_tree(sub_tree, Where.Gallery, TestGallery.g_scientific, ['coral'])
 
         self.assertNotEqual(htmls, [])
         (path, html) = htmls[-1]

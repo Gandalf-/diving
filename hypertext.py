@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 html generation
-'''
+"""
 
 import enum
 import statistics
@@ -78,9 +78,7 @@ scripts = """
 blurb = 'Explore high quality scuba diving pictures'
 
 
-def title(
-    lineage: List[str], where: Where, scientific: Dict[str, Any]
-) -> Tuple[str, str]:
+def title(lineage: List[str], where: Where, scientific: Dict[str, Any]) -> Tuple[str, str]:
     """html head and target path"""
     if not lineage:
         impl: Type[Title] = TopTitle
@@ -101,13 +99,13 @@ def head(display: str, path: str, where: Where) -> str:
     if display.endswith('Gallery'):
         desc = (
             f'{blurb} organized into a tree structure by '
-            'subject\'s common names. Such as anemone, fish, '
+            "subject's common names. Such as anemone, fish, "
             'nudibranch, octopus, sponge.'
         )
     elif display.endswith('Taxonomy'):
         desc = (
             f'{blurb} organized into a tree structure by '
-            'subject\'s scientific classification. Such as Arthropoda, '
+            "subject's scientific classification. Such as Arthropoda, "
             'Cnidaria, Mollusca.'
         )
     elif display.endswith('Sites'):
@@ -198,7 +196,7 @@ def lineage_to_link(lineage: List[str], side: Side, key: Optional[str] = None) -
 
 
 def image_to_name_html(image: Image, where: Where) -> str:
-    '''create the html gallery link, entry, or nothing for this image'''
+    """create the html gallery link, entry, or nothing for this image"""
     if where in (Where.Gallery, Where.Taxonomy):
         return ''
 
@@ -213,7 +211,7 @@ def image_to_name_html(image: Image, where: Where) -> str:
 
 
 def image_to_site_html(image: Image, where: Where) -> str:
-    '''create the html site link, entry, or nothing for this image'''
+    """create the html site link, entry, or nothing for this image"""
     if where == Where.Sites:
         return ''
 
@@ -335,22 +333,20 @@ def _image_to_sites_link(image: Image) -> str:
 
 
 class Title:
-    '''Produce the HTML and title for a particular group of pages'''
+    """Produce the HTML and title for a particular group of pages"""
 
-    def __init__(
-        self, where: Where, lineage: List[str], scientific: Dict[str, Any]
-    ) -> None:
+    def __init__(self, where: Where, lineage: List[str], scientific: Dict[str, Any]) -> None:
         self.where = where
         self.lineage = lineage
         self.scientific = scientific
 
     def run(self) -> Tuple[str, str]:
-        '''Produce html, path'''
+        """Produce html, path"""
         raise NotImplementedError
 
 
 class GalleryTitle(Title):
-    '''html head and title section for gallery pages'''
+    """html head and title section for gallery pages"""
 
     def run(self) -> Tuple[str, str]:
         side = Side.Left
@@ -415,7 +411,7 @@ class GalleryTitle(Title):
 
 
 class TaxonomyTitle(Title):
-    '''html head and title section for taxonomy pages'''
+    """html head and title section for taxonomy pages"""
 
     def translate_lineage(self) -> str:
         lineage: List[str] = flatten(word.split(' ') for word in self.lineage)[::-1]
@@ -454,7 +450,7 @@ class TaxonomyTitle(Title):
         for i, name in enumerate(self.lineage):
             name = taxonomy.simplify(name)
             partial = self.lineage[: i + 1]
-            link = f"/taxonomy/{lineage_to_link(partial, side)}"
+            link = f'/taxonomy/{lineage_to_link(partial, side)}'
 
             html += f"""
             <a href="{link}">
@@ -463,11 +459,11 @@ class TaxonomyTitle(Title):
             """
 
         # check for common name for taxonomy
-        name = ""
+        name = ''
         history = ' '.join(self.lineage).split(' ')
 
         while history and not name:
-            name = self.scientific.get(' '.join(history), "")
+            name = self.scientific.get(' '.join(history), '')
             history = history[:-1]
 
         name = titlecase(name)
@@ -493,7 +489,7 @@ class TaxonomyTitle(Title):
 
 
 class SitesTitle(Title):
-    '''html head and title section for sites pages'''
+    """html head and title section for sites pages"""
 
     def is_dive(self) -> bool:
         *_, last = ' '.join(self.lineage).split(' ')
@@ -524,7 +520,7 @@ class SitesTitle(Title):
             <div class="top buffer"></div>
         """
         dive_info = None
-        name = ""
+        name = ''
 
         if self.is_dive():
             date = self.get_date()
@@ -537,7 +533,7 @@ class SitesTitle(Title):
                 continue
 
             partial = self.lineage[: i + 1]
-            link = f"/sites/{lineage_to_link(partial, Side.Right)}"
+            link = f'/sites/{lineage_to_link(partial, Side.Right)}'
 
             html += f"""
             <a href="{link}">
@@ -558,32 +554,32 @@ class SitesTitle(Title):
 
 
 def switcher_button(where: Where, long: bool = False) -> str:
-    '''Get the switcher button for this site'''
-    _timeline = '''
+    """Get the switcher button for this site"""
+    _timeline = """
         <a href="/timeline/">
             <h1 class="top switch">{}</h1>
         </a>
-    '''
-    _gallery = '''
+    """
+    _gallery = """
         <a href="/gallery/">
             <h1 class="top switch gallery">{}</h1>
         </a>
-    '''
-    _detective = '''
+    """
+    _detective = """
         <a href="/detective/">
             <h1 class="top switch detective">{}</h1>
         </a>
-    '''
-    _sites = '''
+    """
+    _sites = """
         <a href="/sites/">
             <h1 class="top switch sites">{}</h1>
         </a>
-    '''
-    _taxonomy = '''
+    """
+    _taxonomy = """
         <a href="/taxonomy/">
             <h1 class="top switch taxonomy">{}</h1>
         </a>
-    '''
+    """
     return {
         Where.Timeline: _timeline,
         Where.Gallery: _gallery,
@@ -594,12 +590,12 @@ def switcher_button(where: Where, long: bool = False) -> str:
 
 
 def long_name(where: Where) -> str:
-    '''Get the full name'''
+    """Get the full name"""
     return where.name
 
 
 def short_name(where: Where) -> str:
-    '''Get the abbreviated switcher button for this site'''
+    """Get the abbreviated switcher button for this site"""
     return {
         Where.Timeline: '📅',
         Where.Gallery: '📸',
@@ -610,16 +606,16 @@ def short_name(where: Where) -> str:
 
 
 class TopTitle(Title):
-    '''
+    """
     HTML head and title section for top level pages. The most interesting
     part of this is the switcher, which allows us to move between the sites
-    '''
+    """
 
     def sub_line(self) -> str:
         if self.where == Where.Timeline:
             return ''
 
-        return f'''
+        return f"""
         <div class="search">
             <form class="search_random" action="javascript:;" onsubmit="randomPage()">
                 <button type="submit">Random</button>
@@ -634,7 +630,7 @@ class TopTitle(Title):
         <script src="/{search_data_path}" defer></script>
         <script src="/{search_js.path}" defer></script>
         </div>
-        '''
+        """
 
     def run(self) -> Tuple[str, str]:
         _title = titlecase(self.where.name)
@@ -670,8 +666,8 @@ class TopTitle(Title):
         html += spacer.join(parts)
         html += self.sub_line()
 
-        html += '''
+        html += """
         </div>
-        '''
+        """
 
         return html, path

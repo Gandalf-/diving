@@ -10,7 +10,7 @@ from util.taxonomy import MappingType
 
 
 class TestTaxonomy(unittest.TestCase):
-    '''taxonomy.py'''
+    """taxonomy.py"""
 
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
@@ -19,34 +19,34 @@ class TestTaxonomy(unittest.TestCase):
         database.use_test_database()
 
     def test_compress_single_leaf(self):
-        tree = {"a": {"b": {"c": "d"}}}
+        tree = {'a': {'b': {'c': 'd'}}}
         result = taxonomy.compress_tree(tree)
-        self.assertEqual(result, {"a b c": "d"})
+        self.assertEqual(result, {'a b c': 'd'})
 
     def test_compress_single_subtree(self):
-        tree = {"a": {"b": {"c": {"d": "e"}}}}
+        tree = {'a': {'b': {'c': {'d': 'e'}}}}
         result = taxonomy.compress_tree(tree)
-        self.assertEqual(result, {"a b c d": "e"})
+        self.assertEqual(result, {'a b c d': 'e'})
 
     def test_compress_multiple_subtrees(self):
-        tree = {"a": {"b": {"c": {"d": "e", "f": "g"}}}}
+        tree = {'a': {'b': {'c': {'d': 'e', 'f': 'g'}}}}
         result = taxonomy.compress_tree(tree)
-        self.assertEqual(result, {"a b c": {"d": "e", "f": "g"}})
+        self.assertEqual(result, {'a b c': {'d': 'e', 'f': 'g'}})
 
     def test_compress_complex_tree(self):
         tree = {
-            "a": {"b": {"c": "d", "e": {"f": "g", "h": {"i": "n"}}}, "j": "k"},
-            "l": "m",
+            'a': {'b': {'c': 'd', 'e': {'f': 'g', 'h': {'i': 'n'}}}, 'j': 'k'},
+            'l': 'm',
         }
         result = taxonomy.compress_tree(tree)
         expected = {
-            "a": {"b": {"c": "d", "e": {"f": "g", "h i": "n"}}, "j": "k"},
-            "l": "m",
+            'a': {'b': {'c': 'd', 'e': {'f': 'g', 'h i': 'n'}}, 'j': 'k'},
+            'l': 'm',
         }
         self.assertEqual(result, expected)
 
     def test_find_representative(self):
-        '''same as gallery.py but the lineage is reversed'''
+        """same as gallery.py but the lineage is reversed"""
         taxia = taxonomy.gallery_tree()
         lineage = [
             'Animalia',
@@ -59,13 +59,11 @@ class TestTaxonomy(unittest.TestCase):
         self.assertIn('Cnidaria', taxia['Animalia'])
 
         for i in range(len(lineage)):
-            out = gallery.find_representative(
-                taxia, Where.Taxonomy, lineage=lineage[:i]
-            )
+            out = gallery.find_representative(taxia, Where.Taxonomy, lineage=lineage[:i])
             self.assertIsNotNone(out)
 
     def test_taxia_filler(self):
-        '''it doesn't lose data'''
+        """it doesn't lose data"""
         images = collection.single_level(collection.build_image_tree())
         taxia = taxonomy.compress_tree(taxonomy.load_tree())
 
@@ -86,7 +84,7 @@ class TestTaxonomy(unittest.TestCase):
         self.assertNotEqual(filled['Aglaopheniidae'], {})
 
     def test_looks_like_scientific_name(self):
-        '''it works'''
+        """it works"""
         positives = [
             'Aglaophenia diegensis Hydroid',
             'Antipathes galapagensis',
@@ -99,7 +97,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertFalse(taxonomy.looks_like_scientific_name(sample), sample)
 
     def test_filter_exact(self):
-        '''remove sp. entries'''
+        """remove sp. entries"""
         tree = {'Actiniaria': {'sp.': 1, 'Actinioidea': 2, 'Metridioidea': 3}}
         tree = taxonomy._filter_exact(tree)
         self.assertEqual(tree, {'Actiniaria': {'Actinioidea': 2, 'Metridioidea': 3}})
@@ -115,7 +113,7 @@ class TestTaxonomy(unittest.TestCase):
         self.assertEqual(ms['Animalia Chordata Actinopterygii sp.'], 'fish')
 
     def test_gallery_scientific(self):
-        '''find scientific names by common name'''
+        """find scientific names by common name"""
         samples = [
             (['copper', 'rock', 'fish'], 'Sebastes caurinus'),
             (['fish'], 'Actinopterygii sp.'),
@@ -135,7 +133,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertTrue(match.endswith(output), f'{match} != {output}')
 
     def test_similar(self):
-        '''can these be collapsed?'''
+        """can these be collapsed?"""
         samples = [
             (True, ('Amphinomida', 'Amphinomidae')),
             (True, ('Aphrocallistidae', 'Aphrocallistes')),
@@ -149,7 +147,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertEqual(expected, taxonomy.similar(a, b), [a, b])
 
     def test_simplify(self):
-        '''remove similar non-ambiguous names'''
+        """remove similar non-ambiguous names"""
         samples = [
             (
                 'Polyplacophora Chitonida Mopalioidea Mopaliidae',
@@ -188,7 +186,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertEqual(after, taxonomy.simplify(before, shorten=True))
 
     def test_title_scientific_name(self):
-        '''cached helper'''
+        """cached helper"""
         for example in ('crab', 'fish', 'giant pacific octopus'):
             self.assertIsNone(taxonomy.is_scientific_name(example), example)
 
@@ -199,7 +197,7 @@ class TestTaxonomy(unittest.TestCase):
             self.assertIsNotNone(taxonomy.is_scientific_name(example), example)
 
     def test_binomial_names(self):
-        '''parse binomial names from taxonomy.yml'''
+        """parse binomial names from taxonomy.yml"""
         names = list(taxonomy.binomial_names())
         self.assertNotEqual(names, [])
 

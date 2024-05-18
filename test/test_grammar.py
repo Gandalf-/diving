@@ -10,7 +10,7 @@ class TestGrammar(unittest.TestCase):
             ('Algae Eelgrass', 'Algae Eelgrass'),
             ('Red Rock Crab', 'Red Rock Crabs'),
             ('Galapagos Octopus', 'Galapagos Octopus'),
-            ('Heath\'s Dorid', 'Heath\'s Dorids'),
+            ("Heath's Dorid", "Heath's Dorids"),
             ('Giant Nudibranch', 'Giant Nudibranchs'),
             ('Feather Duster Worm', 'Feather Duster Worms'),
             ('Reef Manta Ray', 'Reef Manta Rays'),

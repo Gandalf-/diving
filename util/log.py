@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-'''
+"""
 Parsing UDDF files
 
 https://www.streit.cc/extern/uddf_v321/en/index.html
-'''
+"""
 
 import math
 import os
@@ -49,7 +49,7 @@ def search(date: str, hint: str) -> Optional[DiveInfo]:
 
 
 def dive_info_html(info: DiveInfo) -> str:
-    '''build a snippet from the dive computer information available'''
+    """build a snippet from the dive computer information available"""
     parts = []
     parts.append(f'{info["depth"]}\'')
     parts.append(f'{info["duration"] // 60}min')
@@ -65,9 +65,9 @@ def dive_info_html(info: DiveInfo) -> str:
         parts.append(f'{start}&rarr;{end} PSI')
 
     metrics.counter('dive log html snippets added')
-    return f'''\
+    return f"""\
 <p class="tight">{' &nbsp; '.join(parts)}</p>
-'''
+"""
 
 
 def series_match(series: List[int], others: List[int], target: int) -> int:
@@ -124,9 +124,7 @@ def _parse_uddf(file: str) -> DiveInfo:
     tree = lxml.etree.parse(os.path.join(_UDDF_ROOT, 'Perdix', file))  # type: ignore
 
     date = datetime.fromisoformat(
-        tree.xpath(
-            '//uddf:informationbeforedive/uddf:datetime/text()', namespaces=_XML_NS
-        )[0]
+        tree.xpath('//uddf:informationbeforedive/uddf:datetime/text()', namespaces=_XML_NS)[0]
     )
 
     number = _parse_number(tree, '//uddf:informationbeforedive/uddf:divenumber')
@@ -135,9 +133,7 @@ def _parse_uddf(file: str) -> DiveInfo:
 
     tank_start = float('nan')
     tank_end = float('nan')
-    for start in tree.xpath(
-        '//uddf:waypoint/uddf:tankpressure[@ref="T1"]', namespaces=_XML_NS
-    ):
+    for start in tree.xpath('//uddf:waypoint/uddf:tankpressure[@ref="T1"]', namespaces=_XML_NS):
         value = float(start.text)
         last = value
         if value > 100 and math.isnan(tank_start):
@@ -188,15 +184,9 @@ def _parse_sml(file: str) -> DiveInfo:
     ns = {'sml': 'http://www.suunto.com/schemas/sml'}
 
     # Extract data from XML using XPath
-    date_str = root.xpath(
-        './sml:DeviceLog/sml:Header/sml:DateTime/text()', namespaces=ns
-    )[0]
-    depth = root.xpath(
-        './sml:DeviceLog/sml:Header/sml:Depth/sml:Max/text()', namespaces=ns
-    )[0]
-    duration = root.xpath(
-        './sml:DeviceLog/sml:Header/sml:Duration/text()', namespaces=ns
-    )[0]
+    date_str = root.xpath('./sml:DeviceLog/sml:Header/sml:DateTime/text()', namespaces=ns)[0]
+    depth = root.xpath('./sml:DeviceLog/sml:Header/sml:Depth/sml:Max/text()', namespaces=ns)[0]
+    duration = root.xpath('./sml:DeviceLog/sml:Header/sml:Duration/text()', namespaces=ns)[0]
     tank_start = root.xpath(
         './sml:DeviceLog/sml:Header/sml:Diving/sml:Gases/sml:Gas/sml:StartPressure/text()',
         namespaces=ns,
@@ -253,9 +243,9 @@ def _load_dive_info() -> Iterator[DiveInfo]:
 
 
 def _build_dive_history() -> Dict[str, List[str]]:
-    '''No caching possible here since the consumer modifies the result to
+    """No caching possible here since the consumer modifies the result to
     track progress through multi-dive days. Plus, dive_listing is already cached
-    '''
+    """
     history: Dict[str, List[str]] = {}
 
     for dive in [os.path.basename(dive) for dive in collection.dive_listing()]:

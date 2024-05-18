@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 Check for broken links, misspelled names, and more
-'''
+"""
 
 import difflib
 import os
@@ -59,7 +59,7 @@ def _verify(label: str, checks: List[Callable[[], None]]) -> None:
 
 
 def _name_casing() -> None:
-    '''Look for names that are not capitalized correctly.'''
+    """Look for names that are not capitalized correctly."""
     unusual = []
     ignore = {'BC'}
 
@@ -77,12 +77,12 @@ def _name_casing() -> None:
 
 
 def _image_keys() -> None:
-    '''
+    """
     Ensure that no two files in the same dive directory have the same key.
     Images with the same name are fine, but the key must be different.
-    '''
+    """
     dive_paths = collection.dive_listing()
-    pattern = re.compile(r"(\d+)(.*)")
+    pattern = re.compile(r'(\d+)(.*)')
 
     for path in dive_paths:
         seen = set()
@@ -99,10 +99,10 @@ def _image_keys() -> None:
 
 
 def _taxonomy_keys() -> None:
-    '''
+    """
     Read the yaml file and check for duplicate keys. Duplicates shadow previous
     definitions making things appear to be missing when they are not.
-    '''
+    """
     fname = taxonomy.yaml_path
     seen_keys = set()
     ignore = ('sp.', 'Pantopoda')
@@ -154,14 +154,14 @@ def _site_names() -> None:
 
 
 def _word_order() -> None:
-    '''actual check'''
+    """actual check"""
     tree = collection.build_image_tree()
     for value in _find_wrong_name_order(tree):
         assert False, f'word ordering appears wrong between {value}'
 
 
 def _find_wrong_name_order(tree: Any) -> Iterable[Tuple[str, str]]:
-    '''look for swapped words'''
+    """look for swapped words"""
     if not isinstance(tree, dict):
         return
 
@@ -187,14 +187,14 @@ def _find_wrong_name_order(tree: Any) -> Iterable[Tuple[str, str]]:
 
 
 def _spelling() -> None:
-    '''actual check'''
+    """actual check"""
     found = set(_find_misspellings(collection.all_names()))
     if found:
         assert False, f'{found} may be mispelled'
 
 
 def _find_misspellings(names: Set[str]) -> Iterable[str]:
-    '''check for misspellings'''
+    """check for misspellings"""
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
     ignores = (
@@ -215,10 +215,10 @@ def _find_misspellings(names: Set[str]) -> Iterable[str]:
 
 
 def _possible_misspellings(names: Set[str]) -> Iterable[List[str]]:
-    '''look for edit distance
+    """look for edit distance
 
     prune based on taxonomy.load_known()
-    '''
+    """
     skip = set(static.ignore + ['unknown'])
     names = {name for name in names if not any(name.endswith(i) for i in skip)}
 
@@ -226,9 +226,7 @@ def _possible_misspellings(names: Set[str]) -> Iterable[List[str]]:
         name = names.pop()
 
         similars = difflib.get_close_matches(name, names, cutoff=0.8)
-        similars = [
-            other for other in similars if other not in name and name not in other
-        ]
+        similars = [other for other in similars if other not in name and name not in other]
         if similars:
             yield [name] + similars
 
@@ -237,15 +235,14 @@ def _possible_misspellings(names: Set[str]) -> Iterable[List[str]]:
 
 
 def _important_files() -> None:
-    '''basic sanity'''
+    """basic sanity"""
     required = ['index.html', static.stylesheet.path, 'favicon.ico', 'imgs']
     required += [
         'jquery.fancybox.min.css',
         'jquery.fancybox.min.js',
     ]
     required += [
-        f'{site}/index.html'
-        for site in ['sites', 'detective', 'taxonomy', 'timeline', 'gallery']
+        f'{site}/index.html' for site in ['sites', 'detective', 'taxonomy', 'timeline', 'gallery']
     ]
     required += [
         'gallery/nudibranch.html',
@@ -324,7 +321,7 @@ def _find_links() -> Iterable[Tuple[str, str]]:
             (directory, filename)
             for directory in ('taxonomy', 'gallery', 'sites', 'detective')
             for filename in os.listdir(directory)
-            if filename.endswith(".html")
+            if filename.endswith('.html')
         ]
         for result in executor.map(lambda args: process_file(*args), file_list):
             yield from result

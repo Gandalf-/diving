@@ -1,6 +1,6 @@
-'''
+"""
 Database interface
-'''
+"""
 
 from typing import Any, Dict, List, Optional
 
@@ -10,50 +10,50 @@ from util.metrics import metrics
 
 
 class Database:
-    '''Interface'''
+    """Interface"""
 
     # High Level
 
     def get_image_hash(self, identifier: str) -> Optional[str]:
-        '''Get an image's hash'''
+        """Get an image's hash"""
         raise NotImplementedError
 
     # Low Level
 
     def get(self, *keys: str, default: Optional[Any] = None) -> Any:
-        '''Retrieve a value'''
+        """Retrieve a value"""
         raise NotImplementedError
 
     def set(self, *keys: str, value: Any) -> None:
-        '''Assign a value to a key'''
+        """Assign a value to a key"""
         raise NotImplementedError
 
     def delete(self, *keys: str) -> None:
-        '''Delete a value'''
+        """Delete a value"""
         raise NotImplementedError
 
     def keys(self, *keys: str) -> List[str]:
-        '''Retrieve a list of keys'''
+        """Retrieve a list of keys"""
         raise NotImplementedError
 
     def append(self, *keys: str, value: Any) -> None:
-        '''Append a value to a key'''
+        """Append a value to a key"""
         raise NotImplementedError
 
     def remove(self, *keys: str, value: Any) -> None:
-        '''Remove a value from a key'''
+        """Remove a value from a key"""
         raise NotImplementedError
 
 
 class RealDatabase(Database):
-    '''Real implementation that requires a database to be running'''
+    """Real implementation that requires a database to be running"""
 
     def __init__(self) -> None:
         self.database = apocrypha.client.Client()
         self.level_cache: Dict[str, Any] = {}
 
     def _invalidate_cache(self) -> None:
-        '''invalidate the cache'''
+        """invalidate the cache"""
         self.level_cache = {}
 
     def get_image_hash(self, identifier: str) -> Optional[str]:
@@ -95,7 +95,7 @@ class RealDatabase(Database):
 
 
 class TestDatabase(Database):
-    '''Real implementation that requires a database to be running'''
+    """Real implementation that requires a database to be running"""
 
     def __init__(self) -> None:
         pass

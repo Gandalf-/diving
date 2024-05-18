@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-'''
+"""
 configuration information
-'''
+"""
 
 import os
 import pathlib
@@ -16,7 +16,7 @@ ListTree = Dict[str, List[str]]
 
 
 source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
-image_root = "/Users/leaf/Pictures/Diving"
+image_root = '/Users/leaf/Pictures/Diving'
 
 with open(source_root + 'data/static.yml') as fd:
     _static = yaml.safe_load(fd)
@@ -40,7 +40,7 @@ no_taxonomy_any: Set[str] = set(_static['no-taxonomy-any'])
 
 
 def _invert(tree: Dict[str, List[str]]) -> Dict[str, str]:
-    '''map locations to full location names'''
+    """map locations to full location names"""
     out = {}
     for area, places in tree.items():
         for place in places:
