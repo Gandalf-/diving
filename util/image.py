@@ -123,13 +123,13 @@ class Image:
     def thumbnail(self) -> str:
         """URI of thumbnail image"""
         if self.is_video:
-            return f'/clips/{self.hashed()}.webm'
+            return f'/clips/{self.hashed()}.mp4'
         return f'/imgs/{self.hashed()}.webp'
 
     def fullsize(self) -> str:
         """URI of original image"""
         if self.is_video:
-            return f'/video/{self.hashed()}.webm'
+            return f'/video/{self.hashed()}.mp4'
         return f'/full/{self.hashed()}.webp'
 
     def hashed(self) -> str:

@@ -64,6 +64,36 @@ scripts = """
         }
     }
 
+    function isIOSorSafari() {
+      const isIOS =
+        ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(
+          navigator.platform
+        ) ||
+        // iPad on iOS 13 detection
+        (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+
+      const isMacSafari =
+        navigator.platform === 'MacIntel' &&
+        !navigator.userAgent.includes('Chrome') &&
+        !navigator.userAgent.includes('CriOS') && // Chrome on iOS
+        'WebkitAppearance' in document.documentElement.style; // WebKit specific
+
+      const result = isIOS || isMacSafari;
+      console.log('isIOSorSafari', result);
+      return result;
+    }
+
+    function enableAutoPlay() {
+        const clips = document.querySelectorAll('video.clip');
+        clips.forEach(clip => {
+            if (clip.autoplay) {
+                return;
+            }
+            clip.autoplay = true;
+            clip.load();
+        });
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         const clips = document.querySelectorAll('video.clip');
         clips.forEach(clip => {
@@ -71,6 +101,8 @@ scripts = """
                 clip.removeAttribute('loop');
             }, 7000); // 5 seconds
         });
+
+        enableAutoPlay();
     });
     </script>
 """
@@ -288,8 +320,12 @@ def _direct_video_html(image: Image, where: Where) -> str:
     return f"""
     <div class="card" onclick="flip(this);">
         <div class="card_face card_face-front">
-            <video class="clip" disableRemotePlayback preload playsinline muted autoplay loop height=225 width=300>
-                <source src="{thumbnail.replace('.webm', '.mp4')}" type="video/mp4">
+            <video
+              class="clip"
+              height=225 width=300
+              disableRemotePlayback preload playsinline muted loop
+              >
+                <source src="{thumbnail}" type="video/mp4">
                 Your browser does not support the HTML5 video tag.
             </video>
         </div>
@@ -301,9 +337,11 @@ def _direct_video_html(image: Image, where: Where) -> str:
             </a>
             <p class="top elem">Close</p>
 
-            <video controls muted preload="none" id="{unique}" style="display:none;">
-                <source src="{fullsize}" type="video/webm">
-                <source src="{fullsize.replace('.webm', '.mp4')}" type="video/mp4">
+            <video
+              controls muted preload="none"
+              id="{unique}" style="display:none;"
+              >
+                <source src="{fullsize}" type="video/mp4">
                 Your browser does not support the HTML5 video tag.
             </video>
         </div>

@@ -13,7 +13,7 @@ from util.common import titlecase
 from util.image import Image, categorize, split, unqualify
 from util.metrics import metrics
 from util.resource import VersionedResource
-from util.static import reef_organisms, source_root, stylesheet
+from util.static import source_root, stylesheet
 
 
 def get_hashes(images: List[Image]) -> Iterable[str]:
@@ -53,7 +53,6 @@ def table_builder(
 def writer() -> None:
     """Write out all the game artifacts"""
     _write_data_js(collection.named(), 'main')
-    _write_data_js(_reef_images(), 'reef')
 
     shutil.copy(
         os.path.join(source_root, 'web', 'game.js'),
@@ -62,14 +61,13 @@ def writer() -> None:
 
     game = VersionedResource('detective/game.js', 'detective')
     data = VersionedResource('detective/main.js', 'detective')
-    reef = VersionedResource('detective/reef.js', 'detective')
 
-    for vr in [game, data, reef]:
+    for vr in [game, data]:
         vr.cleanup()
         vr.write()
 
     with open('detective/index.html', 'w+') as fd:
-        html = _html_builder(stylesheet.path, game.path, data.path, reef.path)
+        html = _html_builder(stylesheet.path, game.path, data.path)
         print(html, file=fd, end='')
 
 
@@ -90,24 +88,6 @@ def _write_data_js(images: List[Image], name: str) -> None:
         print(f'var {name}_thumbs =', ts, file=fd)
         print(f'var {name}_similarities =', ss, file=fd)
         print(f'var {name}_difficulties =', ds, file=fd)
-
-
-def _reef_images() -> List[Image]:
-    """images of REEF organisms"""
-    reef = set(reef_organisms)
-    named = collection.named()
-    found = set()
-
-    result = []
-    for image in named:
-        name = image.simplified()
-        if name in reef:
-            result.append(image)
-            found.add(name)
-
-    metrics.counter('reef organisms found', len(found))
-    metrics.counter('reef organisms missing', len(reef) - len(found))
-    return result
 
 
 def _distance(a: str, b: str, tree: Optional[dict[str, str]] = None) -> float:
@@ -223,7 +203,7 @@ def _similarity_table(names: List[str]) -> SimiliarityTable:
     return similarity
 
 
-def _html_builder(css: str, game: str, data: str, reef: str) -> str:
+def _html_builder(css: str, game: str, data: str) -> str:
     """Insert dynamic content into the HTML template"""
     desc = 'Scuba diving picture identification game, identify a picture or choose the image for a name'
     return f"""
@@ -240,7 +220,6 @@ def _html_builder(css: str, game: str, data: str, reef: str) -> str:
         <link rel="stylesheet" href="/jquery.fancybox.min.css" />
         <script src="/{data}"></script>
         <script src="/{game}"></script>
-        <script src="/{reef}" defer></script>
         <style>
 body {{
     max-width: 1080px;
@@ -279,7 +258,6 @@ body {{
                 <select id="game" onchange="choose_game();">
                     <option value="names">Names</option>
                     <option value="images">Images</option>
-                    <option value="reef">REEF</option>
                 </select>
                 <div class="scoring">
                     <h3 id="score"></h3>

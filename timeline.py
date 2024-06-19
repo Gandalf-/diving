@@ -119,8 +119,11 @@ def _javascript(paths: List[str]) -> str:
 
       furthest = bot_of_scrn;
       console.log("loading ", elem)
-      $(elem).load(content)
-      $(elem).addClass("isloaded");
+
+      $(elem).load(content, function() {
+          $(elem).addClass("isloaded");
+          enableAutoPlay();
+      });
 
       return true;
     }
@@ -130,9 +133,18 @@ def _javascript(paths: List[str]) -> str:
     # preload
     first, second, third = paths[:3]
     html += f"""
-    $("#0").load("/{first}" ).addClass("isloaded");
-    $("#1").load("/{second}").addClass("isloaded");
-    $("#2").load("/{third}" ).addClass("isloaded");
+    $("#0").load("/{first}", function () {{
+        $("#0").addClass("isloaded");
+        enableAutoPlay();
+    }});
+    $("#1").load("/{second}", function () {{
+        $("#1").addClass("isloaded");
+        enableAutoPlay();
+    }});
+    $("#2").load("/{third}", function () {{
+        $("#2").addClass("isloaded");
+        enableAutoPlay();
+    }});
     """
 
     # scroll function

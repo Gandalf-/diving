@@ -142,7 +142,6 @@ generate_video_fullsize() {
   }
 
   webm \
-    | tee "$fout.webm" \
     | mp4 \
     || die "ffmpeg fullsize failure $fin"
 

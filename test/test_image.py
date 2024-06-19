@@ -120,5 +120,5 @@ class TestImage(unittest.TestCase):
         self.assertFalse(img.is_image)
         self.assertTrue(img.is_video)
 
-        self.assertEqual(img.thumbnail(), '/clips/test.webm')
-        self.assertEqual(img.fullsize(), '/video/test.webm')
+        self.assertEqual(img.thumbnail(), '/clips/test.mp4')
+        self.assertEqual(img.fullsize(), '/video/test.mp4')
