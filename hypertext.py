@@ -33,33 +33,16 @@ scripts = (
     <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
     <script src="/jquery-3.6.0.min.js"></script>
     <script src="/jquery.fancybox.min.js" defer></script>
-
     <script>
-    function removeFlip(elem) {
-        elem.classList.remove('is-flipped');
-
-        // When 'is-flipped' is removed, we add the 'loop' attribute and start the timer to remove it after 5 seconds.
-        const clips = elem.querySelectorAll('video.clip');
-        clips.forEach(clip => {
-            clip.setAttribute('loop', 'true');
-            clip.currentTime = 0;
-            clip.play();
-
-            setTimeout(() => {
-                clip.removeAttribute('loop');
-            }, 7000);
-        });
-    }
-
     function flip(elem) {
         const label = 'is-flipped';
         if (elem.classList.contains(label)) {
-            removeFlip(elem);
+            elem.classList.remove(label);
         } else {
             elem.classList.add(label);
             setTimeout(() => {
                 if (elem.classList.contains(label)) {
-                    removeFlip(elem);
+                    elem.classList.remove(label);
                 }
             }, 7000);
         }
