@@ -19,7 +19,7 @@ import locations
 import search
 import timeline
 from hypertext import Side, Where
-from util import collection, static, taxonomy, verify
+from util import collection, resource, static, taxonomy, verify
 from util.common import (
     Progress,
     Tree,
@@ -262,7 +262,7 @@ def main() -> None:
     metrics.counter('pages in taxonomy', len(taxia_htmls))
     metrics.counter('pages in timeline', len(times_htmls))
 
-    for vr in [static.search_js, static.video_js, static.stylesheet]:
+    for vr in resource.registry:
         vr.cleanup()
         vr.write()
 

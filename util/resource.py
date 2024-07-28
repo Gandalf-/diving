@@ -32,6 +32,8 @@ class VersionedResource:
         name, ext = os.path.splitext(self._name)
         self.path = os.path.join(self._target, f'{name}-{self._hash}{ext}')
 
+        registry.append(self)
+
     def write(self) -> None:
         """write out the versioned resource"""
         if os.path.exists(self.path):
@@ -60,3 +62,6 @@ class VersionedResource:
             if i >= count:
                 metrics.counter('versioned resources deleted')
                 os.remove(version)
+
+
+registry: List[VersionedResource] = []

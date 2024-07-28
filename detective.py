@@ -62,10 +62,6 @@ def writer() -> None:
     game = VersionedResource('detective/game.js', 'detective')
     data = VersionedResource('detective/main.js', 'detective')
 
-    for vr in [game, data]:
-        vr.cleanup()
-        vr.write()
-
     with open('detective/index.html', 'w+') as fd:
         html = _html_builder(stylesheet.path, game.path, data.path)
         print(html, file=fd, end='')

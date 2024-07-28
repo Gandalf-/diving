@@ -4,6 +4,7 @@
 Python implementation of runner.sh
 """
 
+import json
 import operator
 import os
 from typing import Any, Dict, List, Tuple
@@ -12,6 +13,7 @@ import hypertext
 import locations
 from hypertext import Where
 from util import collection, common, log, static
+from util.resource import VersionedResource
 
 
 def timeline() -> List[Tuple[str, str]]:
@@ -22,8 +24,10 @@ def timeline() -> List[Tuple[str, str]]:
     for dive in dives:
         results.append(_subpage(dive))
 
-    paths = [path for (path, _) in results]
-    divs = '\n'.join(f"    <div id='{i}'></div>" for i, _ in enumerate(dives))
+    with open('timeline-data.json', 'w+') as fd:
+        paths = [f'/{path}' for (path, _) in results]
+        json.dump(paths, fd)
+    vr = VersionedResource('timeline-data.json')
 
     fake_scientific: Dict[str, Any] = {}
     title, _ = hypertext.title([], Where.Timeline, fake_scientific)
@@ -31,10 +35,10 @@ def timeline() -> List[Tuple[str, str]]:
     html = '\n'.join(
         [
             title,
-            divs,
             '</div>',
             hypertext.scripts,
-            _javascript(paths),
+            f'  <script>var TIMELINE_DATA_URL = "/{vr.path}";</script>',
+            f'  <script src="/{static.timeline_js.path}"></script>',
             '  </body>',
             '</html>',
         ]
@@ -88,74 +92,3 @@ def _subpage(dive: str) -> Tuple[str, str]:
 
     path = common.sanitize_link(dive) + '.html'
     return f'timeline/{path}', html
-
-
-def _javascript(paths: List[str]) -> str:
-    """build the javascript lazy loader"""
-    html = """\
-  <script>
-    var furthest = 0;
-
-    function loader(elem, content) {
-      const top_of_elem = $(elem).offset().top;
-      const bot_of_elem = top_of_elem + $(elem).outerHeight();
-      const bot_of_scrn = $(window).scrollTop() + window.innerHeight;
-      const top_of_scrn = $(window).scrollTop();
-
-      if ((bot_of_scrn < top_of_elem) || (top_of_scrn > bot_of_elem)) {
-        // we are not yet nearing the bottom
-        return false;
-      }
-
-      if ($(elem).hasClass("isloaded")) {
-        // the page is already loaded
-        return false;
-      }
-
-      if (furthest >= bot_of_scrn) {
-        // we have gotten further than this before
-        return false;
-      }
-
-      furthest = bot_of_scrn;
-      console.log("loading ", elem)
-
-      $(elem).load(content, function() {
-          $(elem).addClass("isloaded");
-      });
-
-      return true;
-    }
-    // preload three groups to fill the screen
-    """
-
-    # preload
-    first, second, third = paths[:3]
-    html += f"""
-    $("#0").load("/{first}", function () {{
-        $("#0").addClass("isloaded");
-    }});
-    $("#1").load("/{second}", function () {{
-        $("#1").addClass("isloaded");
-    }});
-    $("#2").load("/{third}", function () {{
-        $("#2").addClass("isloaded");
-    }});
-    """
-
-    # scroll function
-    html += """
-    $(window).scroll(function() {
-"""
-    html += '\n'.join(
-        f'      if (loader("#{i}", "/{path}")) {{ return }};'
-        for i, path in enumerate(paths)
-        if i > 2
-    )
-
-    html += """
-    });
-  </script>
-    """
-
-    return html
