@@ -914,6 +914,9 @@ Animalia:
     Hydrozoa:
       sp.: hydroid
       Anthoathecata:
+        Corynidae:
+          Polyorchis:
+            penicillatus: bell medusa jelly
         Bougainvilliidae:
           Garveia:
             annulata: orange hydroid
@@ -1302,6 +1305,7 @@ Animalia:
             Geitodoris:
               heathi: heath's dorid
             Doris:
+              odhneri: odhner's dorid
               montereyensis: monterey sea lemon
               odhneri: white nudibranch
           Discodorididae:
@@ -1393,6 +1397,7 @@ Animalia:
           Tritoniidae:
             Tritonia:
               festiva: diamondback nudibranch
+            Tochuina:
               gigantea: orange peel nudibranch
   Arthropoda:
     Pantopoda:

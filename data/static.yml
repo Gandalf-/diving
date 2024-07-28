@@ -27,6 +27,7 @@ locations:
     - Port Townsend
     - Redondo
     - Rockaway
+    - Salt Creek
     - Saltwater State Park
     - Sund Rock
     - Tacoma North Wall
@@ -137,6 +138,7 @@ dives-without-camera:
   # days with some camera dives but not all
   - 227
   - 237
+  - 398
 
 ignore:
   # places
@@ -179,6 +181,7 @@ ignore:
   - kayaker
   - pelican
   - seagull
+  - bald eagle
   - skink
 
 no-taxonomy-exact:

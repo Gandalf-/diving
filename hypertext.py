@@ -85,13 +85,26 @@ scripts = """
 
     function enableAutoPlay() {
         const clips = document.querySelectorAll('video.clip');
-        clips.forEach(clip => {
-            if (clip.autoplay) {
+        let index = 0;
+
+        function loadNextClip() {
+            if (index >= clips.length) {
                 return;
             }
-            clip.autoplay = true;
-            clip.load();
-        });
+
+            const clip = clips[index];
+            index++;
+
+            if (clip.autoplay) {
+                // Skip to the next clip if this one is already autoplaying
+                loadNextClip();
+            } else {
+                clip.autoplay = true;
+                setTimeout(loadNextClip, 500);
+            }
+        }
+
+        loadNextClip();
     }
 
     document.addEventListener("DOMContentLoaded", function() {

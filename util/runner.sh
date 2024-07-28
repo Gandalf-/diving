@@ -17,6 +17,10 @@ report() { echo "$@" >&2; }
 die()    { report "$@"; exit 1; }
 debug()  { (( DEBUG )) && report "$@"; }
 
+ffmpeg() {
+  /opt/homebrew/opt/ffmpeg@6/bin/ffmpeg "$@"
+}
+
 generate_image_thumbnail() {
   local fin="$1"
   local fout="$2"
