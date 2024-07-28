@@ -122,7 +122,6 @@ def _javascript(paths: List[str]) -> str:
 
       $(elem).load(content, function() {
           $(elem).addClass("isloaded");
-          enableAutoPlay();
       });
 
       return true;
@@ -135,15 +134,12 @@ def _javascript(paths: List[str]) -> str:
     html += f"""
     $("#0").load("/{first}", function () {{
         $("#0").addClass("isloaded");
-        enableAutoPlay();
     }});
     $("#1").load("/{second}", function () {{
         $("#1").addClass("isloaded");
-        enableAutoPlay();
     }});
     $("#2").load("/{third}", function () {{
         $("#2").addClass("isloaded");
-        enableAutoPlay();
     }});
     """
 
@@ -161,4 +157,5 @@ def _javascript(paths: List[str]) -> str:
     });
   </script>
     """
+
     return html

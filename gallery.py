@@ -262,7 +262,7 @@ def main() -> None:
     metrics.counter('pages in taxonomy', len(taxia_htmls))
     metrics.counter('pages in timeline', len(times_htmls))
 
-    for vr in [static.search_js, static.stylesheet]:
+    for vr in [static.search_js, static.video_js, static.stylesheet]:
         vr.cleanup()
         vr.write()
 

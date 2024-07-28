@@ -52,5 +52,6 @@ location_map = _invert(locations)
 
 stylesheet = VersionedResource(os.path.join(source_root, 'web/style.css'))
 search_js = VersionedResource(os.path.join(source_root, 'web/search.js'))
+video_js = VersionedResource(os.path.join(source_root, 'web/video.js'))
 
 search_data_path = 'search-data.js'

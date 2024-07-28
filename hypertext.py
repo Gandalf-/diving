@@ -21,13 +21,14 @@ from util.common import (
 )
 from util.image import Image, categorize, split, uncategorize
 from util.metrics import metrics
-from util.static import search_data_path, search_js, stylesheet
+from util.static import search_data_path, search_js, stylesheet, video_js
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
 Side = enum.Enum('Side', 'Left Right')
 
 
-scripts = """
+scripts = (
+    """
     <!-- fancybox is excellent, this project is not commercial -->
     <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
     <script src="/jquery-3.6.0.min.js"></script>
@@ -63,62 +64,12 @@ scripts = """
             }, 7000);
         }
     }
-
-    function isIOSorSafari() {
-      const isIOS =
-        ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(
-          navigator.platform
-        ) ||
-        // iPad on iOS 13 detection
-        (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-
-      const isMacSafari =
-        navigator.platform === 'MacIntel' &&
-        !navigator.userAgent.includes('Chrome') &&
-        !navigator.userAgent.includes('CriOS') && // Chrome on iOS
-        'WebkitAppearance' in document.documentElement.style; // WebKit specific
-
-      const result = isIOS || isMacSafari;
-      console.log('isIOSorSafari', result);
-      return result;
-    }
-
-    function enableAutoPlay() {
-        const clips = document.querySelectorAll('video.clip');
-        let index = 0;
-
-        function loadNextClip() {
-            if (index >= clips.length) {
-                return;
-            }
-
-            const clip = clips[index];
-            index++;
-
-            if (clip.autoplay) {
-                // Skip to the next clip if this one is already autoplaying
-                loadNextClip();
-            } else {
-                clip.autoplay = true;
-                setTimeout(loadNextClip, 500);
-            }
-        }
-
-        loadNextClip();
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const clips = document.querySelectorAll('video.clip');
-        clips.forEach(clip => {
-            setTimeout(() => {
-                clip.removeAttribute('loop');
-            }, 7000); // 5 seconds
-        });
-
-        enableAutoPlay();
-    });
     </script>
 """
+    + f"""
+    <script src="/{video_js.path}"></script>
+"""
+)
 
 blurb = 'Explore high quality scuba diving pictures'
 
