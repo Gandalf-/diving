@@ -4,7 +4,6 @@ const LOAD_BATCH_SIZE = 3;
 const LOAD_THRESHOLD = 200; // pixels from bottom of page to trigger load
 
 // State
-let timelineUrls = [];
 let currentIndex = 0;
 let isLoading = false;
 
@@ -17,15 +16,6 @@ function isElementInViewport(el) {
         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
-}
-
-async function fetchTimelineUrls() {
-    try {
-        const response = await fetch(TIMELINE_DATA_URL);
-        timelineUrls = await response.json();
-    } catch (error) {
-        console.error('Error fetching timeline URLs:', error);
-    }
 }
 
 async function loadTimelineContent(url) {
@@ -72,7 +62,6 @@ function handleScroll() {
 
 // Initialization
 async function initializeTimeline() {
-    await fetchTimelineUrls();
     for (let i = 0; i < INITIAL_LOAD_COUNT; i++) {
         await loadMoreContent();
     }

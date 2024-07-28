@@ -31,7 +31,7 @@ scripts = (
     """
     <!-- fancybox is excellent, this project is not commercial -->
     <link rel="stylesheet" href="/jquery.fancybox.min.css"/>
-    <script src="/jquery-3.6.0.min.js"></script>
+    <script src="/jquery-3.6.0.min.js" defer></script>
     <script src="/jquery.fancybox.min.js" defer></script>
     <script>
     function flip(elem) {
@@ -50,7 +50,7 @@ scripts = (
     </script>
 """
     + f"""
-    <script src="/{video_js.path}"></script>
+    <script src="/{video_js.path}" defer></script>
 """
 )
 

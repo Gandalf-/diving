@@ -4,7 +4,6 @@
 Python implementation of runner.sh
 """
 
-import json
 import operator
 import os
 from typing import Any, Dict, List, Tuple
@@ -13,7 +12,6 @@ import hypertext
 import locations
 from hypertext import Where
 from util import collection, common, log, static
-from util.resource import VersionedResource
 
 
 def timeline() -> List[Tuple[str, str]]:
@@ -24,21 +22,22 @@ def timeline() -> List[Tuple[str, str]]:
     for dive in dives:
         results.append(_subpage(dive))
 
-    with open('timeline-data.json', 'w+') as fd:
-        paths = [f'/{path}' for (path, _) in results]
-        json.dump(paths, fd)
-    vr = VersionedResource('timeline-data.json')
-
     fake_scientific: Dict[str, Any] = {}
     title, _ = hypertext.title([], Where.Timeline, fake_scientific)
+    paths = [f'/{path}' for (path, _) in results]
+
+    with open(static.timeline_js_path) as fd:
+        timeline_js = fd.read()
 
     html = '\n'.join(
         [
             title,
             '</div>',
             hypertext.scripts,
-            f'  <script>var TIMELINE_DATA_URL = "/{vr.path}";</script>',
-            f'  <script src="/{static.timeline_js.path}"></script>',
+            '  <script>',
+            f'const timelineUrls = {paths};',
+            timeline_js,
+            '  </script>',
             '  </body>',
             '</html>',
         ]
