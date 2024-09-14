@@ -29,12 +29,12 @@ generate_image_thumbnail() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
-  convert \
+  magick \
+    "$fin" \
     -strip \
     -interlace plane \
     -resize 350 \
     -quality 60% \
-    "$fin" \
     "$fout" || die "convert thumbnail failure $fin"
   report "thumbnail $( basename "$fin" )"
 }
@@ -44,10 +44,10 @@ generate_image_fullsize() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
-  convert \
+  magick \
+    "$fin" \
     -strip \
     -quality 35 \
-    "$fin" \
     "$fout" || die "convert fullsize failure $fin"
   report "fullsize $( basename "$fin" )"
 }
@@ -125,7 +125,7 @@ generate_video_thumbnail() {
 generate_video_fullsize() {
   local fin="$1"
   local fout="$2"
-  [[ -f "$fout.webm" && -f "$fout.mp4" ]] && return
+  [[ -f "$fout" ]] && return
 
   webm() {
     ffmpeg \
@@ -145,7 +145,7 @@ generate_video_fullsize() {
       -f webm -i pipe: \
       -movflags faststart \
       -crf 28 \
-      "$fout.mp4"
+      "$fout"
   }
 
   webm \
@@ -255,7 +255,7 @@ scanner() {
         generate_image_fullsize  "$root/$path" "$imageroot/$unique.webp"
       else
         generate_video_thumbnail "$root/$path" "$clipsroot/$unique.mp4"
-        generate_video_fullsize  "$root/$path" "$videoroot/$unique"
+        generate_video_fullsize  "$root/$path" "$videoroot/$unique.mp4"
       fi
     ) &
 

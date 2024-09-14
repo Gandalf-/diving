@@ -375,6 +375,8 @@ cucumariidae: Cucumber-family
 culcita: Little-cushion
 cumingi: Cuming's
 curacoensis: From-Curaçao
+cuthonella: Litte-skin
+cuthonellidae: Little-skin-family
 cyanea: Dark-blue
 cyaneidae: Dark-blue-family
 cyclopteridae: Circle-winged-family
@@ -716,6 +718,7 @@ iris: Rainbow
 isopoda: Equal-foot
 isostichopus: Equal-row-foot
 jacobus: Jacob's
+janssi: Janss's
 japonica: Japanese
 javanicus: From-Java
 jordani: Jordan's
@@ -830,6 +833,7 @@ maxillopoda: Jaw-footed
 maxima: Largest
 maximus: Greatest
 mazzaella: Mazza's
+mcdonaldi: McDonald's
 meandrina: Meandering
 meandrinidae: Maze-family
 media: Middle
@@ -1093,6 +1097,7 @@ pedersoni: Pederson's
 pedum: Foot
 pellucida: Translucent
 peltodoris: Shield-gift
+penicillatus: Brush-like
 pennaria: Feather-like
 pennariidae: Feather-like-family
 pennatulacea: Feather-pen-like
@@ -1114,6 +1119,8 @@ phidoloporidae: Phido-hole-dweller-family
 philinoidea: Love-idea
 philippina: Of-the-Philippines
 phlebobranchia: Vein-gill
+phoca: Seal
+phocidae: Seal-family
 pholadidae: Ocean-worm-family
 pholadoidea: Ocean-worm-idea
 pholidae: Ocean-worm-family
@@ -1222,6 +1229,7 @@ purpuratus: Purple-colored
 purpurea: Purple
 pusiolus: Very-little
 pustulata: Pimpled
+pycnoclavella: Dense-club
 pycnogonida: Thick-knees
 pycnopodia: Thick-footed
 pyuridae: Pus-family
@@ -1366,6 +1374,7 @@ squamata: Scaly
 squamatus: Scaly
 squamipinnis: Scaly-finned
 squamosa: Scaly
+stanleyi: Stanley's
 staurocalyptus: Crossed-calyx
 stegastes: Roofed
 steindachneri: Steindachner's
@@ -1440,6 +1449,7 @@ thor: Thor's
 thouarsii: Thouars's
 thyrsoideus: Thyrsus-like
 tigris: Tiger
+tochuina: Tochu's
 toporoki: Toporok's
 torreyi: Torrey's
 toxopneustes: Poison-breath
@@ -1514,6 +1524,7 @@ vexillosa: Banner-like
 viride: Green
 viridis: Green
 vittata: Banded
+vitulina: Calf-like
 vulsa: Torn-off
 wellingtoni: Wellington's
 willemoesi: Willemoes's
@@ -1539,13 +1550,10 @@ zosteraceae: Girdle-like
 zygophora: Yoke-bearing
 
 catriona:
+clavelinidae:
 corynidae:
-cuthonella:
-cuthonellidae:
-penicillatus:
 polyorchis:
 sepioidea:
 sepioteuthis:
 stiliger:
 telmatactis:
-tochuina:

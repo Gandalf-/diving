@@ -514,6 +514,9 @@ Animalia:
         Polycitoridae:
           Cystodytes:
             lobatus: lobed compound tunicate
+        Clavelinidae:
+          Pycnoclavella:
+            stanleyi: yellow social tunicate
         Didemnidae:
           Trididemnum: white glove leather tunicate
           Didemnum:
@@ -541,6 +544,9 @@ Animalia:
     Mammalia:
       sp.: mammal
       Carnivora:
+        Phocidae:
+          Phoca:
+            vitulina: harbor seal
         Otariidae:
           Zalophus:
             sp.: sea lion
@@ -1330,6 +1336,8 @@ Animalia:
               morosa: gloomy nudibranch
             Limacia:
               cockerelli: cockerell's nudibranch
+              mcdonaldi: mcdonald's nudibranch
+              janssi: janss's nudibranch
             Triopha:
               catalinae: bold clown nudibranch
               modesta: modest clown nudibranch
