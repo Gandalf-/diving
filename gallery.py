@@ -272,7 +272,9 @@ def main() -> None:
         pool.map(_pool_writer, taxia_htmls)
         pool.map(_pool_writer, times_htmls)
 
-    search.write_search_data()
+    search.write_search_data(
+        _get_paths(name_htmls), _get_paths(sites_htmls), _get_paths(taxia_htmls)
+    )
 
 
 def _pool_writer(args: Tuple[str, str]) -> None:
@@ -294,6 +296,11 @@ def _find_by_path(tree: Tree, needle: str) -> Optional[Image]:
         if needle in leaf.path():
             return leaf
     return None
+
+
+def _get_paths(htmls: List[Tuple[str, str]]) -> List[str]:
+    """helper"""
+    return [p for p, _ in htmls]
 
 
 if not sys.flags.interactive and __name__ == '__main__':

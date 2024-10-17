@@ -64,7 +64,7 @@ generate_video_thumbnail() {
       -select_streams v:0 \
       -show_entries stream=width,height \
       -of csv=s=x:p=0 \
-      "$1"
+      "$1" 2>/dev/null || echo 1920x1080
   }
 
   declare -A sizes
@@ -191,7 +191,7 @@ scanner() {
 
             *)
               # this directory changed, scan its contents
-              for sub in "$path"/*.{jpg,mov}; do
+              for sub in "$path"/*.{jpg,mov,mp4}; do
                 [[ -f "$sub" ]] || continue
                 echo "$sub"
               done

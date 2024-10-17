@@ -4,17 +4,20 @@ import glob
 import os
 import re
 import subprocess
-from typing import Iterable
+from typing import Iterable, List
 
 from util.resource import VersionedResource
 from util.static import search_data_path
 
 
-def write_search_data() -> None:
+def write_search_data(
+    gallery_pages: List[str], sites_pages: List[str], taxonomy_pages: List[str]
+) -> None:
     """JSON site map for gallerySearch"""
-    gallery_pages = _reader('gallery')
-    taxonomy_pages = _reader('taxonomy')
-    sites_pages = _reader('sites')
+
+    gallery_pages = list(_cleaner(gallery_pages))
+    sites_pages = list(_cleaner(sites_pages))
+    taxonomy_pages = list(_cleaner(taxonomy_pages))
 
     with open(search_data_path, 'w') as fd:
         fd.write('var gallery_pages = [')
@@ -42,19 +45,15 @@ def write_search_data() -> None:
 DATE_PATTERN = re.compile(r'\d{4} \d{2} \d{2}')
 
 
-def _cleanup(name: str) -> str:
-    name = name.replace('.html', '').replace('-', ' ')
-    name = DATE_PATTERN.sub(lambda m: m.group(0).replace(' ', '-'), name)
-    return f'"{name}"'
-
-
-def _reader(path: str) -> Iterable[str]:
-    for page in os.listdir(path):
-        if not page.endswith('.html'):
-            continue
+def _cleaner(pages: List[str]) -> Iterable[str]:
+    for page in pages:
+        assert page.endswith('.html')
+        page = os.path.basename(page)
 
         prefixes = ('index', 'various', 'juvenile')
         if any(page.startswith(prefix) for prefix in prefixes):
             continue
 
-        yield _cleanup(page)
+        name = page.replace('.html', '').replace('-', ' ')
+        name = DATE_PATTERN.sub(lambda m: m.group(0).replace(' ', '-'), name)
+        yield f'"{name}"'
