@@ -108,6 +108,14 @@ locations:
     - Male South
     - Rasdhoo
     - Vaavu
+  Roatan:
+    - Chimneys
+    - Coco View Wall
+    - Mary's Place
+    - Minagerhea's Reef
+    - Morerat Wall
+    - Newman's Wall
+    - Osmon Reef
 
 dives:
   # these foiled automatic matching in log.py because of timezone madness

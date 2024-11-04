@@ -17,11 +17,21 @@ report() { echo "$@" >&2; }
 die()    { report "$@"; exit 1; }
 debug()  { (( DEBUG )) && report "$@"; }
 
+log() {
+  echo "$@" >> ~/working/tmp/diving.log
+  "$@"
+}
+
 ffmpeg() {
   # ffmpeg 7 breaks the madness I have going on with xfade
   # [Parsed_xfade_8 @ 0x60000373c9a0] The inputs needs to be a constant frame rate
   # [Parsed_xfade_8 @ 0x60000373c9a0] Failed to configure output pad on Parsed_xfade_8
-  /opt/homebrew/opt/ffmpeg@6/bin/ffmpeg "$@"
+  log /opt/homebrew/opt/ffmpeg@6/bin/ffmpeg "$@"
+}
+
+ffprobe() {
+  # ???
+  log /opt/homebrew/opt/ffmpeg@6/bin/ffprobe "$@"
 }
 
 generate_image_thumbnail() {
@@ -29,14 +39,14 @@ generate_image_thumbnail() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
-  magick \
+  log magick \
     "$fin" \
     -strip \
     -interlace plane \
     -resize 350 \
     -quality 60% \
     "$fout" || die "convert thumbnail failure $fin"
-  report "thumbnail $( basename "$fin" )"
+  report "image $( basename "$fin" )"
 }
 
 generate_image_fullsize() {
@@ -44,12 +54,12 @@ generate_image_fullsize() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
-  magick \
+  log magick \
     "$fin" \
     -strip \
     -quality 35 \
     "$fout" || die "convert fullsize failure $fin"
-  report "fullsize $( basename "$fin" )"
+  report "IMAGE $( basename "$fin" )"
 }
 
 generate_video_thumbnail() {
@@ -64,11 +74,11 @@ generate_video_thumbnail() {
       -select_streams v:0 \
       -show_entries stream=width,height \
       -of csv=s=x:p=0 \
-      "$1" 2>/dev/null || echo 1920x1080
+      "$1" 2>/dev/null
   }
 
   declare -A sizes
-  sizes[1920x1080]=1440:1080  # mov
+  sizes[1920x1080]=1440:1080  # mov, sony
   sizes[1280x720]=960:720     # mp4
   sizes[320x240]=320:240      # mp4, old camera
 
@@ -79,13 +89,15 @@ generate_video_thumbnail() {
 
     # https://superuser.com/a/624564
     # https://stackoverflow.com/a/52675535
+    # Not sure why I need to flip the scale for Lightroom exports
     ffmpeg \
       -loglevel fatal \
+      -noautorotate \
       -nostdin \
       -threads 1 \
       -i "$fin" \
       -ss 2 -t 4 \
-      -vf "crop=$target, scale=224:300" \
+      -vf "crop=$target, scale=300:224" \
       -f webm pipe:
   }
 
@@ -100,6 +112,7 @@ generate_video_thumbnail() {
     ffmpeg \
       -threads 1 \
       -loglevel fatal \
+      -noautorotate \
       -f webm -i pipe: \
       -filter_complex "$filter" \
       -f webm pipe:
@@ -108,6 +121,7 @@ generate_video_thumbnail() {
   mp4() {
     ffmpeg \
       -loglevel fatal \
+      -noautorotate \
       -f webm -i pipe: \
       -an -c:v libx264 -profile:v main \
       -movflags faststart \
@@ -118,8 +132,10 @@ generate_video_thumbnail() {
 
   # ffmpeg is easy 😵
   # https://stackoverflow.com/a/45902691
-  rescale | fade | mp4 || die "ffmpeg thumbnail failure $fin"
-  report "video thumbnail $( basename "$fin" )"
+  rescale \
+    | fade \
+    | mp4 || die "ffmpeg thumbnail failure $fin"
+  report "video $( basename "$fin" )"
 }
 
 generate_video_fullsize() {
@@ -152,7 +168,7 @@ generate_video_fullsize() {
     | mp4 \
     || die "ffmpeg fullsize failure $fin"
 
-  report "video fullsize $( basename "$fin" )"
+  report "VIDEO $( basename "$fin" )"
 }
 
 scanner() {
@@ -242,7 +258,7 @@ scanner() {
       local hashed; hashed="$( $sha "$root/$path" )" || die "hash failure $path"
       hashed="${hashed%% *}"
       local unique="$hashed"
-      report "hashed $path"
+      report "check $path"
 
       # update the database for python
       local label="${image%% *}"
@@ -274,5 +290,6 @@ copy_web() {
   rsync --archive "$web"/ "$PWD"
 }
 
+date > ~/working/tmp/diving.log
 copy_web
 scanner fast "$@"
