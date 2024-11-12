@@ -43,7 +43,9 @@ generate_image_thumbnail() {
     "$fin" \
     -strip \
     -interlace plane \
-    -resize 350 \
+    -resize "350x262^" \
+    -gravity center \
+    -extent 350x262 \
     -quality 60% \
     "$fout" || die "convert thumbnail failure $fin"
   report "image $( basename "$fin" )"

@@ -110,12 +110,16 @@ locations:
     - Vaavu
   Roatan:
     - Chimneys
+    - Coco View Front Yard
     - Coco View Wall
+    - Helene Key Wall
     - Mary's Place
     - Minagerhea's Reef
     - Morerat Wall
     - Newman's Wall
     - Osmon Reef
+    - Pigeon Key Shallows
+    - Pigeon Key Wall
 
 dives:
   # these foiled automatic matching in log.py because of timezone madness
@@ -142,12 +146,14 @@ dives:
 dives-without-computer:
   - Playa Grandi
   - 5 Ari South Maihi Beyru
+  - Pigeon Key Shallows
 
 dives-without-camera:
   # days with some camera dives but not all
   - 227
   - 237
   - 398
+  - 444
 
 ignore:
   # places
