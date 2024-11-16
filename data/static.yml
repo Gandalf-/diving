@@ -112,14 +112,18 @@ locations:
     - Chimneys
     - Coco View Front Yard
     - Coco View Wall
+    - Forty Foot Point
     - Helene Key Wall
     - Mary's Place
     - Minagerhea's Reef
     - Morerat Wall
+    - Neverstain Bight
     - Newman's Wall
     - Osmon Reef
     - Pigeon Key Shallows
     - Pigeon Key Wall
+    - Valley of the Kings
+    - Wreck of Mr. Bud
 
 dives:
   # these foiled automatic matching in log.py because of timezone madness

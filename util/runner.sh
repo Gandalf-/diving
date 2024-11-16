@@ -26,7 +26,7 @@ ffmpeg() {
   # ffmpeg 7 breaks the madness I have going on with xfade
   # [Parsed_xfade_8 @ 0x60000373c9a0] The inputs needs to be a constant frame rate
   # [Parsed_xfade_8 @ 0x60000373c9a0] Failed to configure output pad on Parsed_xfade_8
-  log /opt/homebrew/opt/ffmpeg@6/bin/ffmpeg "$@"
+  log nice -n 10 /opt/homebrew/opt/ffmpeg@6/bin/ffmpeg "$@"
 }
 
 ffprobe() {
