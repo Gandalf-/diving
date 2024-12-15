@@ -1,6 +1,6 @@
 const MAX_PLAYING_VIDEOS = 5;
-const PLAY_DELAY = 500;
-const DEBOUNCE_DELAY = 100;
+const PLAY_DELAY_MS = 500;
+const DEBOUNCE_DELAY_MS = 100;
 
 let playingVideos = [];
 let isHandling = false;
@@ -52,7 +52,7 @@ function handleVisibleVideos() {
         if (index === visibleVideos.length - 1) {
           isHandling = false;
         }
-      }, index * PLAY_DELAY);
+      }, index * PLAY_DELAY_MS);
     } else if (index === visibleVideos.length - 1) {
       isHandling = false;
     }
@@ -65,7 +65,7 @@ function handleVisibleVideos() {
 
 function debouncedHandleVisibleVideos() {
   clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(handleVisibleVideos, DEBOUNCE_DELAY);
+  debounceTimer = setTimeout(handleVisibleVideos, DEBOUNCE_DELAY_MS);
 }
 
 function initializeVideoHandling() {
