@@ -70,16 +70,6 @@ def dive_info_html(info: DiveInfo) -> str:
 """
 
 
-def series_match(series: List[int], others: List[int], target: int) -> int:
-    assert target in others
-
-    position = others.index(target)
-    step_size = len(series) / len(others)
-
-    index = round(position * step_size)
-    return series[index]
-
-
 # PRIVATE
 
 
@@ -283,6 +273,9 @@ def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
         dirs = history[date]
         assert dirs, f'dive {info["number"]} on {date} may be a no camera dive'
         directory = dirs.pop(0)
+
+        if directory in static.dives_without_computer:
+            continue
 
         yield _update_info(info, f'{date} {directory}')
 

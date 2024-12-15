@@ -11,7 +11,6 @@ from util.log import (
     _match_dive_info,
     _parse,
     search,
-    series_match,
 )
 
 
@@ -190,19 +189,14 @@ class TestUDDF(unittest.TestCase):
         assert info
         self.assertEqual(info['directory'], '2023-09-04 1 Keystone Jetty')
 
-    def test_series_match(self) -> None:
-        series = list(range(0, 100))
-        others = list(range(0, 10))
+    def test_search_bug_skip(self) -> None:
+        info = search('2024-10-30', 'Pigeon Key Shallows')
+        assert not info, info
 
-        self.assertEqual(series_match(series, others, 0), 0)
-        self.assertEqual(series_match(series, others, 1), 10)
-        self.assertEqual(series_match(series, others, 5), 50)
-        self.assertEqual(series_match(series, others, 9), 90)
+    def test_search_bug_cover(self) -> None:
+        info = search('2024-10-30', 'Morerat Wall')
+        assert info
 
-    def test_series_match_non_contiguous(self) -> None:
-        series = [1, 2, 3, 4, 5, 15, 16, 17, 18]
-        others = [5, 6, 7]
 
-        self.assertEqual(series_match(series, others, 5), 1)
-        self.assertEqual(series_match(series, others, 6), 4)
-        self.assertEqual(series_match(series, others, 7), 16)
+if __name__ == '__main__':
+    unittest.main()
