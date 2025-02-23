@@ -14,6 +14,7 @@ from typing import List, Optional, Tuple, cast
 
 import detective
 import hypertext
+import imprecise
 import information
 import locations
 import search
@@ -261,6 +262,7 @@ def main() -> None:
     metrics.counter('pages in sites', len(sites_htmls))
     metrics.counter('pages in taxonomy', len(taxia_htmls))
     metrics.counter('pages in timeline', len(times_htmls))
+    metrics.counter('imprecise labels', imprecise.total_imprecise())
 
     for vr in resource.registry:
         vr.cleanup()
