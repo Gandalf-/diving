@@ -61,6 +61,7 @@ Animalia:
         Agelasidae:
           Agelas:
             conifera: brown tube sponge
+            tubulata: tubulate sponge
       Verongiida:
         Aplysinidae:
           Aiolochroia:
@@ -197,6 +198,7 @@ Animalia:
             infundibulum: slime tube feather duster worm
           Bispira:
             crassicornis: twin eyed feather duster worm
+            brunnea: social feather duster worm
       Spionida:
         Chaetopteridae:
           Spiochaetopterus:
@@ -270,6 +272,7 @@ Animalia:
               foveolata: soft coral brittle star
               purpurea: sea fan brittle star
               spiculata: glass spined brittle star
+              suensonii: sponge brittle star
             Ophiothela:
               mirabilis: epizoic brittle star
     Crinoidea:
@@ -597,6 +600,7 @@ Animalia:
             leptorhynchus: bay pipefish
           Hippocampus:
             ingens: pacific seahorse
+            reidi: longsnout seahorse
         Aulostomoidei:
           Aulostomoidea:
             Aulostomidae:
@@ -782,6 +786,7 @@ Animalia:
             undulatus: undulated moray eel
             moringa: spotted moray eel
             funebris: green moray eel
+            miliaris: goldentail moray eel
       Scorpaeniformes:
         # mail-cheecked fish
         Cyclopteridae:
@@ -1120,6 +1125,9 @@ Animalia:
               piscivora: fish eating anemone
               lofotensis: white spotted rose anemone
         Metridioidea:
+          Aliciidae:
+            Lebrunia:
+              coralligens: hidden anemone
           Aiptasiidae:
             Bartholomea:
               annulata: corkscrew anemone
@@ -1139,6 +1147,11 @@ Animalia:
   Mollusca:
     Bivalvia:
       sp.: bivalve
+      Limida:
+        Limoidea:
+          Limidae:
+            Ctenoides:
+              scaber: rough file clam
       Mytilida:
         Mytiloidea:
           Mytilidae:
@@ -1227,6 +1240,9 @@ Animalia:
             fuscovittatus: brown streaked sapsucker
       Cephalaspidea:
         Philinoidea:
+          Aglajidae:
+            Melanochlamys:
+              ezoensis: japanese aglaja sea slug
           Gastropteridae:
             Gastropteron:
               pacificum: winged sea slug
