@@ -192,6 +192,10 @@ def _spelling() -> None:
     if found:
         assert False, f'{found} may be mispelled'
 
+    found = set(_illegal_names(collection.all_names()))
+    if found:
+        assert False, f'{found} illegal names'
+
 
 def _find_misspellings(names: Set[str]) -> Iterable[str]:
     """check for misspellings"""
@@ -229,6 +233,13 @@ def _possible_misspellings(names: Set[str]) -> Iterable[List[str]]:
         similars = [other for other in similars if other not in name and name not in other]
         if similars:
             yield [name] + similars
+
+
+def _illegal_names(names: Set[str]) -> Iterable[str]:
+    illegal = ('sea star', 'jelly fish')
+    for name in names:
+        if any(i in name for i in illegal):
+            yield name
 
 
 # AFTER

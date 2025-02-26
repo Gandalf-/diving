@@ -11,6 +11,7 @@ import os
 from collections import Counter
 from typing import List, Set
 
+import locations
 from util import collection, common
 from util.image import Image
 
@@ -23,14 +24,19 @@ def count_imprecise_names() -> Counter[str]:
     all_names = collection.all_names()
     imprecise: Counter[str] = Counter()
 
+    # For each name (potentially imprecise)
     for name in all_names:
-        less_precise = {other for other in all_names if name.endswith(other) and name != other}
-        imprecise.update(less_precise)
+        # Check if it appears as a suffix in other longer names
+        for other in all_names:
+            # Only check if the other name is longer and ends with this name preceded by a space
+            if len(other) > len(name) and other.endswith(' ' + name):
+                imprecise[name] += 1
 
     allowed = {
         'boat',
         'boat wreck',
         'building',
+        'eggs',
         'rock',
         'seagull',
     }
@@ -58,7 +64,12 @@ def get_imprecise_images() -> List[Image]:
 
 
 def find_imprecise_images(name: str) -> List[Image]:
-    return [i for i in get_imprecise_images() if name in i.simplified()]
+    """Find images with the given imprecise name.
+
+    This matches against the full simplified name to avoid partial matches.
+    For example, searching for "star" won't match "rockstar".
+    """
+    return [i for i in get_imprecise_images() if i.simplified() == name]
 
 
 def save_imprecise(name: str) -> None:
@@ -74,7 +85,10 @@ def save_imprecise(name: str) -> None:
 
     for n, image in enumerate(images):
         src = image.path()
-        tgt = os.path.join(root, f'{n:03d}.jpg')
+        where = locations.get_region(image.site())
+
+        _, extension = os.path.splitext(image.label)
+        tgt = os.path.join(root, f'{n:03d} {where}{extension}')
         print(src)
         os.link(src, tgt)
 
@@ -142,8 +156,11 @@ def main() -> None:
 
     if args.list:
         items = count_imprecise_names().items()
+        total = 0
         for name, count in sorted(items, key=operator.itemgetter(1)):
+            total += count
             print(name, count)
+        print('total', total)
 
     elif args.find:
         save_imprecise(args.find)
