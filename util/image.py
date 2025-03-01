@@ -13,6 +13,18 @@ from util.common import Tree
 from util.grammar import singular
 
 
+def dive_to_site(dive: str) -> str:
+    _, where = dive.split(' ', 1)
+
+    i = 0
+    for i, char in enumerate(where):
+        if char in '0123456789 ':
+            continue
+        break
+
+    return where[i:]
+
+
 def categorize(name: str) -> str:
     """add special categorization labels"""
     for category, values in static.categories.items():
@@ -98,14 +110,10 @@ class Image:
 
     def location(self) -> str:
         """directory minus numbering"""
-        when, where = self.directory.split(' ', 1)
+        when, _ = self.directory.split(' ', 1)
+        where = dive_to_site(self.directory)
 
-        i = 0
-        for i, char in enumerate(where):
-            if char in '0123456789 ':
-                continue
-            break
-        return when + ' ' + where[i:]
+        return f'{when} {where}'
 
     def site(self) -> str:
         """directory minus numbering and date"""

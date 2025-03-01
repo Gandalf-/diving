@@ -4,10 +4,12 @@
 collecting dive locations
 """
 
+import os
 import re
-from typing import List, cast
+from functools import lru_cache
+from typing import Dict, List, Set, cast
 
-from util import collection, common, static
+from util import collection, common, image, static
 from util.collection import Image, ImageTree
 
 
@@ -57,7 +59,50 @@ def where_to_words(where: str) -> List[str]:
     return words
 
 
+def region_to_year_range(lineage: List[str]) -> str:
+    """return a string like '2020, 2022-2024'"""
+    region = lineage[0]
+    return _pretty_year_range(_region_year_ranges()[region])
+
+
 # PRIVATE
+
+
+@lru_cache(None)
+def _region_year_ranges() -> Dict[str, Set[int]]:
+    out: Dict[str, Set[int]] = {k: set() for k in static.locations.keys()}
+
+    for path in collection.dive_listing():
+        dive = os.path.basename(path)
+        year, *_ = dive.split('-')
+        year = int(year)
+
+        site = image.dive_to_site(dive)
+
+        region = get_region(site)
+        out[region].add(year)
+
+    return out
+
+
+def _pretty_year_range(years: Set[int]) -> str:
+    """1, 3, 4, 6 -> 1, 3-4, 6"""
+    out = []
+    years = sorted(list(years))
+
+    while years:
+        start = years.pop(0)
+        end = start
+
+        while years and years[0] == end + 1:
+            end = years.pop(0)
+
+        if start == end:
+            out.append(str(start))
+        else:
+            out.append(f'{start}-{end}')
+
+    return ', '.join(out)
 
 
 _SITE_PATTERN = re.compile(
@@ -70,8 +115,8 @@ def _make_tree() -> ImageTree:
     images = collection.named()
     out: ImageTree = {}
 
-    for image in images:
-        when, *where = image.location().split(' ')
+    for image_ in images:
+        when, *where = image_.location().split(' ')
         where = ' '.join(where)
         where = add_context(where) or where
         words = where_to_words(where)
@@ -85,6 +130,6 @@ def _make_tree() -> ImageTree:
         sub = cast(ImageTree, sub[when])
 
         sub.setdefault('data', [])
-        cast(List[Image], sub['data']).append(image)
+        cast(List[Image], sub['data']).append(image_)
 
     return out

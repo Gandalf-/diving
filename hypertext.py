@@ -505,12 +505,17 @@ class SitesTitle(Title):
             <div class="top buffer"></div>
         """
         dive_info = None
+        site_info = None
         name = ''
 
         if self.is_dive():
             date = self.get_date()
             dive_info = log.search(date, self.get_hint())
             name = pretty_date(date)
+
+        elif len(self.lineage) == 1:
+            years = locations.region_to_year_range(self.lineage)
+            site_info = f'<p class="tight">{years}</p>'
 
         # create the buttons for each part of our name lineage
         for i, _name in enumerate(self.lineage):
@@ -531,6 +536,8 @@ class SitesTitle(Title):
         """
         if dive_info:
             html += log.dive_info_html(dive_info)
+        if site_info:
+            html += site_info
         html += """\
         </div>
         """

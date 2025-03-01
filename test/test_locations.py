@@ -52,6 +52,23 @@ class TestLocations(unittest.TestCase):
         for before, after in samples:
             self.assertEqual(locations.where_to_words(before), after)
 
+    def test_region_year_ranges(self) -> None:
+        ranges = locations._region_year_ranges()
+
+        self.assertEqual(ranges['Galapagos'], {2021})
+        self.assertEqual(ranges['Maldives'], {2022})
+        self.assertEqual(ranges['British Columbia'], {2020, 2022, 2023, 2024})
+
+    def test_pretty_year_range(self) -> None:
+        self.assertEqual(locations._pretty_year_range({1, 3, 4, 6}), '1, 3-4, 6')
+        self.assertEqual(locations._pretty_year_range({1, 2, 3, 4, 5, 6}), '1-6')
+        self.assertEqual(locations._pretty_year_range({1, 6}), '1, 6')
+
+    def test_region_to_year_range(self) -> None:
+        self.assertEqual(locations.region_to_year_range(['Galapagos']), '2021')
+        self.assertEqual(locations.region_to_year_range(['Maldives']), '2022')
+        self.assertEqual(locations.region_to_year_range(['British Columbia']), '2020, 2022-2024')
+
 
 if __name__ == '__main__':
     unittest.main()
