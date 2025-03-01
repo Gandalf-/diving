@@ -33,6 +33,7 @@ agelas: Twig-like
 agelasida: Twig-like
 agelasidae: Twig-like-family
 aggregata: Clustered
+aglajidae: Splendid-ones
 aglaophenia: Bright-appearance
 aglaopheniidae: Bright-appearance-family
 agonidae: Struggle-family
@@ -50,6 +51,7 @@ alcyoniidae: Alcyonium-family
 alcyonium: Soft-coral
 aldisa: Aldis
 alfredi: Alfred's
+aliciidae: Alice-like-family
 alismatales: Alisma-order
 alpheidae: Pistol-shrimp-family
 alpheoidea: Pistol-shrimp-superfamily
@@ -69,6 +71,7 @@ amphiprion: Both-saw
 amphispicula: Both-spikelet
 amphiuridae: Both-tail-family
 amphiuroidea: Both-tail-like
+analcidometra: Weak-measured
 anamobaea: Up-walking
 anarhichadidae: Without-ridge-family
 anarrhichthys: Without-ridge-fish
@@ -184,9 +187,11 @@ bowerbanki: Bowerbank's
 brachiopoda: Arm-footed
 bradleyi: Bradley's
 breedeni: Breeden's
+breviceps: Short-headed
 brevispinus: Short-spined
 briareus: Strong
 brissidae: Short-spine-family
+brunnea: Brown
 bryozoa: Moss-animals
 buccinoidea: Trumpet-like
 bugulidae: Thorn-family
@@ -236,8 +241,10 @@ carnivora: Meat-eaters
 carnulentum: Meaty
 cartilagineum: Cartilage-like
 carunculata: Small-fleshy-outgrowth-bearing
+castaneus: Chestnut-colored
 castroi: Castro's
 catalinae: From-Santa-Catalina
+catriona: Pure
 cauliformis: Stem-shaped
 caurinus: Caurinus's
 cavernulina: Little-cave-like
@@ -299,7 +306,9 @@ cirrhitidae: Hawkfish-family
 cirrhitus: Curly-haired
 clarkii: Clark's
 clathria: Lattice
+clavelinidae: Little-key-family
 clemensi: Clemens's
+clepsydra: Water-clock
 cliona: Sloping
 clionaida: Cliona-like
 clionaidae: Cliona-family
@@ -318,6 +327,7 @@ columbiana: From-Colombia
 comanthina: Hairy-star
 comasteridae: Comaster-family
 comatulida: Hairy-star
+comatulidae: Little-hairy-family
 comissa: Joined
 complanata: Flattened
 concinna: Elegant
@@ -325,6 +335,7 @@ condylactis: Knob-action
 congridae: Conger-family
 conifera: Cone-bearing
 corallicola: Coral-inhabitant
+coralligens: Coral-producing
 corallimorpharia: Coral-shaped
 corallimorphidae: Coral-shaped-family
 corallinales: Resembling-coral
@@ -338,6 +349,7 @@ coronatus: Crowned
 corymorpha: Club-shaped
 corymorphidae: Club-shaped-family
 corynactis: Club-ray
+corynidae: Club-shaped-family
 coryphella: Beautiful-crest
 coryphellidae: Beautiful-crest-family
 corythoichthys: Helmet-fish
@@ -368,6 +380,7 @@ crylindrus: Cold-cylinder
 cryptochiton: Hidden-chiton
 cryptolithodes: Hidden-stone-form
 ctenogobiops: Comb-goby-like
+ctenoides: Comb-like
 ctenophora: Comb-bearer
 cubensis: Of-Cuba
 cucumaria: Like-a-cucumber
@@ -391,6 +404,7 @@ dalli: Dall's
 darwini: Darwin's
 darwinii: Darwin's
 dasyatidae: Stingray-family
+davidaster: David's-star
 dawsoni: Dawson's
 decagrammus: Ten-lines
 decapoda: Ten-footed
@@ -412,6 +426,7 @@ dendronotus: Tree-backed
 dendrophylliidae: Tree-coral-family
 depressus: Lowered
 dermasterias: Skin-star
+detatched: Separated
 diadema: Diadem
 diadematidae: Diadem-or-crown-family
 diadematoida: Crown-like
@@ -436,6 +451,7 @@ diplotaenia: Double-ribbon
 dirona: Spear
 dironidae: Spear-family
 discodorididae: Disc-shaped-Doris-family
+discoideus: Disc-shaped
 discosoma: Disk-body
 discosomatidae: Disk-body-family
 disticha: Two-rowed
@@ -474,6 +490,7 @@ elongatus: Elongated
 elopiformes: Elope-shaped
 embiotocidae: Viviparous-family
 emphaeus: Conspicuous
+enchelycore: Eel-like-pupil
 endeca: Eleven
 enophrys: Eyebrow-in
 entacmaea: Point-marked
@@ -505,6 +522,7 @@ euryalida: Wide-wandering
 evasterias: Good-star
 exasperatus: Roughened
 excelsa: High
+ezoensis: From-Ezo
 falciformis: Sickle-shaped
 farcimen: Sausage
 fasciolariidae: Banded
@@ -754,6 +772,7 @@ latens: Hidden
 lateralis: Side-associated
 latipinnis: Broad-finned
 lebbeus: Lebbeus's
+lebrunia: LeBrun's
 leiognathus: Smooth-jawed
 lemnalia: Lemnalia's
 leniusculus: Lenient
@@ -775,7 +794,10 @@ lichenoporidae: Lichen-bearer-family
 lignosa: Woody
 limacia: Slug-like
 limapontiidae: Slug-bridge-family
+limida: File-like
+limidae: File-family
 limneria: Artist
+limoidea: File-like
 linckia: Linck's
 lineidae: Line-family
 liparidae: Fatling-family
@@ -841,6 +863,7 @@ mediaster: Middle-star
 megalopidae: Large-eyed-family
 megalops: Large-eyed
 melampygus: Black-rump
+melanochlamys: Black-cloaked
 melanops: Black-eyed
 melanopterus: Black-winged
 meleagris: Guineafowl-like
@@ -867,6 +890,7 @@ microcladia: Tiny-branches
 microporidae: Tiny-pore-family
 microporina: Tiny-pore
 microporoidea: Tiny-pored
+miliaris: Millet-like
 militaris: Military
 millepora: Thousand-pored
 milleporella: Thousand-pored
@@ -923,6 +947,7 @@ myliobatidae: Eagle-ray-family
 myliobatiformes: Mill-like-form
 myopsida: Less-eyed
 myoxocephalus: Mouse-headed
+myrichthys: Countless-fish
 myripristis: Soldierfish
 myrrhinidae: Myrrhina-family
 mystes: Hidden
@@ -958,6 +983,7 @@ neverita: Smooth
 nicholsii: Nichols's
 nidorellia: Nest-like
 niger: Black
+nigricans: Blackish
 nigripes: Black-foot
 nigripinnis: Black-finned
 niphates: Snowy
@@ -1002,6 +1028,7 @@ onuphidae: Onuph-family
 opalescens: Becoming-opalescent
 opheliidae: Opheli-family
 ophiactoidea: Snake-ray-like
+ophichthidae: Snake-fish-family
 ophidiasteridae: Snake-star-family
 ophioblennius: Snake-mucus-fish
 ophiocoma: Snake-hair
@@ -1183,6 +1210,7 @@ polymastiida: Many-breasted
 polymastiidae: Many-breasted-family
 polymorphus: Many-forms
 polynoidae: Many-nodes-family
+polyorchis: Many-testicled
 polyplacophora: Many-plate-bearer
 pomacanthidae: Covered-thorn-family
 pomacanthus: Covered-thorn
@@ -1239,6 +1267,7 @@ quinquecapitata: Five-headed
 quinquesemita: Five-pathed
 recta: Straight
 regalis: Royal
+reidi: Reid's
 remora: Delay
 reptilia: Creeping-things
 reticulatus: Net-like
@@ -1276,6 +1305,8 @@ ruberrimus: Very-red
 rubescens: Becoming-red
 rubida: Reddish
 rubiformis: Red-shaped
+rubiginosus: Rusty
+rubignosus: Rusty
 ruetzleri: Ruetzler's
 rufopunctata: Red-spotted
 rufus: Red
@@ -1298,6 +1329,7 @@ sardinops: Sardine-eyes
 sargocentron: Sea-bream-spur
 sarsii: Sars'
 savignyi: Savigny's
+scaber: Rough
 scaridae: Parrotfish-family
 scarus: Parrotfish
 sceptrulophora: Little-scepter-bearer
@@ -1334,6 +1366,8 @@ sebastes: August
 sebastidae: August-family
 semaeostomeae: Flag-mouth
 senile: Old
+sepioidea: Cuttlefish-like
+sepioteuthis: Cuttlefish-squid
 serpula: Little-serpent
 serpulidae: Little-serpent-family
 serranidae: Saw-like-family
@@ -1390,6 +1424,7 @@ stevensae: Stevens'
 stichaeidae: Ribbon-family
 stichodactylidae: Thread-finger-family
 stichopodidae: Thread-foot-family
+stiliger: Stake-bearing
 stimpsoni: Stimpson's
 stolidobranchia: Pillar-gill
 stomatopoda: Mouth-footed
@@ -1409,6 +1444,7 @@ stylochus: Column-like
 stylus: Pillar
 suberitida: Cork-like
 suberitidae: Cork-like-family
+suensonii: Suenson's
 suzzanae: Suzzana's
 swifti: Swift's
 swiftia: Swift's
@@ -1426,6 +1462,7 @@ taylori: Taylor's
 tegula: Tile
 tegulidae: Tile-family
 teira: Tiled
+telmatactis: Pond-ray
 telmessus: Far-off
 tenera: Tender
 tenuimanus: Thin-handed
@@ -1489,6 +1526,7 @@ tubastraea: Trumpet-pillar
 tubulanidae: Little-tube-family
 tubulanus: Little-tube
 tubulariidae: Tube-like-family
+tubulata: Tube-shaped
 tunicata: Covered-with-a-tunic
 tursiops: Dolphin-face
 typus: Type
@@ -1549,39 +1587,4 @@ zostera: Girdle
 zosteraceae: Girdle-like
 zygophora: Yoke-bearing
 
-aglajidae:
-aliciidae:
-analcidometra:
-breviceps:
-brunnea:
-castaneus:
-catriona:
-clavelinidae:
-clepsydra:
-coralligens:
-corynidae:
-ctenoides:
-davidaster:
-detatched:
-discoideus:
-enchelycore:
-ezoensis:
-lebrunia:
-limida:
-limidae:
-limoidea:
-melanochlamys:
-miliaris:
 muraena:
-myrichthys:
-nigricans:
-polyorchis:
-reidi:
-rubignosus:
-scaber:
-sepioidea:
-sepioteuthis:
-stiliger:
-suensonii:
-telmatactis:
-tubulata:

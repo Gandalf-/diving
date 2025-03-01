@@ -1,18 +1,5 @@
 # http://www.catalogueoflife.org/annual-checklist/2019/search/all
 
-Detatched:
-  Davidaster:
-    discoideus: beaded feather star
-    rubignosus: golden feather star
-  Analcidometra:
-    armata: swimming feather star
-  Muraena:
-    castaneus: panamic moray eel
-    clepsydra: blackspot moray eel
-  Myrichthys:
-    breviceps: sharptail eel
-  Enchelycore:
-    nigricans: viper moray eel
 Animalia:
   Ctenophora: comb jelly
   Brachiopoda:
@@ -297,6 +284,8 @@ Animalia:
         Himerometra:
           robustipinna: robust feather star
       Colobometridae:
+        Analcidometra:
+          armata: swimming feather star
         Colobometra:
           perspinosa: spinose feather star
         Cenometra:
@@ -311,6 +300,10 @@ Animalia:
         Antedonidae:
           Florometra:
             serratissima: northwest feather star
+        Comatulidae:
+          Davidaster:
+            discoideus: beaded feather star
+            rubiginosus: golden feather star
     Asteroidea:
       sp.: star
       Paxillosida:
@@ -788,9 +781,17 @@ Animalia:
             ocellatus: wolf eel
       Anguilliformes:
         sp.: eel
+        Ophichthidae:
+          Myrichthys:
+            breviceps: sharptail eel
         Congridae:
           Heterocongrinae: garden eel
         Muraenidae:
+          Enchelycore:
+            nigricans: viper moray eel
+          Muraena:
+            castaneus: panamic moray eel
+            clepsydra: blackspot moray eel
           Gymnothorax:
             favagineus: honeycomb moray eel
             breedeni: blackcheek moray eel
