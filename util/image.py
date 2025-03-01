@@ -13,7 +13,7 @@ from util.common import Tree
 from util.grammar import singular
 
 
-def dive_to_site(dive: str) -> str:
+def dive_to_location(dive: str) -> str:
     _, where = dive.split(' ', 1)
 
     i = 0
@@ -111,7 +111,7 @@ class Image:
     def location(self) -> str:
         """directory minus numbering"""
         when, _ = self.directory.split(' ', 1)
-        where = dive_to_site(self.directory)
+        where = dive_to_location(self.directory)
 
         return f'{when} {where}'
 

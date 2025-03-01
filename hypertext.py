@@ -512,9 +512,8 @@ class SitesTitle(Title):
             date = self.get_date()
             dive_info = log.search(date, self.get_hint())
             name = pretty_date(date)
-
-        elif len(self.lineage) == 1:
-            years = locations.region_to_year_range(self.lineage)
+        else:
+            years = locations.find_year_range(self.lineage)
             site_info = f'<p class="tight">{years}</p>'
 
         # create the buttons for each part of our name lineage

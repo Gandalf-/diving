@@ -59,9 +59,9 @@ def where_to_words(where: str) -> List[str]:
     return words
 
 
-def region_to_year_range(lineage: List[str]) -> str:
+def find_year_range(lineage: List[str]) -> str:
     """return a string like '2020, 2022-2024'"""
-    region = lineage[0]
+    region = ' '.join(lineage)
     return _pretty_year_range(_region_year_ranges()[region])
 
 
@@ -70,17 +70,22 @@ def region_to_year_range(lineage: List[str]) -> str:
 
 @lru_cache(None)
 def _region_year_ranges() -> Dict[str, Set[int]]:
-    out: Dict[str, Set[int]] = {k: set() for k in static.locations.keys()}
+    out: Dict[str, Set[int]] = {}
 
     for path in collection.dive_listing():
         dive = os.path.basename(path)
+
         year, *_ = dive.split('-')
         year = int(year)
 
-        site = image.dive_to_site(dive)
+        where = image.dive_to_location(dive)
+        where = add_context(where)
 
-        region = get_region(site)
-        out[region].add(year)
+        parts = where_to_words(where)
+        for i, part in enumerate(parts):
+            region = ' '.join(parts[: i + 1])
+            out.setdefault(region, set())
+            out[region].add(year)
 
     return out
 
