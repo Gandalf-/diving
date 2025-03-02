@@ -93,9 +93,9 @@ generate_video_thumbnail() {
     # https://stackoverflow.com/a/52675535
     # Not sure why I need to flip the scale for Lightroom exports
     ffmpeg \
+      -nostdin \
       -loglevel fatal \
       -noautorotate \
-      -nostdin \
       -threads 1 \
       -i "$fin" \
       -ss 2 -t 4 \

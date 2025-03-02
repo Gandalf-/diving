@@ -407,6 +407,7 @@ Animalia:
           Halodeima:
             atra: atra sea cucumber
           Holothuria:
+            thomasi: tiger tail sea cucumber
             kefersteini: kefersteini sea cucumber
             edulis: edible sea cucumber
             mexicana: mexican sea cucumber
@@ -925,6 +926,10 @@ Animalia:
             triqueter: smooth trunkfish
   Cnidaria:
     Scyphozoa:
+      Rhizostomeae:
+        Cassiopeidae:
+          Cassiopea:
+            frondosa: upsidedown jelly
       Semaeostomeae:
         sp.: jelly
         Phacellophoridae:
@@ -938,6 +943,9 @@ Animalia:
             labiata: moon jelly
     Hydrozoa:
       sp.: hydroid
+      Narcomedusae:
+        Cuninidae:
+          Solmissus: scalloped jelly
       Anthoathecata:
         Corynidae:
           Polyorchis:
@@ -1231,7 +1239,7 @@ Animalia:
       Myopsida:
         Loliginidae:
           Sepioteuthis:
-            sepioidea: reef squid
+            sepioidea: caribbean reef squid
       Octopoda:
         Octopodoidea:
           sp.: octopus
@@ -1465,7 +1473,8 @@ Animalia:
           Odontodactylus:
             scyllarus: peacock mantis shrimp
         Lysiosquillidae:
-          Lysiosquillina:
+          Lysiosquilla:
+            scabricauda: scaly tailed mantis shrimp
             maculata: tiger mantis shrimp
       Isopoda: isopod
       Amphipoda:

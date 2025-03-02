@@ -26,6 +26,9 @@ def count_imprecise_names() -> Counter[str]:
 
     # For each name (potentially imprecise)
     for name in all_names:
+        if ' egg' in name:
+            continue
+
         # Check if it appears as a suffix in other longer names
         for other in all_names:
             # Only check if the other name is longer and ends with this name preceded by a space
