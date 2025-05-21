@@ -339,6 +339,7 @@ Animalia:
           Pisaster:
             ochraceus: ochre star
             brevispinus: giant pink star
+            giganteus: giant spined star
       Valvatida:
         Mithrodiidae:
           Mithrodia:
@@ -1688,6 +1689,11 @@ Chromista:
       Laminariales:
         # sp.: kelp
         Laminariaceae:
+          Laminaria:
+            setchellii: torn kelp
+          Alariaceae:
+            Pterygophora:
+              californica: woody kelp
           Nereocystis:
             luetkeana: bull kelp
       Fucales:

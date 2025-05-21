@@ -110,7 +110,7 @@ def dive_listing() -> List[str]:
         [
             os.path.join(static.image_root, dive)
             for dive in os.listdir(static.image_root)
-            if not dive.startswith('.')
+            if dive.startswith('20')
         ]
     )
 
