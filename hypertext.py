@@ -47,6 +47,42 @@ scripts = (
             }, 7000);
         }
     }
+
+    // Cross-page prefetch tracking using sessionStorage
+    const STORAGE_KEY = 'diving_prefetched_urls';
+    const prefetchedUrls = new Set(JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]'));
+
+    function prefetchPage(url) {
+        if (prefetchedUrls.has(url)) return;
+        prefetchedUrls.add(url);
+
+        // Persist to sessionStorage for cross-page tracking
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify([...prefetchedUrls]));
+
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = url;
+        document.head.appendChild(link);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const path = window.location.pathname;
+
+        // Only prefetch on gallery, taxonomy, and sites pages
+        if (path.startsWith('/gallery') || path.startsWith('/taxonomy') || path.startsWith('/sites')) {
+            // Select all internal links in title navigation and image grid
+            const links = document.querySelectorAll('.title a[href^="/"], .image a[href^="/"]');
+
+            links.forEach(link => {
+                // Small delay to not block page rendering
+                setTimeout(() => {
+                    prefetchPage(link.href);
+                }, 100);
+            });
+
+            console.log(`Prefetching ${links.length} pages (${prefetchedUrls.size} total tracked)`);
+        }
+    });
     </script>
 """
     + f"""
