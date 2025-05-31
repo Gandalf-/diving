@@ -717,6 +717,8 @@ Animalia:
           Paracanthurus:
             hepatus: blue tang
         Embiotocidae:
+          Embiotoca:
+            lateralis: striped surfperch
           Cymatogaster:
             aggregata: shiner perch
         Sciaenidae:
@@ -870,16 +872,17 @@ Animalia:
         Sebastidae:
           Sebastes:
             sp.: rockfish
-            miniatus: vermilion rockfish
-            ruberrimus: yellow eye rockfish
-            melanops: black rockfish
             auriculatus: brown rockfish
-            maliger: quillback rockfish
             caurinus: copper rockfish
-            pinniger: canary rockfish
-            nebulosus: china rockfish
-            emphaeus: puget sound rockfish
             elongatus: greenstriped rockfish
+            emphaeus: puget sound rockfish
+            maliger: quillback rockfish
+            melanops: black rockfish
+            miniatus: vermilion rockfish
+            nebulosus: china rockfish
+            pinniger: canary rockfish
+            rastrelliger: grass rockfish
+            ruberrimus: yellow eye rockfish
         Hexagrammidae:
           sp.: greenling
           Oxylebius:
@@ -1696,6 +1699,9 @@ Chromista:
               californica: woody kelp
           Nereocystis:
             luetkeana: bull kelp
+        Costariaceae:
+          Agarum:
+            clathratum: sieve kelp
       Fucales:
         Fucaceae:
           Fucus:

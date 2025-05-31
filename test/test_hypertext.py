@@ -268,7 +268,7 @@ class TestTitleTaxonomy(unittest.TestCase):
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>Joint-footed Animals<', html)
+        self.assertIn('>Joint-footed Life-possessing-beings<', html)
 
     def test_translation_deeper(self):
         html, title = hypertext.title(
@@ -276,7 +276,7 @@ class TestTitleTaxonomy(unittest.TestCase):
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>Soft-shelled Joint-footed Animals<', html)
+        self.assertIn('>Soft-shelled Joint-footed Life-possessing-beings<', html)
 
     def test_translation_multi_word_lineage(self):
         html, title = hypertext.title(
@@ -284,7 +284,7 @@ class TestTitleTaxonomy(unittest.TestCase):
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('>Many-bristled Ringed Animals<', html)
+        self.assertIn('>Many-bristled Little-ringed Life-possessing-beings<', html)
 
     def test_translation_duplicates(self):
         """Comb-like Comb-like -> Comb-like"""
@@ -293,7 +293,7 @@ class TestTitleTaxonomy(unittest.TestCase):
             Where.Taxonomy,
             TestHypertext.t_scientific,
         )
-        self.assertIn('Comb-like Two-shelled Soft-bodied Animals', html)
+        self.assertIn('Comb-like Two-valved Soft-bodied Life-possessing-beings', html)
 
     def test_translation_genus_species(self):
         """skip rest of the lineage when we have genus + species"""
