@@ -35,37 +35,37 @@ locations:
     - Tacoma North Wall
     - Zee's Reef
   British Columbia:
-    # Jervis Inlet
-    - Agnew
-    - Argonaut Point
-    - Captain Island Light
-    - HMCS Chaudiere
-    - Jaggy Crack
-    - Jervis Point
-    - Nemo's Leap
-    - Stag Wall
-    - Observation Wall
-    - Power Lines
-    - Wingy Dingy
-    # God's Pocket
-    - Aquarium
-    - Browning Islet
-    - Browning Wall
-    - Christie's Corner
-    - Eagle's Nest
-    - Fantasy Island
-    - God's Pocket
-    - Hoodi Nudi
-    - Hussar Bay
-    - Hussar East
-    - Hussar Point
-    - Hunt's Rock
-    - Lucan Chute
-    - Northwest Passage Wall
-    - Seven Tree
-    - Ruth's Rocks
-    - Snowfall
-    - Buttertart
+    Jervis Inlet:
+      - Agnew
+      - Argonaut Point
+      - Captain Island Light
+      - HMCS Chaudiere
+      - Jaggy Crack
+      - Jervis Point
+      - Nemo's Leap
+      - Stag Wall
+      - Observation Wall
+      - Power Lines
+      - Wingy Dingy
+    Queen Charlotte Strait:
+      - Aquarium
+      - Browning Islet
+      - Browning Wall
+      - Christie's Corner
+      - Eagle's Nest
+      - Fantasy Island
+      - God's Pocket
+      - Hoodi Nudi
+      - Hussar Bay
+      - Hussar East
+      - Hussar Point
+      - Hunt's Rock
+      - Lucan Chute
+      - Northwest Passage Wall
+      - Seven Tree
+      - Ruth's Rocks
+      - Snowfall
+      - Buttertart
   Galapagos:
     - Baltra
     - Cousin's Rock

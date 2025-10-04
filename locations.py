@@ -7,7 +7,7 @@ collecting dive locations
 import os
 import re
 from functools import lru_cache
-from typing import Dict, List, Set, cast
+from typing import Dict, List, Optional, Set, cast
 
 from util import collection, common, image, static
 from util.collection import Image, ImageTree
@@ -28,20 +28,49 @@ def sites_link(when: str, where: str) -> str:
 
 def get_region(site: str) -> str:
     """find a dive site in the larger collection of locations"""
-    for name, places in static.locations.items():
-        for place in places:
-            if place == site:
-                return name
+    for name, value in static.locations.items():
+        if isinstance(value, list):
+            # Flat structure: region -> [sites]
+            for place in value:
+                if place == site:
+                    return name
 
-            if site.startswith(place):
-                return name
+                if site.startswith(place):
+                    return name
+        else:
+            # Nested structure: region -> subregion -> [sites]
+            for subregion, places in value.items():
+                for place in places:
+                    if place == site:
+                        return name
+
+                    if site.startswith(place):
+                        return name
 
     assert False, f'no location for {site}'
 
 
+def get_subregion(site: str) -> Optional[str]:
+    """find a dive site's sub-region if it has one"""
+    for name, value in static.locations.items():
+        if isinstance(value, dict):
+            # Nested structure: region -> subregion -> [sites]
+            for subregion, places in value.items():
+                for place in places:
+                    if place == site or site.startswith(place):
+                        return subregion
+    return None
+
+
 def add_context(site: str) -> str:
     """place a dive site into a larger collection of locations"""
-    return f'{get_region(site)} {site}'
+    region = get_region(site)
+    subregion = get_subregion(site)
+
+    if subregion:
+        return f'{region} {subregion} {site}'
+    else:
+        return f'{region} {site}'
 
 
 def sites() -> ImageTree:
@@ -51,10 +80,18 @@ def sites() -> ImageTree:
 
 def where_to_words(where: str) -> List[str]:
     """split the input into words but do not break up dive site names"""
+    # Pre-process multi-word patterns before regex splitting
+    where = where.replace('Queen Charlotte Strait', 'Queen-Charlotte-Strait')
+    where = where.replace('Jervis Inlet', 'Jervis-Inlet')
+
     words = re.findall(_SITE_PATTERN, where)
 
     if len(words) > 1 and words[0] == 'British' and words[1] == 'Columbia':
         words = ['British Columbia'] + words[2:]
+
+    # Restore multi-word patterns
+    words = [w.replace('Queen-Charlotte-Strait', 'Queen Charlotte Strait') for w in words]
+    words = [w.replace('Jervis-Inlet', 'Jervis Inlet') for w in words]
 
     return words
 

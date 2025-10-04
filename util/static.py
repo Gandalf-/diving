@@ -6,13 +6,13 @@ configuration information
 
 import os
 import pathlib
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Union
 
 import yaml
 
 from util.resource import VersionedResource
 
-ListTree = Dict[str, List[str]]
+ListTree = Dict[str, Union[List[str], Dict[str, List[str]]]]
 
 
 source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
@@ -39,12 +39,19 @@ no_taxonomy_exact: Set[str] = set(_static['no-taxonomy-exact'])
 no_taxonomy_any: Set[str] = set(_static['no-taxonomy-any'])
 
 
-def _invert(tree: Dict[str, List[str]]) -> Dict[str, str]:
+def _invert(tree: ListTree) -> Dict[str, str]:
     """map locations to full location names"""
     out = {}
-    for area, places in tree.items():
-        for place in places:
-            out[place] = ' '.join([area, place])
+    for area, value in tree.items():
+        if isinstance(value, list):
+            # Flat structure: region -> [sites]
+            for place in value:
+                out[place] = ' '.join([area, place])
+        else:
+            # Nested structure: region -> subregion -> [sites]
+            for subregion, places in value.items():
+                for place in places:
+                    out[place] = ' '.join([area, subregion, place])
     return out
 
 
