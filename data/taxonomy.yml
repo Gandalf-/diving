@@ -645,6 +645,8 @@ Animalia:
         Clupeidae:
           Sardinops:
             sagax: pacific sardine
+          Clupea:
+            pallasii: pacific herring
       Batrachoidiformes:
         Porichthys: midshipman
       Echeneidae:

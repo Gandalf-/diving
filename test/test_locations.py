@@ -57,10 +57,10 @@ class TestLocations(unittest.TestCase):
 
         self.assertEqual(ranges['Galapagos'], {2021})
         self.assertEqual(ranges['Maldives'], {2022})
-        self.assertEqual(ranges['British Columbia'], {2020, 2022, 2023, 2024})
+        self.assertEqual(ranges['British Columbia'], {2020, 2022, 2023, 2024, 2025})
 
         self.assertEqual(ranges['Bonaire Cliff'], {2019})
-        self.assertEqual(ranges['British Columbia Agnew'], {2023})
+        self.assertEqual(ranges['British Columbia Agnew'], {2023, 2025})
         self.assertEqual(ranges['Galapagos Fernandina'], {2021})
 
     def test_pretty_year_range(self) -> None:
@@ -72,11 +72,11 @@ class TestLocations(unittest.TestCase):
         self.assertEqual(locations.find_year_range(['Galapagos']), '2021')
         self.assertEqual(locations.find_year_range(['Galapagos']), '2021')
         self.assertEqual(locations.find_year_range(['Maldives']), '2022')
-        self.assertEqual(locations.find_year_range(['British Columbia']), '2020, 2022-2024')
+        self.assertEqual(locations.find_year_range(['British Columbia']), '2020, 2022-2025')
 
         self.assertEqual(
             locations.find_year_range(['British Columbia', 'Agnew']),
-            '2023',
+            '2023, 2025',
         )
         self.assertEqual(
             locations.find_year_range(['Galapagos', 'Wolf', 'Shark Bay']),
