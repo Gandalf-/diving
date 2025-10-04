@@ -54,7 +54,17 @@ class TestLocations(unittest.TestCase):
     def test_where_to_words(self) -> None:
         """control splitting for sites so we don't end up with 'Fort', etc"""
         samples = [
+            # Single word regions
+            ('Washington', ['Washington']),
+            ('Bonaire', ['Bonaire']),
+            ('Galapagos', ['Galapagos']),
+            # Multi-word region
             ('British Columbia', ['British Columbia']),
+            # Region + site
+            ('Washington Edmonds', ['Washington', 'Edmonds']),
+            ('Washington Fort Ward', ['Washington', 'Fort Ward']),
+            ('Bonaire Cliff', ['Bonaire', 'Cliff']),
+            # Multi-word region + site
             (
                 'British Columbia Jervis Inlet Argonaut Point',
                 ['British Columbia', 'Jervis Inlet', 'Argonaut Point'],
@@ -63,12 +73,43 @@ class TestLocations(unittest.TestCase):
                 'British Columbia Queen Charlotte Strait Aquarium',
                 ['British Columbia', 'Queen Charlotte Strait', 'Aquarium'],
             ),
-            ('Washington Edmonds', ['Washington', 'Edmonds']),
-            ('Washington Fort Ward', ['Washington', 'Fort Ward']),
+            # Sites with multiple words
             (
                 'Washington Sund Rock South Wall',
                 ['Washington', 'Sund Rock', 'South', 'Wall'],
             ),
+            (
+                'Bonaire Alice in Wonderland',
+                ['Bonaire', 'Alice in Wonderland'],
+            ),
+            (
+                'Roatan Coco View Front Yard',
+                ['Roatan', 'Coco View Front Yard'],
+            ),
+            (
+                "Galapagos Cousin's Rock",
+                ['Galapagos', "Cousin's Rock"],
+            ),
+            (
+                'Washington Kitsap Memorial Park',
+                ['Washington', 'Kitsap Memorial Park'],
+            ),
+            # With dates
+            (
+                'Washington Fort Ward 2020-01-15',
+                ['Washington', 'Fort Ward', '2020-01-15'],
+            ),
+            (
+                'British Columbia Jervis Inlet Agnew 2023-09-22',
+                ['British Columbia', 'Jervis Inlet', 'Agnew', '2023-09-22'],
+            ),
+            (
+                'British Columbia Queen Charlotte Strait Aquarium 2023-04-02',
+                ['British Columbia', 'Queen Charlotte Strait', 'Aquarium', '2023-04-02'],
+            ),
+            # Sub-region hierarchy
+            ('Maldives Ari North', ['Maldives', 'Ari North']),
+            ('Maldives Male South', ['Maldives', 'Male South']),
         ]
         for before, after in samples:
             self.assertEqual(locations.where_to_words(before), after)

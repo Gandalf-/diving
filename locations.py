@@ -5,7 +5,6 @@ collecting dive locations
 """
 
 import os
-import re
 from functools import lru_cache
 from typing import Dict, List, Optional, Set, cast
 
@@ -79,19 +78,34 @@ def sites() -> ImageTree:
 
 
 def where_to_words(where: str) -> List[str]:
-    """split the input into words but do not break up dive site names"""
-    # Pre-process multi-word patterns before regex splitting
-    where = where.replace('Queen Charlotte Strait', 'Queen-Charlotte-Strait')
-    where = where.replace('Jervis Inlet', 'Jervis-Inlet')
+    """Split location string into logical components using greedy tokenization"""
+    multi_word_phrases = _get_multi_word_phrases()
+    words = []
+    remaining = where
 
-    words = re.findall(_SITE_PATTERN, where)
+    while remaining:
+        remaining = remaining.lstrip()
+        if not remaining:
+            break
 
-    if len(words) > 1 and words[0] == 'British' and words[1] == 'Columbia':
-        words = ['British Columbia'] + words[2:]
+        matched = False
 
-    # Restore multi-word patterns
-    words = [w.replace('Queen-Charlotte-Strait', 'Queen Charlotte Strait') for w in words]
-    words = [w.replace('Jervis-Inlet', 'Jervis Inlet') for w in words]
+        # Try multi-word phrases first (longest to shortest)
+        for phrase in multi_word_phrases:
+            if remaining.startswith(phrase):
+                # Ensure phrase is word-bounded (followed by space, end of string)
+                next_char_idx = len(phrase)
+                if next_char_idx >= len(remaining) or remaining[next_char_idx] == ' ':
+                    words.append(phrase)
+                    remaining = remaining[len(phrase) :]
+                    matched = True
+                    break
+
+        # Fall back to single word
+        if not matched:
+            parts = remaining.split(' ', 1)
+            words.append(parts[0])
+            remaining = parts[1] if len(parts) > 1 else ''
 
     return words
 
@@ -103,6 +117,34 @@ def find_year_range(lineage: List[str]) -> str:
 
 
 # PRIVATE
+
+
+@lru_cache(None)
+def _get_multi_word_phrases() -> List[str]:
+    """Extract all multi-word phrases from locations hierarchy, sorted longest first"""
+    phrases = []
+
+    for region, value in static.locations.items():
+        # Add multi-word region names
+        if ' ' in region:
+            phrases.append(region)
+
+        if isinstance(value, list):
+            # Flat structure: add multi-word site names
+            for site in value:
+                if ' ' in site:
+                    phrases.append(site)
+        else:
+            # Nested structure: add sub-regions and sites
+            for subregion, sites in value.items():
+                if ' ' in subregion:
+                    phrases.append(subregion)
+                for site in sites:
+                    if ' ' in site:
+                        phrases.append(site)
+
+    # Sort by length descending to match longest phrases first
+    return sorted(set(phrases), key=len, reverse=True)
 
 
 @lru_cache(None)
@@ -145,11 +187,6 @@ def _pretty_year_range(years: Set[int]) -> str:
             out.append(f'{start}-{end}')
 
     return ', '.join(out)
-
-
-_SITE_PATTERN = re.compile(
-    '|'.join(map(re.escape, common.extract_leaves(static.locations))) + '|\\S+'
-)
 
 
 def _make_tree() -> ImageTree:
