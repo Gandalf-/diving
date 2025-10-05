@@ -40,7 +40,7 @@ function image_game() {
     child.id = 'option' + i;
     document.getElementById('options').appendChild(child);
 
-    const callback = i === actual ? 'success();' : 'failure(this);';
+    const callback = i === actual ? success : function(event) { failure(event.currentTarget); };
     const option = i === actual ? correct : options[w++];
     set_thumbnail('option' + i, option, callback);
   }
@@ -72,9 +72,9 @@ function name_game() {
     byId('options').appendChild(child);
 
     if (i == actual) {
-      set_text('option' + i, correct, 'success();');
+      set_text('option' + i, correct, success);
     } else {
-      set_text('option' + i, options[w], 'failure(this);');
+      set_text('option' + i, options[w], function(event) { failure(event.currentTarget); });
       w++;
     }
   }
@@ -109,9 +109,9 @@ function reef_game() {
     byId('options').appendChild(child);
 
     if (i == actual) {
-      set_text('option' + i, correct, 'success();');
+      set_text('option' + i, correct, success);
     } else {
-      set_text('option' + i, options[w], 'failure(this);');
+      set_text('option' + i, options[w], function(event) { failure(event.currentTarget); });
       w++;
     }
   }
@@ -157,7 +157,7 @@ function set_text(where, what, onclick) {
   var name = g_names[what];
 
   if (onclick) {
-    option.setAttribute('onclick', onclick);
+    option.addEventListener('click', onclick);
   }
   option.setAttribute('class', 'top switch');
 
@@ -176,9 +176,7 @@ function set_thumbnail(where, what, onclick, thumb) {
   img.height = 263;
 
   if (onclick) {
-    img.onclick = function () {
-      eval(onclick);
-    };
+    img.onclick = onclick;
   }
 
   var target = document.getElementById(where);

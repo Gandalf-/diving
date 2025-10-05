@@ -13,9 +13,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Workflow
 - Local build: `make local` or `make fast` (skips expensive operations)
+  - Outputs to `~/working/object-publish/diving-web/`
 - Development mode: `make dev` (auto-rebuild on file changes using entr)
 - Serve locally: `make serve` (serves from ~/working/object-publish/diving-web)
 - Clean: `make clean` (removes generated HTML)
+
+### JavaScript Development
+- Source files in `web/` directory are copied to output during build
+- Detective game: `web/game.js` → `detective/game.js` (versioned)
+- Changes to `web/*.js` require running `make local` to regenerate output
+- Integration test outputs to `~/working/tmp/diving` but doesn't test JavaScript functionality
 
 ## Architecture Overview
 
