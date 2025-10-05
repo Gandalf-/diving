@@ -12,8 +12,8 @@ from collections import Counter
 from typing import List, Set
 
 import locations
-from util import collection, common
-from util.image import Image
+from util import collection, common, taxonomy
+from util.image import Image, split
 
 
 def total_imprecise() -> int:
@@ -22,9 +22,9 @@ def total_imprecise() -> int:
 
 def count_imprecise_names() -> Counter[str]:
     all_names = collection.all_names()
-    imprecise: Counter[str] = Counter()
+    imprecise_names: Set[str] = set()
 
-    # For each name (potentially imprecise)
+    # Find which names are imprecise (have longer variations)
     for name in all_names:
         if ' egg' in name:
             continue
@@ -33,7 +33,8 @@ def count_imprecise_names() -> Counter[str]:
         for other in all_names:
             # Only check if the other name is longer and ends with this name preceded by a space
             if len(other) > len(name) and other.endswith(' ' + name):
-                imprecise[name] += 1
+                imprecise_names.add(name)
+                break
 
     allowed = {
         'boat',
@@ -44,8 +45,16 @@ def count_imprecise_names() -> Counter[str]:
         'seagull',
     }
 
-    for a in allowed:
-        imprecise.pop(a, None)
+    imprecise_names -= allowed
+
+    # Count how many images have each imprecise name
+    named_images = collection.expand_names(collection.named())
+    imprecise: Counter[str] = Counter()
+
+    for i in named_images:
+        name = split(i.simplified())
+        if name in imprecise_names:
+            imprecise[name] += 1
 
     return imprecise
 
@@ -60,7 +69,7 @@ def get_imprecise_images() -> List[Image]:
     imprecise_images = []
 
     for i in named_images:
-        if i.simplified() in imprecise_names:
+        if split(i.simplified()) in imprecise_names:
             imprecise_images.append(i)
 
     return imprecise_images
@@ -69,10 +78,10 @@ def get_imprecise_images() -> List[Image]:
 def find_imprecise_images(name: str) -> List[Image]:
     """Find images with the given imprecise name.
 
-    This matches against the full simplified name to avoid partial matches.
+    This matches against the split simplified name to avoid partial matches.
     For example, searching for "star" won't match "rockstar".
     """
-    return [i for i in get_imprecise_images() if i.simplified() == name]
+    return [i for i in get_imprecise_images() if split(i.simplified()) == name]
 
 
 def save_imprecise(name: str) -> None:
@@ -117,6 +126,7 @@ def update_imprecise(name: str) -> None:
 
     images = find_imprecise_images(name)
     inode_to_image = {}
+    scientific = taxonomy.mapping()
 
     for image in images:
         inode = os.stat(image.path()).st_ino
@@ -135,9 +145,11 @@ def update_imprecise(name: str) -> None:
         path = image.path()
         tgt = path.replace(old, new)
 
+        sci_name = scientific.get(new.lower(), '???')
+
         print(os.path.dirname(path))
         print('\t', os.path.basename(path))
-        print('\t', os.path.basename(tgt))
+        print('\t', f'{os.path.basename(tgt)} ({sci_name})')
         print('? ', end='')
         keep = input()
         if keep and 'n' in keep:
