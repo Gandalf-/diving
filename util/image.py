@@ -170,6 +170,10 @@ class Image:
         name = categorize(name)
         return name
 
+    def has_multiple_subjects(self) -> bool:
+        """check if this image contains multiple subjects (e.g., 'shark and remora')"""
+        return ' and ' in self.label or ' with ' in self.label
+
     @lru_cache(None)
     def approximate_depth(self) -> Optional[Tuple[int, int]]:
         """approximate depth of this image"""

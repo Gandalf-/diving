@@ -51,10 +51,18 @@ def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] =
 
     if where == where.Sites:
         items = list(results)
+        # Prefer single-subject images
+        single_subject = [img for img in items if not img.has_multiple_subjects()]
+        if single_subject:
+            return single_subject[len(single_subject) // 2]
         return items[len(items) // 2]
 
     results = sorted(results, key=lambda image: image.path(), reverse=True)
     assert results, (tree, lineage)
+    # Prefer single-subject images (newest first)
+    single_subject = [img for img in results if not img.has_multiple_subjects()]
+    if single_subject:
+        return single_subject[0]
     return results[0]
 
 

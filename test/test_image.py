@@ -122,3 +122,28 @@ class TestImage(unittest.TestCase):
 
         self.assertEqual(img.thumbnail(), '/clips/test.mp4')
         self.assertEqual(img.fullsize(), '/video/test.mp4')
+
+    def test_has_multiple_subjects(self) -> None:
+        """check if image name contains multiple subjects"""
+        from util.collection import expand_names
+
+        samples = [
+            ('001 - Shark and Remora.jpg', True),
+            ('001 - Crab with Anemone.jpg', True),
+            ('001 - Fish and Kelp.jpg', True),
+            ('001 - Giant Pacific Octopus.jpg', False),
+            ('001 - Painted Chiton.jpg', False),
+            ('001.jpg', False),
+        ]
+        for label, expected in samples:
+            img = image.Image(label, '2020-01-01 Rockaway Beach')
+            self.assertEqual(img.has_multiple_subjects(), expected, f'Failed for {label}')
+
+            # Also test after expand_names processes it
+            expanded = list(expand_names([img]))
+            for expanded_img in expanded:
+                self.assertEqual(
+                    expanded_img.has_multiple_subjects(),
+                    expected,
+                    f'Failed for {label} after expand_names',
+                )
