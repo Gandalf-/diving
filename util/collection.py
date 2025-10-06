@@ -63,9 +63,10 @@ def build_image_tree() -> ImageTree:
 
 def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
     """intermediate steps!"""
-    return _data_to_various(
-        _pruner(_compress(_compress(_compress(tree, reverse), reverse), reverse))
-    )
+    compressed = _compress(_compress(_compress(tree, reverse), reverse), reverse)
+    pruned = _pruner(compressed)
+    unnested = _unnest_complete_species(pruned)
+    return _data_to_various(unnested)
 
 
 @lru_cache(None)
@@ -116,6 +117,24 @@ def dive_listing() -> List[str]:
 
 
 # PRIVATE
+
+
+def _is_complete_species(name: str) -> bool:
+    """Check if this name maps to a genus+species (not 'sp.') in taxonomy"""
+    from util import taxonomy
+
+    mapping = taxonomy.mapping(taxonomy.MappingType.Gallery)
+    scientific = mapping.get(name)
+
+    if not scientific:
+        return False
+
+    parts = scientific.split()
+    if len(parts) < 2:
+        return False
+
+    genus, species = parts[-2:]
+    return genus[0].isupper() and species[0].islower() and species != 'sp.'
 
 
 def _collect_all_images() -> List[List[Image]]:
@@ -185,6 +204,80 @@ def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
             tree[new_key] = _compress(child, reverse)
         else:
             tree[key] = _compress(value, reverse)
+
+    return tree
+
+
+def _unnest_complete_species(tree: ImageTree) -> ImageTree:
+    """
+    Post-process tree to unnest complete species that were incorrectly nested.
+
+    When a node has both 'data' and child nodes, check if the images in 'data'
+    represent a complete species. If so, and any child nodes would also form
+    complete species when combined with the parent key, promote those children
+    to be siblings instead.
+
+    Example:
+        Before: {coral: {staghorn: {data: [...], fused: {data: [...]}}}}
+        After:  {coral: {staghorn: {data: [...]}, 'fused staghorn': {data: [...]}}}
+    """
+    assert isinstance(tree, dict), tree
+
+    # Process each key in the tree
+    for parent_key, parent_value in list(tree.items()):
+        if parent_key == 'data' or not isinstance(parent_value, dict):
+            continue
+
+        # First, recursively process children
+        tree[parent_key] = _unnest_complete_species(parent_value)
+        parent_value = tree[parent_key]  # Get updated value
+
+        # Check if this child node has a conflict to resolve
+        if 'data' not in parent_value:
+            continue
+
+        # Get the simplified name from the images in this node
+        parent_value_dict = cast(ImageTree, parent_value)
+        images = cast(List[Image], parent_value_dict['data'])
+        if not images:
+            continue
+
+        parent_simplified = images[0].simplified()
+
+        # Only proceed if the parent is a complete species
+        if not _is_complete_species(parent_simplified):
+            continue
+
+        # Check each grandchild to see if it's also a complete species
+        children_to_promote = []
+
+        for child_key, child_value in list(parent_value_dict.items()):
+            if child_key == 'data' or not isinstance(child_value, dict):
+                continue
+
+            child_value_dict = cast(ImageTree, child_value)
+            if 'data' in child_value_dict:
+                child_images = cast(List[Image], child_value_dict['data'])
+                if child_images:
+                    child_simplified = child_images[0].simplified()
+
+                    # Check if child is also a complete species AND different from parent
+                    if (
+                        _is_complete_species(child_simplified)
+                        and child_simplified != parent_simplified
+                    ):
+                        # Both are complete species - promote child to be sibling of parent!
+                        # The new key should combine parent_key + child_key
+                        new_key = f'{child_key} {parent_key}'
+                        children_to_promote.append((child_key, new_key, child_value))
+                        metrics.counter('images un-nested complete species')
+
+        # Now promote the children to THIS level (siblings of parent_key)
+        for old_key, new_key, child_value in children_to_promote:
+            # Remove from parent
+            del parent_value_dict[old_key]
+            # Add as sibling
+            tree[new_key] = child_value
 
     return tree
 
