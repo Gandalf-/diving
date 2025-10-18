@@ -80,9 +80,9 @@ generate_video_thumbnail() {
   }
 
   declare -A sizes
-  sizes[1920x1080]=1440:1080  # mov, sony
-  sizes[1280x720]=960:720     # mp4
-  sizes[320x240]=320:240      # mp4, old camera
+  sizes[1920x1080]=1440:1080  # mp4, sony
+  sizes[1280x720]=960:720     # mov, olympus tg-6
+  sizes[320x240]=320:240      # mp4, olympus old
 
   rescale() {
     local size; size="$( dimensions "$fin" )"
@@ -145,29 +145,20 @@ generate_video_fullsize() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
-  webm() {
-    ffmpeg \
-      -nostdin \
-      -loglevel fatal \
-      -i "$fin" \
-      -an \
-      -c:v libvpx-vp9 \
-      -deadline good \
-      -crf 40 \
-      -f webm pipe:
-  }
+  local transforms="$HOME"/working/video-transforms/"$( identity "$fin" | awk '{ print $1 }' )".trf
+  local staboptions="smoothing=30:optzoom=1:interpol=bicubic,unsharp=5:5:0.8:3:3:0.4"
+  [[ -f $transforms ]] || die "missing transform file $transforms"
 
-  mp4() {
-    ffmpeg \
-      -loglevel fatal \
-      -f webm -i pipe: \
-      -movflags faststart \
-      -crf 28 \
-      "$fout"
-  }
-
-  webm \
-    | mp4 \
+  ffmpeg \
+    -nostdin \
+    -i "$fin" \
+    -vf "vidstabtransform=input=$transforms:$staboptions" \
+    -c:v libx264 \
+    -crf 28 \
+    -pix_fmt yuv420p \
+    -an \
+    -movflags +faststart \
+    "$fout" \
     || die "ffmpeg fullsize failure $fin"
 
   report "VIDEO $( basename "$fin" )"
