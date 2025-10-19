@@ -64,13 +64,29 @@ generate_image_fullsize() {
   report "IMAGE $( basename "$fin" )"
 }
 
+generate_video_transform() {
+  local fin="$1"
+  local name="$( identity "$fin" | awk '{ print $1 }' )"
+  local output="$HOME/working/video-transforms/$name.trf"
+  [[ -f "$output" ]] && return
+
+  ffmpeg \
+    -nostdin \
+    -loglevel error \
+    -i "$fin" \
+    -vf vidstabdetect=stepsize=24:shakiness=9:accuracy=15:result="$output" \
+    -f null - \
+    || die "ffmpeg transform failure $fin"
+
+  report "study $( basename "$fin" )"
+}
+
 generate_video_thumbnail() {
   local fin="$1"
   local fout="$2"
   [[ -f "$fout" ]] && return
 
   dimensions() {
-    # https://www.bannerbear.com/blog/how-to-crop-resize-a-video-using-ffmpeg/
     ffprobe \
       -v error \
       -select_streams v:0 \
@@ -84,59 +100,43 @@ generate_video_thumbnail() {
   sizes[1280x720]=960:720     # mov, olympus tg-6
   sizes[320x240]=320:240      # mp4, olympus old
 
-  rescale() {
-    local size; size="$( dimensions "$fin" )"
-    local target="${sizes[$size]}"
-    [[ -z $target ]] && die "unexpected video size $size"
+  local size; size="$( dimensions "$fin" )"
+  local crop_target="${sizes[$size]}"
+  [[ -z "$crop_target" ]] && die "unexpected video size $size"
 
-    # https://superuser.com/a/624564
-    # https://stackoverflow.com/a/52675535
-    # Not sure why I need to flip the scale for Lightroom exports
-    ffmpeg \
-      -nostdin \
-      -loglevel fatal \
-      -noautorotate \
-      -threads 1 \
-      -i "$fin" \
-      -ss 2 -t 4 \
-      -vf "crop=$target, scale=300:224" \
-      -f webm pipe:
-  }
+  local transforms="$HOME"/working/video-transforms/"$( identity "$fin" | awk '{ print $1 }' )".trf
+  [[ -f $transforms ]] || die "missing transform file $transforms"
 
-  fade() {
-    # https://stackoverflow.com/a/64907131
-    # https://trac.ffmpeg.org/wiki/Xfade
-    local filter="\
-    [0]trim=end=1,setpts=PTS-STARTPTS[begin];
-    [0]trim=start=1,setpts=PTS-STARTPTS[end];
-    [end][begin]xfade=distance:duration=1:offset=2"
+  local filter_graph="
+    [0:v]
+    vidstabtransform=input=$transforms:smoothing=30:optzoom=1:interpol=bicubic,
+    crop=$crop_target,
+    scale=300:224,
+    split [main][loop];
 
-    ffmpeg \
-      -threads 1 \
-      -loglevel fatal \
-      -noautorotate \
-      -f webm -i pipe: \
-      -filter_complex "$filter" \
-      -f webm pipe:
-  }
+    [main]trim=start=1,setpts=PTS-STARTPTS [end];
+    [loop]trim=end=1,setpts=PTS-STARTPTS [begin];
 
-  mp4() {
-    ffmpeg \
-      -loglevel fatal \
-      -noautorotate \
-      -f webm -i pipe: \
-      -an -c:v libx264 -profile:v main \
-      -movflags faststart \
-      -vf "format=yuv420p, fps=30" \
-      -crf 26 \
-      "$fout"
-  }
+    [end][begin]xfade=transition=fade:duration=1:offset=2,
+    format=yuv420p,
+    fps=30
+    [outv]"
 
-  # ffmpeg is easy 😵
-  # https://stackoverflow.com/a/45902691
-  rescale \
-    | fade \
-    | mp4 || die "ffmpeg thumbnail failure $fin"
+  ffmpeg \
+    -loglevel fatal \
+    -nostdin \
+    -ss 2 -i "$fin" \
+    -t 4 \
+    -filter_complex "$filter_graph" \
+    -map "[outv]" \
+    -an \
+    -c:v libx264 \
+    -profile:v main \
+    -crf 26 \
+    -movflags +faststart \
+    "$fout" \
+    || die "ffmpeg thumbnail failure $fin"
+
   report "video $( basename "$fin" )"
 }
 
@@ -146,10 +146,11 @@ generate_video_fullsize() {
   [[ -f "$fout" ]] && return
 
   local transforms="$HOME"/working/video-transforms/"$( identity "$fin" | awk '{ print $1 }' )".trf
-  local staboptions="smoothing=30:optzoom=1:interpol=bicubic,unsharp=5:5:0.8:3:3:0.4"
+  local staboptions="smoothing=30:optzoom=1:interpol=bicubic"
   [[ -f $transforms ]] || die "missing transform file $transforms"
 
   ffmpeg \
+    -loglevel fatal \
     -nostdin \
     -i "$fin" \
     -vf "vidstabtransform=input=$transforms:$staboptions" \
@@ -263,6 +264,7 @@ scanner() {
         generate_image_thumbnail "$root/$path" "$thumbroot/$unique.webp"
         generate_image_fullsize  "$root/$path" "$imageroot/$unique.webp"
       else
+        generate_video_transform "$root/$path"
         generate_video_thumbnail "$root/$path" "$clipsroot/$unique.mp4"
         generate_video_fullsize  "$root/$path" "$videoroot/$unique.mp4"
       fi
