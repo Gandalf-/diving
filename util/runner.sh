@@ -34,6 +34,19 @@ ffprobe() {
   log /opt/homebrew/opt/ffmpeg@6/bin/ffprobe "$@"
 }
 
+choose_smoothing() {
+  local fin="$1"
+  case "${fin,,}" in
+    *seal*|*'sea lion'*)
+      report "using low smoothing for $( basename "$fin" )"
+      echo 2
+      ;;
+    *)
+      echo 30
+      ;;
+    esac
+}
+
 generate_image_thumbnail() {
   local fin="$1"
   local fout="$2"
@@ -66,15 +79,14 @@ generate_image_fullsize() {
 
 generate_video_transform() {
   local fin="$1"
-  local name="$( identity "$fin" | awk '{ print $1 }' )"
-  local output="$HOME/working/video-transforms/$name.trf"
-  [[ -f "$output" ]] && return
+  local fout="$HOME/working/video-transforms/$( identity "$fin" | awk '{ print $1 }' ).trf"
+  [[ -f "$fout" ]] && return
 
   ffmpeg \
     -nostdin \
     -loglevel error \
     -i "$fin" \
-    -vf vidstabdetect=stepsize=24:shakiness=9:accuracy=15:result="$output" \
+    -vf vidstabdetect=stepsize=24:shakiness=9:accuracy=15:result="$fout" \
     -f null - \
     || die "ffmpeg transform failure $fin"
 
@@ -106,10 +118,11 @@ generate_video_thumbnail() {
 
   local transforms="$HOME"/working/video-transforms/"$( identity "$fin" | awk '{ print $1 }' )".trf
   [[ -f $transforms ]] || die "missing transform file $transforms"
+  local smoothing="$( choose_smoothing "$fin" )"
 
   local filter_graph="
     [0:v]
-    vidstabtransform=input=$transforms:smoothing=30:optzoom=1:interpol=bicubic,
+    vidstabtransform=input=$transforms:smoothing=$smoothing:optzoom=1:interpol=bicubic,
     crop=$crop_target,
     scale=300:224,
     split [main][loop];
@@ -146,7 +159,8 @@ generate_video_fullsize() {
   [[ -f "$fout" ]] && return
 
   local transforms="$HOME"/working/video-transforms/"$( identity "$fin" | awk '{ print $1 }' )".trf
-  local staboptions="smoothing=30:optzoom=1:interpol=bicubic"
+  local smoothing="$( choose_smoothing "$fin" )"
+  local staboptions="smoothing=$smoothing:optzoom=1:interpol=bicubic"
   [[ -f $transforms ]] || die "missing transform file $transforms"
 
   ffmpeg \
