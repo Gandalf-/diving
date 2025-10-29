@@ -1,8 +1,32 @@
 #!/usr/bin/python3
 
-""" 
-For each name, the name is imprecise if there exists another name that ends with but is not
-exactly equal to the name. 
+"""Find and update images with imprecise names.
+
+A name is imprecise if there exists another name that ends with but is not exactly equal to it.
+For example, 'crab' is imprecise if you also have 'hermit crab' or 'spider crab'.
+
+WORKFLOW:
+1. List imprecise names and counts:
+   $ python3 imprecise.py --list
+
+2. Extract images for a specific imprecise name to temp directory:
+   $ python3 imprecise.py --find 'crab'
+   This creates hardlinks in ~/working/tmp/imprecise/crab/ with names like:
+   - 000 Indonesia.jpg
+   - 001 Philippines.jpg
+   - 002 Caribbean.jpg
+
+3. Manually rename files to specify new precise names:
+   Add ' - <new_name>' before the extension:
+   - 000 Indonesia.jpg  →  000 Indonesia - hermit crab.jpg
+   - 001 Philippines.jpg  →  001 Philippines - spider crab.jpg
+   (Leave files unchanged if they're already correct)
+   (Capitalization doesn't matter)
+   (Do not pluralize)
+
+4. Apply the renames to original files:
+   $ python3 imprecise.py --update 'crab'
+   This will interactively prompt you to confirm each rename.
 """
 
 import argparse

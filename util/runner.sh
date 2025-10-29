@@ -79,7 +79,7 @@ generate_image_fullsize() {
 
 generate_video_transform() {
   local fin="$1"
-  local fout="$HOME/working/video-transforms/$( identity "$fin" | awk '{ print $1 }' ).trf"
+  local fout="$HOME/working/diving/transforms/$( identity "$fin" | awk '{ print $1 }' ).trf"
   [[ -f "$fout" ]] && return
 
   ffmpeg \
@@ -116,7 +116,7 @@ generate_video_thumbnail() {
   local crop_target="${sizes[$size]}"
   [[ -z "$crop_target" ]] && die "unexpected video size $size"
 
-  local transforms="$HOME"/working/video-transforms/"$( identity "$fin" | awk '{ print $1 }' )".trf
+  local transforms="$HOME/working/diving/transforms/$( identity "$fin" | awk '{ print $1 }' )".trf
   [[ -f $transforms ]] || die "missing transform file $transforms"
   local smoothing="$( choose_smoothing "$fin" )"
 
@@ -158,7 +158,7 @@ generate_video_fullsize() {
   local fout="$2"
   [[ -f "$fout" ]] && return
 
-  local transforms="$HOME"/working/video-transforms/"$( identity "$fin" | awk '{ print $1 }' )".trf
+  local transforms="$HOME/working/diving/transforms/$( identity "$fin" | awk '{ print $1 }' )".trf
   local smoothing="$( choose_smoothing "$fin" )"
   local staboptions="smoothing=$smoothing:optzoom=1:interpol=bicubic"
   [[ -f $transforms ]] || die "missing transform file $transforms"

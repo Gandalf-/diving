@@ -73,7 +73,7 @@ def dive_info_html(info: DiveInfo) -> str:
 # PRIVATE
 
 
-_UDDF_ROOT = '/Users/leaf/working/dives/'
+_UDDF_ROOT = '/Users/leaf/working/diving/logs/'
 _XML_NS = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
 
 
