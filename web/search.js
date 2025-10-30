@@ -221,3 +221,8 @@ function randomSearchPlaceholder() {
 }
 
 randomSearchPlaceholder();
+
+// Export for testing (CommonJS)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { expandWords, shortenName, search_inner, pageToUrl, toTitleCase };
+}

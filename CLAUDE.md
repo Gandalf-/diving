@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Unit tests only: `python3 -m unittest`
 - Single test: `python3 -m unittest test.test_module`
 - Integration tests: `bash test/integration.sh`
+- JavaScript tests: `make jstest` or `jasmine --config=.jasmine.mjs`
 - Type checking: `mypy .`
 - Linting: `ruff check --fix .`
 - Formatting: `ruff format *.py */*.py`
@@ -23,6 +24,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Detective game: `web/game.js` → `detective/game.js` (versioned)
 - Changes to `web/*.js` require running `make local` to regenerate output
 - Integration test outputs to `~/working/tmp/diving` but doesn't test JavaScript functionality
+- JavaScript unit tests: Uses Jasmine to test pure functions in `web/*.js` files
+  - Test files: `web/search.spec.js`, `web/game.spec.js`
+  - Run with: `make jstest` (included in `make test`)
+  - Pure functions are exported via CommonJS for testing while maintaining browser compatibility
 
 ## Architecture Overview
 
@@ -60,6 +65,7 @@ This is a static site generator for a scuba diving photography website. The code
 Most operations require `apocrypha-server` to be running. The server is auto-started by `util/macos.sh` and `test/integration.sh` scripts. Direct usage: `apocrypha-server --headless --database data/db.json`
 
 ## Code Style Guidelines
+- Code should be clear, concise, and obvious; avoid extraneous comments
 - Single quotes for strings: `'example'`
 - Maximum line length: 100 characters
 - Type annotations required for all functions

@@ -46,11 +46,14 @@ format:
 	ruff format *.py */*.py
 
 
-.PHONY: test unittest inttest
-test: unittest inttest
+.PHONY: test unittest inttest jstest
+test: unittest jstest inttest
 
 unittest:
 	python3 -m unittest
+
+jstest:
+	jasmine --config=.jasmine.mjs
 
 inttest:
 	bash test/integration.sh

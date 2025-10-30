@@ -467,3 +467,8 @@ function shuffle(array) {
   }
   return result;
 }
+
+// Export for testing (CommonJS)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { random, shuffle, find_similar, choose_correct };
+}
