@@ -51,7 +51,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
     """build the sub page for this dive"""
     when, title = dive.split(' ', 1)
 
-    while title[0].isdigit() or title[0] == ' ':
+    while title and (title[0].isdigit() or title[0] == ' '):
         title = title[1:]
 
     sites_link = locations.sites_link(when, title)

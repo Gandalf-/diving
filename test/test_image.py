@@ -147,3 +147,15 @@ class TestImage(unittest.TestCase):
                     expected,
                     f'Failed for {label} after expand_names',
                 )
+
+    def test_depth_at_beyond_range(self) -> None:
+        """_depth_at should handle position beyond all depth measurements"""
+        depths = [(0.0, 0), (0.5, 30), (0.8, 50)]
+
+        # Position beyond all measurements should return last depth (50)
+        result = image._depth_at(depths, 1.0)
+        self.assertEqual(result, 50)
+
+        # Also test with position slightly beyond
+        result = image._depth_at(depths, 0.95)
+        self.assertEqual(result, 50)

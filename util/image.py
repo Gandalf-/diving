@@ -196,4 +196,5 @@ def _depth_at(depths: List[Tuple[float, int]], position: float) -> int:
     for index, depth in depths:
         if index >= position:
             return depth
-    assert False
+    # Position is beyond all measurements, return the last depth
+    return depths[-1][1]
