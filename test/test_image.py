@@ -9,6 +9,11 @@ class TestImage(unittest.TestCase):
     def setUp(self) -> None:
         database.use_test_database()
 
+    def test_egg_reorder(self) -> None:
+        """reinterpret fish eggs as eggs fish"""
+        img = image.Image('001 - Fish Eggs.jpg', '2020-01-01 Rockaway Beach')
+        self.assertEqual(img.name, 'Eggs Fish')
+
     def test_categorize(self) -> None:
         """subjects are recategorized, but that needs to be undone for some
         presentations
@@ -28,8 +33,7 @@ class TestImage(unittest.TestCase):
     def test_unqualify(self) -> None:
         """remove qualifiers"""
         samples = [
-            ('juvenile red octopus egg', 'red octopus'),
-            ('dead male kelp greenling', 'kelp greenling'),
+            ('adult male kelp greenling', 'kelp greenling'),
             ('giant pacific octopus', 'giant pacific octopus'),
         ]
         for before, after in samples:
@@ -91,11 +95,12 @@ class TestImage(unittest.TestCase):
         """it works"""
         samples = [
             ('001 - Clams.jpg', 'clam'),
-            ('001 - Juvenile Decorator Crab Eggs.jpg', 'decorator crab'),
+            ('001 - Juvenile Decorator Crab.jpg', 'decorator crab'),
             ('001 - Green Algae.jpg', 'green algae'),
-            ('001 - Octopus Egg.jpg', 'octopus'),
+            ('001 - Octopus Eggs.jpg', 'eggs octopus'),
             ('001 - Various Grass.jpg', 'grass'),
             ('001 - Painted Chitons.jpg', 'painted chiton'),
+            ('001 - Kelp Greenling Eggs.jpg', 'eggs kelp greenling'),
         ]
         for before, after in samples:
             picture = image.Image(before, '2020-01-01 Rockaway Beach')

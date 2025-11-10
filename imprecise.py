@@ -94,6 +94,8 @@ def get_imprecise_images() -> List[Image]:
 
     for i in named_images:
         if split(i.simplified()) in imprecise_names:
+            if ' egg' in i.name:
+                continue
             imprecise_images.append(i)
 
     return imprecise_images

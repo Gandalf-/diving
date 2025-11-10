@@ -244,18 +244,16 @@ splits:
   - worm
 
 qualifiers:
-  - cleaning
-  - dead
-  - dying
-  - elderly
-  - female
-  - fighting
+  # lifecycle
+  - adult
   - gravid
-  - husk of
   - juvenile
-  - male
   - mating
-  - molted
+  - male
+  - female
+  # state
+  - cleaning
+  - fighting
   - rebreather
   - school of
   - sleeping

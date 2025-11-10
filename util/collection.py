@@ -10,7 +10,7 @@ from typing import Dict, Iterable, Iterator, List, Set, Union, cast
 
 from util import static
 from util.common import flatten, tree_size
-from util.image import Image, split
+from util.image import Image, reorder_eggs, split
 from util.metrics import metrics
 
 ImageTree = dict[str, Union[List[Image], 'ImageTree']]
@@ -95,8 +95,8 @@ def expand_names(images: List[Image]) -> Iterator[Image]:
             left, right = image.name.split(part)
             lnew = Image(image.label, image.directory)
             rnew = Image(image.label, image.directory)
-            lnew.name = left
-            rnew.name = right
+            lnew.name = reorder_eggs(left)
+            rnew.name = reorder_eggs(right)
             yield lnew
             yield rnew
             break
@@ -298,5 +298,13 @@ def _data_to_various(tree: ImageTree) -> ImageTree:
 
         else:
             tree[key] = _data_to_various(cast(ImageTree, value))
+
+    children = set(tree.keys())
+    if 'various' in children:
+        children -= {'various', 'gravid', 'juvenile', 'eggs'}
+        if not children:
+            metrics.counter('image groups detected as adults')
+            adults = tree.pop('various')
+            tree['adult'] = adults
 
     return tree

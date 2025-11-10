@@ -50,7 +50,7 @@ def _cleaner(pages: List[str]) -> Iterable[str]:
         assert page.endswith('.html')
         page = os.path.basename(page)
 
-        prefixes = ('index', 'various', 'juvenile')
+        prefixes = ('index', 'various', 'adult', 'juvenile')
         if any(page.startswith(prefix) for prefix in prefixes):
             continue
 

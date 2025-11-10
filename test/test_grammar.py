@@ -4,9 +4,18 @@ from util import grammar
 
 
 class TestGrammar(unittest.TestCase):
+    def test_singular(self) -> None:
+        pairs = [
+            ('Kelp Greenling', 'kelp greenling'),
+            ('Kelp Greenlings', 'kelp greenling'),
+        ]
+        for plural, singular in pairs:
+            self.assertEqual(grammar.singular(plural), singular)
+
     def test_pluralize(self) -> None:
         pairs = [
             ('Algae', 'Algae'),
+            ('Kelp Greenling', 'Kelp Greenlings'),
             ('Algae Eelgrass', 'Algae Eelgrass'),
             ('Red Rock Crab', 'Red Rock Crabs'),
             ('Galapagos Octopus', 'Galapagos Octopus'),

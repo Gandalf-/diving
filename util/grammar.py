@@ -21,6 +21,9 @@ def singular(noun: str) -> str:
     if noun.endswith('alga'):
         noun += 'e'
 
+    if noun.endswith('greenlin'):
+        noun += 'g'
+
     return noun
 
 

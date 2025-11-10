@@ -117,7 +117,7 @@ class TestTaxonomy(unittest.TestCase):
         samples = [
             (['copper', 'rock', 'fish'], 'Sebastes caurinus'),
             (['fish'], 'Actinopterygii sp.'),
-            (['fish', 'eggs'], 'Actinopterygii sp.'),
+            (['eggs', 'fish'], 'Actinopterygii sp.'),
             (['juvenile yellow eye', 'rock', 'fish'], 'Sebastes ruberrimus'),
             (['noble', 'sea lemon', 'nudibranch'], 'Peltodoris nobilis'),
             (['brain', 'coral'], 'Scleractinia Mussidae'),

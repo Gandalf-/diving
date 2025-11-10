@@ -205,6 +205,7 @@ def _find_misspellings(names: Set[str]) -> Iterable[str]:
         'clathria',
         'mauve spiky soft coral',
         'magenta spiky soft coral',
+        'eggs sea lemon',
         'fan coral',
     )
 

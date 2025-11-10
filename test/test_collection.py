@@ -1,5 +1,6 @@
 import os
 import unittest
+from typing import Any, Dict, cast
 
 from util import collection, database, image, static
 
@@ -130,9 +131,6 @@ class TestCollection(unittest.TestCase):
         self.assertIn('brain', coral_node)
         self.assertIn('various', coral_node)
 
-        # Verify data is in both (need to cast to dict for type checker)
-        from typing import Any, Dict, cast
-
         coral_dict = cast(Dict[str, Any], coral_node)
         self.assertIn('data', coral_dict['brain'])
         self.assertIn('data', coral_dict['various'])
@@ -164,6 +162,28 @@ class TestCollection(unittest.TestCase):
         # Should NOT have been unbundled to separate top-level keys
         self.assertNotIn('mating mottled star', tree)
         self.assertNotIn('juvenile mottled star', tree)
+
+    def test_various_to_adult(self) -> None:
+        """if the other sibling categories to 'various' are all life cycle, then change various to
+        adult"""
+        # Create enough images to avoid pruning
+        images = [
+            image.Image('001 - Juvenile Rockfish.jpg', '2024-01-01 Test'),
+            image.Image('002 - Juvenile Rockfish.jpg', '2024-01-01 Test'),
+            image.Image('003 - Juvenile Rockfish.jpg', '2024-01-01 Test'),
+            image.Image('004 - Rockfish.jpg', '2024-01-01 Test'),
+            image.Image('005 - Rockfish.jpg', '2024-01-01 Test'),
+            image.Image('006 - Rockfish.jpg', '2024-01-01 Test'),
+        ]
+
+        tree = collection._make_tree(images)
+        tree = collection.pipeline(tree)
+
+        self.assertIn('rock fish', tree)
+        rockfish = tree['rock fish']
+
+        self.assertIn('juvenile', rockfish)
+        self.assertIn('adult', rockfish)
 
 
 if __name__ == '__main__':

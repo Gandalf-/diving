@@ -52,12 +52,6 @@ def unqualify(name: str) -> str:
         if name.startswith(qualifier):
             name = name[len(qualifier) + 1 :]
 
-    if name.endswith(' egg'):
-        name, _ = name.split(' egg')
-
-    if name.endswith(' eggs'):
-        name, _ = name.split(' eggs')
-
     return name
 
 
@@ -81,6 +75,13 @@ def unsplit(name: str) -> str:
     return name
 
 
+def reorder_eggs(name: str) -> str:
+    if name.endswith(' Eggs'):
+        name = name.rstrip(' Eggs')
+        name = f'Eggs {name}'
+    return name
+
+
 class Image:
     """container for a diving picture"""
 
@@ -94,7 +95,7 @@ class Image:
             number = label
             name = ''
 
-        self.name = name
+        self.name = reorder_eggs(name)
         self.number = number
         self.directory = directory
         self.position = position
