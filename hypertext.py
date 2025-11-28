@@ -35,20 +35,6 @@ scripts = (
     <script src="/jquery-3.6.0.min.js" defer></script>
     <script src="/jquery.fancybox.min.js" defer></script>
     <script>
-    function flip(elem) {
-        const label = 'is-flipped';
-        if (elem.classList.contains(label)) {
-            elem.classList.remove(label);
-        } else {
-            elem.classList.add(label);
-            setTimeout(() => {
-                if (elem.classList.contains(label)) {
-                    elem.classList.remove(label);
-                }
-            }, 7000);
-        }
-    }
-
     // Cross-page prefetch tracking using sessionStorage
     const STORAGE_KEY = 'diving_prefetched_urls';
     const prefetchedUrls = new Set(JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]'));
@@ -91,54 +77,11 @@ scripts = (
             };
         }
 
-        // Right-click to flip card (desktop)
-        document.addEventListener('contextmenu', function(e) {
-            const card = e.target.closest('.card');
-            if (card) {
-                e.preventDefault();
-                flip(card);
-            }
-        });
-
-        // Long-press to flip card (mobile)
-        let longPressTimer = null;
-        let touchStartPos = null;
-        const LONG_PRESS_MS = 500;
-        const SCROLL_THRESHOLD = 10;
-
-        document.addEventListener('touchstart', function(e) {
-            const card = e.target.closest('.card');
-            if (!card) return;
-            const touch = e.touches[0];
-            touchStartPos = { x: touch.clientX, y: touch.clientY };
-            longPressTimer = setTimeout(() => flip(card), LONG_PRESS_MS);
-        }, { passive: true });
-
-        document.addEventListener('touchmove', function(e) {
-            if (!longPressTimer || !touchStartPos) return;
-            const touch = e.touches[0];
-            const dx = Math.abs(touch.clientX - touchStartPos.x);
-            const dy = Math.abs(touch.clientY - touchStartPos.y);
-            if (dx > SCROLL_THRESHOLD || dy > SCROLL_THRESHOLD) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }
-        }, { passive: true });
-
-        document.addEventListener('touchend', function() {
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }
-        });
-
-        // Close button handler
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.close-card')) {
-                const card = e.target.closest('.card');
-                if (card) flip(card);
-            }
-        });
+        // Autofocus search on desktop only (avoid keyboard popup on mobile)
+        const searchBar = document.getElementById('search_bar');
+        if (searchBar && window.innerWidth > 768) {
+            searchBar.focus();
+        }
     });
     </script>
 """
@@ -267,30 +210,6 @@ def lineage_to_link(lineage: List[str], side: Side, key: Optional[str] = None) -
     return sanitize_link(name)
 
 
-def image_to_name_html(image: Image, where: Where) -> str:
-    """create the html gallery link, entry, or nothing for this image"""
-    if where in (Where.Gallery, Where.Taxonomy):
-        return ''
-
-    name_url = _image_to_gallery_link(image)
-    if name_url:
-        name_html = f'<a class="top elem gallery" href="{name_url}">{image.name}</a>'
-    else:
-        metrics.counter('images without gallery link')
-        name_html = f'<p class="top elem nolink">{image.name}</p>'
-
-    return name_html
-
-
-def image_to_site_html(image: Image, where: Where) -> str:
-    """create the html site link, entry, or nothing for this image"""
-    if where == Where.Sites:
-        return ''
-
-    site_url = _image_to_sites_link(image)
-    return f'<a class="top elem sites" href="{site_url}">{image.site()}</a>'
-
-
 def html_direct_image(image: Image, where: Where, lazy: bool) -> str:
     if image.is_image:
         return _direct_image_html(image, where, lazy)
@@ -304,80 +223,43 @@ def html_direct_image(image: Image, where: Where, lazy: bool) -> str:
 def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
     assert image.is_image
     metrics.counter('html direct images')
-    name_html = image_to_name_html(image, where)
-    site_html = image_to_site_html(image, where)
-    depth_html = _image_to_depth_html(image)
 
     lazy_load = 'loading="lazy"' if lazy else ''
     fullsize = image.fullsize()
     thumbnail = image.thumbnail()
-
-    # Generate HTML caption with clickable links, escape for attribute
     caption = html_module.escape(_caption_html(image, where), quote=True)
 
     return f"""
-    <div class="card">
-        <div class="card_face card_face-front zoom-wrapper">
-            <a data-fancybox="gallery" data-caption="{caption}" href="{fullsize}">
-                <img class="zoom" height=225 width=300 {lazy_load} alt="{image.name}" src="{thumbnail}">
-            </a>
-        </div>
-        <div class="card_face card_face-back">
-            {name_html}
-            {site_html}
-            {depth_html}
-            <h3 class="top elem close-card">Close</h3>
-        </div>
-    </div>
+    <a class="thumb" data-fancybox="gallery" data-caption="{caption}" href="{fullsize}">
+        <img class="zoom" height=225 width=300 {lazy_load} alt="{image.name}" src="{thumbnail}">
+    </a>
     """
 
 
 def _direct_video_html(image: Image, where: Where) -> str:
     assert image.is_video
     metrics.counter('html direct videos')
-    name_html = image_to_name_html(image, where)
-    site_html = image_to_site_html(image, where)
-    depth_html = _image_to_depth_html(image)
 
     fullsize = image.fullsize()
     thumbnail = image.thumbnail()
+    caption = html_module.escape(_caption_html(image, where), quote=True)
 
     allowed = string.ascii_letters + string.digits
     unique = 'video_' + ''.join(c for c in image.identifier() if c in allowed)
 
     # disableRemotePlayback is to stop Android from suggesting a cast
     # playsinline is get iOS to play the video at all
-    # Safari always chooses the first element regardless of support with autoplay
 
     return f"""
-    <div class="card">
-        <div class="card_face card_face-front">
-            <a class="video-trigger" data-fancybox href="#{unique}">
-                <video
-                  class="clip"
-                  height=225 width=300
-                  disableRemotePlayback preload playsinline muted loop
-                  >
-                    <source src="{thumbnail}" type="video/mp4">
-                    Your browser does not support the HTML5 video tag.
-                </video>
-            </a>
-        </div>
-        <div class="card_face card_face-back">
-            {name_html}
-            {site_html}
-            {depth_html}
-            <h3 class="top elem close-card">Close</h3>
-
-            <video
-              controls muted preload="none"
-              id="{unique}" style="display:none;"
-              >
-                <source src="{fullsize}" type="video/mp4">
-                Your browser does not support the HTML5 video tag.
-            </video>
-        </div>
-    </div>
+    <a class="thumb" data-fancybox="gallery" data-caption="{caption}" href="#{unique}">
+        <video class="clip" height=225 width=300
+          disableRemotePlayback preload playsinline muted loop>
+            <source src="{thumbnail}" type="video/mp4">
+        </video>
+    </a>
+    <video controls muted preload="none" id="{unique}" style="display:none;">
+        <source src="{fullsize}" type="video/mp4">
+    </video>
     """
 
 
@@ -400,19 +282,6 @@ def _image_to_sites_link(image: Image) -> str:
     """get the /sites/ link"""
     when, where = image.location().split(' ', 1)
     return locations.sites_link(when, where)
-
-
-def _image_to_depth_html(image: Image) -> str:
-    """Generate depth info HTML for card back."""
-    depth = image.approximate_depth()
-    if not depth:
-        return ''
-    low, high = depth
-    if high - low < 10:
-        depth_str = f"~{int(statistics.mean(depth))}'"
-    else:
-        depth_str = f"{low}' ~ {high}'"
-    return f'<p class="top elem depth">{depth_str}</p>'
 
 
 def _caption_html(image: Image, where: Where) -> str:
@@ -745,7 +614,7 @@ class TopTitle(Title):
                 <button type="submit">Random</button>
             </form>
             <form class="search_text" autocomplete="off" action="javascript:;" onsubmit="searcher()">
-                <input type="text" id="search_bar" placeholder="" autofocus>
+                <input type="text" id="search_bar" placeholder="">
                 <button type="submit">Search</button>
             </form>
         </div>

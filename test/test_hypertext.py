@@ -70,18 +70,6 @@ class TestHypertext(unittest.TestCase):
             expect = f'Explore high quality scuba diving pictures of {description}.'
             self.assertEqual(hypertext.description(name, Where.Taxonomy), expect)
 
-    def test_image_to_name_html(self):
-        fish = image.Image('001 - Rockfish.jpg', '2021-11-05 10 Rockaway Beach')
-        html = hypertext.image_to_name_html(fish, Where.Sites)
-        self.assertIn('href="/gallery/rock-fish"', html)
-        self.assertIn('Rockfish', html)
-
-    def test_image_to_name_html_pair(self):
-        fish = image.Image('001 - Rockfish and Coral.jpg', '2021-11-05 10 Rockaway Beach')
-        html = hypertext.image_to_name_html(fish, Where.Sites)
-        self.assertIn('href="/gallery/rock-fish"', html)
-        self.assertIn('Rockfish', html)
-
     def test_lineage_to_link(self):
         """converting lineage to links between sites"""
         samples = [

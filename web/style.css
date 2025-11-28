@@ -342,21 +342,6 @@ div.skip {
   overflow: hidden;
 }
 
-/* card flip for images */
-.card {
-  width: 100%;
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
-  cursor: pointer;
-  position: relative;
-  max-width: 350px;
-  padding-top: 75%;
-}
-
-.card img {
-  height: 100%;
-}
-
 .image img {
   /* Need space for the label */
   height: 86%;
@@ -365,48 +350,6 @@ div.skip {
 #options .image img {
   /* but not on detective */
   height: 100%;
-}
-
-.card.is-flipped {
-  transform: rotateY(180deg);
-}
-
-.card_face {
-  top: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  color: white;
-  text-align: center;
-  font-weight: bold;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-
-  -webkit-transform: translateZ(1px);
-  transform: translateZ(1px);
-}
-
-.card_face-back {
-  background: black;
-  transform: rotateY(180deg) translateZ(1px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.card_face-back a {
-  color: white;
-}
-
-.elem {
-  background: black;
-  flex: 1;
-  border-radius: 1em;
-  width: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0.3em;
 }
 
 .pad-down {
@@ -485,18 +428,24 @@ div.skip {
   }
 }
 
-/* Front face anchor wrapper for Fancybox */
-.card_face-front>a {
+/* Thumbnail container - replaces card sizing */
+.thumb {
   display: block;
-  width: 100%;
-  height: 100%;
+  max-width: 350px;
+  position: relative;
+  padding-top: 75%;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
-/* Video trigger styling */
-.video-trigger {
-  display: block;
+.thumb img,
+.thumb video {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 /* Fancybox caption - larger text, better spacing, prevent clipping */
@@ -558,10 +507,10 @@ div.skip {
   border: 1px solid #666;
 }
 
-/* Depth styling */
+/* Depth styling - grey since not clickable */
 .fancybox-caption .caption-depth {
-  color: #87CEEB;
-  border: 1px solid #4682B4;
+  color: #ccc;
+  border: 1px solid #666;
 }
 
 /* Mobile: stack items vertically */
@@ -573,10 +522,14 @@ div.skip {
     margin: 0.3em auto;
     max-width: 90%;
   }
-}
 
-/* Depth info on card back */
-.depth {
-  color: #ccc;
-  font-size: 0.9em;
+  /* Make video content full-width on mobile (override fancybox inline styles) */
+  .fancybox-slide--video .fancybox-content {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .fancybox-slide {
+    padding: 0 !important;
+  }
 }
