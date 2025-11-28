@@ -5,6 +5,7 @@ html generation
 """
 
 import enum
+import html as html_module
 import statistics
 import string
 from typing import Any, Dict, List, Optional, Tuple, Type
@@ -82,6 +83,62 @@ scripts = (
 
             console.log(`Prefetching ${links.length} pages (${prefetchedUrls.size} total tracked)`);
         }
+
+        // Fancybox: enable HTML in captions
+        if (typeof $.fancybox !== 'undefined') {
+            $.fancybox.defaults.caption = function(instance, item) {
+                return item.opts.$orig ? item.opts.$orig.attr('data-caption') : '';
+            };
+        }
+
+        // Right-click to flip card (desktop)
+        document.addEventListener('contextmenu', function(e) {
+            const card = e.target.closest('.card');
+            if (card) {
+                e.preventDefault();
+                flip(card);
+            }
+        });
+
+        // Long-press to flip card (mobile)
+        let longPressTimer = null;
+        let touchStartPos = null;
+        const LONG_PRESS_MS = 500;
+        const SCROLL_THRESHOLD = 10;
+
+        document.addEventListener('touchstart', function(e) {
+            const card = e.target.closest('.card');
+            if (!card) return;
+            const touch = e.touches[0];
+            touchStartPos = { x: touch.clientX, y: touch.clientY };
+            longPressTimer = setTimeout(() => flip(card), LONG_PRESS_MS);
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function(e) {
+            if (!longPressTimer || !touchStartPos) return;
+            const touch = e.touches[0];
+            const dx = Math.abs(touch.clientX - touchStartPos.x);
+            const dy = Math.abs(touch.clientY - touchStartPos.y);
+            if (dx > SCROLL_THRESHOLD || dy > SCROLL_THRESHOLD) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', function() {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        });
+
+        // Close button handler
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.close-card')) {
+                const card = e.target.closest('.card');
+                if (card) flip(card);
+            }
+        });
     });
     </script>
 """
@@ -249,36 +306,27 @@ def _direct_image_html(image: Image, where: Where, lazy: bool) -> str:
     metrics.counter('html direct images')
     name_html = image_to_name_html(image, where)
     site_html = image_to_site_html(image, where)
+    depth_html = _image_to_depth_html(image)
 
     lazy_load = 'loading="lazy"' if lazy else ''
-    location = image.location()
     fullsize = image.fullsize()
     thumbnail = image.thumbnail()
-    caption = f'{image.name}, {location}'
 
-    depth = image.approximate_depth()
-
-    if depth:
-        low, high = depth
-        if high - low < 10:
-            average = int(statistics.mean(depth))
-            extra = f"~{average}'"
-        else:
-            extra = f"{low}' ~ {high}'"
-        caption += f', {extra}'
+    # Generate HTML caption with clickable links, escape for attribute
+    caption = html_module.escape(_caption_html(image, where), quote=True)
 
     return f"""
-    <div class="card" onclick="flip(this);">
+    <div class="card">
         <div class="card_face card_face-front zoom-wrapper">
-            <img class="zoom" height=225 width=300 {lazy_load} alt="{image.name}" src="{thumbnail}">
+            <a data-fancybox="gallery" data-caption="{caption}" href="{fullsize}">
+                <img class="zoom" height=225 width=300 {lazy_load} alt="{image.name}" src="{thumbnail}">
+            </a>
         </div>
         <div class="card_face card_face-back">
             {name_html}
             {site_html}
-            <a class="top elem timeline" data-fancybox="gallery" data-caption="{caption}" href="{fullsize}">
-            <h3>Zoom</h3>
-            </a>
-            <h3 class="top elem">Close</h3>
+            {depth_html}
+            <h3 class="top elem close-card">Close</h3>
         </div>
     </div>
     """
@@ -289,6 +337,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
     metrics.counter('html direct videos')
     name_html = image_to_name_html(image, where)
     site_html = image_to_site_html(image, where)
+    depth_html = _image_to_depth_html(image)
 
     fullsize = image.fullsize()
     thumbnail = image.thumbnail()
@@ -301,24 +350,24 @@ def _direct_video_html(image: Image, where: Where) -> str:
     # Safari always chooses the first element regardless of support with autoplay
 
     return f"""
-    <div class="card" onclick="flip(this);">
+    <div class="card">
         <div class="card_face card_face-front">
-            <video
-              class="clip"
-              height=225 width=300
-              disableRemotePlayback preload playsinline muted loop
-              >
-                <source src="{thumbnail}" type="video/mp4">
-                Your browser does not support the HTML5 video tag.
-            </video>
+            <a class="video-trigger" data-fancybox href="#{unique}">
+                <video
+                  class="clip"
+                  height=225 width=300
+                  disableRemotePlayback preload playsinline muted loop
+                  >
+                    <source src="{thumbnail}" type="video/mp4">
+                    Your browser does not support the HTML5 video tag.
+                </video>
+            </a>
         </div>
         <div class="card_face card_face-back">
             {name_html}
             {site_html}
-            <a class="top elem timeline" data-fancybox href="#{unique}">
-            Full Video
-            </a>
-            <p class="top elem">Close</p>
+            {depth_html}
+            <h3 class="top elem close-card">Close</h3>
 
             <video
               controls muted preload="none"
@@ -351,6 +400,54 @@ def _image_to_sites_link(image: Image) -> str:
     """get the /sites/ link"""
     when, where = image.location().split(' ', 1)
     return locations.sites_link(when, where)
+
+
+def _image_to_depth_html(image: Image) -> str:
+    """Generate depth info HTML for card back."""
+    depth = image.approximate_depth()
+    if not depth:
+        return ''
+    low, high = depth
+    if high - low < 10:
+        depth_str = f"~{int(statistics.mean(depth))}'"
+    else:
+        depth_str = f"{low}' ~ {high}'"
+    return f'<p class="top elem depth">{depth_str}</p>'
+
+
+def _caption_html(image: Image, where: Where) -> str:
+    """Generate HTML caption for Fancybox with clickable links."""
+    parts = []
+
+    # Name - always show as gallery link (green) if available
+    gallery_url = _image_to_gallery_link(image)
+    if gallery_url:
+        escaped_name = html_module.escape(image.name)
+        parts.append(f'<a class="caption-gallery" href="{gallery_url}">{escaped_name}</a>')
+    else:
+        parts.append(f'<span class="caption-name">{html_module.escape(image.name)}</span>')
+
+    # Location - always show as site link (orange)
+    site_url = _image_to_sites_link(image)
+    escaped_site = html_module.escape(image.site())
+    parts.append(f'<a class="caption-site" href="{site_url}">{escaped_site}</a>')
+
+    # Date - always show, use pretty_date (grey, non-clickable)
+    location = image.location()
+    date = location.split(' ', 1)[0]
+    parts.append(f'<span class="caption-date">{pretty_date(date)}</span>')
+
+    # Depth - show if available (grey, non-clickable)
+    depth = image.approximate_depth()
+    if depth:
+        low, high = depth
+        if high - low < 10:
+            depth_str = f"Depth: ~{int(statistics.mean(depth))}'"
+        else:
+            depth_str = f"Depth: {low}' ~ {high}'"
+        parts.append(f'<span class="caption-depth">{depth_str}</span>')
+
+    return ' '.join(parts)
 
 
 class Title:

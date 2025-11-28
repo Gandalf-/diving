@@ -83,7 +83,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
 
     path = os.path.join(static.image_root, dive)
     images = sorted(collection.delve(path), key=operator.attrgetter('number'))
-    html += '\n'.join(hypertext.html_direct_image(image, Where.Sites, True) for image in images)
+    html += '\n'.join(hypertext.html_direct_image(image, Where.Timeline, True) for image in images)
 
     html += """\
 </div>

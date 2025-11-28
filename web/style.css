@@ -484,3 +484,99 @@ div.skip {
     font-size: 16px;
   }
 }
+
+/* Front face anchor wrapper for Fancybox */
+.card_face-front>a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Video trigger styling */
+.video-trigger {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fancybox caption - larger text, better spacing, prevent clipping */
+.fancybox-caption {
+  font-size: 1.2em;
+  overflow: visible !important;
+  padding-top: 1em !important;
+  padding-bottom: 1em !important;
+}
+
+.fancybox-caption__body {
+  overflow: visible !important;
+  line-height: 2.5;
+}
+
+/* Caption items - black background, inline on desktop, block on mobile */
+.fancybox-caption a,
+.fancybox-caption span {
+  display: inline-block;
+  padding: 0.3em 0.6em;
+  margin: 0.2em;
+  border-radius: 0.3em;
+  background-color: black;
+}
+
+/* Gallery link styling */
+.fancybox-caption .caption-gallery {
+  color: #90EE90;
+  border: 1px solid green;
+  text-decoration: none;
+}
+
+.fancybox-caption .caption-gallery:hover {
+  background-color: rgba(0, 128, 0, 0.3);
+  text-decoration: underline;
+}
+
+/* Site link styling */
+.fancybox-caption .caption-site {
+  color: #FFA07A;
+  border: 1px solid #fe5a1d;
+  text-decoration: none;
+}
+
+.fancybox-caption .caption-site:hover {
+  background-color: rgba(254, 90, 29, 0.3);
+  text-decoration: underline;
+}
+
+/* Name (non-link) styling - grey since not clickable */
+.fancybox-caption .caption-name {
+  color: #ccc;
+  border: 1px solid #666;
+}
+
+/* Date styling */
+.fancybox-caption .caption-date {
+  color: #ccc;
+  border: 1px solid #666;
+}
+
+/* Depth styling */
+.fancybox-caption .caption-depth {
+  color: #87CEEB;
+  border: 1px solid #4682B4;
+}
+
+/* Mobile: stack items vertically */
+@media (max-width: 768px) {
+  .fancybox-caption a,
+  .fancybox-caption span {
+    display: block;
+    text-align: center;
+    margin: 0.3em auto;
+    max-width: 90%;
+  }
+}
+
+/* Depth info on card back */
+.depth {
+  color: #ccc;
+  font-size: 0.9em;
+}
