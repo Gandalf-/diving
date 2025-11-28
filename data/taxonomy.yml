@@ -721,9 +721,13 @@ Animalia:
             hepatus: blue tang
         Embiotocidae:
           Embiotoca:
-            lateralis: striped surfperch
+            lateralis: striped perch
+          Brachyistius:
+            frenatus: kelp perch
           Cymatogaster:
             aggregata: shiner perch
+          Rhacochilus:
+            vacca: pile perch
         Sciaenidae:
           Equetus:
             punctatus: spotted drum
@@ -1249,6 +1253,7 @@ Animalia:
     Cephalopoda:
       Myopsida:
         Loliginidae:
+          sp.: squid
           Sepioteuthis:
             sepioidea: caribbean reef squid
           Doryteuthis:
