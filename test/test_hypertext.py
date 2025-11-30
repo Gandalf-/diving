@@ -4,7 +4,7 @@ import unittest
 
 import hypertext
 from hypertext import Side, Where
-from util import image, taxonomy
+from util import taxonomy
 from util.taxonomy import MappingType
 
 

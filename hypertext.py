@@ -6,7 +6,6 @@ html generation
 
 import enum
 import html as html_module
-import statistics
 import string
 from typing import Any, Dict, List, Optional, Tuple, Type
 
@@ -305,16 +304,6 @@ def _caption_html(image: Image, where: Where) -> str:
     location = image.location()
     date = location.split(' ', 1)[0]
     parts.append(f'<span class="caption-date">{pretty_date(date)}</span>')
-
-    # Depth - show if available (grey, non-clickable)
-    depth = image.approximate_depth()
-    if depth:
-        low, high = depth
-        if high - low < 10:
-            depth_str = f"Depth: ~{int(statistics.mean(depth))}'"
-        else:
-            depth_str = f"Depth: {low}' ~ {high}'"
-        parts.append(f'<span class="caption-depth">{depth_str}</span>')
 
     return ' '.join(parts)
 
