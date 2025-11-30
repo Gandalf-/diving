@@ -1476,11 +1476,13 @@ Animalia:
       Sessilia:
         Balanoidea:
           Balanidae:
+            sp.: barnacle
             Balanus:
-              sp.: barnacle
               glandula: common acorn barnacle
               crenatus: crenate barnacle
               nubilus: giant acorn barnacle
+            Megabalanus:
+              coccopoma: galapagos barnacle
     Malacostraca:
       Stomatopoda:
         sp.: mantis shrimp
