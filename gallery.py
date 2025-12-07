@@ -9,6 +9,7 @@ import multiprocessing
 import statistics
 import sys
 import textwrap
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Tuple, cast
 
@@ -28,12 +29,165 @@ from util.common import (
     file_content_matches,
     is_date,
     pretty_date,
+    sanitize_link,
     strip_date,
     titlecase,
     tree_size,
 )
 from util.image import Image
 from util.metrics import metrics
+
+# Similar species configuration
+SIMILAR_SPECIES_COUNT = 4
+SIMILAR_SPECIES_THRESHOLD = 0.55  # Excludes generic categories like "fish" that share only phylum
+SIMILAR_SPECIES_MAX_DEPTH_DIFF = 2  # Only compare species with similar taxonomy depth
+
+# Type alias for precomputed similar species
+SimilarSpeciesMap = dict[str, List[Tuple[str, float]]]
+
+
+@dataclass
+class SimilarSpeciesContext:
+    """Context for similar species rendering (Gallery/Taxonomy only)."""
+
+    flat_tree: dict[str, List[Image]]
+    similar_map: SimilarSpeciesMap
+    scientific_for_links: dict[str, str]
+
+
+def _taxonomy_distance(a: str, b: str, tree: dict[str, str]) -> float:
+    """Taxonomy similarity score: higher means more similar.
+
+    Compares two species by their taxonomy tree paths.
+    Returns 0.0 (no match) to 1.0 (identical).
+    """
+    if a not in tree or b not in tree:
+        return 0.0
+
+    at = tree[a].split(' ')
+    bt = tree[b].split(' ')
+
+    total = 0
+    match = 0
+
+    for x, y in zip(at, bt):
+        total += 1
+        match += 1 if x == y else 0
+
+    return match / total if total > 0 else 0.0
+
+
+def build_similar_species_map(
+    all_names: set[str],
+    taxonomy_tree: dict[str, str],
+) -> SimilarSpeciesMap:
+    """Precompute similar species for all names at once."""
+    # Precompute taxonomy paths and depths for faster comparison
+    paths = {name: taxonomy_tree[name].split(' ') for name in all_names if name in taxonomy_tree}
+    depths = {name: len(path) for name, path in paths.items()}
+
+    def fast_distance(a_path: list[str], b_path: list[str]) -> float:
+        """Fast distance calculation with pre-split paths."""
+        match = sum(1 for x, y in zip(a_path, b_path) if x == y)
+        total = min(len(a_path), len(b_path))
+        return match / total if total > 0 else 0.0
+
+    result: SimilarSpeciesMap = {}
+    for name in all_names:
+        if name not in paths:
+            continue
+
+        name_path = paths[name]
+        name_depth = depths[name]
+
+        # Skip generic sp. entries - they shouldn't have similar species
+        if name_path[-1] == 'sp.':
+            continue
+
+        scores = []
+
+        for other in all_names:
+            if other == name or other not in paths:
+                continue
+
+            other_path = paths[other]
+
+            # Skip generic sp. entries as candidates
+            if other_path[-1] == 'sp.':
+                continue
+
+            # Quick depth check before distance calculation
+            other_depth = depths[other]
+            if abs(name_depth - other_depth) > SIMILAR_SPECIES_MAX_DEPTH_DIFF:
+                continue
+
+            score = fast_distance(name_path, other_path)
+            if score >= SIMILAR_SPECIES_THRESHOLD:
+                scores.append((other, score))
+
+        if scores:
+            # Sort by score DESC, then name ASC for deterministic tie-breaking
+            scores.sort(key=lambda x: (-x[1], x[0]))
+            top_scores = scores[:SIMILAR_SPECIES_COUNT]
+            result[name] = top_scores
+
+    return result
+
+
+def html_similar_species(
+    similar: List[Tuple[str, float]],
+    flat_tree: dict[str, List[Image]],
+    where: Where,
+    scientific: dict[str, str],
+) -> str:
+    """Generate HTML for similar species section."""
+    if not similar:
+        return ''
+
+    html = '<div class="similar-species">'
+    html += '<p class="similar-header"><b>Similar Species</b></p>'
+    html += '<div class="grid similar-grid">'
+
+    for other_name, _ in similar:
+        # Find images for this species
+        images = flat_tree.get(other_name)
+        if not images:
+            continue
+
+        # Get newest image as representative
+        images = sorted(images, key=lambda x: x.path(), reverse=True)
+        example = next((img for img in images if img.is_image), None)
+        if not example:
+            continue
+
+        # Build link and display name based on target (gallery vs taxonomy)
+        if where == Where.Taxonomy:
+            taxonomy_path = scientific.get(other_name, '')
+            if not taxonomy_path:
+                continue
+            link = f'/taxonomy/{taxonomy_path.replace(" ", "-")}'
+            parts = taxonomy_path.split()
+            if parts[-1].islower():
+                display_name = ' '.join(parts[-2:])  # "Oxycomanthus bennetti"
+            else:
+                display_name = f'{parts[-1]} sp.'  # "Comissa sp."
+        else:
+            link = f'/gallery/{sanitize_link(example.normalized())}'
+            display_name = titlecase(other_name)
+
+        html += f"""
+        <div class="image">
+          <a href="{link}">
+            <div class="zoom-wrapper">
+              <img class="zoom" height=150 width=200 alt="{other_name}" src="{example.thumbnail()}">
+            </div>
+            <h4 class="tight">{display_name}</h4>
+          </a>
+        </div>
+        """
+
+    html += '</div></div>'
+    return html
 
 
 def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] = None) -> Image:
@@ -49,7 +203,7 @@ def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] =
     results = (leaf for leaf in extract_leaves(tree) if leaf.is_image)
     assert results, (tree, lineage)
 
-    if where == where.Sites:
+    if where == Where.Sites:
         items = list(results)
         # Prefer single-subject images
         single_subject = [img for img in items if not img.has_multiple_subjects()]
@@ -93,42 +247,31 @@ def get_gallery_info(direct: List[Image]) -> str:
 def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
     """wikipedia information if available"""
     if where == Where.Taxonomy:
+        seen: set[str] = set()
         htmls = []
-        seen = set()
-
         for part in information.lineage_to_names(lineage):
             html, url = information.html(part)
-            if url in seen:
-                continue
-            seen.add(url)
-            htmls.append(html)
+            if url not in seen:
+                seen.add(url)
+                htmls.append(html)
         return '<br>'.join(htmls)
 
-    elif where == Where.Gallery and direct:
+    if where == Where.Gallery and direct:
         return get_gallery_info(direct)
 
-    else:
-        return ''
+    return ''
 
 
 def _key_to_subject(key: str, where: Where) -> str:
-    """helper!"""
     if where == Where.Gallery:
-        subject = taxonomy.is_scientific_name(key)
-        if not subject:
-            subject = titlecase(key)
-        else:
-            subject = f'<em>{subject}</em>'
+        scientific = taxonomy.is_scientific_name(key)
+        return f'<em>{scientific}</em>' if scientific else titlecase(key)
 
-    elif where == Where.Sites:
+    if where == Where.Sites:
         subject = strip_date(key)
-        if is_date(subject):
-            subject = pretty_date(subject)
+        return pretty_date(subject) if is_date(subject) else subject
 
-    else:
-        subject = taxonomy.simplify(key, shorten=True)
-
-    return subject
+    return taxonomy.simplify(key, shorten=True)
 
 
 def html_direct_examples(direct: List[Image], where: Where) -> str:
@@ -156,9 +299,11 @@ def html_tree(
     where: Where,
     scientific: taxonomy.NameMapping,
     lineage: Optional[List[str]] = None,
+    similar_ctx: Optional[SimilarSpeciesContext] = None,
 ) -> List[Tuple[str, str]]:
     """html version of display"""
     lineage = lineage or []
+    assert similar_ctx is None or where in (Where.Gallery, Where.Taxonomy)
     side = Side.Left if where == Where.Gallery else Side.Right
 
     # title
@@ -207,7 +352,15 @@ def html_tree(
         )
 
         value = cast(collection.ImageTree, value)
-        results.extend(html_tree(value, where, scientific, lineage=new_lineage))
+        results.extend(
+            html_tree(
+                value,
+                where,
+                scientific,
+                new_lineage,
+                similar_ctx,
+            )
+        )
 
     if has_subcategories:
         html += '</div>'
@@ -223,10 +376,22 @@ def html_tree(
 
     # additional info, like wikipedia and depth distribution
     info = get_info(where, lineage, direct)
+
+    # Similar species for gallery/taxonomy species pages (after info)
+    similar_html = ''
+    if direct and lineage and similar_ctx:
+        species_name = direct[0].simplified()
+        similar = similar_ctx.similar_map.get(species_name)
+        if similar:
+            similar_html = html_similar_species(
+                similar, similar_ctx.flat_tree, where, similar_ctx.scientific_for_links
+            )
+
     now = datetime.now()
 
     html += f"""
       {info}
+      {similar_html}
       </div>
       <footer>
         <p><a href="https://goto.anardil.net">goto.anardil.net</a></p>
@@ -248,16 +413,26 @@ def main() -> None:
         scientific = taxonomy.mapping()
         taxia = taxonomy.gallery_tree(tree)
 
+        # Precompute for similar species (gallery and taxonomy)
+        flat_tree = collection.single_level(tree)
+        all_species = set(flat_tree.keys())
+        similar_map = build_similar_species_map(all_species, scientific)
+        similar_ctx = SimilarSpeciesContext(
+            flat_tree=flat_tree,
+            similar_map=similar_map,
+            scientific_for_links=scientific,
+        )
+
     with Progress('building /gallery'):
-        name_htmls = html_tree(tree, Where.Gallery, scientific)
+        name_htmls = html_tree(tree, Where.Gallery, scientific, similar_ctx=similar_ctx)
 
     with Progress('building /sites'):
         sites = locations.sites()
         sites_htmls = html_tree(sites, Where.Sites, scientific)
 
     with Progress('building /taxonomy'):
-        scientific = {v: k for k, v in scientific.items()}
-        taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific)
+        scientific_reversed = {v: k for k, v in scientific.items()}
+        taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific_reversed, similar_ctx=similar_ctx)
 
     with Progress('building /timeline'):
         times_htmls = timeline.timeline()

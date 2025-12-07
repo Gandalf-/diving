@@ -533,3 +533,29 @@ div.skip {
     padding: 0 !important;
   }
 }
+
+/* Similar species section */
+.similar-species {
+  margin-top: 2em;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.similar-header {
+  color: white;
+  margin-bottom: 0.5em;
+  font-size: larger;
+}
+
+.similar-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
+}
+
+.similar-grid .image {
+  max-width: 200px;
+}
+
+.similar-grid .image img {
+  height: auto;
+}

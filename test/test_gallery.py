@@ -127,6 +127,94 @@ class TestGallery(unittest.TestCase):
         self.assertRegex(html, r'(?s)<h3.*Fan.*</h3>')
         self.assertRegex(html, r'(?s)<h3.*Rhizopsammia wellingtoni.*</h3>')
 
+    def test_taxonomy_distance(self):
+        """similarity score based on shared taxonomy path"""
+        tree = {
+            'painted dendro chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Dendrochiton flectens',
+            'mossy chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Mopalia muscosa',
+            'gumboot chiton': 'Animalia Mollusca Polyplacophora Chitonida Acanthochitonidae Cryptochiton stelleri',
+            'giant octopus': 'Animalia Mollusca Cephalopoda Octopoda Enteroctopodidae Enteroctopus dofleini',
+        }
+
+        # Same family (Mopaliidae) - high similarity
+        score = gallery._taxonomy_distance('painted dendro chiton', 'mossy chiton', tree)
+        self.assertGreater(score, 0.7)
+
+        # Same order (Chitonida) but different family
+        score = gallery._taxonomy_distance('painted dendro chiton', 'gumboot chiton', tree)
+        self.assertGreater(score, 0.5)
+        self.assertLess(score, 0.7)
+
+        # Same phylum (Mollusca) but different class
+        score = gallery._taxonomy_distance('painted dendro chiton', 'giant octopus', tree)
+        self.assertLess(score, 0.4)
+
+        # Missing entry returns 0
+        score = gallery._taxonomy_distance('unknown', 'mossy chiton', tree)
+        self.assertEqual(score, 0.0)
+
+    def test_build_similar_species_map_filters_sp(self):
+        """generic sp. entries should be filtered out"""
+        tree = {
+            'painted dendro chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Dendrochiton flectens',
+            'mossy chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Mopalia muscosa',
+            'chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae sp.',
+        }
+        all_names = set(tree.keys())
+
+        result = gallery.build_similar_species_map(all_names, tree)
+
+        # 'chiton' (sp.) should not be in results or appear as similar
+        self.assertNotIn('chiton', result)
+        for similar_list in result.values():
+            names = [name for name, _ in similar_list]
+            self.assertNotIn('chiton', names)
+
+    def test_build_similar_species_map_alphabetical(self):
+        """similar species should be sorted alphabetically"""
+        tree = {
+            'a fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus alpha',
+            'z fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus zeta',
+            'm fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus mu',
+            'b fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus beta',
+        }
+        all_names = set(tree.keys())
+
+        result = gallery.build_similar_species_map(all_names, tree)
+
+        # Each entry's similar list should be alphabetically sorted
+        for name, similar_list in result.items():
+            names = [n for n, _ in similar_list]
+            self.assertEqual(names, sorted(names), f'{name} similar list not sorted: {names}')
+
+    def test_build_similar_species_map_deterministic_with_ties(self):
+        """when more species tie than N, selection should be deterministic (alphabetical)"""
+        # 6 species all with identical taxonomy (same score) - only 4 should be selected
+        tree = {
+            'zebra fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus species',
+            'alpha fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus species',
+            'gamma fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus species',
+            'beta fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus species',
+            'delta fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus species',
+            'omega fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus species',
+        }
+        all_names = set(tree.keys())
+
+        # Run multiple times to ensure determinism
+        results = [gallery.build_similar_species_map(all_names, tree) for _ in range(5)]
+
+        # All runs should produce identical results
+        first = results[0]
+        for result in results[1:]:
+            self.assertEqual(first, result, 'Results differ between runs - not deterministic')
+
+        # Should select first 4 alphabetically: alpha, beta, delta, gamma (excluding self)
+        for name, similar_list in first.items():
+            names = [n for n, _ in similar_list]
+            # Should be first 4 alphabetically excluding self
+            expected = sorted([n for n in all_names if n != name])[: gallery.SIMILAR_SPECIES_COUNT]
+            self.assertEqual(names, expected, f'{name}: got {names}, expected {expected}')
+
 
 if __name__ == '__main__':
     unittest.main()
