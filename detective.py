@@ -13,6 +13,7 @@ from util.common import titlecase
 from util.image import Image, categorize, split, unqualify
 from util.metrics import metrics
 from util.resource import VersionedResource
+from util.similarity import similarity
 from util.static import source_root, stylesheet
 
 
@@ -84,26 +85,6 @@ def _write_data_js(images: List[Image], name: str) -> None:
         print(f'var {name}_thumbs =', ts, file=fd)
         print(f'var {name}_similarities =', ss, file=fd)
         print(f'var {name}_difficulties =', ds, file=fd)
-
-
-def _distance(a: str, b: str, tree: Optional[dict[str, str]] = None) -> float:
-    """similarity score, higher means more different
-
-    difflib.SequenceMatcher and jellyfish were all junk
-    """
-    tree = tree or taxonomy.mapping()
-
-    at = tree[a].split(' ')
-    bt = tree[b].split(' ')
-
-    total = 0
-    match = 0
-
-    for x, y in zip(at, bt):
-        total += 1
-        match += 1 if x == y else 0
-
-    return match / total
 
 
 def _difficulties(names: List[str]) -> DifficultyTable:
@@ -180,23 +161,22 @@ def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
 def _similarity_table(names: List[str]) -> SimiliarityTable:
     """how alike is every name pair"""
     tree = taxonomy.mapping()
-    similarity: SimiliarityTable = [[] for _ in names]
+    table: SimiliarityTable = [[] for _ in names]
 
     for i, name in enumerate(names):
         for j, other in enumerate(names):
             if i == j:
-                similarity[i].append(0)
+                table[i].append(0)
                 continue
 
             if j > i:
                 # should already be done
                 continue
 
-            d = _distance(name, other, tree)
-            d = int(d * 100)
-            similarity[i].append(d)
+            score = similarity(tree[name], tree[other])
+            table[i].append(int(score * 100))
 
-    return similarity
+    return table
 
 
 def _html_builder(css: str, game: str, data: str) -> str:

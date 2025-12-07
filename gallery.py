@@ -36,11 +36,11 @@ from util.common import (
 )
 from util.image import Image
 from util.metrics import metrics
+from util.similarity import similarity
 
 # Similar species configuration
 SIMILAR_SPECIES_COUNT = 4
-SIMILAR_SPECIES_THRESHOLD = 0.55  # Excludes generic categories like "fish" that share only phylum
-SIMILAR_SPECIES_MAX_DEPTH_DIFF = 2  # Only compare species with similar taxonomy depth
+SIMILAR_SPECIES_THRESHOLD = 0.75  # Excludes weaker order-level matches
 
 # Type alias for precomputed similar species
 SimilarSpeciesMap = dict[str, List[Tuple[str, float]]]
@@ -55,81 +55,38 @@ class SimilarSpeciesContext:
     scientific_for_links: dict[str, str]
 
 
-def _taxonomy_distance(a: str, b: str, tree: dict[str, str]) -> float:
-    """Taxonomy similarity score: higher means more similar.
-
-    Compares two species by their taxonomy tree paths.
-    Returns 0.0 (no match) to 1.0 (identical).
-    """
-    if a not in tree or b not in tree:
-        return 0.0
-
-    at = tree[a].split(' ')
-    bt = tree[b].split(' ')
-
-    total = 0
-    match = 0
-
-    for x, y in zip(at, bt):
-        total += 1
-        match += 1 if x == y else 0
-
-    return match / total if total > 0 else 0.0
-
-
 def build_similar_species_map(
     all_names: set[str],
     taxonomy_tree: dict[str, str],
 ) -> SimilarSpeciesMap:
     """Precompute similar species for all names at once."""
-    # Precompute taxonomy paths and depths for faster comparison
-    paths = {name: taxonomy_tree[name].split(' ') for name in all_names if name in taxonomy_tree}
-    depths = {name: len(path) for name, path in paths.items()}
+    # Filter to names with taxonomy
+    valid_names = {name for name in all_names if name in taxonomy_tree}
 
-    def fast_distance(a_path: list[str], b_path: list[str]) -> float:
-        """Fast distance calculation with pre-split paths."""
-        match = sum(1 for x, y in zip(a_path, b_path) if x == y)
-        total = min(len(a_path), len(b_path))
-        return match / total if total > 0 else 0.0
+    def is_generic(name: str) -> bool:
+        """Check if this is a generic sp. entry."""
+        return taxonomy_tree[name].endswith(' sp.')
 
     result: SimilarSpeciesMap = {}
-    for name in all_names:
-        if name not in paths:
+    for name in valid_names:
+        if is_generic(name):
             continue
 
-        name_path = paths[name]
-        name_depth = depths[name]
-
-        # Skip generic sp. entries - they shouldn't have similar species
-        if name_path[-1] == 'sp.':
-            continue
-
+        name_taxonomy = taxonomy_tree[name]
         scores = []
 
-        for other in all_names:
-            if other == name or other not in paths:
+        for other in valid_names:
+            if other == name or is_generic(other):
                 continue
 
-            other_path = paths[other]
-
-            # Skip generic sp. entries as candidates
-            if other_path[-1] == 'sp.':
-                continue
-
-            # Quick depth check before distance calculation
-            other_depth = depths[other]
-            if abs(name_depth - other_depth) > SIMILAR_SPECIES_MAX_DEPTH_DIFF:
-                continue
-
-            score = fast_distance(name_path, other_path)
+            score = similarity(name_taxonomy, taxonomy_tree[other])
             if score >= SIMILAR_SPECIES_THRESHOLD:
                 scores.append((other, score))
 
         if scores:
             # Sort by score DESC, then name ASC for deterministic tie-breaking
             scores.sort(key=lambda x: (-x[1], x[0]))
-            top_scores = scores[:SIMILAR_SPECIES_COUNT]
-            result[name] = top_scores
+            result[name] = scores[:SIMILAR_SPECIES_COUNT]
 
     return result
 

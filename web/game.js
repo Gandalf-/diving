@@ -9,8 +9,8 @@ var g_thumbs = [];
 var g_similarities = [];
 var g_difficulties = [];
 
-const g_lower_bound_table = [0, 15, 25, 40, 80];
-const g_upper_bound_table = [10, 25, 35, 40, 100];
+const g_lower_bound_table = [0, 30, 50, 70, 80];
+const g_upper_bound_table = [30, 50, 70, 80, 100];
 const g_count_table = [2, 2, 4, 6, 8];
 const g_sample_table = [2, 2, 2, 1, 1];
 

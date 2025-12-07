@@ -6,6 +6,7 @@ import gallery
 from hypertext import Where
 from util import collection, database, taxonomy
 from util.image import Image
+from util.similarity import similarity
 from util.taxonomy import MappingType
 
 
@@ -129,29 +130,25 @@ class TestGallery(unittest.TestCase):
 
     def test_taxonomy_distance(self):
         """similarity score based on shared taxonomy path"""
-        tree = {
-            'painted dendro chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Dendrochiton flectens',
-            'mossy chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Mopalia muscosa',
-            'gumboot chiton': 'Animalia Mollusca Polyplacophora Chitonida Acanthochitonidae Cryptochiton stelleri',
-            'giant octopus': 'Animalia Mollusca Cephalopoda Octopoda Enteroctopodidae Enteroctopus dofleini',
-        }
+        chiton = 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Dendrochiton flectens'
+        mossy = 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Mopalia muscosa'
+        gumboot = (
+            'Animalia Mollusca Polyplacophora Chitonida Acanthochitonidae Cryptochiton stelleri'
+        )
+        octopus = 'Animalia Mollusca Cephalopoda Octopoda Enteroctopodidae Enteroctopus dofleini'
 
         # Same family (Mopaliidae) - high similarity
-        score = gallery._taxonomy_distance('painted dendro chiton', 'mossy chiton', tree)
-        self.assertGreater(score, 0.7)
+        score = similarity(chiton, mossy)
+        self.assertGreater(score, 0.85)
 
         # Same order (Chitonida) but different family
-        score = gallery._taxonomy_distance('painted dendro chiton', 'gumboot chiton', tree)
-        self.assertGreater(score, 0.5)
-        self.assertLess(score, 0.7)
+        score = similarity(chiton, gumboot)
+        self.assertGreater(score, 0.75)
+        self.assertLess(score, 0.85)
 
         # Same phylum (Mollusca) but different class
-        score = gallery._taxonomy_distance('painted dendro chiton', 'giant octopus', tree)
-        self.assertLess(score, 0.4)
-
-        # Missing entry returns 0
-        score = gallery._taxonomy_distance('unknown', 'mossy chiton', tree)
-        self.assertEqual(score, 0.0)
+        score = similarity(chiton, octopus)
+        self.assertLess(score, 0.5)
 
     def test_build_similar_species_map_filters_sp(self):
         """generic sp. entries should be filtered out"""
