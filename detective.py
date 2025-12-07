@@ -6,7 +6,7 @@ identification game
 
 import os
 import shutil
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List, Tuple
 
 from util import collection, static, taxonomy
 from util.common import titlecase

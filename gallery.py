@@ -337,8 +337,10 @@ def html_tree(
     # Similar species for gallery/taxonomy species pages (after info)
     similar_html = ''
     if direct and lineage and similar_ctx:
-        species_name = direct[0].simplified()
-        similar = similar_ctx.similar_map.get(species_name)
+        # Find species name that exists in similar_map
+        name = direct[0].simplified()
+        similar = similar_ctx.similar_map.get(name)
+
         if similar:
             similar_html = html_similar_species(
                 similar, similar_ctx.flat_tree, where, similar_ctx.scientific_for_links
