@@ -301,7 +301,7 @@ def _data_to_various(tree: ImageTree) -> ImageTree:
 
     children = set(tree.keys())
     if 'various' in children:
-        children -= {'various', 'gravid', 'juvenile', 'eggs'}
+        children -= {'various', 'gravid', 'juvenile', 'eggs', 'mating'}
         if not children:
             metrics.counter('image groups detected as adults')
             adults = tree.pop('various')

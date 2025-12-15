@@ -98,6 +98,11 @@ p {
   margin-bottom: 0.5em;
 }
 
+.similar {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 .top {
   display: inline-block;
   border: 1px solid white;

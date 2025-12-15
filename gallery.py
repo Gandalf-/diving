@@ -138,7 +138,7 @@ def html_similar_species(
             <div class="zoom-wrapper">
               <img class="zoom" height=150 width=200 alt="{other_name}" src="{example.thumbnail()}">
             </div>
-            <h4>{display_name}</h4>
+            <h4 class="similar">{display_name}</h4>
           </a>
         </div>
         """
@@ -279,10 +279,13 @@ def html_tree(
             continue
 
         new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
-        size = tree_size(value)
         example = find_representative(value, where, new_lineage)
         assert example.is_image
         subject = _key_to_subject(key, where)
+
+        size = tree_size(value)
+        subcategories = sum(1 for k in value if k != 'data')
+        hint = f'{subcategories} · {size}' if subcategories else f'{size}'
 
         html += """
         <div class="image">
@@ -293,7 +296,7 @@ def html_tree(
             <h3 class="tight">
               <span> </span>
               <span>{subject}</span>
-              <span class="count">{size}</span>
+              <span class="count">{hint}</span>
             </h3>
         </a>
         </div>
@@ -305,7 +308,7 @@ def html_tree(
                 path=hypertext.lineage_to_link(lineage, side, key),
             ),
             thumbnail=example.thumbnail(),
-            size='{} · {}'.format(sum(1 for k in value if k != 'data') or '', size),
+            hint=hint,
         )
 
         value = cast(collection.ImageTree, value)

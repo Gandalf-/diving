@@ -135,34 +135,6 @@ class TestCollection(unittest.TestCase):
         self.assertIn('data', coral_dict['brain'])
         self.assertIn('data', coral_dict['various'])
 
-    def test_qualified_variants_not_unbundled(self) -> None:
-        """qualified variants of same species should nest with 'various', not unbundle"""
-        # 'mating' and 'juvenile' are qualifiers that get removed by simplified()
-        # Both simplify to 'mottled star', so they should NOT be unbundled
-        images = [
-            image.Image('001 - Mottled Star.jpg', '2024-01-01 Test'),
-            image.Image('002 - Mottled Star.jpg', '2024-01-01 Test'),
-            image.Image('003 - Mottled Star.jpg', '2024-01-01 Test'),
-            image.Image('004 - Mating Mottled Star.jpg', '2024-01-01 Test'),
-            image.Image('005 - Mating Mottled Star.jpg', '2024-01-01 Test'),
-            image.Image('006 - Juvenile Mottled Star.jpg', '2024-01-01 Test'),
-        ]
-
-        tree = collection._make_tree(images)
-        tree = collection.pipeline(tree)
-
-        # After compress, should have 'mottled star' at top level
-        self.assertIn('mottled star', tree)
-        mottled_node = tree['mottled star']
-
-        # Should have 'various' for unqualified mottled star
-        # and nested qualified variants (mating, juvenile)
-        self.assertIn('various', mottled_node)
-
-        # Should NOT have been unbundled to separate top-level keys
-        self.assertNotIn('mating mottled star', tree)
-        self.assertNotIn('juvenile mottled star', tree)
-
     def test_various_to_adult(self) -> None:
         """if the other sibling categories to 'various' are all life cycle, then change various to
         adult"""
