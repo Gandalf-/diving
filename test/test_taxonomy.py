@@ -124,7 +124,7 @@ class TestTaxonomy(unittest.TestCase):
             (['multicolor', 'dendronotid', 'nudibranch'], 'diversicolor'),
             (['six rayed', 'star'], 'hexactis'),
             (['mossy', 'chiton'], 'muscosa'),
-            (['pacific', 'stone', 'fish'], 'plumieri mystes'),
+            (['pacific', 'stone', 'fish'], 'Scorpaena mystes'),
             (['feather', 'star'], 'Echinodermata Crinoidea sp.'),
         ]
 

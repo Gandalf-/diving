@@ -250,7 +250,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
     # playsinline is get iOS to play the video at all
 
     return f"""
-    <a class="thumb" data-fancybox="gallery" data-caption="{caption}" href="#{unique}">
+    <a class="thumb" aria-label="{image.name} video" data-fancybox="gallery" data-caption="{caption}" href="#{unique}">
         <video class="clip" height=225 width=300
           disableRemotePlayback preload playsinline muted loop>
             <source src="{thumbnail}" type="video/mp4">

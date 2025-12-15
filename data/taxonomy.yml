@@ -589,6 +589,10 @@ Animalia:
             mydas: green sea turtle
     Actinopterygii:
       sp.: fish
+      Carangiformes:
+        Centropomoidei:
+          Sphyraenidae:
+            Sphyraena: barracuda
       Lophiiformes:
         Ogcocephalidae:
           Ogcocephalus:
@@ -746,6 +750,8 @@ Animalia:
             nigripinnis: blackfin grouper
             miniata: coral grouper
         Pomacentridae:
+          Abudefduf:
+            saxatilis: sergeant major
           Amphiprion:
             clarkii: yellowtail clownfish
             nigripes: maldives anemone fish
@@ -758,6 +764,7 @@ Animalia:
           Holacanthus:
             tricolor: rock beauty
             passer: king angel fish
+            ciliaris: queen angel fish
         Grammatidae:
           Gramma:
             royal: royal fairy basslet
@@ -836,8 +843,7 @@ Animalia:
           Synanceia:
             verrucosa: indian stonefish
           Scorpaena:
-            plumieri:
-              mystes: pacific stonefish
+            mystes: pacific stonefish
         Hemiramphidae:
           Hemiramphus: needlefish
         Hemitripteridae:
@@ -919,7 +925,8 @@ Animalia:
             Arothron:
               meleagris: guineafowl pufferfish
             Canthigaster:
-              valentini: blacksaddle toby fish
+              valentini: blacksaddle toby
+              jamestyleri: goldface toby
         Balistidae:
           sp.: triggerfish
           Melichthys:
@@ -1694,6 +1701,10 @@ Chromista:
   Chlorophyta:
     # sp.: green algae
     Ulvophyceae:
+      Cladophorales:
+        Valoniaceae:
+          Valonia:
+            ventricosa: sea pearl algae
       Ulvales:
         Ulvaceae:
           Ulva: sea lettuce
@@ -1705,9 +1716,13 @@ Chromista:
           Didymosphenia:
             geminata: rock snot diatom
     Phaeophyceae:
+      sp.: kelp
       Laminariales:
-        # sp.: kelp
         Laminariaceae:
+          Egregia:
+            menziesii: feather boa kelp
+          Macrocystis:
+            pyrifera: giant kelp
           Laminaria:
             setchellii: torn kelp
           Alariaceae:
