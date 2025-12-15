@@ -62,6 +62,7 @@ html_lint="$(
   } \
     | grep -v '.img. proprietary attribute .loading.' \
     | grep -v '.video. proprietary attribute .disableremoteplayback.' \
+    | grep -v 'trimming empty .span.' \
     | cut -d ' ' -f 6- \
     | sort \
     | uniq -c

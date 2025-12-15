@@ -92,6 +92,8 @@ p {
 }
 
 .tight {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   margin-top: 0px;
   margin-bottom: 0.5em;
 }
@@ -205,16 +207,9 @@ footer a,
   color: white;
 }
 
-.sneaky {
-  color: #000000;
-  float: left;
-  /* margin-left: 0.5em; */
-}
-
 .count {
   color: #808080;
-  float: right;
-  /* margin-right: 0.5em; */
+  text-align: right;
 }
 
 .ref {

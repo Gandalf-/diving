@@ -138,7 +138,7 @@ def html_similar_species(
             <div class="zoom-wrapper">
               <img class="zoom" height=150 width=200 alt="{other_name}" src="{example.thumbnail()}">
             </div>
-            <h4 class="tight">{display_name}</h4>
+            <h4>{display_name}</h4>
           </a>
         </div>
         """
@@ -291,8 +291,8 @@ def html_tree(
               <img class="zoom" height=225 width=300 alt="{alt}" src="{thumbnail}">
             </div>
             <h3 class="tight">
-              <span class="sneaky">{size}</span>
-              {subject}
+              <span> </span>
+              <span>{subject}</span>
               <span class="count">{size}</span>
             </h3>
         </a>
@@ -305,7 +305,7 @@ def html_tree(
                 path=hypertext.lineage_to_link(lineage, side, key),
             ),
             thumbnail=example.thumbnail(),
-            size='{}:{}'.format(sum(1 for k in value if k != 'data') or '', size),
+            size='{} · {}'.format(sum(1 for k in value if k != 'data') or '', size),
         )
 
         value = cast(collection.ImageTree, value)
