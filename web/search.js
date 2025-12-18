@@ -9,8 +9,8 @@ const pages = {
 const CHAR_LIMIT = 100;
 var PREVIOUS_STACK = [];
 
-const SEARCH_RESULTS = document.getElementById('search_results');
-const SEARCH_BAR = document.getElementById('search_bar');
+const SEARCH_RESULTS = document.getElementById('search-results');
+const SEARCH_BAR = document.getElementById('search-bar');
 
 function expandWords(words) {
   var result = [];
@@ -113,7 +113,7 @@ function search_inner(text, skip = 0) {
 
 function createResult(name) {
   const div = document.createElement('div');
-  div.classList.add('search_result');
+  div.classList.add('search-result');
 
   const desc = document.createElement('h3');
   desc.innerHTML = name;
@@ -133,7 +133,7 @@ function addPreviousResult() {
     let lastLocation = PREVIOUS_STACK.pop();
     searcher(lastLocation);
   };
-  back.classList.add('search_scroll');
+  back.classList.add('search-scroll');
   SEARCH_RESULTS.appendChild(back);
 }
 
@@ -143,7 +143,7 @@ function addNextResult(skip, results_length) {
     PREVIOUS_STACK.push(skip);
     searcher(skip + results_length);
   };
-  more.classList.add('search_scroll');
+  more.classList.add('search-scroll');
   SEARCH_RESULTS.appendChild(more);
 }
 
@@ -151,7 +151,7 @@ function searcher(skip = 0) {
   console.log(where);
 
   SEARCH_RESULTS.innerHTML = '';
-  SEARCH_RESULTS.classList.remove('have_results');
+  SEARCH_RESULTS.classList.remove('have-results');
   const text = SEARCH_BAR.value.toLowerCase();
   if (skip === 0) {
     PREVIOUS_STACK = [];
@@ -168,14 +168,14 @@ function searcher(skip = 0) {
     return;
   }
 
-  SEARCH_RESULTS.classList.add('have_results');
+  SEARCH_RESULTS.classList.add('have-results');
   if (PREVIOUS_STACK.length > 0) {
     addPreviousResult();
   }
 
   for (let [name, url] of results) {
     const link = document.createElement('a');
-    link.classList.add('search_result');
+    link.classList.add('search-result');
     link.classList.add(where);
     link.title = name;
     link.href = url;

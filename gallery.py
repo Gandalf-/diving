@@ -133,7 +133,7 @@ def html_similar_species(
             display_name = titlecase(other_name)
 
         html += f"""
-        <div class="image">
+        <div class="card">
           <a href="{link}">
             <div class="zoom-wrapper">
               <img class="zoom" height=150 width=200 alt="{other_name}" src="{example.thumbnail()}">
@@ -288,12 +288,12 @@ def html_tree(
         hint = f'{subcategories} · {size}' if subcategories else f'{size}'
 
         html += """
-        <div class="image">
+        <div class="card">
         <a href="{link}">
             <div class="zoom-wrapper">
               <img class="zoom" height=225 width=300 alt="{alt}" src="{thumbnail}">
             </div>
-            <h3 class="tight">
+            <h3 class="label-row">
               <span> </span>
               <span>{subject}</span>
               <span class="count">{hint}</span>

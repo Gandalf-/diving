@@ -159,7 +159,7 @@ function set_text(where, what, onclick) {
   if (onclick) {
     option.addEventListener('click', onclick);
   }
-  option.setAttribute('class', 'top switch');
+  option.setAttribute('class', 'nav-pill active');
 
   var child = document.createElement('h4');
   child.innerHTML = name;
@@ -245,7 +245,7 @@ function set_correct_image(correct) {
  */
 function set_correct_name(correct, previous) {
   const outer = byId('correct_outer');
-  outer.classList.add('grid', 'correct_name');
+  outer.classList.add('grid', 'correct-name');
   outer.innerHTML = '';
 
   const images = shuffle([...g_thumbs[correct]]);
@@ -279,7 +279,7 @@ function add_skip() {
   const options = byId('options');
 
   const child = document.createElement('div');
-  child.classList.add('top', 'switch', 'skip');
+  child.classList.add('nav-pill', 'active', 'skip');
   child.addEventListener('click', choose_game);
   child.innerHTML = '<h4 class="skip">Skip</h4>';
 
@@ -304,7 +304,7 @@ function add_new_correct_thumbnail(correct) {
   }
 
   const child = document.createElement('div');
-  child.classList.add('top', 'switch', 'skip');
+  child.classList.add('nav-pill', 'active', 'skip');
   child.addEventListener('click', new_correct_thumbnail);
   child.innerHTML = '<h4 class="skip">New Example</h4>';
 
@@ -330,7 +330,7 @@ function add_zoom() {
   }
 
   const child = document.createElement('div');
-  child.classList.add('top', 'switch', 'skip');
+  child.classList.add('nav-pill', 'active', 'skip');
   child.addEventListener('click', zoom);
   child.innerHTML = '<h4 class="skip">Zoom</h4>';
 

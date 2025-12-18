@@ -34,7 +34,7 @@ function handleVisibleVideos() {
   if (isHandling) return;
   isHandling = true;
 
-  const allVideos = document.querySelectorAll('video.clip');
+  const allVideos = document.querySelectorAll('video.video');
   const visibleVideos = Array.from(allVideos).filter(isElementInViewport);
 
   // Stop videos that are no longer visible

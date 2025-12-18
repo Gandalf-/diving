@@ -203,8 +203,8 @@ class TestTitleGallery(unittest.TestCase):
         html, path = hypertext.title(['heart', 'crab'], Where.Gallery, TestHypertext.g_scientific)
         self.assertEqual(path, 'gallery/heart-crab.html')
         self.assertIn('<title>Heart Crab</title>', html)
-        self.assertIn('"top">Heart<', html)
-        self.assertIn('"top">Crab<', html)
+        self.assertIn('"nav-pill">Heart<', html)
+        self.assertIn('"nav-pill">Crab<', html)
         self.assertNotIn('<em>', html)
 
     def test_title_scientific_common_name(self):
@@ -218,7 +218,7 @@ class TestTitleGallery(unittest.TestCase):
         )
         self.assertEqual(path, 'gallery/tubastraea-coccinea-coral.html')
         self.assertIn('<title>Tubastraea coccinea Coral</title>', html)
-        self.assertIn('"top"><em>Tubastraea coccinea</em><', html)
+        self.assertIn('"nav-pill"><em>Tubastraea coccinea</em><', html)
         self.assertNotIn('Coccinea', html)
 
     def test_title_sp_scientific_common_name(self):
@@ -230,7 +230,7 @@ class TestTitleGallery(unittest.TestCase):
         )
         self.assertEqual(path, 'gallery/pocillopora-coral.html')
         self.assertIn('<title>Pocillopora Coral</title>', html)
-        self.assertIn('"top"><em>Pocillopora</em><', html)
+        self.assertIn('"nav-pill"><em>Pocillopora</em><', html)
         self.assertNotIn('Coccinea', html)
 
 

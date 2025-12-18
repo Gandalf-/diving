@@ -210,23 +210,23 @@ body {{
         <div class="wrapper">
             <div class="title">
                 <a href="/timeline/">
-                    <h1 class="top switch timeline">📅</h1>
+                    <h1 class="nav-pill active timeline">📅</h1>
                 </a>
-                <div class="top buffer"></div>
+                <div class="nav-pill spacer"></div>
                 <a href="/gallery/">
-                    <h1 class="top switch gallery">📸</h1>
+                    <h1 class="nav-pill active gallery">📸</h1>
                 </a>
-                <div class="top buffer"></div>
+                <div class="nav-pill spacer"></div>
                 <a href="/detective/">
-                    <h1 class="top switch detective">Detective</h1>
+                    <h1 class="nav-pill active detective">Detective</h1>
                 </a>
-                <div class="top buffer"></div>
+                <div class="nav-pill spacer"></div>
                 <a href="/sites/">
-                    <h1 class="top switch sites">🌎</h1>
+                    <h1 class="nav-pill active sites">🌎</h1>
                 </a>
-                <div class="top buffer"></div>
+                <div class="nav-pill spacer"></div>
                 <a href="/taxonomy/">
-                    <h1 class="top switch taxonomy">🔬</h1>
+                    <h1 class="nav-pill active taxonomy">🔬</h1>
                 </a>
                 <p class="scientific"></p>
             </div>
@@ -262,7 +262,7 @@ body {{
                 <div class="choice" id="option6"> </div>
                 <div class="choice" id="option7"> </div>
 
-                <div class="top switch skip" onclick="choose_game();">
+                <div class="nav-pill active skip" onclick="choose_game();">
                     <h4>Skip</h4>
                 </div>
             </div>

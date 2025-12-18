@@ -61,7 +61,7 @@ def _subpage(dive: str) -> Tuple[str, str]:
     if sites_link:
         name = f"""\
 <a href="{sites_link}">
-    <h2 class="where sites pad-down">{title}</h2>
+    <h2 class="site-pill sites pad-down">{title}</h2>
 </a>
 """
     else:

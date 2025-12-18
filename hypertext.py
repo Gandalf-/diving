@@ -77,7 +77,7 @@ scripts = (
         }
 
         // Autofocus search on desktop only (avoid keyboard popup on mobile)
-        const searchBar = document.getElementById('search_bar');
+        const searchBar = document.getElementById('search-bar');
         if (searchBar && window.innerWidth > 768) {
             searchBar.focus();
         }
@@ -251,7 +251,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
 
     return f"""
     <a class="thumb" aria-label="{image.name} video" data-fancybox="gallery" data-caption="{caption}" href="#{unique}">
-        <video class="clip" height=225 width=300
+        <video class="video" height=225 width=300
           disableRemotePlayback preload playsinline muted loop>
             <source src="{thumbnail}" type="video/mp4">
         </video>
@@ -359,15 +359,15 @@ class GalleryTitle(Title):
 
             html += f"""
             <a href="{_link}">
-                <h1 class="top">{name}</h1>
+                <h1 class="nav-pill">{name}</h1>
             </a>
             """
 
         html += """
-            <div class="top buffer"></div>
+            <div class="nav-pill spacer"></div>
 
             <a href="/gallery/">
-                <h1 class="top switch gallery">Gallery</h1>
+                <h1 class="nav-pill active gallery">Gallery</h1>
             </a>
         """
 
@@ -417,9 +417,9 @@ class TaxonomyTitle(Title):
         html = head(' '.join(self.lineage[-2:]), path, Where.Taxonomy)
         html += """
             <a href="/taxonomy/">
-                <h1 class="top switch taxonomy">Taxonomy</h1>
+                <h1 class="nav-pill active taxonomy">Taxonomy</h1>
             </a>
-            <div class="top buffer"></div>
+            <div class="nav-pill spacer"></div>
         """
 
         # create the buttons for each part of our name lineage
@@ -430,7 +430,7 @@ class TaxonomyTitle(Title):
 
             html += f"""
             <a href="{link}">
-                <h1 class="top">{name}</h1>
+                <h1 class="nav-pill">{name}</h1>
             </a>
             """
 
@@ -491,9 +491,9 @@ class SitesTitle(Title):
         html = head(_title, path, Where.Sites)
         html += """
             <a href="/sites/">
-                <h1 class="top switch sites">Sites</h1>
+                <h1 class="nav-pill active sites">Sites</h1>
             </a>
-            <div class="top buffer"></div>
+            <div class="nav-pill spacer"></div>
         """
         dive_info = None
         site_info = None
@@ -517,7 +517,7 @@ class SitesTitle(Title):
 
             html += f"""
             <a href="{link}">
-                <h1 class="top">{strip_date(_name)}</h1>
+                <h1 class="nav-pill">{strip_date(_name)}</h1>
             </a>
             """
 
@@ -539,27 +539,27 @@ def switcher_button(where: Where, long: bool = False) -> str:
     """Get the switcher button for this site"""
     _timeline = """
         <a href="/timeline/">
-            <h1 class="top switch">{}</h1>
+            <h1 class="nav-pill active">{}</h1>
         </a>
     """
     _gallery = """
         <a href="/gallery/">
-            <h1 class="top switch gallery">{}</h1>
+            <h1 class="nav-pill active gallery">{}</h1>
         </a>
     """
     _detective = """
         <a href="/detective/">
-            <h1 class="top switch detective">{}</h1>
+            <h1 class="nav-pill active detective">{}</h1>
         </a>
     """
     _sites = """
         <a href="/sites/">
-            <h1 class="top switch sites">{}</h1>
+            <h1 class="nav-pill active sites">{}</h1>
         </a>
     """
     _taxonomy = """
         <a href="/taxonomy/">
-            <h1 class="top switch taxonomy">{}</h1>
+            <h1 class="nav-pill active taxonomy">{}</h1>
         </a>
     """
     return {
@@ -599,15 +599,15 @@ class TopTitle(Title):
 
         return f"""
         <div class="search">
-            <form class="search_random" action="javascript:;" onsubmit="randomPage()">
+            <form class="search-random" action="javascript:;" onsubmit="randomPage()">
                 <button type="submit">Random</button>
             </form>
-            <form class="search_text" autocomplete="off" action="javascript:;" onsubmit="searcher()">
-                <input type="text" id="search_bar" placeholder="">
+            <form class="search-text" autocomplete="off" action="javascript:;" onsubmit="searcher()">
+                <input type="text" id="search-bar" placeholder="">
                 <button type="submit">Search</button>
             </form>
         </div>
-        <div id="search_results" class="search_results">
+        <div id="search-results" class="search-results">
 
         <script src="/{search_data_path}" defer></script>
         <script src="/{search_js.path}" defer></script>
@@ -641,7 +641,7 @@ class TopTitle(Title):
             switcher_button(carousel[indicies[4]]),
         ]
 
-        spacer = '<div class="top buffer"></div>\n'
+        spacer = '<div class="nav-pill spacer"></div>\n'
         path = sanitize_link(self.where.name.lower() + '/index')
 
         html = head(display, path, self.where)
