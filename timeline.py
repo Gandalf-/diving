@@ -66,12 +66,12 @@ def _subpage(dive: str) -> Tuple[str, str]:
 """
     else:
         name = f"""\
-    <h2 class="tight">{title}</h2>
+    <h2 class="center">{title}</h2>
 """
 
     html = f"""\
 {name}
-<h3 class="tight">{when} - {region}</h3>
+<h3 class="center">{when} - {region}</h3>
 """
     info = log.lookup(dive)
     if info:

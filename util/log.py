@@ -66,7 +66,7 @@ def dive_info_html(info: DiveInfo) -> str:
 
     metrics.counter('dive log html snippets added')
     return f"""\
-<p class="tight">{' &nbsp; '.join(parts)}</p>
+<p class="center">{' &nbsp; '.join(parts)}</p>
 """
 
 
