@@ -309,6 +309,49 @@ def _get_similar_species_html(
     )
 
 
+def _page_footer(info: str, similar_html: str) -> str:
+    """Generate the page footer HTML."""
+    now = datetime.now()
+    return f"""
+      {info}
+      {similar_html}
+      </div>
+      <footer>
+        <p><a href="https://goto.anardil.net">goto.anardil.net</a></p>
+        <p>austin@anardil.net {now.year}</p>
+      </footer>
+      {hypertext.scripts}
+    </body>
+    </html>
+    """
+
+
+def _process_category(
+    key: str,
+    value: collection.ImageTree,
+    where: Where,
+    lineage: List[str],
+    side: Side,
+    scientific: taxonomy.NameMapping,
+    similar_ctx: Optional[SimilarSpeciesContext],
+) -> Tuple[str, List[Tuple[str, str]]]:
+    """Process a single category and return (html, child_results)."""
+    new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
+    example = find_representative(value, where, new_lineage)
+    assert example.is_image
+    subject = _key_to_subject(key, where)
+
+    size = tree_size(value)
+    subcategories = sum(1 for k in value if k != 'data')
+
+    card_html = _render_category_card(
+        example, subject, where, lineage, side, key, size, subcategories
+    )
+
+    child_results = html_tree(value, where, scientific, new_lineage, similar_ctx)
+    return card_html, child_results
+
+
 def html_tree(
     tree: collection.ImageTree,
     where: Where,
@@ -321,40 +364,27 @@ def html_tree(
     assert similar_ctx is None or where in (Where.Gallery, Where.Taxonomy)
     side = Side.Left if where == Where.Gallery else Side.Right
 
-    # title
     html, path = hypertext.title(lineage, where, scientific)
 
-    # body
     results = []
     has_subcategories = any(key != 'data' for key in tree.keys())
     if has_subcategories:
         html += '<div class="grid">'
 
-    # categories
     flip = where == Where.Sites and any(is_date(v) for v in tree.keys())
     for key, value in sorted(tree.items(), reverse=flip):
         if key == 'data':
             continue
-
-        new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
-        example = find_representative(value, where, new_lineage)
-        assert example.is_image
-        subject = _key_to_subject(key, where)
-
-        size = tree_size(value)
-        subcategories = sum(1 for k in value if k != 'data')
-
-        html += _render_category_card(
-            example, subject, where, lineage, side, key, size, subcategories
-        )
-
         value = cast(collection.ImageTree, value)
-        results.extend(html_tree(value, where, scientific, new_lineage, similar_ctx))
+        card_html, child_results = _process_category(
+            key, value, where, lineage, side, scientific, similar_ctx
+        )
+        html += card_html
+        results.extend(child_results)
 
     if has_subcategories:
         html += '</div>'
 
-    # direct examples
     direct = cast(List[Image], tree.get('data', []))
     chronological = where != Where.Sites
     direct = sorted(direct, key=lambda x: x.path(), reverse=chronological)
@@ -363,24 +393,9 @@ def html_tree(
     if direct:
         html += html_direct_examples(direct, where)
 
-    # additional info, like wikipedia and depth distribution
     info = get_info(where, lineage, direct)
     similar_html = _get_similar_species_html(direct, lineage, similar_ctx, where)
-
-    now = datetime.now()
-
-    html += f"""
-      {info}
-      {similar_html}
-      </div>
-      <footer>
-        <p><a href="https://goto.anardil.net">goto.anardil.net</a></p>
-        <p>austin@anardil.net {now.year}</p>
-      </footer>
-      {hypertext.scripts}
-    </body>
-    </html>
-    """
+    html += _page_footer(info, similar_html)
 
     results.append((path, html))
     return results

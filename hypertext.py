@@ -153,43 +153,46 @@ def head(display: str, path: str, where: Where) -> str:
       """
 
 
+def _description_sites(title: str) -> str:
+    words = locations.where_to_words(title)
+    last = words[-1]
+
+    if is_date(last):
+        suffix = f' on {pretty_date(last)}'
+        words = words[:-1]
+    else:
+        suffix = ', organized by dive site and date'
+
+    body = ' '.join(words[1:]) + f', {words[0]}' if len(words) > 1 else words[0]
+    return f'{blurb} from {body}{suffix}.'
+
+
+def _description_gallery(title: str) -> str:
+    more = len(title.split(' ')) > 1
+    related = ' and related organisms' if more else ''
+    title = grammar.plural(title).replace('Various ', '')
+    return f'{blurb} of {title}{related}.'
+
+
+def _description_taxonomy(title: str) -> str:
+    words = title.split(' ')
+    if len(words) > 1 and words[-2].istitle() and words[-1].islower():
+        name = ' '.join(words[-2:])
+        return f'{blurb} of {name} and related organisms.'
+    return f'{blurb} of members of {title}.'
+
+
+_DESCRIPTION_DISPATCH = {
+    Where.Sites: _description_sites,
+    Where.Gallery: _description_gallery,
+    Where.Taxonomy: _description_taxonomy,
+}
+
+
 def description(title: str, where: Where) -> str:
-    if where == Where.Sites:
-        words = locations.where_to_words(title)
-        last = words[-1]
-        suffix = ''
-
-        if is_date(last):
-            suffix = f' on {pretty_date(last)}'
-            words = words[:-1]
-        else:
-            suffix = ', organized by dive site and date'
-
-        if len(words) > 1:
-            # Swap the context and site
-            body = ' '.join(words[1:]) + f', {words[0]}'
-        else:
-            body = words[0]
-
-        return f'{blurb} from {body}{suffix}.'
-
-    if where == Where.Gallery:
-        more = len(title.split(' ')) > 1
-        related = ' and related organisms' if more else ''
-
-        title = grammar.plural(title).replace('Various ', '')
-        return f'{blurb} of {title}{related}.'
-
-    if where == Where.Taxonomy:
-        words = title.split(' ')
-        if len(words) > 1 and words[-2].istitle() and words[-1].islower():
-            # ... Genus species
-            name = ' '.join(words[-2:])
-            return f'{blurb} of {name} and related organisms.'
-
-        return f'{blurb} of members of {title}.'
-
-    assert False, (where, title)
+    handler = _DESCRIPTION_DISPATCH.get(where)
+    assert handler, (where, title)
+    return handler(title)
 
 
 def lineage_to_link(lineage: List[str], side: Side, key: Optional[str] = None) -> str:

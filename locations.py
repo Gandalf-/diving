@@ -25,40 +25,32 @@ def sites_link(when: str, where: str) -> str:
     return f'/sites/{link}-{when}'
 
 
-def get_region(site: str) -> str:
-    """find a dive site in the larger collection of locations"""
-    for name, value in static.locations.items():
+def _find_location(site: str) -> tuple[str, Optional[str]] | None:
+    """Find site in locations hierarchy, return (region, subregion) or None."""
+    for region, value in static.locations.items():
         if isinstance(value, list):
-            # Flat structure: region -> [sites]
             for place in value:
-                if place == site:
-                    return name
-
-                if site.startswith(place):
-                    return name
+                if place == site or site.startswith(place):
+                    return (region, None)
         else:
-            # Nested structure: region -> subregion -> [sites]
             for subregion, places in value.items():
                 for place in places:
-                    if place == site:
-                        return name
+                    if place == site or site.startswith(place):
+                        return (region, subregion)
+    return None
 
-                    if site.startswith(place):
-                        return name
 
-    assert False, f'no location for {site}'
+def get_region(site: str) -> str:
+    """find a dive site in the larger collection of locations"""
+    result = _find_location(site)
+    assert result, f'no location for {site}'
+    return result[0]
 
 
 def get_subregion(site: str) -> Optional[str]:
     """find a dive site's sub-region if it has one"""
-    for name, value in static.locations.items():
-        if isinstance(value, dict):
-            # Nested structure: region -> subregion -> [sites]
-            for subregion, places in value.items():
-                for place in places:
-                    if place == site or site.startswith(place):
-                        return subregion
-    return None
+    result = _find_location(site)
+    return result[1] if result else None
 
 
 def add_context(site: str) -> str:

@@ -51,55 +51,54 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
+def _is_valid_page_name(page_name: str, subject: str) -> tuple[bool, str]:
+    """Check if page name is valid. Returns (is_valid, reason)."""
+    if 'list of ' in page_name:
+        return False, 'is a list'
+    if subject + ' ' in page_name or ' ' + subject in page_name:
+        return False, 'is more specific than ' + subject
+    if ' ' in subject and page_name in subject and page_name != subject:
+        return False, 'is less specific than ' + subject
+    return True, ''
+
+
+def _save_page(page: Any, subject: str, timestamp: float) -> None:
+    """Process and save a Wikipedia page to the database."""
+    name = page.url.split('/')[-1].replace('_', ' ').lower()
+    valid, reason = _is_valid_page_name(name, subject)
+
+    if not valid:
+        print(name, reason)
+        database.append(*db_root, 'invalid', value=subject)
+        return
+
+    if name != subject:
+        print(f'{bcolors.WARNING}mapping {subject} to {name}{bcolors.ENDC}')
+        database.set(*db_root, 'maps', subject, value=name)
+
+    value = {
+        'summary': base64.b64encode(page.summary.encode()).decode(),
+        'url': page.url,
+        'time': timestamp,
+    }
+    print('saved', name)
+    database.set(*db_root, 'valid', name, value=value)
+
+
 def fetch(subject: str, suggest: bool = True) -> None:
     """get summary from wikipedia"""
     now = datetime.now().timestamp()
     try:
         print('fetching', subject)
         page = wikipedia.page(subject, auto_suggest=suggest)
-
     except wikipedia.exceptions.PageError:
         print(subject, 'not found')
         database.append(*db_root, 'invalid', value=subject.lower())
-
     except wikipedia.exceptions.DisambiguationError:
         print(subject, 'ambiguous')
         database.append(*db_root, 'invalid', value=subject.lower())
-
     else:
-        value = {
-            # utf8 -> bytes -> b64 -> ascii
-            'summary': base64.b64encode(page.summary.encode()).decode(),
-            'url': page.url,
-            'time': now,
-        }
-        name = page.url.split('/')[-1]
-        name = name.replace('_', ' ')
-        name = name.lower()
-        subject = subject.lower()
-
-        if 'list of ' in name:
-            print(name, 'is a list')
-            database.append(*db_root, 'invalid', value=subject.lower())
-            return
-
-        if subject + ' ' in name or ' ' + subject in name:
-            print(name, 'is more specific than', subject)
-            database.append(*db_root, 'invalid', value=subject.lower())
-            return
-
-        if ' ' in subject and name in subject and name != subject:
-            print(name, 'is less specific than', subject)
-            database.append(*db_root, 'invalid', value=subject.lower())
-            return
-
-        if name != subject:
-            # metacarcinus magister -> dungeness crab, just save the later
-            print(f'{bcolors.WARNING}mapping {subject} to {name}{bcolors.ENDC}')
-            database.set(*db_root, 'maps', subject, value=name)
-
-        print('saved', name)
-        database.set(*db_root, 'valid', name, value=value)
+        _save_page(page, subject.lower(), now)
 
 
 def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, str]:
