@@ -208,6 +208,35 @@ def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
     return tree
 
 
+def _find_promotable_children(
+    parent_key: str, parent_value_dict: ImageTree, parent_simplified: str
+) -> List[tuple[str, str, ImageTree]]:
+    """Find children that should be promoted to siblings because they are complete species."""
+    promotable = []
+
+    for child_key, child_value in list(parent_value_dict.items()):
+        if child_key == 'data' or not isinstance(child_value, dict):
+            continue
+
+        child_value_dict = cast(ImageTree, child_value)
+        if 'data' not in child_value_dict:
+            continue
+
+        child_images = cast(List[Image], child_value_dict['data'])
+        if not child_images:
+            continue
+
+        child_simplified = child_images[0].simplified()
+
+        # Check if child is also a complete species AND different from parent
+        if _is_complete_species(child_simplified) and child_simplified != parent_simplified:
+            new_key = f'{child_key} {parent_key}'
+            promotable.append((child_key, new_key, child_value))
+            metrics.counter('images un-nested complete species')
+
+    return promotable
+
+
 def _unnest_complete_species(tree: ImageTree) -> ImageTree:
     """
     Post-process tree to unnest complete species that were incorrectly nested.
@@ -223,60 +252,31 @@ def _unnest_complete_species(tree: ImageTree) -> ImageTree:
     """
     assert isinstance(tree, dict), tree
 
-    # Process each key in the tree
     for parent_key, parent_value in list(tree.items()):
         if parent_key == 'data' or not isinstance(parent_value, dict):
             continue
 
-        # First, recursively process children
+        # Recursively process children first
         tree[parent_key] = _unnest_complete_species(parent_value)
-        parent_value = tree[parent_key]  # Get updated value
+        parent_value = tree[parent_key]
 
-        # Check if this child node has a conflict to resolve
         if 'data' not in parent_value:
             continue
 
-        # Get the simplified name from the images in this node
         parent_value_dict = cast(ImageTree, parent_value)
         images = cast(List[Image], parent_value_dict['data'])
         if not images:
             continue
 
         parent_simplified = images[0].simplified()
-
-        # Only proceed if the parent is a complete species
         if not _is_complete_species(parent_simplified):
             continue
 
-        # Check each grandchild to see if it's also a complete species
-        children_to_promote = []
-
-        for child_key, child_value in list(parent_value_dict.items()):
-            if child_key == 'data' or not isinstance(child_value, dict):
-                continue
-
-            child_value_dict = cast(ImageTree, child_value)
-            if 'data' in child_value_dict:
-                child_images = cast(List[Image], child_value_dict['data'])
-                if child_images:
-                    child_simplified = child_images[0].simplified()
-
-                    # Check if child is also a complete species AND different from parent
-                    if (
-                        _is_complete_species(child_simplified)
-                        and child_simplified != parent_simplified
-                    ):
-                        # Both are complete species - promote child to be sibling of parent!
-                        # The new key should combine parent_key + child_key
-                        new_key = f'{child_key} {parent_key}'
-                        children_to_promote.append((child_key, new_key, child_value))
-                        metrics.counter('images un-nested complete species')
-
-        # Now promote the children to THIS level (siblings of parent_key)
-        for old_key, new_key, child_value in children_to_promote:
-            # Remove from parent
+        # Find and promote children that are complete species
+        for old_key, new_key, child_value in _find_promotable_children(
+            parent_key, parent_value_dict, parent_simplified
+        ):
             del parent_value_dict[old_key]
-            # Add as sibling
             tree[new_key] = child_value
 
     return tree

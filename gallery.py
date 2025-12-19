@@ -147,6 +147,15 @@ def html_similar_species(
     return html
 
 
+def _prefer_single_subject(images: List[Image], pick_middle: bool = False) -> Image:
+    """Select an image, preferring single-subject images."""
+    single = [img for img in images if not img.has_multiple_subjects()]
+    candidates = single if single else images
+    if pick_middle:
+        return candidates[len(candidates) // 2]
+    return candidates[0]
+
+
 def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] = None) -> Image:
     """Find one image to represent this tree."""
     lineage = lineage or []
@@ -162,19 +171,11 @@ def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] =
 
     if where == Where.Sites:
         items = list(results)
-        # Prefer single-subject images
-        single_subject = [img for img in items if not img.has_multiple_subjects()]
-        if single_subject:
-            return single_subject[len(single_subject) // 2]
-        return items[len(items) // 2]
+        return _prefer_single_subject(items, pick_middle=True)
 
     results = sorted(results, key=lambda image: image.path(), reverse=True)
     assert results, (tree, lineage)
-    # Prefer single-subject images (newest first)
-    single_subject = [img for img in results if not img.has_multiple_subjects()]
-    if single_subject:
-        return single_subject[0]
-    return results[0]
+    return _prefer_single_subject(results, pick_middle=False)
 
 
 def get_gallery_info(direct: List[Image]) -> str:
@@ -251,6 +252,63 @@ def html_direct_examples(direct: List[Image], where: Where) -> str:
     return html
 
 
+def _render_category_card(
+    example: Image,
+    subject: str,
+    where: Where,
+    lineage: List[str],
+    side: Side,
+    key: str,
+    size: int,
+    subcategories: int,
+) -> str:
+    """Render a single category card for the grid."""
+    hint = f'{subcategories} · {size}' if subcategories else f'{size}'
+    return """
+        <div class="card">
+        <a href="{link}">
+            <div class="zoom-wrapper">
+              <img class="zoom" height=225 width=300 alt="{alt}" src="{thumbnail}">
+            </div>
+            <h3 class="label-row">
+              <span> </span>
+              <span>{subject}</span>
+              <span class="count">{hint}</span>
+            </h3>
+        </a>
+        </div>
+        """.format(
+        alt=example.simplified(),
+        subject=subject,
+        link='/{where}/{path}'.format(
+            where=where.name.lower(),
+            path=hypertext.lineage_to_link(lineage, side, key),
+        ),
+        thumbnail=example.thumbnail(),
+        hint=hint,
+    )
+
+
+def _get_similar_species_html(
+    direct: List[Image],
+    lineage: List[str],
+    similar_ctx: Optional[SimilarSpeciesContext],
+    where: Where,
+) -> str:
+    """Get the similar species HTML section if applicable."""
+    if not (direct and lineage and similar_ctx):
+        return ''
+
+    name = direct[0].simplified()
+    similar = similar_ctx.similar_map.get(name)
+    if not similar:
+        return ''
+
+    return html_similar_species(
+        similar, similar_ctx.flat_tree, where, similar_ctx.scientific_for_links
+    )
+
+
 def html_tree(
     tree: collection.ImageTree,
     where: Where,
@@ -285,42 +343,13 @@ def html_tree(
 
         size = tree_size(value)
         subcategories = sum(1 for k in value if k != 'data')
-        hint = f'{subcategories} · {size}' if subcategories else f'{size}'
 
-        html += """
-        <div class="card">
-        <a href="{link}">
-            <div class="zoom-wrapper">
-              <img class="zoom" height=225 width=300 alt="{alt}" src="{thumbnail}">
-            </div>
-            <h3 class="label-row">
-              <span> </span>
-              <span>{subject}</span>
-              <span class="count">{hint}</span>
-            </h3>
-        </a>
-        </div>
-        """.format(
-            alt=example.simplified(),
-            subject=subject,
-            link='/{where}/{path}'.format(
-                where=where.name.lower(),
-                path=hypertext.lineage_to_link(lineage, side, key),
-            ),
-            thumbnail=example.thumbnail(),
-            hint=hint,
+        html += _render_category_card(
+            example, subject, where, lineage, side, key, size, subcategories
         )
 
         value = cast(collection.ImageTree, value)
-        results.extend(
-            html_tree(
-                value,
-                where,
-                scientific,
-                new_lineage,
-                similar_ctx,
-            )
-        )
+        results.extend(html_tree(value, where, scientific, new_lineage, similar_ctx))
 
     if has_subcategories:
         html += '</div>'
@@ -336,18 +365,7 @@ def html_tree(
 
     # additional info, like wikipedia and depth distribution
     info = get_info(where, lineage, direct)
-
-    # Similar species for gallery/taxonomy species pages (after info)
-    similar_html = ''
-    if direct and lineage and similar_ctx:
-        # Find species name that exists in similar_map
-        name = direct[0].simplified()
-        similar = similar_ctx.similar_map.get(name)
-
-        if similar:
-            similar_html = html_similar_species(
-                similar, similar_ctx.flat_tree, where, similar_ctx.scientific_for_links
-            )
+    similar_html = _get_similar_species_html(direct, lineage, similar_ctx, where)
 
     now = datetime.now()
 
