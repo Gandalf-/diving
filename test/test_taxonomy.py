@@ -4,7 +4,7 @@ import unittest
 
 import gallery
 import util.common as utility
-from hypertext import Where
+from diving.hypertext import Where
 from util import collection, database, taxonomy
 from util.taxonomy import MappingType
 

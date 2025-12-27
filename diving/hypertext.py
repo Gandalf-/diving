@@ -9,7 +9,7 @@ import html as html_module
 import string
 from typing import Any, Dict, List, Optional, Tuple, Type
 
-import locations
+from diving import locations
 from util import collection, grammar, log, taxonomy, translator
 from util.common import (
     flatten,

@@ -35,7 +35,7 @@ import os
 from collections import Counter
 from typing import List, Set
 
-import locations
+from diving import locations
 from util import collection, common, taxonomy
 from util.image import Image, split
 

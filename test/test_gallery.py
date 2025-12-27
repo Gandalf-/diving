@@ -3,7 +3,7 @@
 import unittest
 
 import gallery
-from hypertext import Where
+from diving.hypertext import Where
 from util import collection, database, taxonomy
 from util.image import Image
 from util.similarity import similarity

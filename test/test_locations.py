@@ -1,6 +1,6 @@
 import unittest
 
-import locations
+from diving import locations
 
 
 class TestLocations(unittest.TestCase):

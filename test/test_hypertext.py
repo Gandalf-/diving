@@ -2,8 +2,8 @@
 
 import unittest
 
-import hypertext
-from hypertext import Side, Where
+from diving import hypertext
+from diving.hypertext import Side, Where
 from util import taxonomy
 from util.taxonomy import MappingType
 

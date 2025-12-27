@@ -13,14 +13,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Tuple, cast
 
-import detective
-import hypertext
 import imprecise
-import information
-import locations
-import search
-import timeline
-from hypertext import Side, Where
+from diving import detective, hypertext, information, locations, search, timeline
+from diving.hypertext import Side, Where
 from util import collection, resource, static, taxonomy, verify
 from util.common import (
     Progress,

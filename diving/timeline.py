@@ -8,9 +8,8 @@ import operator
 import os
 from typing import Any, Dict, List, Tuple
 
-import hypertext
-import locations
-from hypertext import Where
+from diving import hypertext, locations
+from diving.hypertext import Where
 from util import collection, common, log, static
 
 

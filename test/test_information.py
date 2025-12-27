@@ -2,7 +2,7 @@
 
 import unittest
 
-import information
+from diving import information
 
 
 class TestInformation(unittest.TestCase):
