@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Tuple
 
 from diving import hypertext, locations
 from diving.hypertext import Where
-from util import collection, common, log, static
+from diving.util import collection, common, log, static
 
 
 def timeline() -> List[Tuple[str, str]]:

@@ -1,7 +1,7 @@
 import unittest
 from typing import List
 
-import util.common as utility
+import diving.util.common as utility
 
 
 class TestUtility(unittest.TestCase):

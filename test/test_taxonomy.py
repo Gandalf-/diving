@@ -2,11 +2,11 @@
 
 import unittest
 
+import diving.util.common as utility
 import gallery
-import util.common as utility
 from diving.hypertext import Where
-from util import collection, database, taxonomy
-from util.taxonomy import MappingType
+from diving.util import collection, database, taxonomy
+from diving.util.taxonomy import MappingType
 
 
 class TestTaxonomy(unittest.TestCase):

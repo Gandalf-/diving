@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 
 import apocrypha.client
 
-from util.metrics import metrics
+from diving.util.metrics import metrics
 
 
 class Database:

@@ -8,10 +8,10 @@ import os
 from functools import lru_cache
 from typing import Dict, Iterable, Iterator, List, Set, Union, cast
 
-from util import static
-from util.common import flatten, tree_size
-from util.image import Image, reorder_eggs, split
-from util.metrics import metrics
+from diving.util import static
+from diving.util.common import flatten, tree_size
+from diving.util.image import Image, reorder_eggs, split
+from diving.util.metrics import metrics
 
 ImageTree = dict[str, Union[List[Image], 'ImageTree']]
 
@@ -121,7 +121,7 @@ def dive_listing() -> List[str]:
 
 def _is_complete_species(name: str) -> bool:
     """Check if this name maps to a genus+species (not 'sp.') in taxonomy"""
-    from util import taxonomy
+    from diving.util import taxonomy
 
     mapping = taxonomy.mapping(taxonomy.MappingType.Gallery)
     scientific = mapping.get(name)

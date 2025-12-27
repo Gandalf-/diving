@@ -24,8 +24,8 @@ import operator
 from collections import Counter
 from typing import Set
 
-from util import collection, static, taxonomy
-from util.image import split
+from diving.util import collection, static, taxonomy
+from diving.util.image import split
 
 NameMapping = dict[str, str]
 

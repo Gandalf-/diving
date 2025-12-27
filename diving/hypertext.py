@@ -10,8 +10,8 @@ import string
 from typing import Any, Dict, List, Optional, Tuple, Type
 
 from diving import locations
-from util import collection, grammar, log, taxonomy, translator
-from util.common import (
+from diving.util import collection, grammar, log, taxonomy, translator
+from diving.util.common import (
     flatten,
     is_date,
     pretty_date,
@@ -19,9 +19,9 @@ from util.common import (
     strip_date,
     titlecase,
 )
-from util.image import Image, categorize, split, uncategorize
-from util.metrics import metrics
-from util.static import search_data_path, search_js, stylesheet, video_js
+from diving.util.image import Image, categorize, split, uncategorize
+from diving.util.metrics import metrics
+from diving.util.static import search_data_path, search_js, stylesheet, video_js
 
 Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
 Side = enum.Enum('Side', 'Left Right')

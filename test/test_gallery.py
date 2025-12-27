@@ -4,10 +4,10 @@ import unittest
 
 import gallery
 from diving.hypertext import Where
-from util import collection, database, taxonomy
-from util.image import Image
-from util.similarity import similarity
-from util.taxonomy import MappingType
+from diving.util import collection, database, taxonomy
+from diving.util.image import Image
+from diving.util.similarity import similarity
+from diving.util.taxonomy import MappingType
 
 
 class TestGallery(unittest.TestCase):

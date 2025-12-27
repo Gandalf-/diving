@@ -10,12 +10,12 @@ from typing import Dict, List, Set, Union
 
 import yaml
 
-from util.resource import VersionedResource
+from diving.util.resource import VersionedResource
 
 ListTree = Dict[str, Union[List[str], Dict[str, List[str]]]]
 
 
-source_root = str(pathlib.Path(__file__).parent.parent.absolute()) + '/'
+source_root = str(pathlib.Path(__file__).parent.parent.parent.absolute()) + '/'
 image_root = '/Users/leaf/Pictures/Diving'
 
 with open(source_root + 'data/static.yml') as fd:

@@ -1,6 +1,6 @@
 import unittest
 
-from util.similarity import similarity
+from diving.util.similarity import similarity
 
 
 class TestSimilarity(unittest.TestCase):

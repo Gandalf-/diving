@@ -2,7 +2,7 @@
 
 import unittest
 
-from util import collection, database, verify
+from diving.util import collection, database, verify
 
 
 class TestVerify(unittest.TestCase):

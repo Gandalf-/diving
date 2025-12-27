@@ -6,8 +6,8 @@ import re
 import subprocess
 from typing import Iterable, List
 
-from util.resource import VersionedResource
-from util.static import search_data_path
+from diving.util.resource import VersionedResource
+from diving.util.static import search_data_path
 
 
 def write_search_data(

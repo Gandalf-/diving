@@ -2,8 +2,8 @@ import os
 import unittest
 from datetime import UTC, datetime
 
-from util import collection, common, database
-from util.log import (
+from diving.util import collection, common, database
+from diving.util.log import (
     _build_dive_history,
     _db_decode,
     _db_encode,

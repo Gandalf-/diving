@@ -1,6 +1,6 @@
 import unittest
 
-from util.translator import cleanup, translate
+from diving.util.translator import cleanup, translate
 
 
 class TestTranslator(unittest.TestCase):

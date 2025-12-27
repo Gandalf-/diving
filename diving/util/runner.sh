@@ -295,7 +295,7 @@ scanner() {
 }
 
 copy_web() {
-  local web; web="$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )"/../web
+  local web; web="$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )"/../../web
   rsync --archive "$web"/ "$PWD"
 }
 

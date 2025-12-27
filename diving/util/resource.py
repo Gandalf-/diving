@@ -9,7 +9,7 @@ import hashlib
 import os
 from typing import List, Optional
 
-from util.metrics import metrics
+from diving.util.metrics import metrics
 
 
 class VersionedResource:

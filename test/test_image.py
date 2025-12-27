@@ -1,6 +1,6 @@
 import unittest
 
-from util import database, image
+from diving.util import database, image
 
 
 class TestImage(unittest.TestCase):
@@ -130,7 +130,7 @@ class TestImage(unittest.TestCase):
 
     def test_has_multiple_subjects(self) -> None:
         """check if image name contains multiple subjects"""
-        from util.collection import expand_names
+        from diving.util.collection import expand_names
 
         samples = [
             ('001 - Shark and Remora.jpg', True),

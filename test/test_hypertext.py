@@ -4,8 +4,8 @@ import unittest
 
 from diving import hypertext
 from diving.hypertext import Side, Where
-from util import taxonomy
-from util.taxonomy import MappingType
+from diving.util import taxonomy
+from diving.util.taxonomy import MappingType
 
 
 class TestHypertext(unittest.TestCase):

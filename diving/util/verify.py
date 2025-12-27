@@ -10,9 +10,9 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple
 
-from util import collection, common, static, taxonomy
-from util.common import Progress
-from util.metrics import metrics
+from diving.util import collection, common, static, taxonomy
+from diving.util.common import Progress
+from diving.util.metrics import metrics
 
 
 def verify_before() -> None:

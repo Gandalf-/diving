@@ -2,7 +2,7 @@ import os
 import unittest
 from typing import Any, Dict, cast
 
-from util import collection, database, image, static
+from diving.util import collection, database, image, static
 
 
 class TestCollection(unittest.TestCase):

@@ -8,9 +8,9 @@ import os
 from functools import lru_cache
 from typing import List, Optional, Tuple
 
-from util import database, log, static
-from util.common import Tree
-from util.grammar import singular
+from diving.util import database, log, static
+from diving.util.common import Tree
+from diving.util.grammar import singular
 
 
 def dive_to_location(dive: str) -> str:

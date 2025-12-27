@@ -11,9 +11,9 @@ from typing import Dict, Optional
 
 import yaml
 
-from util import static
-from util.metrics import metrics
-from util.taxonomy import all_latin_words
+from diving.util import static
+from diving.util.metrics import metrics
+from diving.util.taxonomy import all_latin_words
 
 translations_yml = os.path.join(static.source_root, 'data/translations.yml')
 

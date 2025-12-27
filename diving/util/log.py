@@ -14,9 +14,9 @@ from typing import Any, Dict, Iterator, List, Optional
 
 import lxml
 
-from util import collection, database, static
-from util.common import Counter, kelvin_to_fahrenheit, meters_to_feet, pascal_to_psi
-from util.metrics import metrics
+from diving.util import collection, database, static
+from diving.util.common import Counter, kelvin_to_fahrenheit, meters_to_feet, pascal_to_psi
+from diving.util.metrics import metrics
 
 # PUBLIC
 

@@ -43,8 +43,8 @@ build() {
   esac
 
   cd "$www"
-  bash    "$src"/util/runner.sh  ~/Pictures/diving/
-  python3 "$src"/gallery.py      ~/Pictures/diving/
+  bash    "$src"/diving/util/runner.sh  ~/Pictures/diving/
+  python3 "$src"/gallery.py             ~/Pictures/diving/
 }
 
 prune() {
@@ -112,7 +112,7 @@ wikipedia() {
   start_database
 
   echo ">>> updater()"
-  python3 -i "$src"/information.py
+  python3 -i "$src"/diving/information.py
 }
 
 sync() {
@@ -150,7 +150,7 @@ sitemap() {
   }
 
   cd "$www"
-  images | awk -f "$src"/util/sitemap.awk > sitemap.xml
+  images | awk -f "$src"/diving/util/sitemap.awk > sitemap.xml
   xmllint --noout sitemap.xml
 }
 

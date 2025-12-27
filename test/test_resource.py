@@ -2,8 +2,8 @@ import os
 import unittest
 from typing import List, Set
 
-from util import static
-from util.resource import VersionedResource
+from diving.util import static
+from diving.util.resource import VersionedResource
 
 
 class TestResource(unittest.TestCase):

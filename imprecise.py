@@ -36,8 +36,8 @@ from collections import Counter
 from typing import List, Set
 
 from diving import locations
-from util import collection, common, taxonomy
-from util.image import Image, split
+from diving.util import collection, common, taxonomy
+from diving.util.image import Image, split
 
 
 def total_imprecise() -> int:

@@ -26,9 +26,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import wikipedia
 
-from util import taxonomy
-from util.database import database
-from util.metrics import metrics
+from diving.util import taxonomy
+from diving.util.database import database
+from diving.util.metrics import metrics
 
 db_root = (
     'diving',

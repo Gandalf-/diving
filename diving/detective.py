@@ -8,13 +8,13 @@ import os
 import shutil
 from typing import Iterable, List, Tuple
 
-from util import collection, static, taxonomy
-from util.common import titlecase
-from util.image import Image, categorize, split, unqualify
-from util.metrics import metrics
-from util.resource import VersionedResource
-from util.similarity import similarity
-from util.static import source_root, stylesheet
+from diving.util import collection, static, taxonomy
+from diving.util.common import titlecase
+from diving.util.image import Image, categorize, split, unqualify
+from diving.util.metrics import metrics
+from diving.util.resource import VersionedResource
+from diving.util.similarity import similarity
+from diving.util.static import source_root, stylesheet
 
 
 def get_hashes(images: List[Image]) -> Iterable[str]:

@@ -8,8 +8,8 @@ import os
 from functools import lru_cache
 from typing import Dict, List, Optional, Set, cast
 
-from util import collection, common, image, static
-from util.collection import Image, ImageTree
+from diving.util import collection, common, image, static
+from diving.util.collection import Image, ImageTree
 
 
 def site_list() -> str:

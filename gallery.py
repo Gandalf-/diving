@@ -16,8 +16,8 @@ from typing import List, Optional, Tuple, cast
 import imprecise
 from diving import detective, hypertext, information, locations, search, timeline
 from diving.hypertext import Side, Where
-from util import collection, resource, static, taxonomy, verify
-from util.common import (
+from diving.util import collection, resource, static, taxonomy, verify
+from diving.util.common import (
     Progress,
     Tree,
     extract_leaves,
@@ -29,9 +29,9 @@ from util.common import (
     titlecase,
     tree_size,
 )
-from util.image import Image
-from util.metrics import metrics
-from util.similarity import similarity
+from diving.util.image import Image
+from diving.util.metrics import metrics
+from diving.util.similarity import similarity
 
 # Similar species configuration
 SIMILAR_SPECIES_COUNT = 4
@@ -479,10 +479,10 @@ def _get_paths(htmls: List[Tuple[str, str]]) -> List[str]:
 
 
 if not sys.flags.interactive and __name__ == '__main__':
-    import util.common
+    import diving.util.common
 
     if len(sys.argv) > 1:
-        util.static.image_root = sys.argv[1]
+        diving.util.static.image_root = sys.argv[1]
 
     verify.verify_before()
     main()

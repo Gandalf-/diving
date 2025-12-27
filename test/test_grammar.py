@@ -1,6 +1,6 @@
 import unittest
 
-from util import grammar
+from diving.util import grammar
 
 
 class TestGrammar(unittest.TestCase):
