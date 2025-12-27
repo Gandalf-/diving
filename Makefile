@@ -1,28 +1,28 @@
 .PHONY: clean local dev prune sitemap sync
 
 local: data/translations.yml
-	bash diving/util/macos.sh build
+	bash diving/macos.sh build
 
 fast: data/translations.yml
-	bash diving/util/macos.sh build --fast
+	bash diving/macos.sh build --fast
 
 dev: data/translations.yml
-	bash diving/util/macos.sh dev
+	bash diving/macos.sh dev
 
 sitemap:
-	bash diving/util/macos.sh sitemap
+	bash diving/macos.sh sitemap
 
 sync: sitemap
-	bash diving/util/macos.sh sync
+	bash diving/macos.sh sync
 
 serve:
 	@serve ~/working/object-publish/diving-web
 
 clean:
-	bash diving/util/macos.sh clean
+	bash diving/macos.sh clean
 
 prune:
-	bash diving/util/macos.sh prune
+	bash diving/macos.sh prune
 
 
 data/translations.yml: data/taxonomy.yml

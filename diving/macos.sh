@@ -43,7 +43,7 @@ build() {
   esac
 
   cd "$www"
-  bash    "$src"/diving/util/runner.sh  ~/Pictures/diving/
+  bash    "$src"/diving/media.sh         ~/Pictures/diving/
   python3 "$src"/cli.py generate        ~/Pictures/diving/
 }
 
@@ -137,7 +137,7 @@ sync() {
 dev() {
   echo *.py util/*.py web/* data/*.yml \
     | tr ' ' '\n' \
-    | entr bash util/macos.sh build
+    | entr bash diving/macos.sh build
 }
 
 sitemap() {
