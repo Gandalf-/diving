@@ -44,7 +44,7 @@ build() {
 
   cd "$www"
   bash    "$src"/diving/util/runner.sh  ~/Pictures/diving/
-  python3 "$src"/gallery.py             ~/Pictures/diving/
+  python3 "$src"/cli.py generate        ~/Pictures/diving/
 }
 
 prune() {

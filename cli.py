@@ -3,12 +3,18 @@
 
 import argparse
 
-from diving import imprecise, missing
+from diving import generate, imprecise, missing
+from diving.util import static, verify
+from diving.util.metrics import metrics
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description='Diving utilities')
     subparsers = parser.add_subparsers(dest='command', required=True)
+
+    # generate subcommand
+    gen = subparsers.add_parser('generate', help='Generate the diving website')
+    gen.add_argument('image_root', nargs='?', help='path to diving images directory')
 
     # imprecise subcommand
     imp = subparsers.add_parser('imprecise', help='Find and update imprecise image names')
@@ -27,7 +33,17 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    if args.command == 'imprecise':
+    if args.command == 'generate':
+        if args.image_root:
+            static.image_root = args.image_root
+
+        verify.verify_before()
+        generate.main()
+        verify.verify_after()
+
+        metrics.summary('gallery')
+
+    elif args.command == 'imprecise':
         if args.list:
             imprecise.main_list()
         elif args.find:

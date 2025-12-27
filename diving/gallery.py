@@ -1,34 +1,16 @@
-#!/usr/bin/python3
+"""HTML generation for gallery, taxonomy, and sites pages."""
 
-"""
-search through diving pictures to produce a 'taxonomy tree', then convert that
-tree into HTML pages for diving.anardil.net
-"""
-
-import multiprocessing
 import statistics
-import sys
-import textwrap
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Tuple, cast
 
-from diving import (
-    detective,
-    hypertext,
-    imprecise,
-    information,
-    locations,
-    search,
-    timeline,
-)
+from diving import hypertext, information, locations
 from diving.hypertext import Side, Where
-from diving.util import collection, resource, static, taxonomy, verify
+from diving.util import collection, static, taxonomy
 from diving.util.common import (
-    Progress,
     Tree,
     extract_leaves,
-    file_content_matches,
     is_date,
     pretty_date,
     sanitize_link,
@@ -158,6 +140,14 @@ def _prefer_single_subject(images: List[Image], pick_middle: bool = False) -> Im
     return candidates[0]
 
 
+def _find_by_path(tree: Tree, needle: str) -> Optional[Image]:
+    """Search the tree for an image with this path."""
+    for leaf in extract_leaves(tree):
+        if needle in leaf.path():
+            return leaf
+    return None
+
+
 def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] = None) -> Image:
     """Find one image to represent this tree."""
     lineage = lineage or []
@@ -181,6 +171,7 @@ def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] =
 
 
 def get_gallery_info(direct: List[Image]) -> str:
+    """Generate distribution info HTML for gallery pages."""
     parts = []
     measurements = [image.approximate_depth() for image in direct]
     depths = [m for m in measurements if m]
@@ -205,7 +196,7 @@ def get_gallery_info(direct: List[Image]) -> str:
 
 
 def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
-    """wikipedia information if available"""
+    """Generate info section HTML (wikipedia for taxonomy, distribution for gallery)."""
     if where == Where.Taxonomy:
         seen: set[str] = set()
         htmls = []
@@ -223,6 +214,7 @@ def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
 
 
 def _key_to_subject(key: str, where: Where) -> str:
+    """Convert a tree key to display subject text."""
     if where == Where.Gallery:
         scientific = taxonomy.is_scientific_name(key)
         return f'<em>{scientific}</em>' if scientific else titlecase(key)
@@ -235,9 +227,7 @@ def _key_to_subject(key: str, where: Where) -> str:
 
 
 def html_direct_examples(direct: List[Image], where: Where) -> str:
-    """
-    Generate the HTML for the direct examples of a tree.
-    """
+    """Generate the HTML for the direct examples of a tree."""
     seen = set()
     html = '<div class="grid">'
 
@@ -361,7 +351,7 @@ def html_tree(
     lineage: Optional[List[str]] = None,
     similar_ctx: Optional[SimilarSpeciesContext] = None,
 ) -> List[Tuple[str, str]]:
-    """html version of display"""
+    """Generate HTML pages for a tree structure."""
     lineage = lineage or []
     assert similar_ctx is None or where in (Where.Gallery, Where.Taxonomy)
     side = Side.Left if where == Where.Gallery else Side.Right
@@ -401,98 +391,3 @@ def html_tree(
 
     results.append((path, html))
     return results
-
-
-def main() -> None:
-    """main"""
-    with Progress('loading images'):
-        tree = collection.build_image_tree()
-        scientific = taxonomy.mapping()
-        taxia = taxonomy.gallery_tree(tree)
-
-        # Precompute for similar species (gallery and taxonomy)
-        flat_tree = collection.single_level(tree)
-        all_species = set(flat_tree.keys())
-        similar_map = build_similar_species_map(all_species, scientific)
-        similar_ctx = SimilarSpeciesContext(
-            flat_tree=flat_tree,
-            similar_map=similar_map,
-            scientific_for_links=scientific,
-        )
-
-    with Progress('building /gallery'):
-        name_htmls = html_tree(tree, Where.Gallery, scientific, similar_ctx=similar_ctx)
-
-    with Progress('building /sites'):
-        sites = locations.sites()
-        sites_htmls = html_tree(sites, Where.Sites, scientific)
-
-    with Progress('building /taxonomy'):
-        scientific_reversed = {v: k for k, v in scientific.items()}
-        taxia_htmls = html_tree(taxia, Where.Taxonomy, scientific_reversed, similar_ctx=similar_ctx)
-
-    with Progress('building /timeline'):
-        times_htmls = timeline.timeline()
-
-    with Progress('building /detective'):
-        detective.writer()
-
-    metrics.counter('images loaded', tree_size(tree))
-    metrics.counter('pages in gallery', len(name_htmls))
-    metrics.counter('pages in sites', len(sites_htmls))
-    metrics.counter('pages in taxonomy', len(taxia_htmls))
-    metrics.counter('pages in timeline', len(times_htmls))
-    metrics.counter('imprecise labels', imprecise.total_imprecise())
-
-    for vr in resource.registry:
-        vr.cleanup()
-        vr.write()
-
-    with Progress('writing html'), multiprocessing.Pool() as pool:
-        pool.map(_pool_writer, name_htmls)
-        pool.map(_pool_writer, sites_htmls)
-        pool.map(_pool_writer, taxia_htmls)
-        pool.map(_pool_writer, times_htmls)
-
-    search.write_search_data(
-        _get_paths(name_htmls), _get_paths(sites_htmls), _get_paths(taxia_htmls)
-    )
-
-
-def _pool_writer(args: Tuple[str, str]) -> None:
-    """callback for HTML writer pool"""
-    path, html = args
-    # TODO make this ASCII once I have the escape codes for the emojis
-    html = textwrap.dedent(html)
-
-    if file_content_matches(path, html):
-        return
-
-    with open(path, 'w+') as f:
-        print(html, file=f, end='')
-
-
-def _find_by_path(tree: Tree, needle: str) -> Optional[Image]:
-    """search the tree for an image with this path"""
-    for leaf in extract_leaves(tree):
-        if needle in leaf.path():
-            return leaf
-    return None
-
-
-def _get_paths(htmls: List[Tuple[str, str]]) -> List[str]:
-    """helper"""
-    return [p for p, _ in htmls]
-
-
-if not sys.flags.interactive and __name__ == '__main__':
-    import diving.util.common
-
-    if len(sys.argv) > 1:
-        diving.util.static.image_root = sys.argv[1]
-
-    verify.verify_before()
-    main()
-    verify.verify_after()
-
-    metrics.summary('gallery')

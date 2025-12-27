@@ -26,7 +26,7 @@ prune:
 
 
 data/translations.yml: data/taxonomy.yml
-	python3 -c 'from util.translator import main; main()'
+	python3 -c 'from diving.util.translator import main; main()'
 
 
 .PHONY: lint shellcheck mypy ruff format

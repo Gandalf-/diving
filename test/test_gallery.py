@@ -2,7 +2,7 @@
 
 import unittest
 
-import gallery
+from diving import gallery
 from diving.hypertext import Where
 from diving.util import collection, database, taxonomy
 from diving.util.image import Image

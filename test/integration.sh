@@ -40,7 +40,7 @@ cd ~/working/tmp/diving/
 find gallery sites taxonomy timeline -name '*.html' -delete
 
 start_database
-DIVING_VERIFY=1 python3 ~/google_drive/code/python/diving/gallery.py
+DIVING_VERIFY=1 python3 ~/google_drive/code/shell/diving/cli.py generate
 
 html_lint="$(
   {
