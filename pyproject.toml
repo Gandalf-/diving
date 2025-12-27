@@ -1,3 +1,23 @@
+[project]
+name = "diving"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "wikipedia",
+    "inflect",
+    "apocrypha",
+    "pyyaml",
+    "lxml",
+]
+
+[project.optional-dependencies]
+dev = [
+    "types-PyYaml",
+    "types-beautifulsoup4",
+    "mypy",
+    "ruff",
+]
+
 [tool.ruff]
 lint.ignore = ["E501"]
 line-length = 100

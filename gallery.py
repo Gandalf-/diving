@@ -13,8 +13,15 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional, Tuple, cast
 
-import imprecise
-from diving import detective, hypertext, information, locations, search, timeline
+from diving import (
+    detective,
+    hypertext,
+    imprecise,
+    information,
+    locations,
+    search,
+    timeline,
+)
 from diving.hypertext import Side, Where
 from diving.util import collection, resource, static, taxonomy, verify
 from diving.util.common import (

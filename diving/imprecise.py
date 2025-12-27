@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 """Find and update images with imprecise names.
 
 A name is imprecise if there exists another name that ends with but is not exactly equal to it.
@@ -29,7 +27,6 @@ WORKFLOW:
    This will interactively prompt you to confirm each rename.
 """
 
-import argparse
 import operator
 import os
 from collections import Counter
@@ -188,27 +185,11 @@ def update_imprecise(name: str) -> None:
         print('')
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-l', '--list', action='store_true', help='list imprecise names')
-    parser.add_argument('-f', '--find', help='find imprecise images by name')
-    parser.add_argument('-u', '--update', help='update imprecise images by name')
-    args = parser.parse_args()
-
-    if args.list:
-        items = count_imprecise_names().items()
-        total = 0
-        for name, count in sorted(items, key=operator.itemgetter(1)):
-            total += count
-            print(name, count)
-        print('total', total)
-
-    elif args.find:
-        save_imprecise(args.find)
-
-    elif args.update:
-        update_imprecise(args.update)
-
-
-if __name__ == '__main__':
-    main()
+def main_list() -> None:
+    """Print imprecise names sorted by count."""
+    items = count_imprecise_names().items()
+    total = 0
+    for name, count in sorted(items, key=operator.itemgetter(1)):
+        total += count
+        print(name, count)
+    print('total', total)

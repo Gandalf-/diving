@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 """Find species with missing or incomplete taxonomy data.
 
 Two modes:
@@ -19,7 +17,6 @@ USAGE:
   $ python3 missing.py --incomplete  # show names without exact species
 """
 
-import argparse
 import operator
 from collections import Counter
 from typing import Set
@@ -131,25 +128,11 @@ def _print_counts(counts: Counter[str], label: str) -> None:
     print(f'total {label}', total)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        '-m', '--missing', action='store_true', help='list names without taxonomy entry'
-    )
-    parser.add_argument(
-        '-i', '--incomplete', action='store_true', help='list names without exact genus+species'
-    )
-    args = parser.parse_args()
-
-    if args.missing:
-        _print_counts(count_missing_names(), 'missing')
-
-    elif args.incomplete:
-        _print_counts(count_incomplete_names(), 'incomplete')
-
-    else:
-        parser.print_help()
+def main_missing() -> None:
+    """Print names without taxonomy entry."""
+    _print_counts(count_missing_names(), 'missing')
 
 
-if __name__ == '__main__':
-    main()
+def main_incomplete() -> None:
+    """Print names without exact genus+species."""
+    _print_counts(count_incomplete_names(), 'incomplete')
