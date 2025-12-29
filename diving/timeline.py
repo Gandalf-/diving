@@ -6,14 +6,14 @@ Python implementation of runner.sh
 
 import operator
 import os
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from diving import hypertext, locations
 from diving.hypertext import Where
 from diving.util import collection, common, log, static
 
 
-def timeline() -> List[Tuple[str, str]]:
+def timeline() -> list[tuple[str, str]]:
     """generate all the timeline html"""
     dives = [d for d in sorted(os.listdir(static.image_root), reverse=True) if d.startswith('20')]
     results = []
@@ -21,7 +21,7 @@ def timeline() -> List[Tuple[str, str]]:
     for dive in dives:
         results.append(_subpage(dive))
 
-    fake_scientific: Dict[str, Any] = {}
+    fake_scientific: dict[str, Any] = {}
     title, _ = hypertext.title([], Where.Timeline, fake_scientific)
     paths = [f'/{path}' for (path, _) in results]
 
@@ -46,7 +46,7 @@ def timeline() -> List[Tuple[str, str]]:
     return results
 
 
-def _subpage(dive: str) -> Tuple[str, str]:
+def _subpage(dive: str) -> tuple[str, str]:
     """build the sub page for this dive"""
     when, title = dive.split(' ', 1)
 

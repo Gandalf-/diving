@@ -6,7 +6,7 @@ identification game
 
 import os
 import shutil
-from typing import Iterable, List, Tuple
+from collections.abc import Iterable
 
 from diving.util import collection, static, taxonomy
 from diving.util.common import titlecase
@@ -17,20 +17,20 @@ from diving.util.similarity import similarity
 from diving.util.static import source_root, stylesheet
 
 
-def get_hashes(images: List[Image]) -> Iterable[str]:
+def get_hashes(images: list[Image]) -> Iterable[str]:
     """cache in a database"""
     for image in images:
         yield image.hashed()
 
 
-ThumbsTable = List[List[str]]
-SimiliarityTable = List[List[int]]
-DifficultyTable = List[int]
+ThumbsTable = list[list[str]]
+SimiliarityTable = list[list[int]]
+DifficultyTable = list[int]
 
 
 def table_builder(
-    images: List[Image],
-) -> Tuple[List[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
+    images: list[Image],
+) -> tuple[list[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
     """Build the tables."""
     images = reversed(images)
     all_names, images = _filter_images(images)
@@ -71,7 +71,7 @@ def writer() -> None:
 # PRIVATE
 
 
-def _write_data_js(images: List[Image], name: str) -> None:
+def _write_data_js(images: list[Image], name: str) -> None:
     """write out the tables to a file"""
     ns, ts, ss, ds = table_builder(images)
 
@@ -87,7 +87,7 @@ def _write_data_js(images: List[Image], name: str) -> None:
         print(f'var {name}_difficulties =', ds, file=fd)
 
 
-def _difficulties(names: List[str]) -> DifficultyTable:
+def _difficulties(names: list[str]) -> DifficultyTable:
     """get difficulty overrides"""
     lookup = {
         'very easy': 0,
@@ -110,7 +110,7 @@ def _difficulties(names: List[str]) -> DifficultyTable:
     return out
 
 
-def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
+def _filter_images(images: Iterable[Image]) -> tuple[list[str], list[Image]]:
     """strip out images that are poor fits for the game
     - multiple subjects
     - vague, like "sponge"
@@ -158,7 +158,7 @@ def _filter_images(images: Iterable[Image]) -> Tuple[List[str], List[Image]]:
     return all_names, new_images
 
 
-def _similarity_table(names: List[str]) -> SimiliarityTable:
+def _similarity_table(names: list[str]) -> SimiliarityTable:
     """how alike is every name pair"""
     tree = taxonomy.mapping()
     table: SimiliarityTable = [[] for _ in names]

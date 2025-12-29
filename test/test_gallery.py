@@ -4,7 +4,7 @@ import unittest
 
 from diving import gallery
 from diving.hypertext import Where
-from diving.util import collection, database, taxonomy
+from diving.util import collection, taxonomy
 from diving.util.image import Image
 from diving.util.similarity import similarity
 from diving.util.taxonomy import MappingType
@@ -15,9 +15,6 @@ class TestGallery(unittest.TestCase):
 
     g_scientific = taxonomy.mapping()
     t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
-
-    def setUp(self):
-        database.use_test_database()
 
     def test_find_representative(self):
         """picking the newest image to represent a tree, or a predefined 'pinned' image"""

@@ -6,7 +6,6 @@ and writing HTML output.
 
 import multiprocessing
 import textwrap
-from typing import List, Tuple
 
 from diving import detective, imprecise, locations, search, timeline
 from diving.gallery import SimilarSpeciesContext, build_similar_species_map, html_tree
@@ -72,7 +71,7 @@ def main() -> None:
     )
 
 
-def _pool_writer(args: Tuple[str, str]) -> None:
+def _pool_writer(args: tuple[str, str]) -> None:
     """Callback for HTML writer pool."""
     path, html = args
     html = textwrap.dedent(html)
@@ -84,6 +83,6 @@ def _pool_writer(args: Tuple[str, str]) -> None:
         print(html, file=f, end='')
 
 
-def _get_paths(htmls: List[Tuple[str, str]]) -> List[str]:
+def _get_paths(htmls: list[tuple[str, str]]) -> list[str]:
     """Extract paths from html tuples."""
     return [p for p, _ in htmls]

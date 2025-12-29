@@ -1,6 +1,9 @@
 [project]
 name = "diving"
 version = "0.1.0"
+description = "Static site generator for scuba diving photography galleries"
+readme = "CLAUDE.md"
+license = "MIT"
 requires-python = ">=3.11"
 dependencies = [
     "wikipedia",
@@ -12,14 +15,20 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "pytest",
+    "pytest-xdist",
     "types-PyYaml",
-    "types-beautifulsoup4",
     "mypy",
     "ruff",
 ]
 
+[project.scripts]
+diving = "cli:main"
+
+[tool.setuptools.packages.find]
+include = ["diving*"]
+
 [tool.ruff]
-lint.ignore = ["E501"]
 line-length = 100
 
 [tool.ruff.format]
@@ -42,4 +51,8 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "wikipedia.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["pytest", "pytest.*"]
 ignore_missing_imports = true

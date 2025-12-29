@@ -7,7 +7,7 @@ html generation
 import enum
 import html as html_module
 import string
-from typing import Any, Dict, List, Optional, Tuple, Type
+from typing import Any
 
 from diving import locations
 from diving.util import collection, grammar, log, taxonomy, translator
@@ -92,10 +92,10 @@ scripts = (
 blurb = 'Explore high quality scuba diving pictures'
 
 
-def title(lineage: List[str], where: Where, scientific: Dict[str, Any]) -> Tuple[str, str]:
+def title(lineage: list[str], where: Where, scientific: dict[str, Any]) -> tuple[str, str]:
     """html head and target path"""
     if not lineage:
-        impl: Type[Title] = TopTitle
+        impl: type[Title] = TopTitle
     else:
         assert lineage
         impl = {
@@ -195,7 +195,7 @@ def description(title: str, where: Where) -> str:
     return handler(title)
 
 
-def lineage_to_link(lineage: List[str], side: Side, key: Optional[str] = None) -> str:
+def lineage_to_link(lineage: list[str], side: Side, key: str | None = None) -> str:
     """get a link to this page"""
     if not lineage:
         assert key
@@ -265,7 +265,7 @@ def _direct_video_html(image: Image, where: Where) -> str:
     """
 
 
-def _image_to_gallery_link(image: Image) -> Optional[str]:
+def _image_to_gallery_link(image: Image) -> str | None:
     """get the /gallery link
 
     there could be mulitple subjects in this image, just take the first for now
@@ -314,12 +314,12 @@ def _caption_html(image: Image, where: Where) -> str:
 class Title:
     """Produce the HTML and title for a particular group of pages"""
 
-    def __init__(self, where: Where, lineage: List[str], scientific: Dict[str, Any]) -> None:
+    def __init__(self, where: Where, lineage: list[str], scientific: dict[str, Any]) -> None:
         self.where = where
         self.lineage = lineage
         self.scientific = scientific
 
-    def run(self) -> Tuple[str, str]:
+    def run(self) -> tuple[str, str]:
         """Produce html, path"""
         raise NotImplementedError
 
@@ -327,7 +327,7 @@ class Title:
 class GalleryTitle(Title):
     """html head and title section for gallery pages"""
 
-    def run(self) -> Tuple[str, str]:
+    def run(self) -> tuple[str, str]:
         side = Side.Left
 
         # check for scientific name for gallery
@@ -393,7 +393,7 @@ class TaxonomyTitle(Title):
     """html head and title section for taxonomy pages"""
 
     def translate_lineage(self) -> str:
-        lineage: List[str] = flatten(word.split(' ') for word in self.lineage)[::-1]
+        lineage: list[str] = flatten(word.split(' ') for word in self.lineage)[::-1]
 
         translated = [translator.translate(name) for name in lineage if name != 'sp.']
         if lineage[0].islower():
@@ -412,7 +412,7 @@ class TaxonomyTitle(Title):
         assert names, lineage
         return ' '.join(names)
 
-    def run(self) -> Tuple[str, str]:
+    def run(self) -> tuple[str, str]:
         _title = ' '.join(self.lineage)
         side = Side.Right
         path = sanitize_link(f'taxonomy/{_title}')
@@ -487,7 +487,7 @@ class SitesTitle(Title):
 
         return self.lineage[-2]
 
-    def run(self) -> Tuple[str, str]:
+    def run(self) -> tuple[str, str]:
         _title = ' '.join(self.lineage)
         path = sanitize_link(f'sites/{_title}')
 
@@ -617,7 +617,7 @@ class TopTitle(Title):
         </div>
         """
 
-    def run(self) -> Tuple[str, str]:
+    def run(self) -> tuple[str, str]:
         _title = titlecase(self.where.name)
 
         display = uncategorize(_title)

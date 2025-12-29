@@ -2,14 +2,11 @@ import os
 import unittest
 from typing import Any, Dict, cast
 
-from diving.util import collection, database, image, static
+from diving.util import collection, image, static
 
 
 class TestCollection(unittest.TestCase):
     """collection.py"""
-
-    def setUp(self) -> None:
-        database.use_test_database()
 
     def test_expand_names(self) -> None:
         """it works"""

@@ -2,7 +2,7 @@ import os
 import unittest
 from datetime import UTC, datetime
 
-from diving.util import collection, common, database
+from diving.util import collection, common
 from diving.util.log import (
     _build_dive_history,
     _db_decode,
@@ -11,13 +11,11 @@ from diving.util.log import (
     _match_dive_info,
     _parse,
     search,
+    suunto_counter,
 )
 
 
 class TestUDDF(unittest.TestCase):
-    def setUp(self) -> None:
-        database.use_test_database()
-
     def test_db_encode(self) -> None:
         info = {
             'date': datetime.now(UTC),
@@ -85,6 +83,8 @@ class TestUDDF(unittest.TestCase):
         self.assertNotEqual(depths, [])
 
     def test_parse_sml(self) -> None:
+        # Reset counter so test doesn't depend on execution order
+        suunto_counter.value = 21
         fname = '99809020-2021-01-09T10_39_00-0.sml'
         expected = {
             'date': datetime.fromisoformat('2021-01-09T10:39:00'),

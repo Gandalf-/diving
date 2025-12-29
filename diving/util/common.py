@@ -9,7 +9,8 @@ import functools
 import itertools
 import os
 import time
-from typing import Any, Callable, Iterable, List, Tuple
+from collections.abc import Callable, Iterable
+from typing import Any
 
 Tree = Any
 
@@ -50,18 +51,18 @@ def sanitize_link(xs: str) -> str:
     return xs.replace(' sp.', ' sp').replace(' ', '-').replace("'", '')
 
 
-def prefix_tuples(first: Any, ts: List[Tuple[Any, Any]]) -> Iterable[Tuple[Any, Any, Any]]:
+def prefix_tuples(first: Any, ts: list[tuple[Any, Any]]) -> Iterable[tuple[Any, Any, Any]]:
     """add a value to the beginning of each tuple in a list"""
     for a, b in ts:
         yield (first, a, b)
 
 
-def take(xs: Iterable[Any], n: int) -> List[Any]:
+def take(xs: Iterable[Any], n: int) -> list[Any]:
     """pull n items from xs"""
     return list(itertools.islice(xs, n))
 
 
-def walk_spine(tree: Tree, lineage: List[str]) -> Tree:
+def walk_spine(tree: Tree, lineage: list[str]) -> Tree:
     """walk the spine of a tree"""
     lineage = lineage[::-1]
 
@@ -73,7 +74,7 @@ def walk_spine(tree: Tree, lineage: List[str]) -> Tree:
     return tree
 
 
-def flatten(xs: Iterable[Iterable[Any]]) -> List[Any]:
+def flatten(xs: Iterable[Iterable[Any]]) -> list[Any]:
     """[[a]] -> [a]"""
     return [item for sublist in xs for item in sublist]
 

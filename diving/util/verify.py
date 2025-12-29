@@ -7,8 +7,9 @@ Check for broken links, misspelled names, and more
 import difflib
 import os
 import re
+from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any
 
 from diving.util import collection, common, static, taxonomy
 from diving.util.common import Progress
@@ -43,7 +44,7 @@ def verify_after() -> None:
 # PRIVATE
 
 
-def _verify(label: str, checks: List[Callable[[], None]]) -> None:
+def _verify(label: str, checks: list[Callable[[], None]]) -> None:
     if os.environ.get('DIVING_FAST'):
         return
 
@@ -160,13 +161,13 @@ def _word_order() -> None:
         assert False, f'word ordering appears wrong between {value}'
 
 
-def _find_wrong_name_order(tree: Any) -> Iterable[Tuple[str, str]]:
+def _find_wrong_name_order(tree: Any) -> Iterable[tuple[str, str]]:
     """look for swapped words"""
     if not isinstance(tree, dict):
         return
 
     conflicts = []
-    seen: Dict[str, str] = {}
+    seen: dict[str, str] = {}
 
     for key in tree.keys():
         flattened = ' '.join(sorted(key.split(' ')))
@@ -197,7 +198,7 @@ def _spelling() -> None:
         assert False, f'{found} illegal names'
 
 
-def _find_misspellings(names: Set[str]) -> Iterable[str]:
+def _find_misspellings(names: set[str]) -> Iterable[str]:
     """check for misspellings"""
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
@@ -219,7 +220,7 @@ def _find_misspellings(names: Set[str]) -> Iterable[str]:
             yield candidate
 
 
-def _possible_misspellings(names: Set[str]) -> Iterable[List[str]]:
+def _possible_misspellings(names: set[str]) -> Iterable[list[str]]:
     """look for edit distance
 
     prune based on taxonomy.load_known()
@@ -236,7 +237,7 @@ def _possible_misspellings(names: Set[str]) -> Iterable[List[str]]:
             yield [name] + similars
 
 
-def _illegal_names(names: Set[str]) -> Iterable[str]:
+def _illegal_names(names: set[str]) -> Iterable[str]:
     illegal = ('sea star', 'jelly fish')
     for name in names:
         if any(i in name for i in illegal):
@@ -277,7 +278,7 @@ def _links() -> None:
     internal links from the written files and looking for those as paths
     """
 
-    def check_link_exists(args: Tuple[str, str]) -> Optional[str]:
+    def check_link_exists(args: tuple[str, str]) -> str | None:
         path, link = args
 
         for attempt in (link + '.html', link + 'index.html', link):
@@ -292,7 +293,7 @@ def _links() -> None:
     assert not broken, broken
 
 
-def _deduped_links() -> Iterable[Tuple[str, str]]:
+def _deduped_links() -> Iterable[tuple[str, str]]:
     seen = set()
 
     for path, link in _find_links():
@@ -303,10 +304,10 @@ def _deduped_links() -> Iterable[Tuple[str, str]]:
         yield path, link
 
 
-def _find_links() -> Iterable[Tuple[str, str]]:
+def _find_links() -> Iterable[tuple[str, str]]:
     """check the html directory for internal links"""
 
-    def extract_from(path: str) -> List[Tuple[str, str]]:
+    def extract_from(path: str) -> list[tuple[str, str]]:
         """get links from a file"""
         links = []
         with open(path) as fd:
@@ -323,7 +324,7 @@ def _find_links() -> Iterable[Tuple[str, str]]:
                 links.append((path, link))
         return links
 
-    def process_file(directory: str, filename: str) -> List[Tuple[str, str]]:
+    def process_file(directory: str, filename: str) -> list[tuple[str, str]]:
         path = os.path.join(directory, filename)
         return extract_from(path)
 

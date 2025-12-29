@@ -7,7 +7,6 @@ suffixes
 
 import os
 import re
-from typing import Dict, Optional
 
 import yaml
 
@@ -41,7 +40,7 @@ PARENTHETICAL = re.compile(r' \(.*\)')
 AFTER_COMMA = re.compile(r',.*')
 
 
-def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
+def cleanup(latin: str, english: str | None) -> str | None:
     if not english:
         return None
 
@@ -57,7 +56,7 @@ def cleanup(latin: str, english: Optional[str]) -> Optional[str]:
     return english
 
 
-def filterer(translations: Dict[str, str]) -> None:
+def filterer(translations: dict[str, str]) -> None:
     clean = {}
     empty = set()
     all_latin = all_latin_words()

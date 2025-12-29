@@ -4,45 +4,48 @@
 parsing data from the file system to construct trees of images
 """
 
+from __future__ import annotations
+
 import os
+from collections.abc import Iterable, Iterator
 from functools import lru_cache
-from typing import Dict, Iterable, Iterator, List, Set, Union, cast
+from typing import TypeAlias, cast
 
 from diving.util import static
 from diving.util.common import flatten, tree_size
 from diving.util.image import Image, reorder_eggs, split
 from diving.util.metrics import metrics
 
-ImageTree = dict[str, Union[List[Image], 'ImageTree']]
+ImageTree: TypeAlias = 'dict[str, list[Image] | ImageTree]'
 
 
-def named() -> List[Image]:
+def named() -> list[Image]:
     """all named images from all directories"""
     return flatten([[y for y in z if y.name] for z in _collect_all_images()])
 
 
-def all_names() -> Set[str]:
+def all_names() -> set[str]:
     """all simplified, split names"""
     return {split(i.simplified()) for i in expand_names(named())}
 
 
 @lru_cache(None)
-def all_valid_names() -> Set[str]:
+def all_valid_names() -> set[str]:
     return set(single_level(build_image_tree()).keys())
 
 
-def single_level(tree: ImageTree) -> Dict[str, List[Image]]:
+def single_level(tree: ImageTree) -> dict[str, list[Image]]:
     """squash the tree into a single level name to images dict"""
     assert isinstance(tree, dict), tree
 
-    def inner(where: ImageTree) -> Iterator[List[Image]]:
+    def inner(where: ImageTree) -> Iterator[list[Image]]:
         for value in where.values():
             if isinstance(value, list):
                 yield value
             else:
                 yield from inner(value)
 
-    out: Dict[str, List[Image]] = {}
+    out: dict[str, list[Image]] = {}
     for group in inner(tree):
         name = group[0].simplified()
 
@@ -70,7 +73,7 @@ def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
 
 
 @lru_cache(None)
-def delve(dive_path: str) -> List[Image]:
+def delve(dive_path: str) -> list[Image]:
     """
     Create an Image object for each labeled picture in a directory; the path
     provided must be absolute
@@ -85,7 +88,7 @@ def delve(dive_path: str) -> List[Image]:
     return [Image(entry, directory, i / len(entries)) for i, entry in enumerate(sorted(entries))]
 
 
-def expand_names(images: List[Image]) -> Iterator[Image]:
+def expand_names(images: list[Image]) -> Iterator[Image]:
     """split out `a and b` into separate elements"""
     for image in images:
         for part in (' with ', ' and '):
@@ -105,7 +108,7 @@ def expand_names(images: List[Image]) -> Iterator[Image]:
 
 
 @lru_cache(None)
-def dive_listing() -> List[str]:
+def dive_listing() -> list[str]:
     """a list of all dive picture folders available"""
     return sorted(
         [
@@ -137,7 +140,7 @@ def _is_complete_species(name: str) -> bool:
     return genus[0].isupper() and species[0].islower() and species != 'sp.'
 
 
-def _collect_all_images() -> List[List[Image]]:
+def _collect_all_images() -> list[list[Image]]:
     """run delve on all dive picture folders"""
     return [delve(dive_path) for dive_path in dive_listing()]
 
@@ -160,7 +163,7 @@ def _make_tree(images: Iterable[Image]) -> ImageTree:
             sub = cast(ImageTree, sub[word])
 
         sub.setdefault('data', [])
-        cast(List[Image], sub['data']).append(image)
+        cast(list[Image], sub['data']).append(image)
 
     return out
 
@@ -210,7 +213,7 @@ def _compress(tree: ImageTree, reverse: bool = True) -> ImageTree:
 
 def _find_promotable_children(
     parent_key: str, parent_value_dict: ImageTree, parent_simplified: str
-) -> List[tuple[str, str, ImageTree]]:
+) -> list[tuple[str, str, ImageTree]]:
     """Find children that should be promoted to siblings because they are complete species."""
     promotable = []
 
@@ -222,7 +225,7 @@ def _find_promotable_children(
         if 'data' not in child_value_dict:
             continue
 
-        child_images = cast(List[Image], child_value_dict['data'])
+        child_images = cast(list[Image], child_value_dict['data'])
         if not child_images:
             continue
 
@@ -264,7 +267,7 @@ def _unnest_complete_species(tree: ImageTree) -> ImageTree:
             continue
 
         parent_value_dict = cast(ImageTree, parent_value)
-        images = cast(List[Image], parent_value_dict['data'])
+        images = cast(list[Image], parent_value_dict['data'])
         if not images:
             continue
 

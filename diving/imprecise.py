@@ -30,7 +30,6 @@ WORKFLOW:
 import operator
 import os
 from collections import Counter
-from typing import List, Set
 
 from diving import locations
 from diving.util import collection, common, taxonomy
@@ -43,7 +42,7 @@ def total_imprecise() -> int:
 
 def count_imprecise_names() -> Counter[str]:
     all_names = collection.all_names()
-    imprecise_names: Set[str] = set()
+    imprecise_names: set[str] = set()
 
     # Find which names are imprecise (have longer variations)
     for name in all_names:
@@ -80,11 +79,11 @@ def count_imprecise_names() -> Counter[str]:
     return imprecise
 
 
-def get_imprecise_names() -> Set[str]:
+def get_imprecise_names() -> set[str]:
     return set(count_imprecise_names().keys())
 
 
-def get_imprecise_images() -> List[Image]:
+def get_imprecise_images() -> list[Image]:
     imprecise_names = get_imprecise_names()
     named_images = collection.expand_names(collection.named())
     imprecise_images = []
@@ -98,7 +97,7 @@ def get_imprecise_images() -> List[Image]:
     return imprecise_images
 
 
-def find_imprecise_images(name: str) -> List[Image]:
+def find_imprecise_images(name: str) -> list[Image]:
     """Find images with the given imprecise name.
 
     This matches against the split simplified name to avoid partial matches.
@@ -128,7 +127,7 @@ def save_imprecise(name: str) -> None:
         os.link(src, tgt)
 
 
-def find_updates(name: str) -> List[str]:
+def find_updates(name: str) -> list[str]:
     root = os.path.expanduser(f'~/working/tmp/imprecise/{name}')
     imprecise_paths = [os.path.join(root, p) for p in os.listdir(root)]
 

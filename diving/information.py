@@ -22,7 +22,7 @@ import copy
 import operator
 from collections import Counter
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import wikipedia
 
@@ -101,7 +101,7 @@ def fetch(subject: str, suggest: bool = True) -> None:
         _save_page(page, subject.lower(), now)
 
 
-def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, str]:
+def lookup(subject: str, update: bool = True, again: bool = True) -> dict[str, str]:
     """get the subject from the database"""
     key = subject.lower()
 
@@ -130,7 +130,7 @@ def lookup(subject: str, update: bool = True, again: bool = True) -> Dict[str, s
     return out
 
 
-def reference(entry: Dict[str, Any], style: str = 'apa') -> str:
+def reference(entry: dict[str, Any], style: str = 'apa') -> str:
     """reference info"""
     url = entry['url']
     uri = url.replace('https://', '')
@@ -164,12 +164,12 @@ def cleanup(text: str) -> str:
     )
 
 
-def paragraphs(text: str, count: int) -> List[str]:
+def paragraphs(text: str, count: int) -> list[str]:
     """take count number of paragraphs"""
     return text.split('\n')[:count]
 
 
-def lineage_to_names(lineage: List[str]) -> List[str]:
+def lineage_to_names(lineage: list[str]) -> list[str]:
     """lineage list to names to look up"""
     if not lineage:
         return []
@@ -189,7 +189,7 @@ def lineage_to_names(lineage: List[str]) -> List[str]:
     return parts
 
 
-def html(name: str) -> Tuple[str, str]:
+def html(name: str) -> tuple[str, str]:
     """html fit for use by gallery.py"""
     reasonable_number_of_characters = 400
 
@@ -221,7 +221,7 @@ def html(name: str) -> Tuple[str, str]:
     )
 
 
-def missing_list() -> List[str]:
+def missing_list() -> list[str]:
     """what subjects are we missing?"""
     names = set(taxonomy.mapping().values())
     out = []
@@ -314,13 +314,13 @@ def link(subject: str, title: str) -> None:
     database.remove(*db_root, 'invalid', value=subject)
 
 
-def get_valid_subject(subject: str) -> Dict[str, Any]:
+def get_valid_subject(subject: str) -> dict[str, Any]:
     """get the entry for this valid subject"""
     value = database.get('diving', 'wikipedia', 'valid', subject)
     return copy.deepcopy(value)
 
 
-def get_mapped_subject(key: str) -> Optional[str]:
+def get_mapped_subject(key: str) -> str | None:
     return database.get('diving', 'wikipedia', 'maps', key)
 
 

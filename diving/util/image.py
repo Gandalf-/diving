@@ -6,7 +6,6 @@ base class for a diving image
 
 import os
 from functools import lru_cache
-from typing import List, Optional, Tuple
 
 from diving.util import database, log, static
 from diving.util.common import Tree
@@ -153,7 +152,7 @@ class Image:
         assert self.name, self
         return singular(self.name)
 
-    def scientific(self, names: Tree) -> Optional[str]:
+    def scientific(self, names: Tree) -> str | None:
         """do we have a scientific name?
         names should be taxonomy.mapping()
         """
@@ -176,7 +175,7 @@ class Image:
         return ' and ' in self.label or ' with ' in self.label
 
     @lru_cache(None)
-    def approximate_depth(self) -> Optional[Tuple[int, int]]:
+    def approximate_depth(self) -> tuple[int, int] | None:
         """approximate depth of this image"""
         info = log.lookup(self.directory)
         if not info or not info['depths']:
@@ -193,7 +192,7 @@ class Image:
 # PRIVATE
 
 
-def _depth_at(depths: List[Tuple[float, int]], position: float) -> int:
+def _depth_at(depths: list[tuple[float, int]], position: float) -> int:
     for index, depth in depths:
         if index >= position:
             return depth

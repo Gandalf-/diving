@@ -4,14 +4,14 @@ import glob
 import os
 import re
 import subprocess
-from typing import Iterable, List
+from collections.abc import Iterable
 
 from diving.util.resource import VersionedResource
 from diving.util.static import search_data_path
 
 
 def write_search_data(
-    gallery_pages: List[str], sites_pages: List[str], taxonomy_pages: List[str]
+    gallery_pages: list[str], sites_pages: list[str], taxonomy_pages: list[str]
 ) -> None:
     """JSON site map for gallerySearch"""
 
@@ -45,7 +45,7 @@ def write_search_data(
 DATE_PATTERN = re.compile(r'\d{4} \d{2} \d{2}')
 
 
-def _cleaner(pages: List[str]) -> Iterable[str]:
+def _cleaner(pages: list[str]) -> Iterable[str]:
     for page in pages:
         assert page.endswith('.html')
         page = os.path.basename(page)

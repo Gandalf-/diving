@@ -9,10 +9,13 @@ taxonomy related things
 - simplification of full classification into reasonable abbreviations
 """
 
+from __future__ import annotations
+
 import enum
 import os
+from collections.abc import Callable, Iterable
 from functools import lru_cache
-from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
+from typing import Any, TypeAlias
 
 import yaml
 
@@ -24,14 +27,14 @@ from diving.util.metrics import metrics
 
 yaml_path = os.path.join(static.source_root, 'data/taxonomy.yml')
 
-TaxiaTree = dict[str, Union[str, 'TaxiaTree']]
+TaxiaTree: TypeAlias = 'dict[str, str | TaxiaTree]'
 NameMapping = dict[str, str]
 
 
-def gallery_scientific(lineage: List[str], scientific: NameMapping, debug: bool = False) -> str:
+def gallery_scientific(lineage: list[str], scientific: NameMapping, debug: bool = False) -> str:
     """attempt to find a scientific name for this page"""
 
-    def lookup(names: List[str], *fns: Callable) -> Optional[str]:
+    def lookup(names: list[str], *fns: Callable[..., Any]) -> str | None:
         base = ' '.join(names).lower()
         candidate = hmap(base, *fns)
         return scientific.get(candidate)
@@ -54,7 +57,7 @@ def gallery_scientific(lineage: List[str], scientific: NameMapping, debug: bool 
     return name or ''
 
 
-def no_taxonomy(lineage: List[str]) -> bool:
+def no_taxonomy(lineage: list[str]) -> bool:
     """is this lineage not in the taxonomy?"""
     name = ' '.join(lineage)
     if unqualify(uncategorize(name)) in static.no_taxonomy_exact:
@@ -129,7 +132,7 @@ def load_known(exact_only: bool = False) -> Iterable[str]:
     yield from extract_leaves(tree)
 
 
-def all_latin_words() -> Set[str]:
+def all_latin_words() -> set[str]:
     def producer() -> Iterable[str]:
         for branch in extract_branches(load_tree()):
             yield from branch.split(' ')
@@ -156,7 +159,7 @@ def mapping(where: MappingType = MappingType.Gallery) -> NameMapping:
     return {v: k for k, v in tree.items()}
 
 
-def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
+def gallery_tree(tree: ImageTree | None = None) -> ImageTree:
     """produce a tree for gallery.py to use
     the provided tree must be from collection.build_image_tree()
     """
@@ -169,7 +172,7 @@ def gallery_tree(tree: Optional[ImageTree] = None) -> ImageTree:
     return itree
 
 
-def binomial_names(tree: Optional[Any] = None, parent: Optional[str] = None) -> Iterable[str]:
+def binomial_names(tree: Any | None = None, parent: str | None = None) -> Iterable[str]:
     """scientific binomial names"""
     tree = tree or load_tree()
 
@@ -196,7 +199,7 @@ def looks_like_scientific_name(name: str) -> bool:
     return genus.istitle() and species.islower()
 
 
-def is_scientific_name(name: str) -> Optional[str]:
+def is_scientific_name(name: str) -> str | None:
     """cached lookup"""
     return names_cache().get(name.lower())
 
@@ -262,7 +265,7 @@ def compress_tree(tree: TaxiaTree) -> TaxiaTree:
     return out
 
 
-def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
+def _taxia_filler(tree: TaxiaTree, images: dict[str, list[Image]]) -> ImageTree:
     """fill in the images"""
     assert isinstance(tree, dict), tree
     out: ImageTree = {}
@@ -283,12 +286,12 @@ def _taxia_filler(tree: TaxiaTree, images: Dict[str, List[Image]]) -> ImageTree:
 def _invert_known(tree: TaxiaTree) -> NameMapping:
     """leaves become roots"""
 
-    result: Dict[str, str] = {}
+    result: dict[str, str] = {}
 
     def inner(
-        tree: Union[str, 'TaxiaTree'],
-        out: Dict[str, str],
-        lineage: Optional[List[str]] = None,
+        tree: str | TaxiaTree,
+        out: dict[str, str],
+        lineage: list[str] | None = None,
     ) -> None:
         if not lineage:
             lineage = []

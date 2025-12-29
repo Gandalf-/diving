@@ -1,15 +1,12 @@
 # type: ignore
 
-import unittest
+import pytest
 
-from diving.util import collection, database, verify
+from diving.util import collection, verify
 
 
-class TestVerify(unittest.TestCase):
+class TestVerify:
     """verify.py"""
-
-    def setUp(self) -> None:
-        database.use_test_database()
 
     def _build_swapped_tree(self) -> collection.ImageTree:
         """swapped words"""
@@ -19,8 +16,8 @@ class TestVerify(unittest.TestCase):
 
         tree['nudibranch']['sea lemon']['pale freckled'] = {'data': [nudi]}
 
-        self.assertIn('pale freckled', tree['nudibranch']['sea lemon'].keys())
-        self.assertIn('freckled pale', tree['nudibranch']['sea lemon'].keys())
+        assert 'pale freckled' in tree['nudibranch']['sea lemon'].keys()
+        assert 'freckled pale' in tree['nudibranch']['sea lemon'].keys()
 
         return tree
 
@@ -28,38 +25,49 @@ class TestVerify(unittest.TestCase):
         """pale freckled sea lemon vs freckled pale sea lemon"""
         tree = self._build_swapped_tree()
         wrong = list(verify._find_wrong_name_order(tree))
-        self.assertEqual(wrong, [('freckled pale', 'pale freckled')])
+        assert wrong == [('freckled pale', 'pale freckled')]
 
-    def test_detect_misspelling(self) -> None:
+    @pytest.mark.parametrize(
+        'names,expected',
+        [
+            (
+                ['curlyhead spaghetti worm', 'curlyheaded spaghetti worm'],
+                [['curlyhead spaghetti worm', 'curlyheaded spaghetti worm']],
+            ),
+            (
+                ['encrusting bryozoan', 'encrusting byrozoan'],
+                [['encrusting bryozoan', 'encrusting byrozoan']],
+            ),
+            (
+                ['nanaimo nudibranch', 'naniamo nudibranch'],
+                [['nanaimo nudibranch', 'naniamo nudibranch']],
+            ),
+        ],
+    )
+    def test_detect_misspelling(self, names: list[str], expected: list[list[str]]) -> None:
         """curlyhead spaghetti worm vs curlyheaded spaghetti worm"""
-        examples = [
-            ['curlyhead spaghetti worm', 'curlyheaded spaghetti worm'],
-            ['encrusting bryozoan', 'encrusting byrozoan'],
-            ['nanaimo nudibranch', 'naniamo nudibranch'],
-        ]
-        for names in examples:
-            wrong = [sorted(w) for w in verify._possible_misspellings(names[:])]
-            self.assertEqual(wrong, [names])
+        wrong = [sorted(w) for w in verify._possible_misspellings(names[:])]
+        assert wrong == expected
 
-    def test_detect_misspelling_ignore_explicit(self) -> None:
-        """don't consider ignored names"""
-        examples = [
+    @pytest.mark.parametrize(
+        'names',
+        [
             ['submerged log', 'submerged wood'],
             ['a unknown', 'b unknown'],
-        ]
-        for names in examples:
-            wrong = [sorted(w) for w in verify._possible_misspellings(names[:])]
-            self.assertEqual(wrong, [])
+        ],
+    )
+    def test_detect_misspelling_ignore_explicit(self, names: list[str]) -> None:
+        """don't consider ignored names"""
+        wrong = [sorted(w) for w in verify._possible_misspellings(names[:])]
+        assert wrong == []
 
-    def test_detect_misspelling_ignore_scientific(self) -> None:
-        """a name isn't misspelled if it has a scientific name"""
-        examples = [
+    @pytest.mark.parametrize(
+        'names',
+        [
             ['dalls dendronotid nudibranch', 'red dendronotid nudibranch'],
-        ]
-        for names in examples:
-            wrong = [sorted(w) for w in verify._find_misspellings(names[:])]
-            self.assertEqual(wrong, [])
-
-
-if __name__ == '__main__':
-    unittest.main()
+        ],
+    )
+    def test_detect_misspelling_ignore_scientific(self, names: list[str]) -> None:
+        """a name isn't misspelled if it has a scientific name"""
+        wrong = [sorted(w) for w in verify._find_misspellings(names[:])]
+        assert wrong == []

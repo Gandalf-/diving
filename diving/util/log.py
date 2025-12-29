@@ -8,11 +8,12 @@ https://www.streit.cc/extern/uddf_v321/en/index.html
 
 import math
 import os
+from collections.abc import Iterator
 from datetime import datetime
 from functools import lru_cache
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any
 
-import lxml
+import lxml.etree
 
 from diving.util import collection, database, static
 from diving.util.common import Counter, kelvin_to_fahrenheit, meters_to_feet, pascal_to_psi
@@ -20,16 +21,16 @@ from diving.util.metrics import metrics
 
 # PUBLIC
 
-DiveInfo = Dict[str, Any]
+DiveInfo = dict[str, Any]
 
 
-def lookup(dive: str) -> Optional[DiveInfo]:
+def lookup(dive: str) -> DiveInfo | None:
     # this should be the exact directory
     return _matched_dives().get(dive)
 
 
-def search(date: str, hint: str) -> Optional[DiveInfo]:
-    dates_only: Dict[str, List[str]] = {}
+def search(date: str, hint: str) -> DiveInfo | None:
+    dates_only: dict[str, list[str]] = {}
     for dive in _matched_dives():
         ymd, _ = dive.split(' ', 1)
         dates_only.setdefault(ymd, [])
@@ -232,11 +233,11 @@ def _load_dive_info() -> Iterator[DiveInfo]:
         yield info
 
 
-def _build_dive_history() -> Dict[str, List[str]]:
+def _build_dive_history() -> dict[str, list[str]]:
     """No caching possible here since the consumer modifies the result to
     track progress through multi-dive days. Plus, dive_listing is already cached
     """
-    history: Dict[str, List[str]] = {}
+    history: dict[str, list[str]] = {}
 
     for dive in [os.path.basename(dive) for dive in collection.dive_listing()]:
         date, name = dive.split(' ', 1)
@@ -281,7 +282,7 @@ def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
 
 
 @lru_cache(None)
-def _matched_dives() -> Dict[str, DiveInfo]:
+def _matched_dives() -> dict[str, DiveInfo]:
     dives = {}
     for dive in _match_dive_info(_load_dive_info()):
         dives[dive['directory']] = dive

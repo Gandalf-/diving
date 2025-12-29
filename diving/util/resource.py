@@ -7,7 +7,6 @@ configuration information
 import glob
 import hashlib
 import os
-from typing import List, Optional
 
 from diving.util.metrics import metrics
 
@@ -21,7 +20,7 @@ class VersionedResource:
     the resource, but still have it update when the content changes.
     """
 
-    def __init__(self, path: str, target: Optional[str] = None) -> None:
+    def __init__(self, path: str, target: str | None = None) -> None:
         self._name = os.path.basename(path)
         self._target = target or ''
 
@@ -42,7 +41,7 @@ class VersionedResource:
         with open(self.path, 'w') as vr:
             vr.write(self._body)
 
-    def versions(self) -> List[str]:
+    def versions(self) -> list[str]:
         """
         get all output versions of this resource, ordered by mtime, so that
         the newest version is first
@@ -64,4 +63,4 @@ class VersionedResource:
                 os.remove(version)
 
 
-registry: List[VersionedResource] = []
+registry: list[VersionedResource] = []

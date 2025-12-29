@@ -1,44 +1,28 @@
 import os
-import unittest
-from typing import List, Set
+from pathlib import Path
 
 from diving.util import static
 from diving.util.resource import VersionedResource
 
 
-class TestResource(unittest.TestCase):
+class TestResource:
     """resource.py"""
-
-    def writer(self, path: str, body: str) -> None:
-        """write a file, track it for cleanup"""
-        self.written.add(path)
-
-        with open(path, 'w+') as fd:
-            print(body, end='', file=fd)
-
-    def setUp(self) -> None:
-        self.written: Set[str] = set()
-        self.writer('/tmp/versioned.bin', 'applesauce')
-
-    def tearDown(self) -> None:
-        for path in self.written:
-            try:
-                os.unlink(path)
-            except OSError:
-                pass
 
     def test_versioned_css(self) -> None:
         vr = VersionedResource(static.source_root + 'web/style.css')
-        self.assertEqual(vr._name, 'style.css')
-        self.assertIn('display: inline-block;', vr._body)
-        self.assertEqual(len(vr._hash), 10)
-        self.assertEqual(vr.path, f'style-{vr._hash}.css')
+        assert vr._name == 'style.css'
+        assert 'display: inline-block;' in vr._body
+        assert len(vr._hash) == 10
+        assert vr.path == f'style-{vr._hash}.css'
 
-    def test_does_not_overwrite_identical(self) -> None:
-        vr = VersionedResource('/tmp/versioned.bin', '/tmp')
-        self.assertEqual(vr.path, '/tmp/versioned-404a6e35ea.bin')
+    def test_does_not_overwrite_identical(self, tmp_path: Path) -> None:
+        source = tmp_path / 'versioned.bin'
+        source.write_text('applesauce')
 
-        self.writer(vr.path, 'applesauce')
+        vr = VersionedResource(str(source), str(tmp_path))
+        assert vr.path == str(tmp_path / 'versioned-404a6e35ea.bin')
+
+        Path(vr.path).write_text('applesauce')
         vr.write()
         st1 = os.stat(vr.path)
 
@@ -46,43 +30,37 @@ class TestResource(unittest.TestCase):
         vr.write()
         st2 = os.stat(vr.path)
 
-        self.assertEqual(st1.st_mtime, st2.st_mtime)
+        assert st1.st_mtime == st2.st_mtime
 
-    def test_finds_versions_with_glob(self) -> None:
-        seen: List[str] = []
+    def test_finds_versions_with_glob(self, tmp_path: Path) -> None:
+        source = tmp_path / 'versioned.bin'
+        seen: list[str] = []
 
         for body in range(0, 10):
-            self.writer('/tmp/versioned.bin', str(body))
+            source.write_text(str(body))
 
-            vr = VersionedResource('/tmp/versioned.bin', '/tmp')
-            self.assertNotIn(vr.path, seen)
+            vr = VersionedResource(str(source), str(tmp_path))
+            assert vr.path not in seen
             seen.append(vr.path)
-
-            self.written.add(vr.path)
             vr.write()
 
-        self.assertEqual(len(seen), 10)
-        self.assertEqual(vr.versions(), seen[::-1])
+        assert len(seen) == 10
+        assert vr.versions() == seen[::-1]
 
-    def test_cleans_up_old_versions(self) -> None:
-        wrote: List[str] = []
+    def test_cleans_up_old_versions(self, tmp_path: Path) -> None:
+        source = tmp_path / 'versioned.bin'
+        wrote: list[str] = []
 
         for body in range(0, 10):
-            self.writer('/tmp/versioned.bin', str(body))
+            source.write_text(str(body))
 
-            vr = VersionedResource('/tmp/versioned.bin', '/tmp')
+            vr = VersionedResource(str(source), str(tmp_path))
             wrote.append(vr.path)
-
-            self.written.add(vr.path)
             vr.write()
 
-        self.assertEqual(len(vr.versions()), 10)
+        assert len(vr.versions()) == 10
         vr.cleanup(3)
 
         retained = vr.versions()
-        self.assertEqual(len(retained), 3)
-        self.assertEqual(retained, wrote[-3:][::-1])
-
-
-if __name__ == '__main__':
-    unittest.main()
+        assert len(retained) == 3
+        assert retained == wrote[-3:][::-1]

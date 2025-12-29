@@ -6,7 +6,7 @@ collecting dive locations
 
 import os
 from functools import lru_cache
-from typing import Dict, List, Optional, Set, cast
+from typing import cast
 
 from diving.util import collection, common, image, static
 from diving.util.collection import Image, ImageTree
@@ -25,7 +25,7 @@ def sites_link(when: str, where: str) -> str:
     return f'/sites/{link}-{when}'
 
 
-def _find_location(site: str) -> tuple[str, Optional[str]] | None:
+def _find_location(site: str) -> tuple[str, str | None] | None:
     """Find site in locations hierarchy, return (region, subregion) or None."""
     for region, value in static.locations.items():
         if isinstance(value, list):
@@ -47,7 +47,7 @@ def get_region(site: str) -> str:
     return result[0]
 
 
-def get_subregion(site: str) -> Optional[str]:
+def get_subregion(site: str) -> str | None:
     """find a dive site's sub-region if it has one"""
     result = _find_location(site)
     return result[1] if result else None
@@ -69,7 +69,7 @@ def sites() -> ImageTree:
     return collection.pipeline(_make_tree(), reverse=False)
 
 
-def where_to_words(where: str) -> List[str]:
+def where_to_words(where: str) -> list[str]:
     """Split location string into logical components using greedy tokenization"""
     multi_word_phrases = _get_multi_word_phrases()
     words = []
@@ -102,7 +102,7 @@ def where_to_words(where: str) -> List[str]:
     return words
 
 
-def find_year_range(lineage: List[str]) -> str:
+def find_year_range(lineage: list[str]) -> str:
     """return a string like '2020, 2022-2024'"""
     region = ' '.join(lineage)
     return _pretty_year_range(_region_year_ranges()[region])
@@ -112,7 +112,7 @@ def find_year_range(lineage: List[str]) -> str:
 
 
 @lru_cache(None)
-def _get_multi_word_phrases() -> List[str]:
+def _get_multi_word_phrases() -> list[str]:
     """Extract all multi-word phrases from locations hierarchy, sorted longest first"""
     phrases = []
 
@@ -140,8 +140,8 @@ def _get_multi_word_phrases() -> List[str]:
 
 
 @lru_cache(None)
-def _region_year_ranges() -> Dict[str, Set[int]]:
-    out: Dict[str, Set[int]] = {}
+def _region_year_ranges() -> dict[str, set[int]]:
+    out: dict[str, set[int]] = {}
 
     for path in collection.dive_listing():
         dive = os.path.basename(path)
@@ -161,7 +161,7 @@ def _region_year_ranges() -> Dict[str, Set[int]]:
     return out
 
 
-def _pretty_year_range(years: Set[int]) -> str:
+def _pretty_year_range(years: set[int]) -> str:
     """1, 3, 4, 6 -> 1, 3-4, 6"""
     out = []
     years = sorted(list(years))
@@ -201,6 +201,6 @@ def _make_tree() -> ImageTree:
         sub = cast(ImageTree, sub[when])
 
         sub.setdefault('data', [])
-        cast(List[Image], sub['data']).append(image_)
+        cast(list[Image], sub['data']).append(image_)
 
     return out

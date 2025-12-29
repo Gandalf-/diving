@@ -3,7 +3,7 @@
 import statistics
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional, Tuple, cast
+from typing import cast
 
 from diving import hypertext, information, locations
 from diving.hypertext import Side, Where
@@ -27,14 +27,14 @@ SIMILAR_SPECIES_COUNT = 4
 SIMILAR_SPECIES_THRESHOLD = 0.75  # Excludes weaker order-level matches
 
 # Type alias for precomputed similar species
-SimilarSpeciesMap = dict[str, List[Tuple[str, float]]]
+SimilarSpeciesMap = dict[str, list[tuple[str, float]]]
 
 
 @dataclass
 class SimilarSpeciesContext:
     """Context for similar species rendering (Gallery/Taxonomy only)."""
 
-    flat_tree: dict[str, List[Image]]
+    flat_tree: dict[str, list[Image]]
     similar_map: SimilarSpeciesMap
     scientific_for_links: dict[str, str]
 
@@ -76,8 +76,8 @@ def build_similar_species_map(
 
 
 def html_similar_species(
-    similar: List[Tuple[str, float]],
-    flat_tree: dict[str, List[Image]],
+    similar: list[tuple[str, float]],
+    flat_tree: dict[str, list[Image]],
     where: Where,
     scientific: dict[str, str],
 ) -> str:
@@ -131,7 +131,7 @@ def html_similar_species(
     return html
 
 
-def _prefer_single_subject(images: List[Image], pick_middle: bool = False) -> Image:
+def _prefer_single_subject(images: list[Image], pick_middle: bool = False) -> Image:
     """Select an image, preferring single-subject images."""
     single = [img for img in images if not img.has_multiple_subjects()]
     candidates = single if single else images
@@ -140,7 +140,7 @@ def _prefer_single_subject(images: List[Image], pick_middle: bool = False) -> Im
     return candidates[0]
 
 
-def _find_by_path(tree: Tree, needle: str) -> Optional[Image]:
+def _find_by_path(tree: Tree, needle: str) -> Image | None:
     """Search the tree for an image with this path."""
     for leaf in extract_leaves(tree):
         if needle in leaf.path():
@@ -148,7 +148,7 @@ def _find_by_path(tree: Tree, needle: str) -> Optional[Image]:
     return None
 
 
-def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] = None) -> Image:
+def find_representative(tree: Tree, where: Where, lineage: list[str] | None = None) -> Image:
     """Find one image to represent this tree."""
     lineage = lineage or []
     pinned = static.pinned.get(' '.join(lineage))
@@ -170,7 +170,7 @@ def find_representative(tree: Tree, where: Where, lineage: Optional[List[str]] =
     return _prefer_single_subject(results, pick_middle=False)
 
 
-def get_gallery_info(direct: List[Image]) -> str:
+def get_gallery_info(direct: list[Image]) -> str:
     """Generate distribution info HTML for gallery pages."""
     parts = []
     measurements = [image.approximate_depth() for image in direct]
@@ -195,7 +195,7 @@ def get_gallery_info(direct: List[Image]) -> str:
     </div>"""
 
 
-def get_info(where: Where, lineage: List[str], direct: List[Image]) -> str:
+def get_info(where: Where, lineage: list[str], direct: list[Image]) -> str:
     """Generate info section HTML (wikipedia for taxonomy, distribution for gallery)."""
     if where == Where.Taxonomy:
         seen: set[str] = set()
@@ -226,7 +226,7 @@ def _key_to_subject(key: str, where: Where) -> str:
     return taxonomy.simplify(key, shorten=True)
 
 
-def html_direct_examples(direct: List[Image], where: Where) -> str:
+def html_direct_examples(direct: list[Image], where: Where) -> str:
     """Generate the HTML for the direct examples of a tree."""
     seen = set()
     html = '<div class="grid">'
@@ -248,7 +248,7 @@ def _render_category_card(
     example: Image,
     subject: str,
     where: Where,
-    lineage: List[str],
+    lineage: list[str],
     side: Side,
     key: str,
     size: int,
@@ -282,9 +282,9 @@ def _render_category_card(
 
 
 def _get_similar_species_html(
-    direct: List[Image],
-    lineage: List[str],
-    similar_ctx: Optional[SimilarSpeciesContext],
+    direct: list[Image],
+    lineage: list[str],
+    similar_ctx: SimilarSpeciesContext | None,
     where: Where,
 ) -> str:
     """Get the similar species HTML section if applicable."""
@@ -322,11 +322,11 @@ def _process_category(
     key: str,
     value: collection.ImageTree,
     where: Where,
-    lineage: List[str],
+    lineage: list[str],
     side: Side,
     scientific: taxonomy.NameMapping,
-    similar_ctx: Optional[SimilarSpeciesContext],
-) -> Tuple[str, List[Tuple[str, str]]]:
+    similar_ctx: SimilarSpeciesContext | None,
+) -> tuple[str, list[tuple[str, str]]]:
     """Process a single category and return (html, child_results)."""
     new_lineage = [key] + lineage if side == Side.Left else lineage + [key]
     example = find_representative(value, where, new_lineage)
@@ -348,9 +348,9 @@ def html_tree(
     tree: collection.ImageTree,
     where: Where,
     scientific: taxonomy.NameMapping,
-    lineage: Optional[List[str]] = None,
-    similar_ctx: Optional[SimilarSpeciesContext] = None,
-) -> List[Tuple[str, str]]:
+    lineage: list[str] | None = None,
+    similar_ctx: SimilarSpeciesContext | None = None,
+) -> list[tuple[str, str]]:
     """Generate HTML pages for a tree structure."""
     lineage = lineage or []
     assert similar_ctx is None or where in (Where.Gallery, Where.Taxonomy)
@@ -377,7 +377,7 @@ def html_tree(
     if has_subcategories:
         html += '</div>'
 
-    direct = cast(List[Image], tree.get('data', []))
+    direct = cast(list[Image], tree.get('data', []))
     chronological = where != Where.Sites
     direct = sorted(direct, key=lambda x: x.path(), reverse=chronological)
     assert not (direct and has_subcategories)

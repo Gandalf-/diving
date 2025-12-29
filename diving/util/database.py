@@ -2,7 +2,7 @@
 Database interface
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import apocrypha.client
 
@@ -14,13 +14,13 @@ class Database:
 
     # High Level
 
-    def get_image_hash(self, identifier: str) -> Optional[str]:
+    def get_image_hash(self, identifier: str) -> str | None:
         """Get an image's hash"""
         raise NotImplementedError
 
     # Low Level
 
-    def get(self, *keys: str, default: Optional[Any] = None) -> Any:
+    def get(self, *keys: str, default: Any | None = None) -> Any:
         """Retrieve a value"""
         raise NotImplementedError
 
@@ -32,7 +32,7 @@ class Database:
         """Delete a value"""
         raise NotImplementedError
 
-    def keys(self, *keys: str) -> List[str]:
+    def keys(self, *keys: str) -> list[str]:
         """Retrieve a list of keys"""
         raise NotImplementedError
 
@@ -50,16 +50,16 @@ class RealDatabase(Database):
 
     def __init__(self) -> None:
         self.database = apocrypha.client.Client()
-        self.level_cache: Dict[str, Any] = {}
+        self.level_cache: dict[str, Any] = {}
 
     def _invalidate_cache(self) -> None:
         """invalidate the cache"""
         self.level_cache = {}
 
-    def get_image_hash(self, identifier: str) -> Optional[str]:
+    def get_image_hash(self, identifier: str) -> str | None:
         return self.get('diving', 'cache', identifier, default={}).get('hash')
 
-    def get(self, *keys: str, default: Optional[Any] = None) -> Any:
+    def get(self, *keys: str, default: Any | None = None) -> Any:
         *context, target = keys
         ckey = ' '.join(context)
 
@@ -81,7 +81,7 @@ class RealDatabase(Database):
         self._invalidate_cache()
         self.database.delete(*keys)
 
-    def keys(self, *keys: str) -> List[str]:
+    def keys(self, *keys: str) -> list[str]:
         metrics.counter('database keys')
         return self.database.keys(*keys)
 
@@ -100,10 +100,10 @@ class TestDatabase(Database):
     def __init__(self) -> None:
         pass
 
-    def get_image_hash(self, identifier: str) -> Optional[str]:
+    def get_image_hash(self, identifier: str) -> str | None:
         return 'test'
 
-    def get(self, *keys: str, default: Optional[Any] = None) -> Any:
+    def get(self, *keys: str, default: Any | None = None) -> Any:
         return None
 
     def set(self, *keys: str, value: Any) -> None:
@@ -112,7 +112,7 @@ class TestDatabase(Database):
     def delete(self, *keys: str) -> None:
         pass
 
-    def keys(self, *keys: str) -> List[str]:
+    def keys(self, *keys: str) -> list[str]:
         return []
 
     def append(self, *keys: str, value: Any) -> None:
