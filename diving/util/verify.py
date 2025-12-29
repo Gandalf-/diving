@@ -225,7 +225,7 @@ def _possible_misspellings(names: set[str]) -> Iterable[list[str]]:
 
     prune based on taxonomy.load_known()
     """
-    skip = set(static.ignore + ['unknown'])
+    skip = set(static.ignore) | {'unknown'}
     names = {name for name in names if not any(name.endswith(i) for i in skip)}
 
     while names:

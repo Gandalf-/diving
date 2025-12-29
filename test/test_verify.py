@@ -3,6 +3,7 @@ from typing import Any
 import pytest
 
 from diving.util import collection, verify
+from diving.util.freeze import unfreeze
 
 
 class TestVerify:
@@ -10,7 +11,8 @@ class TestVerify:
 
     def _build_swapped_tree(self) -> collection.ImageTree:
         """swapped words"""
-        tree: Any = collection.build_image_tree()
+        # Convert frozen tree to mutable for test manipulation
+        tree: Any = unfreeze(collection.build_image_tree())
         nudi = tree['nudibranch']['sea lemon']['freckled pale']['data'].pop()
         nudi.name = 'Pale Freckled Sea Lemon'
 

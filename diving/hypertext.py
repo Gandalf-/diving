@@ -7,6 +7,7 @@ html generation
 import enum
 import html as html_module
 import string
+from collections.abc import Mapping
 from typing import Any
 
 from diving import locations
@@ -92,7 +93,7 @@ scripts = (
 blurb = 'Explore high quality scuba diving pictures'
 
 
-def title(lineage: list[str], where: Where, scientific: dict[str, Any]) -> tuple[str, str]:
+def title(lineage: list[str], where: Where, scientific: Mapping[str, Any]) -> tuple[str, str]:
     """html head and target path"""
     if not lineage:
         impl: type[Title] = TopTitle
@@ -314,7 +315,7 @@ def _caption_html(image: Image, where: Where) -> str:
 class Title:
     """Produce the HTML and title for a particular group of pages"""
 
-    def __init__(self, where: Where, lineage: list[str], scientific: dict[str, Any]) -> None:
+    def __init__(self, where: Where, lineage: list[str], scientific: Mapping[str, Any]) -> None:
         self.where = where
         self.lineage = lineage
         self.scientific = scientific

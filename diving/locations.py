@@ -8,6 +8,8 @@ import os
 from functools import lru_cache
 from typing import cast
 
+from frozendict import frozendict
+
 from diving.util import collection, common, image, static
 from diving.util.collection import Image, ImageTree
 
@@ -28,7 +30,7 @@ def sites_link(when: str, where: str) -> str:
 def _find_location(site: str) -> tuple[str, str | None] | None:
     """Find site in locations hierarchy, return (region, subregion) or None."""
     for region, value in static.locations.items():
-        if isinstance(value, list):
+        if isinstance(value, tuple):
             for place in value:
                 if place == site or site.startswith(place):
                     return (region, None)
@@ -112,16 +114,16 @@ def find_year_range(lineage: list[str]) -> str:
 
 
 @lru_cache(None)
-def _get_multi_word_phrases() -> list[str]:
+def _get_multi_word_phrases() -> tuple[str, ...]:
     """Extract all multi-word phrases from locations hierarchy, sorted longest first"""
-    phrases = []
+    phrases: list[str] = []
 
     for region, value in static.locations.items():
         # Add multi-word region names
         if ' ' in region:
             phrases.append(region)
 
-        if isinstance(value, list):
+        if isinstance(value, tuple):
             # Flat structure: add multi-word site names
             for site in value:
                 if ' ' in site:
@@ -136,11 +138,11 @@ def _get_multi_word_phrases() -> list[str]:
                         phrases.append(site)
 
     # Sort by length descending to match longest phrases first
-    return sorted(set(phrases), key=len, reverse=True)
+    return tuple(sorted(set(phrases), key=len, reverse=True))
 
 
 @lru_cache(None)
-def _region_year_ranges() -> dict[str, set[int]]:
+def _region_year_ranges() -> frozendict[str, frozenset[int]]:
     out: dict[str, set[int]] = {}
 
     for path in collection.dive_listing():
@@ -158,20 +160,20 @@ def _region_year_ranges() -> dict[str, set[int]]:
             out.setdefault(region, set())
             out[region].add(year)
 
-    return out
+    return frozendict({k: frozenset(v) for k, v in out.items()})
 
 
-def _pretty_year_range(years: set[int]) -> str:
+def _pretty_year_range(years: set[int] | frozenset[int]) -> str:
     """1, 3, 4, 6 -> 1, 3-4, 6"""
-    out = []
-    years = sorted(list(years))
+    out: list[str] = []
+    years_list = sorted(list(years))
 
-    while years:
-        start = years.pop(0)
+    while years_list:
+        start = years_list.pop(0)
         end = start
 
-        while years and years[0] == end + 1:
-            end = years.pop(0)
+        while years_list and years_list[0] == end + 1:
+            end = years_list.pop(0)
 
         if start == end:
             out.append(str(start))

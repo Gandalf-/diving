@@ -9,7 +9,7 @@ import functools
 import itertools
 import os
 import time
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping
 from typing import Any
 
 Tree = Any
@@ -81,7 +81,7 @@ def flatten(xs: Iterable[Iterable[Any]]) -> list[Any]:
 
 def tree_size(tree: Tree) -> int:
     """number of leaves"""
-    if not isinstance(tree, dict):
+    if not isinstance(tree, Mapping):
         return len(tree)
 
     return sum(tree_size(c) for c in tree.values())
@@ -89,12 +89,12 @@ def tree_size(tree: Tree) -> int:
 
 def extract_leaves(tree: Tree) -> Iterable[Any]:
     """get all the leaves in a tree of trees"""
-    assert isinstance(tree, dict), tree
+    assert isinstance(tree, Mapping), tree
 
     for value in tree.values():
-        if isinstance(value, dict):
+        if isinstance(value, Mapping):
             yield from extract_leaves(value)
-        elif isinstance(value, list):
+        elif isinstance(value, (list, tuple)):
             yield from value
         else:
             yield value
@@ -102,11 +102,11 @@ def extract_leaves(tree: Tree) -> Iterable[Any]:
 
 def extract_branches(tree: Tree) -> Iterable[str]:
     """get everything but the leaves"""
-    assert isinstance(tree, dict), tree
+    assert isinstance(tree, Mapping), tree
 
     for key, value in tree.items():
         yield key
-        if isinstance(value, dict):
+        if isinstance(value, Mapping):
             yield from extract_branches(value)
 
 

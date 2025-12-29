@@ -19,15 +19,14 @@ USAGE:
 
 import operator
 from collections import Counter
+from collections.abc import Mapping
 from typing import Set
 
 from diving.util import collection, static, taxonomy
 from diving.util.image import split
 
-NameMapping = dict[str, str]
 
-
-def _lookup_scientific(name: str, mapping: NameMapping) -> str:
+def _lookup_scientific(name: str, mapping: Mapping[str, str]) -> str:
     """Lookup scientific name, reusing gallery_scientific for normalization.
 
     Pre-applies split() then lets gallery_scientific handle:

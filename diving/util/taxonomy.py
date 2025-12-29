@@ -13,25 +13,36 @@ from __future__ import annotations
 
 import enum
 import os
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping
 from functools import lru_cache
 from typing import Any, TypeAlias
 
 import yaml
+from frozendict import frozendict
 
 from diving.util import static
-from diving.util.collection import ImageTree, all_names, build_image_tree, single_level
+from diving.util.collection import (
+    FrozenImageTree,
+    ImageTree,
+    all_names,
+    build_image_tree,
+    single_level,
+)
 from diving.util.common import extract_branches, extract_leaves, hmap
+from diving.util.freeze import deep_freeze
 from diving.util.image import Image, uncategorize, unqualify, unsplit
 from diving.util.metrics import metrics
 
 yaml_path = os.path.join(static.source_root, 'data/taxonomy.yml')
 
 TaxiaTree: TypeAlias = 'dict[str, str | TaxiaTree]'
-NameMapping = dict[str, str]
+FrozenTaxiaTree: TypeAlias = 'frozendict[str, str | FrozenTaxiaTree]'
+NameMapping: TypeAlias = frozendict[str, str]
 
 
-def gallery_scientific(lineage: list[str], scientific: NameMapping, debug: bool = False) -> str:
+def gallery_scientific(
+    lineage: list[str], scientific: Mapping[str, str], debug: bool = False
+) -> str:
     """attempt to find a scientific name for this page"""
 
     def lookup(names: list[str], *fns: Callable[..., Any]) -> str | None:
@@ -116,16 +127,16 @@ def similar(a: str, b: str) -> bool:
 
 
 @lru_cache(None)
-def load_tree() -> TaxiaTree:
+def load_tree() -> FrozenTaxiaTree:
     """yaml load"""
     with open(yaml_path, encoding='utf8') as fd:
-        return yaml.safe_load(fd)
+        return deep_freeze(yaml.safe_load(fd))
 
 
 def load_known(exact_only: bool = False) -> Iterable[str]:
     """load taxonomy.yml"""
 
-    tree = load_tree()
+    tree: TaxiaTree | FrozenTaxiaTree = load_tree()
     if exact_only:
         tree = _filter_exact(tree)
 
@@ -154,12 +165,12 @@ def mapping(where: MappingType = MappingType.Gallery) -> NameMapping:
     tree = _invert_known(load_tree())
 
     if where == MappingType.Gallery:
-        return tree
+        return frozendict(tree)
 
-    return {v: k for k, v in tree.items()}
+    return frozendict({v: k for k, v in tree.items()})
 
 
-def gallery_tree(tree: ImageTree | None = None) -> ImageTree:
+def gallery_tree(tree: ImageTree | FrozenImageTree | None = None) -> ImageTree:
     """produce a tree for gallery.py to use
     the provided tree must be from collection.build_image_tree()
     """
@@ -172,11 +183,15 @@ def gallery_tree(tree: ImageTree | None = None) -> ImageTree:
     return itree
 
 
-def binomial_names(tree: Any | None = None, parent: str | None = None) -> Iterable[str]:
+def binomial_names(
+    tree: FrozenTaxiaTree | TaxiaTree | str | None = None,
+    parent: str | None = None,
+) -> Iterable[str]:
     """scientific binomial names"""
-    tree = tree or load_tree()
+    if tree is None:
+        tree = load_tree()
 
-    if not isinstance(tree, dict):
+    if isinstance(tree, str):
         return
 
     for key, value in tree.items():
@@ -210,14 +225,14 @@ def is_scientific_name(name: str) -> str | None:
 @lru_cache(None)
 def names_cache() -> NameMapping:
     """cached lookup"""
-    cache = {}
+    cache: dict[str, str] = {}
     for bname in binomial_names():
         cache[bname.lower()] = bname
 
         genus, _ = bname.split()
         cache[genus.lower()] = genus
 
-    return cache
+    return frozendict(cache)
 
 
 def _to_classification(name: str, mappings: NameMapping) -> str:
@@ -225,16 +240,16 @@ def _to_classification(name: str, mappings: NameMapping) -> str:
     return gallery_scientific(name.split(' '), mappings)
 
 
-def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
+def _filter_exact(tree: TaxiaTree | FrozenTaxiaTree) -> TaxiaTree:
     """remove all sp. entries"""
-    assert isinstance(tree, dict), tree
+    assert isinstance(tree, (dict, frozendict)), tree
 
     out: TaxiaTree = {}
     for key, value in tree.items():
         if key == 'sp.':
             continue
 
-        if isinstance(value, dict):
+        if isinstance(value, (dict, frozendict)):
             out[key] = _filter_exact(value)
         else:
             out[key] = value
@@ -242,15 +257,15 @@ def _filter_exact(tree: TaxiaTree) -> TaxiaTree:
     return out
 
 
-def compress_tree(tree: TaxiaTree) -> TaxiaTree:
+def compress_tree(tree: TaxiaTree | FrozenTaxiaTree) -> TaxiaTree:
     """
     Collapse subtrees with only one child into their parent and update the parent's
     key for the current subtree to be "key + child key".
     """
-    out = {}
+    out: TaxiaTree = {}
 
     for key, value in tree.items():
-        if isinstance(value, dict):
+        if isinstance(value, (dict, frozendict)):
             sub_tree = compress_tree(value)
 
             if len(sub_tree) == 1:
@@ -283,13 +298,13 @@ def _taxia_filler(tree: TaxiaTree, images: dict[str, list[Image]]) -> ImageTree:
     return out
 
 
-def _invert_known(tree: TaxiaTree) -> NameMapping:
+def _invert_known(tree: TaxiaTree | FrozenTaxiaTree) -> dict[str, str]:
     """leaves become roots"""
 
     result: dict[str, str] = {}
 
     def inner(
-        tree: str | TaxiaTree,
+        tree: str | TaxiaTree | FrozenTaxiaTree,
         out: dict[str, str],
         lineage: list[str] | None = None,
     ) -> None:
@@ -312,13 +327,13 @@ def _invert_known(tree: TaxiaTree) -> NameMapping:
 
 def _ordered_simple_names(tree: ImageTree) -> Iterable[str]:
     """taxonomy names"""
-    assert isinstance(tree, dict), tree
+    assert isinstance(tree, (dict, frozendict)), tree
 
     for value in tree.values():
-        if isinstance(value, dict):
+        if isinstance(value, (dict, frozendict)):
             yield from _ordered_simple_names(value)
 
-        elif isinstance(value, list):
+        elif isinstance(value, (list, tuple)):
             yield value[0].simplified()
 
         else:

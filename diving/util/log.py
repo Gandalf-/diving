@@ -11,25 +11,28 @@ import os
 from collections.abc import Iterator
 from datetime import datetime
 from functools import lru_cache
-from typing import Any
+from typing import Any, TypeAlias
 
 import lxml.etree
+from frozendict import frozendict
 
 from diving.util import collection, database, static
 from diving.util.common import Counter, kelvin_to_fahrenheit, meters_to_feet, pascal_to_psi
+from diving.util.freeze import deep_freeze
 from diving.util.metrics import metrics
 
 # PUBLIC
 
-DiveInfo = dict[str, Any]
+DiveInfo: TypeAlias = dict[str, Any]
+FrozenDiveInfo: TypeAlias = frozendict[str, Any]
 
 
-def lookup(dive: str) -> DiveInfo | None:
+def lookup(dive: str) -> FrozenDiveInfo | None:
     # this should be the exact directory
     return _matched_dives().get(dive)
 
 
-def search(date: str, hint: str) -> DiveInfo | None:
+def search(date: str, hint: str) -> FrozenDiveInfo | None:
     dates_only: dict[str, list[str]] = {}
     for dive in _matched_dives():
         ymd, _ = dive.split(' ', 1)
@@ -49,7 +52,7 @@ def search(date: str, hint: str) -> DiveInfo | None:
         return None
 
 
-def dive_info_html(info: DiveInfo) -> str:
+def dive_info_html(info: DiveInfo | FrozenDiveInfo) -> str:
     """build a snippet from the dive computer information available"""
     parts = []
     parts.append(f'{info["depth"]}\'')
@@ -86,13 +89,13 @@ def _parse_number(tree: Any, path: str) -> float:  # type: ignore
 
 
 @lru_cache(None)
-def _parse(file: str) -> DiveInfo:
+def _parse(file: str) -> FrozenDiveInfo:
     info = _db_decode(database.database.get('diving', 'log', 'cache', file))
     if not info:
         parser = _parse_uddf if file.endswith('.uddf') else _parse_sml
         info = parser(file)
         database.database.set('diving', 'log', 'cache', file, value=_db_encode(info))
-    return info
+    return deep_freeze(info)
 
 
 def _db_encode(info: DiveInfo) -> DiveInfo:
@@ -212,7 +215,7 @@ def _parse_sml(file: str) -> DiveInfo:
     }
 
 
-def _load_dive_info() -> Iterator[DiveInfo]:
+def _load_dive_info() -> Iterator[FrozenDiveInfo]:
     log_types = [('Perdix', '.uddf'), ('Suunto', '.sml')]
 
     def candidates() -> Iterator[str]:
@@ -249,7 +252,7 @@ def _build_dive_history() -> dict[str, list[str]]:
     return history
 
 
-def _update_info(info: DiveInfo, directory: str) -> DiveInfo:
+def _update_info(info: DiveInfo | FrozenDiveInfo, directory: str) -> DiveInfo:
     _, name = directory.split(' ', 1)
     dive = {k: v for k, v in info.items()}
     dive['site'] = name
@@ -259,7 +262,7 @@ def _update_info(info: DiveInfo, directory: str) -> DiveInfo:
     return dive
 
 
-def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
+def _match_dive_info(infos: Iterator[FrozenDiveInfo]) -> Iterator[DiveInfo]:
     history = _build_dive_history()
 
     for info in sorted(infos, key=lambda i: i['number']):
@@ -282,8 +285,8 @@ def _match_dive_info(infos: Iterator[DiveInfo]) -> Iterator[DiveInfo]:
 
 
 @lru_cache(None)
-def _matched_dives() -> dict[str, DiveInfo]:
-    dives = {}
+def _matched_dives() -> frozendict[str, FrozenDiveInfo]:
+    dives: dict[str, DiveInfo] = {}
     for dive in _match_dive_info(_load_dive_info()):
         dives[dive['directory']] = dive
-    return dives
+    return deep_freeze(dives)

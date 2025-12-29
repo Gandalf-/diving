@@ -9,14 +9,18 @@ from __future__ import annotations
 import os
 from collections.abc import Iterable, Iterator
 from functools import lru_cache
-from typing import TypeAlias, cast
+from typing import Any, TypeAlias, cast
+
+from frozendict import frozendict
 
 from diving.util import static
 from diving.util.common import flatten, tree_size
+from diving.util.freeze import deep_freeze
 from diving.util.image import Image, reorder_eggs, split
 from diving.util.metrics import metrics
 
 ImageTree: TypeAlias = 'dict[str, list[Image] | ImageTree]'
+FrozenImageTree: TypeAlias = frozendict[str, Any]  # frozen nested structure
 
 
 def named() -> list[Image]:
@@ -30,17 +34,17 @@ def all_names() -> set[str]:
 
 
 @lru_cache(None)
-def all_valid_names() -> set[str]:
-    return set(single_level(build_image_tree()).keys())
+def all_valid_names() -> frozenset[str]:
+    return frozenset(single_level(build_image_tree()).keys())
 
 
-def single_level(tree: ImageTree) -> dict[str, list[Image]]:
+def single_level(tree: ImageTree | FrozenImageTree) -> dict[str, list[Image]]:
     """squash the tree into a single level name to images dict"""
-    assert isinstance(tree, dict), tree
+    assert isinstance(tree, (dict, frozendict)), tree
 
-    def inner(where: ImageTree) -> Iterator[list[Image]]:
+    def inner(where: ImageTree | FrozenImageTree) -> Iterator[list[Image] | tuple[Image, ...]]:
         for value in where.values():
-            if isinstance(value, list):
+            if isinstance(value, (list, tuple)):
                 yield value
             else:
                 yield from inner(value)
@@ -56,12 +60,12 @@ def single_level(tree: ImageTree) -> dict[str, list[Image]]:
 
 
 @lru_cache(None)
-def build_image_tree() -> ImageTree:
+def build_image_tree() -> FrozenImageTree:
     """construct a nested dictionary where each key is a unique split of a
     name (after processing) from right to left. if there's another split under
-    this one, the value is another dictionary, otherwise, it's a list of Images
+    this one, the value is another dictionary, otherwise, it's a tuple of Images
     """
-    return pipeline(_make_tree(expand_names(named())))
+    return cast(FrozenImageTree, deep_freeze(pipeline(_make_tree(expand_names(named())))))
 
 
 def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
@@ -73,7 +77,7 @@ def pipeline(tree: ImageTree, reverse: bool = True) -> ImageTree:
 
 
 @lru_cache(None)
-def delve(dive_path: str) -> list[Image]:
+def delve(dive_path: str) -> tuple[Image, ...]:
     """
     Create an Image object for each labeled picture in a directory; the path
     provided must be absolute
@@ -85,7 +89,9 @@ def delve(dive_path: str) -> list[Image]:
         for entry in os.listdir(dive_path)
         if any(entry.endswith(ext) for ext in exts) and '-' in entry
     ]
-    return [Image(entry, directory, i / len(entries)) for i, entry in enumerate(sorted(entries))]
+    return tuple(
+        Image(entry, directory, i / len(entries)) for i, entry in enumerate(sorted(entries))
+    )
 
 
 def expand_names(images: list[Image]) -> Iterator[Image]:
@@ -108,14 +114,14 @@ def expand_names(images: list[Image]) -> Iterator[Image]:
 
 
 @lru_cache(None)
-def dive_listing() -> list[str]:
-    """a list of all dive picture folders available"""
-    return sorted(
-        [
+def dive_listing() -> tuple[str, ...]:
+    """a tuple of all dive picture folders available"""
+    return tuple(
+        sorted(
             os.path.join(static.image_root, dive)
             for dive in os.listdir(static.image_root)
             if dive.startswith('20')
-        ]
+        )
     )
 
 
@@ -140,7 +146,7 @@ def _is_complete_species(name: str) -> bool:
     return genus[0].isupper() and species[0].islower() and species != 'sp.'
 
 
-def _collect_all_images() -> list[list[Image]]:
+def _collect_all_images() -> list[tuple[Image, ...]]:
     """run delve on all dive picture folders"""
     return [delve(dive_path) for dive_path in dive_listing()]
 

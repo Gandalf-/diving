@@ -43,9 +43,9 @@ class TestUDDF:
             'temp_low': 78,
         }
         parsed = _parse(fname)
-        depths = parsed.pop('depths')
-        assert expected == parsed
-        assert depths != []
+        for key, value in expected.items():
+            assert parsed[key] == value, f'{key}: {parsed[key]} != {value}'
+        assert parsed['depths'] != ()
 
     def test_parse_uddf_long(self) -> None:
         fname = 'Perdix AI[385834A0]#169_2023-09-24.uddf'
@@ -60,9 +60,9 @@ class TestUDDF:
             'temp_low': 46,
         }
         parsed = _parse(fname)
-        depths = parsed.pop('depths')
-        assert expected == parsed
-        assert depths != []
+        for key, value in expected.items():
+            assert parsed[key] == value, f'{key}: {parsed[key]} != {value}'
+        assert parsed['depths'] != ()
 
     def test_parse_uddf_zero_start_pressure(self) -> None:
         fname = 'Perdix AI[385834A0]#165_2023-09-22.uddf'
@@ -77,9 +77,9 @@ class TestUDDF:
             'temp_low': 48,
         }
         parsed = _parse(fname)
-        depths = parsed.pop('depths')
-        assert expected == parsed
-        assert depths != []
+        for key, value in expected.items():
+            assert parsed[key] == value, f'{key}: {parsed[key]} != {value}'
+        assert parsed['depths'] != ()
 
     def test_parse_sml(self) -> None:
         # Reset counter so test doesn't depend on execution order
@@ -89,14 +89,16 @@ class TestUDDF:
             'date': datetime.fromisoformat('2021-01-09T10:39:00'),
             'number': 22,
             'depth': 93,
-            'depths': [],
+            'depths': (),  # frozen, so tuple not list
             'duration': 3620,
             'tank_start': 3190,
             'tank_end': 928,
             'temp_high': 46,
             'temp_low': 44,
         }
-        assert expected == _parse(fname)
+        parsed = _parse(fname)
+        for key, value in expected.items():
+            assert parsed[key] == value, f'{key}: {parsed[key]} != {value}'
 
     def test_load(self) -> None:
         dives = list(_load_dive_info())

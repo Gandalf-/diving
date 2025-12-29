@@ -1,6 +1,9 @@
 """HTML generation for gallery, taxonomy, and sites pages."""
 
+from __future__ import annotations
+
 import statistics
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from typing import cast
@@ -34,14 +37,14 @@ SimilarSpeciesMap = dict[str, list[tuple[str, float]]]
 class SimilarSpeciesContext:
     """Context for similar species rendering (Gallery/Taxonomy only)."""
 
-    flat_tree: dict[str, list[Image]]
+    flat_tree: Mapping[str, list[Image] | tuple[Image, ...]]
     similar_map: SimilarSpeciesMap
-    scientific_for_links: dict[str, str]
+    scientific_for_links: Mapping[str, str]
 
 
 def build_similar_species_map(
     all_names: set[str],
-    taxonomy_tree: dict[str, str],
+    taxonomy_tree: Mapping[str, str],
 ) -> SimilarSpeciesMap:
     """Precompute similar species for all names at once."""
     # Filter to names with taxonomy
@@ -77,9 +80,9 @@ def build_similar_species_map(
 
 def html_similar_species(
     similar: list[tuple[str, float]],
-    flat_tree: dict[str, list[Image]],
+    flat_tree: Mapping[str, list[Image] | tuple[Image, ...]],
     where: Where,
-    scientific: dict[str, str],
+    scientific: Mapping[str, str],
 ) -> str:
     """Generate HTML for similar species section."""
     if not similar:
@@ -314,11 +317,11 @@ def _page_footer(info: str, similar_html: str) -> str:
 
 def _process_category(
     key: str,
-    value: collection.ImageTree,
+    value: collection.ImageTree | collection.FrozenImageTree,
     where: Where,
     lineage: list[str],
     side: Side,
-    scientific: taxonomy.NameMapping,
+    scientific: Mapping[str, str],
     similar_ctx: SimilarSpeciesContext | None,
 ) -> tuple[str, list[tuple[str, str]]]:
     """Process a single category and return (html, child_results)."""
@@ -339,9 +342,9 @@ def _process_category(
 
 
 def html_tree(
-    tree: collection.ImageTree,
+    tree: collection.ImageTree | collection.FrozenImageTree,
     where: Where,
-    scientific: taxonomy.NameMapping,
+    scientific: Mapping[str, str],
     lineage: list[str] | None = None,
     similar_ctx: SimilarSpeciesContext | None = None,
 ) -> list[tuple[str, str]]:

@@ -36,7 +36,7 @@ def categorize(name: str) -> str:
 def uncategorize(name: str) -> str:
     """remove the special categorization labels added earlier"""
     for category, values in static.categories.items():
-        assert isinstance(values, list)
+        assert isinstance(values, tuple)
 
         for value in values:
             if name.endswith(f' {category}') and value in name:
