@@ -1,5 +1,3 @@
-# type: ignore
-
 import pytest
 
 from diving import hypertext

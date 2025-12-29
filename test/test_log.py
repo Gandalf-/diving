@@ -1,5 +1,4 @@
 import os
-import unittest
 from datetime import UTC, datetime
 
 from diving.util import collection, common
@@ -15,7 +14,7 @@ from diving.util.log import (
 )
 
 
-class TestUDDF(unittest.TestCase):
+class TestUDDF:
     def test_db_encode(self) -> None:
         info = {
             'date': datetime.now(UTC),
@@ -27,9 +26,9 @@ class TestUDDF(unittest.TestCase):
             'temp_high': 78,
             'temp_low': 78,
         }
-        self.assertEqual(info, _db_decode(_db_encode(info)))
-        self.assertEqual({}, _db_encode({}))
-        self.assertEqual({}, _db_decode({}))
+        assert info == _db_decode(_db_encode(info))
+        assert {} == _db_encode({})
+        assert {} == _db_decode({})
 
     def test_parse_uddf_short(self) -> None:
         fname = 'Perdix AI[385834A0]#43_2021-10-22.uddf'
@@ -45,8 +44,8 @@ class TestUDDF(unittest.TestCase):
         }
         parsed = _parse(fname)
         depths = parsed.pop('depths')
-        self.assertEqual(expected, parsed)
-        self.assertNotEqual(depths, [])
+        assert expected == parsed
+        assert depths != []
 
     def test_parse_uddf_long(self) -> None:
         fname = 'Perdix AI[385834A0]#169_2023-09-24.uddf'
@@ -62,8 +61,8 @@ class TestUDDF(unittest.TestCase):
         }
         parsed = _parse(fname)
         depths = parsed.pop('depths')
-        self.assertEqual(expected, parsed)
-        self.assertNotEqual(depths, [])
+        assert expected == parsed
+        assert depths != []
 
     def test_parse_uddf_zero_start_pressure(self) -> None:
         fname = 'Perdix AI[385834A0]#165_2023-09-22.uddf'
@@ -79,8 +78,8 @@ class TestUDDF(unittest.TestCase):
         }
         parsed = _parse(fname)
         depths = parsed.pop('depths')
-        self.assertEqual(expected, parsed)
-        self.assertNotEqual(depths, [])
+        assert expected == parsed
+        assert depths != []
 
     def test_parse_sml(self) -> None:
         # Reset counter so test doesn't depend on execution order
@@ -97,39 +96,39 @@ class TestUDDF(unittest.TestCase):
             'temp_high': 46,
             'temp_low': 44,
         }
-        self.assertEqual(expected, _parse(fname))
+        assert expected == _parse(fname)
 
     def test_load(self) -> None:
         dives = list(_load_dive_info())
-        self.assertGreater(len(dives), 0)
+        assert len(dives) > 0
 
         numbers = sorted([d['number'] for d in dives])
-        self.assertIn(370, numbers)
+        assert 370 in numbers
 
         # too short
-        self.assertNotIn(243, numbers)
+        assert 243 not in numbers
 
     def test_build_history(self) -> None:
         history = _build_dive_history()
-        self.assertEqual(history['2023-09-24'], ['1 Power Lines', '2 Jaggy Crack'])
-        self.assertEqual(history['2023-09-10'], ['Rockaway Beach'])
-        self.assertNotIn('5 Ari South Maihi Beyru', history['2022-11-10'])
+        assert history['2023-09-24'] == ['1 Power Lines', '2 Jaggy Crack']
+        assert history['2023-09-10'] == ['Rockaway Beach']
+        assert '5 Ari South Maihi Beyru' not in history['2022-11-10']
 
     def test_match_single(self) -> None:
         fname = 'Perdix AI[385834A0]#161_2023-09-10.uddf'
         dive = next(_match_dive_info(_parse(f) for f in [fname]))
-        self.assertEqual(dive['site'], 'Rockaway Beach')
-        self.assertEqual(dive['directory'], '2023-09-10 Rockaway Beach')
+        assert dive['site'] == 'Rockaway Beach'
+        assert dive['directory'] == '2023-09-10 Rockaway Beach'
 
     def test_match_double(self) -> None:
         f169 = 'Perdix AI[385834A0]#169_2023-09-24.uddf'
         f170 = 'Perdix AI[385834A0]#170_2023-09-24.uddf'
         e169, e170 = list(_match_dive_info(_parse(f) for f in [f169, f170]))
 
-        self.assertEqual(e169['site'], '1 Power Lines')
-        self.assertEqual(e169['directory'], '2023-09-24 1 Power Lines')
-        self.assertEqual(e170['site'], '2 Jaggy Crack')
-        self.assertEqual(e170['directory'], '2023-09-24 2 Jaggy Crack')
+        assert e169['site'] == '1 Power Lines'
+        assert e169['directory'] == '2023-09-24 1 Power Lines'
+        assert e170['site'] == '2 Jaggy Crack'
+        assert e170['directory'] == '2023-09-24 2 Jaggy Crack'
 
     def test_match_triple(self) -> None:
         f134 = 'Perdix AI[385834A0]#134_2023-04-04.uddf'
@@ -137,21 +136,21 @@ class TestUDDF(unittest.TestCase):
         f136 = 'Perdix AI[385834A0]#136_2023-04-04.uddf'
         e134, e135, e136 = list(_match_dive_info(_parse(f) for f in [f134, f135, f136]))
 
-        self.assertEqual(e134['site'], '1 Fantasy Island')
-        self.assertEqual(e135['site'], '2 Hussar Bay')
-        self.assertEqual(e136['site'], '3 Browning Wall')
+        assert e134['site'] == '1 Fantasy Island'
+        assert e135['site'] == '2 Hussar Bay'
+        assert e136['site'] == '3 Browning Wall'
 
     def test_integration(self) -> None:
         dives = common.take(_match_dive_info(_load_dive_info()), 100)
-        self.assertEqual(len(dives), 100)
+        assert len(dives) == 100
         directories = set(os.path.basename(d) for d in collection.dive_listing())
 
         for dive in dives:
-            self.assertGreater(dive['number'], 0)
-            self.assertGreater(dive['depth'], 10)
-            self.assertGreater(dive['duration'], 900)
-            self.assertIn('site', dive)
-            self.assertIn(dive['directory'], directories)
+            assert dive['number'] > 0
+            assert dive['depth'] > 10
+            assert dive['duration'] > 900
+            assert 'site' in dive
+            assert dive['directory'] in directories
 
     def test_maldives(self) -> None:
         f120 = 'Perdix AI[385834A0]#120_2022-11-11.uddf'
@@ -159,9 +158,9 @@ class TestUDDF(unittest.TestCase):
         f102 = 'Perdix AI[385834A0]#102_2022-11-06.uddf'
         e102, e119, e120 = list(_match_dive_info(_parse(f) for f in [f102, f119, f120]))
 
-        self.assertEqual(e102['site'], '1 Male North Kurumba')
-        self.assertEqual(e119['site'], '1 Male South Kuda Giri Wreck')
-        self.assertEqual(e120['site'], '2 Male North Manta Point')
+        assert e102['site'] == '1 Male North Kurumba'
+        assert e119['site'] == '1 Male South Kuda Giri Wreck'
+        assert e120['site'] == '2 Male North Manta Point'
 
     """
     SitesTitle doesn't have exact information on which directory it
@@ -170,24 +169,24 @@ class TestUDDF(unittest.TestCase):
     """
 
     def test_search_failure(self) -> None:
-        self.assertIsNone(search('2000-01-01', 'Rockaway Beach'))
+        assert search('2000-01-01', 'Rockaway Beach') is None
 
     def test_search_single(self) -> None:
-        self.assertIsNotNone(search('2022-12-03', 'Fort Ward'))
+        assert search('2022-12-03', 'Fort Ward') is not None
 
     def test_search_multi_unique(self) -> None:
         info = search('2023-03-11', 'Elephant Wall')
         assert info
-        self.assertEqual(info['directory'], '2023-03-11 2 Elephant Wall')
+        assert info['directory'] == '2023-03-11 2 Elephant Wall'
 
         info = search('2023-04-03', 'Seven Tree')
         assert info
-        self.assertEqual(info['directory'], '2023-04-03 2 Seven Tree')
+        assert info['directory'] == '2023-04-03 2 Seven Tree'
 
     def test_search_multi_duplicate(self) -> None:
         info = search('2023-09-04', 'Keystone Jetty')
         assert info
-        self.assertEqual(info['directory'], '2023-09-04 1 Keystone Jetty')
+        assert info['directory'] == '2023-09-04 1 Keystone Jetty'
 
     def test_search_bug_skip(self) -> None:
         info = search('2024-10-30', 'Pigeon Key Shallows')
@@ -196,7 +195,3 @@ class TestUDDF(unittest.TestCase):
     def test_search_bug_cover(self) -> None:
         info = search('2024-10-30', 'Morerat Wall')
         assert info
-
-
-if __name__ == '__main__':
-    unittest.main()

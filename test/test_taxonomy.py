@@ -1,5 +1,3 @@
-# type: ignore
-
 import pytest
 
 import diving.util.common as utility
@@ -15,34 +13,34 @@ t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 class TestTaxonomy:
     """taxonomy.py"""
 
-    def test_compress_single_leaf(self):
+    def test_compress_single_leaf(self) -> None:
         tree = {'a': {'b': {'c': 'd'}}}
-        result = taxonomy.compress_tree(tree)
+        result = taxonomy.compress_tree(tree)  # type: ignore[arg-type]
         assert result == {'a b c': 'd'}
 
-    def test_compress_single_subtree(self):
+    def test_compress_single_subtree(self) -> None:
         tree = {'a': {'b': {'c': {'d': 'e'}}}}
-        result = taxonomy.compress_tree(tree)
+        result = taxonomy.compress_tree(tree)  # type: ignore[arg-type]
         assert result == {'a b c d': 'e'}
 
-    def test_compress_multiple_subtrees(self):
+    def test_compress_multiple_subtrees(self) -> None:
         tree = {'a': {'b': {'c': {'d': 'e', 'f': 'g'}}}}
-        result = taxonomy.compress_tree(tree)
+        result = taxonomy.compress_tree(tree)  # type: ignore[arg-type]
         assert result == {'a b c': {'d': 'e', 'f': 'g'}}
 
-    def test_compress_complex_tree(self):
+    def test_compress_complex_tree(self) -> None:
         tree = {
             'a': {'b': {'c': 'd', 'e': {'f': 'g', 'h': {'i': 'n'}}}, 'j': 'k'},
             'l': 'm',
         }
-        result = taxonomy.compress_tree(tree)
+        result = taxonomy.compress_tree(tree)  # type: ignore[arg-type]
         expected = {
             'a': {'b': {'c': 'd', 'e': {'f': 'g', 'h i': 'n'}}, 'j': 'k'},
             'l': 'm',
         }
         assert result == expected
 
-    def test_find_representative(self):
+    def test_find_representative(self) -> None:
         """same as gallery.py but the lineage is reversed"""
         taxia = taxonomy.gallery_tree()
         lineage = [
@@ -59,7 +57,7 @@ class TestTaxonomy:
             out = gallery.find_representative(taxia, Where.Taxonomy, lineage=lineage[:i])
             assert out is not None
 
-    def test_taxia_filler(self):
+    def test_taxia_filler(self) -> None:
         """it doesn't lose data"""
         images = collection.single_level(collection.build_image_tree())
         taxia = taxonomy.compress_tree(taxonomy.load_tree())
@@ -87,7 +85,7 @@ class TestTaxonomy:
             'Antipathes galapagensis',
         ],
     )
-    def test_looks_like_scientific_name_positive(self, name: str):
+    def test_looks_like_scientific_name_positive(self, name: str) -> None:
         """it works - positive cases"""
         assert taxonomy.looks_like_scientific_name(name) is True
 
@@ -97,22 +95,22 @@ class TestTaxonomy:
             'Fairy Palm Hydroid',
         ],
     )
-    def test_looks_like_scientific_name_negative(self, name: str):
+    def test_looks_like_scientific_name_negative(self, name: str) -> None:
         """it works - negative cases"""
         assert taxonomy.looks_like_scientific_name(name) is False
 
-    def test_filter_exact(self):
+    def test_filter_exact(self) -> None:
         """remove sp. entries"""
         tree = {'Actiniaria': {'sp.': 1, 'Actinioidea': 2, 'Metridioidea': 3}}
-        tree = taxonomy._filter_exact(tree)
+        tree = taxonomy._filter_exact(tree)  # type: ignore[arg-type]
         assert tree == {'Actiniaria': {'Actinioidea': 2, 'Metridioidea': 3}}
 
-    def test_mapping_gallery(self):
+    def test_mapping_gallery(self) -> None:
         ms = taxonomy.mapping(MappingType.Gallery)
         assert 'fish' in ms
         assert ms['fish'] == 'Animalia Chordata Actinopterygii sp.'
 
-    def test_mapping_taxonomy(self):
+    def test_mapping_taxonomy(self) -> None:
         ms = taxonomy.mapping(MappingType.Taxonomy)
         assert 'Animalia Chordata Actinopterygii sp.' in ms
         assert ms['Animalia Chordata Actinopterygii sp.'] == 'fish'
@@ -133,7 +131,7 @@ class TestTaxonomy:
             (['feather', 'star'], 'Echinodermata Crinoidea sp.'),
         ],
     )
-    def test_gallery_scientific(self, lineage: list[str], expected: str):
+    def test_gallery_scientific(self, lineage: list[str], expected: str) -> None:
         """find scientific names by common name"""
         match = taxonomy.gallery_scientific(lineage, g_scientific)
         assert match.endswith(expected), f'{match} != {expected}'
@@ -150,7 +148,7 @@ class TestTaxonomy:
             (False, ('Toxopneustidae', 'Tripneustes')),
         ],
     )
-    def test_similar(self, expected: bool, pair: tuple[str, str]):
+    def test_similar(self, expected: bool, pair: tuple[str, str]) -> None:
         """can these be collapsed?"""
         a, b = pair
         assert taxonomy.similar(a, b) == expected
@@ -176,7 +174,7 @@ class TestTaxonomy:
             ),
         ],
     )
-    def test_simplify(self, before: str, after: str):
+    def test_simplify(self, before: str, after: str) -> None:
         """remove similar non-ambiguous names"""
         assert taxonomy.simplify(before) == after
 
@@ -195,7 +193,7 @@ class TestTaxonomy:
             ),
         ],
     )
-    def test_simplify_shortens_very_long(self, before: str, after: str):
+    def test_simplify_shortens_very_long(self, before: str, after: str) -> None:
         assert taxonomy.simplify(before, shorten=True) == after
 
     @pytest.mark.parametrize(
@@ -206,7 +204,7 @@ class TestTaxonomy:
             'giant pacific octopus',
         ],
     )
-    def test_is_scientific_name_negative(self, example: str):
+    def test_is_scientific_name_negative(self, example: str) -> None:
         """cached helper - non-scientific names"""
         assert taxonomy.is_scientific_name(example) is None
 
@@ -217,7 +215,7 @@ class TestTaxonomy:
             'antipathes galapagensis',
         ],
     )
-    def test_is_scientific_name_positive(self, example: str):
+    def test_is_scientific_name_positive(self, example: str) -> None:
         """cached helper - scientific names"""
         assert taxonomy.is_scientific_name(example) is not None
 
@@ -228,11 +226,11 @@ class TestTaxonomy:
             'porites',
         ],
     )
-    def test_is_scientific_name_genus(self, example: str):
+    def test_is_scientific_name_genus(self, example: str) -> None:
         """cached helper - genus names"""
         assert taxonomy.is_scientific_name(example) is not None
 
-    def test_binomial_names(self):
+    def test_binomial_names(self) -> None:
         """parse binomial names from taxonomy.yml"""
         names = list(taxonomy.binomial_names())
         assert names != []

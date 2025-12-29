@@ -50,7 +50,7 @@ format:
 test: unittest jstest inttest
 
 unittest:
-	python3 -m pytest --quiet -n auto test/
+	python3 -m pytest --quiet test/
 
 jstest:
 	jasmine --config=.jasmine.mjs

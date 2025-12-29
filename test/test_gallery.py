@@ -1,6 +1,4 @@
-# type: ignore
-
-import unittest
+import re
 
 from diving import gallery
 from diving.hypertext import Where
@@ -9,20 +7,20 @@ from diving.util.image import Image
 from diving.util.similarity import similarity
 from diving.util.taxonomy import MappingType
 
+g_scientific = taxonomy.mapping()
+t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
 
-class TestGallery(unittest.TestCase):
+
+class TestGallery:
     """gallery.py"""
 
-    g_scientific = taxonomy.mapping()
-    t_scientific = taxonomy.mapping(where=MappingType.Taxonomy)
-
-    def test_find_representative(self):
+    def test_find_representative(self) -> None:
         """picking the newest image to represent a tree, or a predefined 'pinned' image"""
         tree = collection.build_image_tree()
 
-        self.assertIn('barnacle', tree)
+        assert 'barnacle' in tree
         out = gallery.find_representative(tree['barnacle'], Where.Gallery, lineage=['barnacle'])
-        self.assertIsNotNone(out)
+        assert out is not None
 
     def test_find_representative_skips_videos(self) -> None:
         tree = {
@@ -33,7 +31,7 @@ class TestGallery(unittest.TestCase):
             ]
         }
         out = gallery.find_representative(tree, Where.Gallery, lineage=['fish'])
-        self.assertEqual(out.name, 'Gray Fish')
+        assert out.name == 'Gray Fish'
 
     def test_find_representative_sites(self) -> None:
         tree = {
@@ -44,7 +42,7 @@ class TestGallery(unittest.TestCase):
             ]
         }
         out = gallery.find_representative(tree, Where.Sites)
-        self.assertEqual(out.name, 'Fast Fish')
+        assert out.name == 'Fast Fish'
 
     def test_find_representative_prefers_single_subject(self) -> None:
         """find_representative should prefer images without multiple subjects"""
@@ -58,7 +56,7 @@ class TestGallery(unittest.TestCase):
             ]
         }
         out = gallery.find_representative(tree, Where.Gallery)
-        self.assertEqual(out.name, 'Blue Fish')
+        assert out.name == 'Blue Fish'
 
         # Sites: prefers middle single-subject image
         tree_sites = {
@@ -71,7 +69,7 @@ class TestGallery(unittest.TestCase):
         }
         out = gallery.find_representative(tree_sites, Where.Sites)
         # Middle of single-subject images [Blue Fish, Red Fish] is Blue Fish (index 0 of 2)
-        self.assertIn(out.name, ['Blue Fish', 'Red Fish'])
+        assert out.name in ['Blue Fish', 'Red Fish']
 
     def test_find_representative_only_multiple_subjects(self) -> None:
         """when only multi-subject images available, still pick one"""
@@ -82,50 +80,50 @@ class TestGallery(unittest.TestCase):
             ]
         }
         out = gallery.find_representative(tree, Where.Gallery)
-        self.assertEqual(out.name, 'Shark and Remora')
+        assert out.name == 'Shark and Remora'
 
-    def test_key_to_subject_gallery(self):
+    def test_key_to_subject_gallery(self) -> None:
         """current element to visible text"""
 
-        def key_to_subject(key):
+        def key_to_subject(key: str) -> str:
             return gallery._key_to_subject(key, Where.Gallery)
 
-        self.assertEqual(key_to_subject('fancy fish'), 'Fancy Fish')
-        self.assertEqual(key_to_subject('octopus'), '<em>Octopus</em>')
+        assert key_to_subject('fancy fish') == 'Fancy Fish'
+        assert key_to_subject('octopus') == '<em>Octopus</em>'
 
-    def test_key_to_subject_taxonomy(self):
+    def test_key_to_subject_taxonomy(self) -> None:
         """current element to visible text"""
 
-        def key_to_subject(key):
+        def key_to_subject(key: str) -> str:
             return gallery._key_to_subject(key, Where.Taxonomy)
 
-        self.assertEqual(key_to_subject('octopoda octopus'), 'O. octopus')
+        assert key_to_subject('octopoda octopus') == 'O. octopus'
 
-    def test_key_to_subject_sites(self):
+    def test_key_to_subject_sites(self) -> None:
         """current element to visible text"""
 
-        def key_to_subject(key):
+        def key_to_subject(key: str) -> str:
             return gallery._key_to_subject(key, Where.Sites)
 
-        self.assertEqual(key_to_subject('Stretch Reef'), 'Stretch Reef')
-        self.assertEqual(key_to_subject('Shallows 2021-03-06'), 'Shallows')
-        self.assertEqual(key_to_subject('2021-03-06'), 'March 6th, 2021')
+        assert key_to_subject('Stretch Reef') == 'Stretch Reef'
+        assert key_to_subject('Shallows 2021-03-06') == 'Shallows'
+        assert key_to_subject('2021-03-06') == 'March 6th, 2021'
 
-    def test_html_tree_gallery(self):
+    def test_html_tree_gallery(self) -> None:
         """basics"""
         tree = collection.build_image_tree()
         sub_tree = tree['coral']
-        htmls = gallery.html_tree(sub_tree, Where.Gallery, TestGallery.g_scientific, ['coral'])
+        htmls = gallery.html_tree(sub_tree, Where.Gallery, g_scientific, ['coral'])  # type: ignore[arg-type]
 
-        self.assertNotEqual(htmls, [])
+        assert htmls != []
         (path, html) = htmls[-1]
 
-        self.assertEqual(path, 'gallery/coral.html')
-        self.assertRegex(html, r'(?s)<head>.*<title>.*Coral.*</title>.*</head>')
-        self.assertRegex(html, r'(?s)<h3.*Fan.*</h3>')
-        self.assertRegex(html, r'(?s)<h3.*Rhizopsammia wellingtoni.*</h3>')
+        assert path == 'gallery/coral.html'
+        assert re.search(r'(?s)<head>.*<title>.*Coral.*</title>.*</head>', html)
+        assert re.search(r'(?s)<h3.*Fan.*</h3>', html)
+        assert re.search(r'(?s)<h3.*Rhizopsammia wellingtoni.*</h3>', html)
 
-    def test_taxonomy_distance(self):
+    def test_taxonomy_distance(self) -> None:
         """similarity score based on shared taxonomy path"""
         chiton = 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Dendrochiton flectens'
         mossy = 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Mopalia muscosa'
@@ -136,18 +134,18 @@ class TestGallery(unittest.TestCase):
 
         # Same family (Mopaliidae) - high similarity
         score = similarity(chiton, mossy)
-        self.assertGreater(score, 0.85)
+        assert score > 0.85
 
         # Same order (Chitonida) but different family
         score = similarity(chiton, gumboot)
-        self.assertGreater(score, 0.75)
-        self.assertLess(score, 0.85)
+        assert score > 0.75
+        assert score < 0.85
 
         # Same phylum (Mollusca) but different class
         score = similarity(chiton, octopus)
-        self.assertLess(score, 0.5)
+        assert score < 0.5
 
-    def test_build_similar_species_map_filters_sp(self):
+    def test_build_similar_species_map_filters_sp(self) -> None:
         """generic sp. entries should be filtered out"""
         tree = {
             'painted dendro chiton': 'Animalia Mollusca Polyplacophora Chitonida Mopaliidae Dendrochiton flectens',
@@ -159,12 +157,12 @@ class TestGallery(unittest.TestCase):
         result = gallery.build_similar_species_map(all_names, tree)
 
         # 'chiton' (sp.) should not be in results or appear as similar
-        self.assertNotIn('chiton', result)
+        assert 'chiton' not in result
         for similar_list in result.values():
             names = [name for name, _ in similar_list]
-            self.assertNotIn('chiton', names)
+            assert 'chiton' not in names
 
-    def test_build_similar_species_map_alphabetical(self):
+    def test_build_similar_species_map_alphabetical(self) -> None:
         """similar species should be sorted alphabetically"""
         tree = {
             'a fish': 'Animalia Chordata Actinopterygii Perciformes Labridae Genus alpha',
@@ -179,9 +177,9 @@ class TestGallery(unittest.TestCase):
         # Each entry's similar list should be alphabetically sorted
         for name, similar_list in result.items():
             names = [n for n, _ in similar_list]
-            self.assertEqual(names, sorted(names), f'{name} similar list not sorted: {names}')
+            assert names == sorted(names), f'{name} similar list not sorted: {names}'
 
-    def test_build_similar_species_map_deterministic_with_ties(self):
+    def test_build_similar_species_map_deterministic_with_ties(self) -> None:
         """when more species tie than N, selection should be deterministic (alphabetical)"""
         # 6 species all with identical taxonomy (same score) - only 4 should be selected
         tree = {
@@ -200,15 +198,11 @@ class TestGallery(unittest.TestCase):
         # All runs should produce identical results
         first = results[0]
         for result in results[1:]:
-            self.assertEqual(first, result, 'Results differ between runs - not deterministic')
+            assert first == result, 'Results differ between runs - not deterministic'
 
         # Should select first 4 alphabetically: alpha, beta, delta, gamma (excluding self)
         for name, similar_list in first.items():
             names = [n for n, _ in similar_list]
             # Should be first 4 alphabetically excluding self
             expected = sorted([n for n in all_names if n != name])[: gallery.SIMILAR_SPECIES_COUNT]
-            self.assertEqual(names, expected, f'{name}: got {names}, expected {expected}')
-
-
-if __name__ == '__main__':
-    unittest.main()
+            assert names == expected, f'{name}: got {names}, expected {expected}'

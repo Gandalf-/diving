@@ -1,17 +1,11 @@
-import unittest
-
 from diving.util.translator import cleanup, translate
 
 
-class TestTranslator(unittest.TestCase):
+class TestTranslator:
     def test_load_yaml(self) -> None:
-        self.assertEqual(translate('unguiculata'), 'Small-clawed')
-        self.assertEqual(translate('acarnidae'), 'Non-thorny')
+        assert translate('unguiculata') == 'Small-clawed'
+        assert translate('acarnidae') == 'Non-thorny'
 
     def test_cleanup(self) -> None:
-        self.assertEqual(cleanup('pilosa', 'Hairy'), 'Hairy')
-        self.assertEqual(cleanup('polychaeta', 'Many bristled'), 'Many-bristled')
-
-
-if __name__ == '__main__':
-    unittest.main()
+        assert cleanup('pilosa', 'Hairy') == 'Hairy'
+        assert cleanup('polychaeta', 'Many bristled') == 'Many-bristled'

@@ -1,49 +1,48 @@
 import os
-import unittest
-from typing import Any, Dict, cast
+from typing import Any, cast
 
 from diving.util import collection, image, static
 
 
-class TestCollection(unittest.TestCase):
+class TestCollection:
     """collection.py"""
 
     def test_expand_names(self) -> None:
         """it works"""
         base = image.Image('001 - Fish and Coral.jpg', '2021-11-05 10 Rockaway Beach')
         out = list(collection.expand_names([base]))
-        self.assertEqual(len(out), 2)
+        assert len(out) == 2
         fish = out[0]
         coral = out[1]
 
-        self.assertEqual(fish.name, 'Fish')
-        self.assertEqual(coral.name, 'Coral')
-        self.assertEqual(fish.number, coral.number)
-        self.assertEqual(fish.directory, coral.directory)
+        assert fish.name == 'Fish'
+        assert coral.name == 'Coral'
+        assert fish.number == coral.number
+        assert fish.directory == coral.directory
 
     def test_expand_names_noop(self) -> None:
         """it works"""
         base = image.Image('001 - Fish', '2021-11-05 10 Rockaway Beach')
         out = list(collection.expand_names([base]))
-        self.assertEqual(len(out), 1)
+        assert len(out) == 1
         fish = out[0]
 
-        self.assertEqual(fish.name, 'Fish')
-        self.assertEqual(fish.number, '001')
+        assert fish.name == 'Fish'
+        assert fish.number == '001'
 
     def test_position(self) -> None:
         """it works"""
         path = os.path.join(static.image_root, '2023-10-19 3 Sunscape')
         images = collection.delve(path)
-        self.assertEqual(len(images), 9)
+        assert len(images) == 9
 
         first, *_ = images
         *_, last = images
-        self.assertGreaterEqual(first.position, 0.0)
-        self.assertLessEqual(last.position, 1.0)
+        assert first.position >= 0.0
+        assert last.position <= 1.0
 
         positions = [i.position for i in images]
-        self.assertEqual(positions, sorted(positions))
+        assert positions == sorted(positions)
 
     def test_unnest_staghorn_coral(self) -> None:
         """staghorn coral and fused staghorn coral should be siblings after pipeline"""
@@ -63,18 +62,18 @@ class TestCollection(unittest.TestCase):
 
         # Check structure after pipeline
         # After compress, keys get merged so we expect top-level keys
-        self.assertIn('staghorn coral', tree)
-        self.assertIn('fused staghorn coral', tree)
+        assert 'staghorn coral' in tree
+        assert 'fused staghorn coral' in tree
 
         # They should be siblings (both at same level)
         staghorn_node = tree['staghorn coral']
         fused_node = tree['fused staghorn coral']
 
         # Neither should have the other as a child
-        self.assertNotIn('fused', staghorn_node)
-        self.assertNotIn('various', staghorn_node)
-        self.assertIn('data', staghorn_node)
-        self.assertIn('data', fused_node)
+        assert 'fused' not in staghorn_node
+        assert 'various' not in staghorn_node
+        assert 'data' in staghorn_node
+        assert 'data' in fused_node
 
     def test_unnest_hogfish(self) -> None:
         """hogfish and mexican hogfish should be siblings after pipeline"""
@@ -92,17 +91,17 @@ class TestCollection(unittest.TestCase):
         tree = collection.pipeline(tree)
 
         # After compress, keys get merged
-        self.assertIn('hog fish', tree)
-        self.assertIn('mexican hog fish', tree)
+        assert 'hog fish' in tree
+        assert 'mexican hog fish' in tree
 
         # They should be siblings (both at same level)
         hog_node = tree['hog fish']
         mexican_node = tree['mexican hog fish']
 
         # 'hog' should NOT have a 'mexican' child
-        self.assertNotIn('mexican', hog_node)
-        self.assertIn('data', hog_node)
-        self.assertIn('data', mexican_node)
+        assert 'mexican' not in hog_node
+        assert 'data' in hog_node
+        assert 'data' in mexican_node
 
     def test_normal_nesting_with_various(self) -> None:
         """non-complete species should still create 'various' normally"""
@@ -121,16 +120,16 @@ class TestCollection(unittest.TestCase):
 
         # 'coral' by itself is not a complete species (it's too general)
         # So normal nesting occurs: coral -> {brain: {...}, various: {...}}
-        self.assertIn('coral', tree)
+        assert 'coral' in tree
         coral_node = tree['coral']
 
         # Should have 'brain' for specific type and 'various' for general coral
-        self.assertIn('brain', coral_node)
-        self.assertIn('various', coral_node)
+        assert 'brain' in coral_node
+        assert 'various' in coral_node
 
-        coral_dict = cast(Dict[str, Any], coral_node)
-        self.assertIn('data', coral_dict['brain'])
-        self.assertIn('data', coral_dict['various'])
+        coral_dict = cast(dict[str, Any], coral_node)
+        assert 'data' in coral_dict['brain']
+        assert 'data' in coral_dict['various']
 
     def test_various_to_adult(self) -> None:
         """if the other sibling categories to 'various' are all life cycle, then change various to
@@ -148,12 +147,8 @@ class TestCollection(unittest.TestCase):
         tree = collection._make_tree(images)
         tree = collection.pipeline(tree)
 
-        self.assertIn('rock fish', tree)
+        assert 'rock fish' in tree
         rockfish = tree['rock fish']
 
-        self.assertIn('juvenile', rockfish)
-        self.assertIn('adult', rockfish)
-
-
-if __name__ == '__main__':
-    unittest.main()
+        assert 'juvenile' in rockfish
+        assert 'adult' in rockfish

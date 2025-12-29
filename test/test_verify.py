@@ -1,4 +1,4 @@
-# type: ignore
+from typing import Any
 
 import pytest
 
@@ -10,7 +10,7 @@ class TestVerify:
 
     def _build_swapped_tree(self) -> collection.ImageTree:
         """swapped words"""
-        tree = collection.build_image_tree()
+        tree: Any = collection.build_image_tree()
         nudi = tree['nudibranch']['sea lemon']['freckled pale']['data'].pop()
         nudi.name = 'Pale Freckled Sea Lemon'
 
@@ -46,7 +46,7 @@ class TestVerify:
     )
     def test_detect_misspelling(self, names: list[str], expected: list[list[str]]) -> None:
         """curlyhead spaghetti worm vs curlyheaded spaghetti worm"""
-        wrong = [sorted(w) for w in verify._possible_misspellings(names[:])]
+        wrong = [sorted(w) for w in verify._possible_misspellings(set(names))]
         assert wrong == expected
 
     @pytest.mark.parametrize(
@@ -58,7 +58,7 @@ class TestVerify:
     )
     def test_detect_misspelling_ignore_explicit(self, names: list[str]) -> None:
         """don't consider ignored names"""
-        wrong = [sorted(w) for w in verify._possible_misspellings(names[:])]
+        wrong = [sorted(w) for w in verify._possible_misspellings(set(names))]
         assert wrong == []
 
     @pytest.mark.parametrize(
@@ -69,5 +69,5 @@ class TestVerify:
     )
     def test_detect_misspelling_ignore_scientific(self, names: list[str]) -> None:
         """a name isn't misspelled if it has a scientific name"""
-        wrong = [sorted(w) for w in verify._find_misspellings(names[:])]
+        wrong = [sorted(w) for w in verify._find_misspellings(set(names))]
         assert wrong == []

@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 
 import diving.util.common as utility
@@ -52,7 +54,7 @@ class TestUtility:
     def test_tree_size(self) -> None:
         """Test the tree_size function with various inputs."""
         # Test a tree with no leaves
-        tree = {'a': {'b': {}, 'c': {}}, 'd': {}}
+        tree: dict[str, Any] = {'a': {'b': {}, 'c': {}}, 'd': {}}
         assert utility.tree_size(tree) == 0
 
         # Test a tree with one leaf
