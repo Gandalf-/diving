@@ -1,3 +1,4 @@
+from functools import lru_cache
 from typing import cast
 
 import inflect
@@ -5,6 +6,7 @@ import inflect
 _inflect = inflect.engine()
 
 
+@lru_cache(maxsize=4096)
 def singular(noun: str) -> str:
     """return singular version"""
 

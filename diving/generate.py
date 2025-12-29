@@ -4,8 +4,8 @@ Coordinates building all sections (gallery, sites, taxonomy, timeline, detective
 and writing HTML output.
 """
 
-import multiprocessing
 import textwrap
+from concurrent.futures import ThreadPoolExecutor
 
 from diving import detective, imprecise, locations, search, timeline
 from diving.gallery import SimilarSpeciesContext, build_similar_species_map, html_tree
@@ -60,11 +60,9 @@ def main() -> None:
         vr.cleanup()
         vr.write()
 
-    with Progress('writing html'), multiprocessing.Pool() as pool:
-        pool.map(_pool_writer, name_htmls)
-        pool.map(_pool_writer, sites_htmls)
-        pool.map(_pool_writer, taxia_htmls)
-        pool.map(_pool_writer, times_htmls)
+    with Progress('writing html'), ThreadPoolExecutor() as pool:
+        all_htmls = name_htmls + sites_htmls + taxia_htmls + times_htmls
+        list(pool.map(_pool_writer, all_htmls))
 
     search.write_search_data(
         _get_paths(name_htmls), _get_paths(sites_htmls), _get_paths(taxia_htmls)

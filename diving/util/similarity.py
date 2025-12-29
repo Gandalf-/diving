@@ -1,6 +1,15 @@
 """Position-weighted taxonomy similarity scoring."""
 
+from functools import lru_cache
 
+
+@lru_cache(maxsize=2048)
+def _split_taxonomy(s: str) -> tuple[str, ...]:
+    """Cache taxonomy string splits."""
+    return tuple(s.split(' ')) if s else ()
+
+
+@lru_cache(maxsize=65536)
 def similarity(a: str, b: str) -> float:
     """Position-weighted taxonomy similarity.
 
@@ -10,8 +19,8 @@ def similarity(a: str, b: str) -> float:
 
     Returns 0.0 (no match) to 1.0 (identical).
     """
-    at = a.split(' ') if a else []
-    bt = b.split(' ') if b else []
+    at = _split_taxonomy(a)
+    bt = _split_taxonomy(b)
     max_len = max(len(at), len(bt))
     if max_len == 0:
         return 0.0

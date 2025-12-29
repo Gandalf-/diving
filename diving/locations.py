@@ -27,6 +27,7 @@ def sites_link(when: str, where: str) -> str:
     return f'/sites/{link}-{when}'
 
 
+@lru_cache(maxsize=1024)
 def _find_location(site: str) -> tuple[str, str | None] | None:
     """Find site in locations hierarchy, return (region, subregion) or None."""
     for region, value in static.locations.items():

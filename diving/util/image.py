@@ -24,6 +24,7 @@ def dive_to_location(dive: str) -> str:
     return where[i:]
 
 
+@lru_cache(maxsize=4096)
 def categorize(name: str) -> str:
     """add special categorization labels"""
     for category, values in static.categories.items():

@@ -221,17 +221,30 @@ def _find_misspellings(names: AbstractSet[str]) -> Iterable[str]:
 
 
 def _possible_misspellings(names: AbstractSet[str]) -> Iterable[list[str]]:
-    """look for edit distance
+    """Look for edit distance, filtering by length for efficiency.
 
-    prune based on taxonomy.load_known()
+    For 0.8 cutoff, strings must have similar lengths.
+    Uses sorted iteration for deterministic results.
     """
     skip = set(static.ignore) | {'unknown'}
     names = {name for name in names if not any(name.endswith(i) for i in skip)}
+    remaining = set(names)  # Track unprocessed names
 
-    while names:
-        name = names.pop()
+    for name in sorted(names):  # Deterministic order
+        if name not in remaining:
+            continue
+        remaining.discard(name)
 
-        similars = difflib.get_close_matches(name, names, cutoff=0.8)
+        name_len = len(name)
+
+        # For 0.8 cutoff: 2*min(a,b)/(a+b) >= 0.8 → lengths within ~50%
+        min_len = int(name_len * 0.67)
+        max_len = int(name_len * 1.5)
+
+        # Filter candidates by length before expensive comparison
+        candidates = [n for n in remaining if min_len <= len(n) <= max_len]
+
+        similars = difflib.get_close_matches(name, candidates, cutoff=0.8)
         similars = [other for other in similars if other not in name and name not in other]
         if similars:
             yield [name] + similars
