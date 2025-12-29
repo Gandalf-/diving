@@ -1,13 +1,13 @@
 /* globals */
-var g_correct = 0;
-var g_incorrect = 0;
-var g_points = 0;
-var g_made_mistake = false;
+let g_correct = 0;
+let g_incorrect = 0;
+let g_points = 0;
+let g_made_mistake = false;
 
-var g_names = [];
-var g_thumbs = [];
-var g_similarities = [];
-var g_difficulties = [];
+let g_names = [];
+let g_thumbs = [];
+let g_similarities = [];
+let g_difficulties = [];
 
 const g_lower_bound_table = [0, 30, 50, 70, 80];
 const g_upper_bound_table = [30, 50, 70, 80, 100];
@@ -37,12 +37,12 @@ function image_game() {
   for (let i = 0, w = 0; i < count; i++) {
     const child = document.createElement('div');
     child.classList.add('image');
-    child.id = 'option' + i;
+    child.id = `option${i}`;
     document.getElementById('options').appendChild(child);
 
-    const callback = i === actual ? success : function(event) { failure(event.currentTarget); };
+    const callback = i === actual ? success : (event) => failure(event.currentTarget);
     const option = i === actual ? correct : options[w++];
-    set_thumbnail('option' + i, option, callback);
+    set_thumbnail(`option${i}`, option, callback);
   }
   add_skip();
 }
@@ -66,15 +66,15 @@ function name_game() {
   set_correct_name(correct);
   const actual = random(count);
 
-  for (i = 0, w = 0; i < count; i++) {
-    var child = document.createElement('div');
-    child.setAttribute('id', 'option' + i);
+  for (let i = 0, w = 0; i < count; i++) {
+    const child = document.createElement('div');
+    child.id = `option${i}`;
     byId('options').appendChild(child);
 
-    if (i == actual) {
-      set_text('option' + i, correct, success);
+    if (i === actual) {
+      set_text(`option${i}`, correct, success);
     } else {
-      set_text('option' + i, options[w], function(event) { failure(event.currentTarget); });
+      set_text(`option${i}`, options[w], (event) => failure(event.currentTarget));
       w++;
     }
   }
@@ -103,15 +103,15 @@ function reef_game() {
   set_correct_name(correct);
   const actual = random(count);
 
-  for (i = 0, w = 0; i < count; i++) {
-    var child = document.createElement('div');
-    child.setAttribute('id', 'option' + i);
+  for (let i = 0, w = 0; i < count; i++) {
+    const child = document.createElement('div');
+    child.id = `option${i}`;
     byId('options').appendChild(child);
 
-    if (i == actual) {
-      set_text('option' + i, correct, success);
+    if (i === actual) {
+      set_text(`option${i}`, correct, success);
     } else {
-      set_text('option' + i, options[w], function(event) { failure(event.currentTarget); });
+      set_text(`option${i}`, options[w], (event) => failure(event.currentTarget));
       w++;
     }
   }
@@ -122,12 +122,12 @@ function reef_game() {
 }
 
 function choose_dataset(dataset) {
-  if (dataset == 'main') {
+  if (dataset === 'main') {
     g_names = main_names;
     g_thumbs = main_thumbs;
     g_similarities = main_similarities;
     g_difficulties = main_difficulties;
-  } else if (dataset == 'reef') {
+  } else if (dataset === 'reef') {
     g_names = reef_names;
     g_thumbs = reef_thumbs;
     g_similarities = reef_similarities;
@@ -142,58 +142,58 @@ function choose_game() {
   update_score();
   reset_options();
 
-  var game = byId('game').value;
-  if (game == 'images') {
+  const game = byId('game').value;
+  if (game === 'images') {
     image_game();
-  } else if (game == 'names') {
+  } else if (game === 'names') {
     name_game();
-  } else if (game == 'reef') {
+  } else if (game === 'reef') {
     reef_game();
   }
 }
 
 function set_text(where, what, onclick) {
-  var option = byId(where);
-  var name = g_names[what];
+  const option = byId(where);
+  const name = g_names[what];
 
   if (onclick) {
     option.addEventListener('click', onclick);
   }
-  option.setAttribute('class', 'nav-pill active');
+  option.className = 'nav-pill active';
 
-  var child = document.createElement('h4');
-  child.innerHTML = name;
+  const child = document.createElement('h4');
+  child.textContent = name;
 
   option.appendChild(child);
 }
 
-function set_thumbnail(where, what, onclick, thumb) {
-  thumb = thumb || g_thumbs[what][random(g_thumbs[what].length)];
+function set_thumbnail(where, what, onclick, thumb = null) {
+  thumb = thumb ?? g_thumbs[what][random(g_thumbs[what].length)];
 
-  var img = document.createElement('img');
-  img.src = '/imgs/' + thumb + '.webp';
+  const img = document.createElement('img');
+  img.src = `/imgs/${thumb}.webp`;
   img.width = 350;
   img.height = 263;
 
   if (onclick) {
-    img.onclick = onclick;
+    img.addEventListener('click', onclick);
   }
 
-  var target = document.getElementById(where);
+  const target = document.getElementById(where);
   target.innerHTML = '';
   target.appendChild(img);
 }
 
 function update_score() {
-  var total = g_correct + g_incorrect;
-  var score = 0;
+  const total = g_correct + g_incorrect;
+  let score = 0;
 
-  if (total != 0) {
+  if (total !== 0) {
     score = Math.floor((g_correct / total) * 100);
   }
 
-  byId('score').innerHTML = score + '% (' + g_correct + '/' + total + ')';
-  byId('points').innerHTML = `Points: ${g_points.toLocaleString()}`;
+  byId('score').textContent = `${score}% (${g_correct}/${total})`;
+  byId('points').textContent = `Points: ${g_points.toLocaleString()}`;
 }
 
 function success() {
@@ -228,12 +228,12 @@ function reset_options() {
  * @param {number} correct - The index of the correct creature.
  */
 function set_correct_image(correct) {
-  var outer = byId('correct_outer');
-  outer.setAttribute('class', '');
+  const outer = byId('correct_outer');
+  outer.className = '';
   outer.innerHTML = '';
 
-  var child = document.createElement('h2');
-  child.innerHTML = 'Select the ' + g_names[correct];
+  const child = document.createElement('h2');
+  child.textContent = `Select the ${g_names[correct]}`;
   outer.appendChild(child);
 }
 
@@ -250,7 +250,7 @@ function set_correct_name(correct, previous) {
 
   const images = shuffle([...g_thumbs[correct]]);
 
-  var i = 0;
+  let i = 0;
   while (i < images.length && images[i] === previous) {
     i++;
   }
@@ -320,7 +320,7 @@ function add_zoom() {
 
   function zoom() {
     const current = byId('correct').firstChild.src;
-    var img = byId('correct').firstChild;
+    const img = byId('correct').firstChild;
 
     img.src = current.replace('/imgs/', '/full/');
     img.width = 700;
@@ -391,7 +391,7 @@ function choose_correct(difficulty) {
  */
 function find_similar(target, lowerBound, upperBound, required) {
   const found = [];
-  var shuffledIndices = shuffle([...Array(g_names.length).keys()]);
+  let shuffledIndices = shuffle([...Array(g_names.length).keys()]);
 
   console.log('Search limits', lowerBound, upperBound, g_names[target]);
 

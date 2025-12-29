@@ -540,38 +540,20 @@ class SitesTitle(Title):
 
 def switcher_button(where: Where, long: bool = False) -> str:
     """Get the switcher button for this site"""
-    _timeline = """
-        <a href="/timeline/">
-            <h1 class="nav-pill active">{}</h1>
+    name = long_name(where) if long else short_name(where)
+    extra_class = {
+        Where.Timeline: '',
+        Where.Gallery: ' gallery',
+        Where.Detective: ' detective',
+        Where.Sites: ' sites',
+        Where.Taxonomy: ' taxonomy',
+    }[where]
+    path = where.name.lower()
+    return f"""
+        <a href="/{path}/">
+            <h1 class="nav-pill active{extra_class}">{name}</h1>
         </a>
     """
-    _gallery = """
-        <a href="/gallery/">
-            <h1 class="nav-pill active gallery">{}</h1>
-        </a>
-    """
-    _detective = """
-        <a href="/detective/">
-            <h1 class="nav-pill active detective">{}</h1>
-        </a>
-    """
-    _sites = """
-        <a href="/sites/">
-            <h1 class="nav-pill active sites">{}</h1>
-        </a>
-    """
-    _taxonomy = """
-        <a href="/taxonomy/">
-            <h1 class="nav-pill active taxonomy">{}</h1>
-        </a>
-    """
-    return {
-        Where.Timeline: _timeline,
-        Where.Gallery: _gallery,
-        Where.Detective: _detective,
-        Where.Sites: _sites,
-        Where.Taxonomy: _taxonomy,
-    }[where].format(long_name(where) if long else short_name(where))
 
 
 def long_name(where: Where) -> str:

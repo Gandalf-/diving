@@ -42,7 +42,7 @@ ruff:
 	ruff check --fix .
 
 format:
-	isort --jobs -1 *.py */*.py
+	isort --jobs 0 *.py */*.py
 	ruff format *.py */*.py
 
 

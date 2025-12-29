@@ -7,13 +7,13 @@ const pages = {
 }[where];
 
 const CHAR_LIMIT = 100;
-var PREVIOUS_STACK = [];
+let PREVIOUS_STACK = [];
 
 const SEARCH_RESULTS = document.getElementById('search-results');
 const SEARCH_BAR = document.getElementById('search-bar');
 
 function expandWords(words) {
-  var result = [];
+  const result = [];
 
   for (let word of words) {
     let found = false;
@@ -41,7 +41,7 @@ function expandWords(words) {
 }
 
 function shortenName(name) {
-  if (where != 'taxonomy') {
+  if (where !== 'taxonomy') {
     return name;
   }
 
@@ -57,7 +57,7 @@ function shortenName(name) {
 function search_inner(text, skip = 0) {
   const words = expandWords(text.replace("'", '').split(' '));
 
-  var results = [];
+  let results = [];
   for (let i = 0; i < pages.length; i++) {
     const candidate = pages[i];
     let match = true;
@@ -78,7 +78,7 @@ function search_inner(text, skip = 0) {
   }
 
   // sort results based on 'exact' first and then length of candidate
-  results.sort(function (a, b) {
+  results.sort((a, b) => {
     // sort by exactness
     if (a[1] === b[1]) {
       // if exactness is same, sort by length
@@ -92,9 +92,9 @@ function search_inner(text, skip = 0) {
   results = results.slice(skip);
 
   // Take 100 characters worth of results
-  var truncated = false;
-  var char_count = 0;
-  var topResults = [];
+  let truncated = false;
+  let char_count = 0;
+  const topResults = [];
 
   for (let result of results) {
     const name = shortenName(result[0]);
@@ -129,8 +129,8 @@ function addNoResult() {
 
 function addPreviousResult() {
   const back = createResult('Back');
-  back.onclick = function () {
-    let lastLocation = PREVIOUS_STACK.pop();
+  back.onclick = () => {
+    const lastLocation = PREVIOUS_STACK.pop();
     searcher(lastLocation);
   };
   back.classList.add('search-scroll');
@@ -139,7 +139,7 @@ function addPreviousResult() {
 
 function addNextResult(skip, results_length) {
   const more = createResult('More');
-  more.onclick = function () {
+  more.onclick = () => {
     PREVIOUS_STACK.push(skip);
     searcher(skip + results_length);
   };
@@ -204,13 +204,13 @@ function pageToUrl(page) {
 }
 
 function toTitleCase(str) {
-  if (where != 'gallery') {
+  if (where !== 'gallery') {
     return str;
   }
 
   // https://stackoverflow.com/a/196991
-  return str.replace(/\w\S*/g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  return str.replace(/\w\S*/g, (txt) => {
+    return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
   });
 }
 

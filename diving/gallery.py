@@ -256,7 +256,10 @@ def _render_category_card(
 ) -> str:
     """Render a single category card for the grid."""
     hint = f'{subcategories} · {size}' if subcategories else f'{size}'
-    return """
+    alt = example.simplified()
+    link = f'/{where.name.lower()}/{hypertext.lineage_to_link(lineage, side, key)}'
+    thumbnail = example.thumbnail()
+    return f"""
         <div class="card">
         <a href="{link}">
             <div class="zoom-wrapper">
@@ -269,16 +272,7 @@ def _render_category_card(
             </h3>
         </a>
         </div>
-        """.format(
-        alt=example.simplified(),
-        subject=subject,
-        link='/{where}/{path}'.format(
-            where=where.name.lower(),
-            path=hypertext.lineage_to_link(lineage, side, key),
-        ),
-        thumbnail=example.thumbnail(),
-        hint=hint,
-    )
+        """
 
 
 def _get_similar_species_html(

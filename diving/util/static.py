@@ -6,13 +6,12 @@ configuration information
 
 import os
 import pathlib
-from typing import Dict, List, Set, Union
 
 import yaml
 
 from diving.util.resource import VersionedResource
 
-ListTree = Dict[str, Union[List[str], Dict[str, List[str]]]]
+ListTree = dict[str, list[str] | dict[str, list[str]]]
 
 
 source_root = str(pathlib.Path(__file__).parent.parent.parent.absolute()) + '/'
@@ -21,25 +20,25 @@ image_root = '/Users/leaf/Pictures/Diving'
 with open(source_root + 'data/static.yml') as fd:
     _static = yaml.safe_load(fd)
 
-dives: Dict[int, str] = _static['dives']
-dives_without_computer: List[str] = _static['dives-without-computer']
-dives_without_camera: List[int] = _static['dives-without-camera']
+dives: dict[int, str] = _static['dives']
+dives_without_computer: list[str] = _static['dives-without-computer']
+dives_without_camera: list[int] = _static['dives-without-camera']
 categories: ListTree = _static['categories']
 difficulty: ListTree = _static['difficulty']
 locations: ListTree = _static['locations']
 
-pinned: Dict[str, str] = _static['pinned']
+pinned: dict[str, str] = _static['pinned']
 
-ignore: List[str] = _static['ignore']
-splits: List[str] = _static['splits']
-qualifiers: List[str] = _static['qualifiers']
-reef_organisms: List[str] = _static['reef-organisms']
+ignore: list[str] = _static['ignore']
+splits: list[str] = _static['splits']
+qualifiers: list[str] = _static['qualifiers']
+reef_organisms: list[str] = _static['reef-organisms']
 
-no_taxonomy_exact: Set[str] = set(_static['no-taxonomy-exact'])
-no_taxonomy_any: Set[str] = set(_static['no-taxonomy-any'])
+no_taxonomy_exact: set[str] = set(_static['no-taxonomy-exact'])
+no_taxonomy_any: set[str] = set(_static['no-taxonomy-any'])
 
 
-def _invert(tree: ListTree) -> Dict[str, str]:
+def _invert(tree: ListTree) -> dict[str, str]:
     """map locations to full location names"""
     out = {}
     for area, value in tree.items():
