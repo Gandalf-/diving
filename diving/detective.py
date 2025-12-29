@@ -6,7 +6,7 @@ identification game
 
 import os
 import shutil
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 
 from diving.util import collection, static, taxonomy
 from diving.util.common import titlecase
@@ -29,7 +29,7 @@ DifficultyTable = list[int]
 
 
 def table_builder(
-    images: list[Image],
+    images: Sequence[Image],
 ) -> tuple[list[str], ThumbsTable, SimiliarityTable, DifficultyTable]:
     """Build the tables."""
     images = reversed(images)
@@ -71,7 +71,7 @@ def writer() -> None:
 # PRIVATE
 
 
-def _write_data_js(images: list[Image], name: str) -> None:
+def _write_data_js(images: Sequence[Image], name: str) -> None:
     """write out the tables to a file"""
     ns, ts, ss, ds = table_builder(images)
 

@@ -7,7 +7,7 @@ Check for broken links, misspelled names, and more
 import difflib
 import os
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Set as AbstractSet
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
@@ -198,7 +198,7 @@ def _spelling() -> None:
         assert False, f'{found} illegal names'
 
 
-def _find_misspellings(names: set[str]) -> Iterable[str]:
+def _find_misspellings(names: AbstractSet[str]) -> Iterable[str]:
     """check for misspellings"""
     candidates = _possible_misspellings(names)
     scientific = taxonomy.mapping()
@@ -220,7 +220,7 @@ def _find_misspellings(names: set[str]) -> Iterable[str]:
             yield candidate
 
 
-def _possible_misspellings(names: set[str]) -> Iterable[list[str]]:
+def _possible_misspellings(names: AbstractSet[str]) -> Iterable[list[str]]:
     """look for edit distance
 
     prune based on taxonomy.load_known()
@@ -237,7 +237,7 @@ def _possible_misspellings(names: set[str]) -> Iterable[list[str]]:
             yield [name] + similars
 
 
-def _illegal_names(names: set[str]) -> Iterable[str]:
+def _illegal_names(names: AbstractSet[str]) -> Iterable[str]:
     illegal = ('sea star', 'jelly fish')
     for name in names:
         if any(i in name for i in illegal):

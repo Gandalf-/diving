@@ -11,3 +11,4 @@ profile.*
 *.sync-conflict*
 .playwright-mcp
 diving.egg-info
+.claude

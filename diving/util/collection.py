@@ -9,7 +9,7 @@ from __future__ import annotations
 import os
 from collections.abc import Iterable, Iterator
 from functools import lru_cache
-from typing import Any, TypeAlias, cast
+from typing import TypeAlias, cast
 
 from frozendict import frozendict
 
@@ -20,17 +20,19 @@ from diving.util.image import Image, reorder_eggs, split
 from diving.util.metrics import metrics
 
 ImageTree: TypeAlias = 'dict[str, list[Image] | ImageTree]'
-FrozenImageTree: TypeAlias = frozendict[str, Any]  # frozen nested structure
+FrozenImageTree: TypeAlias = 'frozendict[str, tuple[Image, ...] | FrozenImageTree]'
 
 
-def named() -> list[Image]:
+@lru_cache(None)
+def named() -> tuple[Image, ...]:
     """all named images from all directories"""
-    return flatten([[y for y in z if y.name] for z in _collect_all_images()])
+    return tuple(flatten([[y for y in z if y.name] for z in _collect_all_images()]))
 
 
-def all_names() -> set[str]:
+@lru_cache(None)
+def all_names() -> frozenset[str]:
     """all simplified, split names"""
-    return {split(i.simplified()) for i in expand_names(named())}
+    return frozenset(split(i.simplified()) for i in expand_names(named()))
 
 
 @lru_cache(None)
@@ -94,7 +96,7 @@ def delve(dive_path: str) -> tuple[Image, ...]:
     )
 
 
-def expand_names(images: list[Image]) -> Iterator[Image]:
+def expand_names(images: Iterable[Image]) -> Iterator[Image]:
     """split out `a and b` into separate elements"""
     for image in images:
         for part in (' with ', ' and '):
@@ -146,9 +148,10 @@ def _is_complete_species(name: str) -> bool:
     return genus[0].isupper() and species[0].islower() and species != 'sp.'
 
 
-def _collect_all_images() -> list[tuple[Image, ...]]:
+@lru_cache(None)
+def _collect_all_images() -> tuple[tuple[Image, ...], ...]:
     """run delve on all dive picture folders"""
-    return [delve(dive_path) for dive_path in dive_listing()]
+    return tuple(delve(dive_path) for dive_path in dive_listing())
 
 
 def _make_tree(images: Iterable[Image]) -> ImageTree:
