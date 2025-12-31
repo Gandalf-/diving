@@ -232,7 +232,9 @@ def _key_to_subject(key: str, where: Where) -> str:
 def html_direct_examples(direct: list[Image], where: Where) -> str:
     """Generate the HTML for the direct examples of a tree."""
     seen = set()
-    html = '<div class="grid">'
+    unique_count = len({img.identifier() for img in direct})
+    grid_class = 'grid grid-compact' if unique_count <= 9 else 'grid'
+    html = f'<div class="{grid_class}">'
 
     for i, image in enumerate(direct):
         identifier = image.identifier()
@@ -356,9 +358,11 @@ def html_tree(
     html, path = hypertext.title(lineage, where, scientific)
 
     results = []
-    has_subcategories = any(key != 'data' for key in tree.keys())
+    subcategory_count = sum(1 for key in tree.keys() if key != 'data')
+    has_subcategories = subcategory_count > 0
     if has_subcategories:
-        html += '<div class="grid">'
+        grid_class = 'grid grid-compact' if subcategory_count <= 9 else 'grid'
+        html += f'<div class="{grid_class}">'
 
     flip = where == Where.Sites and any(is_date(v) for v in tree.keys())
     for key, value in sorted(tree.items(), reverse=flip):
