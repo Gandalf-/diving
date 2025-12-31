@@ -6,9 +6,6 @@ local: data/translations.yml
 fast: data/translations.yml
 	bash diving/macos.sh build --fast
 
-dev: data/translations.yml
-	bash diving/macos.sh dev
-
 sitemap:
 	bash diving/macos.sh sitemap
 
