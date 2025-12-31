@@ -236,10 +236,11 @@ no-taxonomy-any:
   - spiky soft coral
 
 splits:
-  - fish
-  - coral
-  - ray
   - chiton
+  - coral
+  - fish
+  - grass
+  - ray
   - snail
   - worm
 
