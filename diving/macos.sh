@@ -43,8 +43,8 @@ build() {
   esac
 
   cd "$www"
-  bash    "$src"/diving/media.sh         ~/Pictures/diving/
-  python3 "$src"/cli.py generate        ~/Pictures/diving/
+  bash    "$src"/diving/media.sh ~/Pictures/diving/
+  python3 "$src"/cli.py generate ~/Pictures/diving/
 }
 
 prune() {
@@ -134,12 +134,6 @@ sync() {
     # walnut:/mnt/web/diving/
 }
 
-dev() {
-  echo *.py util/*.py web/* data/*.yml \
-    | tr ' ' '\n' \
-    | entr bash diving/macos.sh build
-}
-
 sitemap() {
   images() {
     rg \
@@ -152,11 +146,6 @@ sitemap() {
   cd "$www"
   images | awk -f "$src"/diving/util/sitemap.awk > sitemap.xml
   xmllint --noout sitemap.xml
-}
-
-serve() {
-  cd "$www" || exit 1
-  python3 -m http.server
 }
 
 "$@"

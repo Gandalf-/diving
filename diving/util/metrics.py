@@ -3,6 +3,7 @@ An interface for other modules to record interesting information that can then
 be displayed at the end of gallery.py's execution.
 """
 
+import os
 from typing import Any
 
 
@@ -43,6 +44,8 @@ class Metrics:
         self._persist(label)
 
     def _persist(self, label: str) -> None:
+        if os.environ.get('DIVING_VERIFY'):
+            return
         from diving.util.database import database
 
         data = {}
