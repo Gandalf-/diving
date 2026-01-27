@@ -24,7 +24,7 @@ from diving.util.image import Image, categorize, split, uncategorize
 from diving.util.metrics import metrics
 from diving.util.static import search_data_path, search_js, stylesheet, video_js
 
-Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective')
+Where = enum.Enum('Where', 'Gallery Taxonomy Sites Timeline Detective Stats')
 Side = enum.Enum('Side', 'Left Right')
 
 
@@ -551,6 +551,7 @@ def switcher_button(where: Where, long: bool = False) -> str:
         Where.Detective: ' detective',
         Where.Sites: ' sites',
         Where.Taxonomy: ' taxonomy',
+        Where.Stats: '',
     }[where]
     path = where.name.lower()
     return f"""
@@ -573,6 +574,7 @@ def short_name(where: Where) -> str:
         Where.Detective: '🔍',  # '🕵️',
         Where.Sites: '🌎',
         Where.Taxonomy: '🔬',
+        Where.Stats: '📊',
     }[where]
 
 
@@ -615,6 +617,7 @@ class TopTitle(Title):
             Where.Gallery,
             Where.Detective,
             Where.Sites,
+            Where.Stats,
             Where.Taxonomy,
         ]
 

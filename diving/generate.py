@@ -7,7 +7,7 @@ and writing HTML output.
 import textwrap
 from concurrent.futures import ThreadPoolExecutor
 
-from diving import detective, imprecise, locations, search, timeline
+from diving import detective, imprecise, locations, search, stats, timeline
 from diving.gallery import SimilarSpeciesContext, build_similar_species_map, html_tree
 from diving.hypertext import Where
 from diving.util import collection, resource, taxonomy
@@ -48,6 +48,9 @@ def main() -> None:
 
     with Progress('building /detective'):
         detective.writer()
+
+    with Progress('building /stats'):
+        stats.writer()
 
     metrics.counter('images loaded', tree_size(tree))
     metrics.counter('pages in gallery', len(name_htmls))
