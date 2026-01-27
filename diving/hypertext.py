@@ -299,9 +299,12 @@ def _caption_html(image: Image, where: Where) -> str:
     else:
         parts.append(f'<span class="caption-name">{html_module.escape(image.name)}</span>')
 
-    # Location - always show as site link (orange)
+    # Location - always show as site link (orange) with region
     site_url = _image_to_sites_link(image)
-    escaped_site = html_module.escape(image.site())
+    site_name = image.site()
+    region = locations.get_region(site_name)
+    site_with_region = f'{site_name}, {region}'
+    escaped_site = html_module.escape(site_with_region)
     parts.append(f'<a class="caption-site" href="{site_url}">{escaped_site}</a>')
 
     # Date - always show, use pretty_date (grey, non-clickable)

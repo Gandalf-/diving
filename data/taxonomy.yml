@@ -1744,6 +1744,10 @@ Chromista:
   Rhodophyta:
     # sp.: red algae
     Florideophyceae:
+      Gelidiales:
+        Gelidiaceae:
+          Gelidium:
+            coulteri: red agar seaweed
       Rhodymeniales:
         Rhodymeniaceae:
           Rhodymenia:
