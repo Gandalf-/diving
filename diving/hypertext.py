@@ -551,7 +551,7 @@ def switcher_button(where: Where, long: bool = False) -> str:
         Where.Detective: ' detective',
         Where.Sites: ' sites',
         Where.Taxonomy: ' taxonomy',
-        Where.Stats: '',
+        Where.Stats: ' stats',
     }[where]
     path = where.name.lower()
     return f"""

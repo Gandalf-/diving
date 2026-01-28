@@ -18,6 +18,8 @@ from typing import Any, TypeAlias
 
 from diving import locations
 from diving.util import log
+from diving.util.collection import dive_listing
+from diving.util.image import dive_to_location
 from diving.util.resource import VersionedResource
 from diving.util.static import source_root, stylesheet
 
@@ -29,9 +31,16 @@ LocationStats: TypeAlias = dict[str, dict[str, int | float]]
 DiveData: TypeAlias = log.DiveInfo | log.FrozenDiveInfo
 
 
+def _make_sites_link(dive: DiveData) -> str:
+    """Build a sites link from dive data, or empty string if not possible."""
+    site = dive_to_location(dive['directory'])
+    date = dive['date'].strftime('%Y-%m-%d')
+    return locations.sites_link(date, site)
+
+
 def get_all_dives() -> Iterable[log.FrozenDiveInfo]:
     """Retrieve all matched dives from the log module."""
-    return log._matched_dives().values()
+    return log.all().values()
 
 
 def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
@@ -46,8 +55,9 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['deepest'] = {
         'value': deepest['depth'],
         'unit': 'ft',
-        'dive': deepest.get('site', ''),
+        'dive': deepest['site'],
         'date': deepest['date'].strftime('%Y-%m-%d'),
+        'link': _make_sites_link(deepest),
     }
 
     # Longest dive
@@ -55,8 +65,9 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['longest'] = {
         'value': longest['duration'] // 60,
         'unit': 'min',
-        'dive': longest.get('site', ''),
+        'dive': longest['site'],
         'date': longest['date'].strftime('%Y-%m-%d'),
+        'link': _make_sites_link(longest),
     }
 
     # Coldest dive
@@ -64,8 +75,9 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['coldest'] = {
         'value': coldest['temp_low'],
         'unit': '°F',
-        'dive': coldest.get('site', ''),
+        'dive': coldest['site'],
         'date': coldest['date'].strftime('%Y-%m-%d'),
+        'link': _make_sites_link(coldest),
     }
 
     # Most dives in a single day
@@ -73,11 +85,15 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     date_counts = Counter(dates)
     if date_counts:
         most_day, count = date_counts.most_common(1)[0]
+        # Find first dive on that day (by directory order)
+        day_dives = [d for d in dives if d['date'].strftime('%Y-%m-%d') == most_day]
+        first_dive = min(day_dives, key=lambda d: d.get('directory', ''))
         records['most_dives_day'] = {
             'value': count,
             'unit': 'dives',
             'dive': '',
             'date': most_day,
+            'link': _make_sites_link(first_dive),
         }
 
     return records
@@ -126,18 +142,14 @@ def build_location_stats(dives: Sequence[DiveData]) -> LocationStats:
     region_data: dict[str, dict[str, list[float]]] = {}
 
     for dive in dives:
-        site = dive.get('site', '')
-        if not site:
+        directory = dive.get('directory', '')
+        if not directory:
             continue
 
-        try:
-            region = locations.get_region(site)
-        except AssertionError:
-            continue
+        site = dive_to_location(directory)
+        region = locations.get_region(site)
 
-        if region not in region_data:
-            region_data[region] = {'depths': [], 'temps': [], 'count': []}
-
+        region_data.setdefault(region, {'depths': [], 'temps': [], 'count': []})
         region_data[region]['depths'].append(dive['depth'])
         region_data[region]['temps'].append(dive['temp_low'])
         region_data[region]['count'].append(1)
@@ -156,12 +168,12 @@ def build_location_stats(dives: Sequence[DiveData]) -> LocationStats:
 def build_totals(dives: Sequence[DiveData]) -> dict[str, int | float]:
     """Compute aggregate totals."""
     total_time = sum(d['duration'] for d in dives)
-    sites = set(d.get('site', '') for d in dives if d.get('site'))
+    sites = set(dive_to_location(d['directory']) for d in dives if d.get('directory'))
 
     return {
-        'dive_count': len(dives),
+        'total_dives': len(dive_listing()),
+        'logged_dives': len(dives),
         'total_bottom_time_hours': round(total_time / 3600, 1),
-        'deepest_depth': max((d['depth'] for d in dives), default=0),
         'unique_sites': len(sites),
     }
 
@@ -197,14 +209,15 @@ def writer() -> None:
 
     data = VersionedResource('stats/data.js', 'stats')
     stats_js = VersionedResource('stats/stats.js', 'stats')
+    stats_css = VersionedResource(os.path.join(source_root, 'web/stats.css'), 'stats')
 
     # Write index.html
     with open('stats/index.html', 'w+') as fd:
-        html = _html_builder(stylesheet.path, stats_js.path, data.path)
+        html = _html_builder(stylesheet.path, stats_css.path, stats_js.path, data.path)
         print(html, file=fd, end='')
 
 
-def _html_builder(css: str, stats_js: str, data_js: str) -> str:
+def _html_builder(main_css: str, stats_css: str, stats_js: str, data_js: str) -> str:
     """Build the stats page HTML."""
     desc = 'Scuba diving statistics: personal records, dive distributions, and location analytics'
     # Carousel order: Timeline, Gallery, Detective, Sites, Stats, Taxonomy
@@ -218,89 +231,10 @@ def _html_builder(css: str, stats_js: str, data_js: str) -> str:
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="{desc}">
-        <link rel="stylesheet" href="/{css}" />
+        <link rel="stylesheet" href="/{main_css}" />
+        <link rel="stylesheet" href="/{stats_css}" />
         <script src="/{data_js}"></script>
         <script src="/{stats_js}" defer></script>
-        <style>
-body {{
-    max-width: 1080px;
-    margin-left: auto;
-    margin-right: auto;
-    float: none !important;
-}}
-.stats-section {{
-    margin: 2em 1em;
-    clear: both;
-}}
-.stats-section h2 {{
-    margin-bottom: 1em;
-    text-align: center;
-}}
-.records-grid {{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1em;
-    margin: 1em 0;
-}}
-.record-card {{
-    background: var(--nav-pill-bg, #f0f0f0);
-    border-radius: 8px;
-    padding: 1em;
-    text-align: center;
-}}
-.record-card .label {{
-    font-size: 0.9em;
-    opacity: 0.8;
-    margin-bottom: 0.5em;
-}}
-.record-card .value {{
-    font-size: 2em;
-    font-weight: bold;
-}}
-.record-card .context {{
-    font-size: 0.8em;
-    opacity: 0.7;
-    margin-top: 0.5em;
-}}
-.chart-container {{
-    margin: 1em 0;
-    min-height: 100px;
-}}
-.locations-table {{
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1em 0;
-}}
-.locations-table th,
-.locations-table td {{
-    padding: 0.5em 1em;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color, #ccc);
-}}
-.locations-table th {{
-    background: var(--nav-pill-bg, #f0f0f0);
-}}
-.totals-grid {{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1em;
-    margin: 1em 0;
-    text-align: center;
-}}
-.total-item .value {{
-    font-size: 2.5em;
-    font-weight: bold;
-    color: #fff;
-}}
-.total-item .label {{
-    font-size: 0.9em;
-    opacity: 0.8;
-    color: #fff;
-}}
-.locations-table td {{
-    color: #fff;
-}}
-        </style>
     </head>
 
     <body>
@@ -315,7 +249,7 @@ body {{
                 </a>
                 <div class="nav-pill spacer"></div>
                 <a href="/stats/">
-                    <h1 class="nav-pill active">Stats</h1>
+                    <h1 class="nav-pill active stats">Stats</h1>
                 </a>
                 <div class="nav-pill spacer"></div>
                 <a href="/taxonomy/">

@@ -322,6 +322,10 @@ select {
   border-color: rgb(56, 19, 221);
 }
 
+.stats {
+  border-color: rgb(153 19 221);
+}
+
 .sites {
   border-color: #fe5a1d;
 }

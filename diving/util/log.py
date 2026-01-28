@@ -27,6 +27,10 @@ DiveInfo: TypeAlias = dict[str, Any]
 FrozenDiveInfo: TypeAlias = frozendict[str, Any]
 
 
+def all() -> frozendict[str, FrozenDiveInfo]:
+    return _matched_dives()
+
+
 def lookup(dive: str) -> FrozenDiveInfo | None:
     # this should be the exact directory
     return _matched_dives().get(dive)

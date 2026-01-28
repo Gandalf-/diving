@@ -14,9 +14,9 @@
 
     // Total labels for display
     const totalLabels = {
-        dive_count: 'Total Dives',
+        total_dives: 'Total Dives',
+        logged_dives: 'Logged Dives',
         total_bottom_time_hours: 'Bottom Time (hrs)',
-        deepest_depth: 'Max Depth (ft)',
         unique_sites: 'Dive Sites'
     };
 
@@ -59,13 +59,17 @@
                 ? `${record.dive}<br>${formatDate(record.date)}`
                 : formatDate(record.date);
 
-            html += `
-                <div class="record-card">
-                    <div class="label">${label}</div>
-                    <div class="value">${value}</div>
-                    <div class="context">${context}</div>
-                </div>
+            const cardContent = `
+                <div class="label">${label}</div>
+                <div class="value">${value}</div>
+                <div class="context">${context}</div>
             `;
+
+            if (record.link) {
+                html += `<a href="${record.link}" class="record-card record-link">${cardContent}</a>`;
+            } else {
+                html += `<div class="record-card">${cardContent}</div>`;
+            }
         }
         container.innerHTML = html;
     }
