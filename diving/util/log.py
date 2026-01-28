@@ -42,6 +42,8 @@ def calculate_sac(pressure_drop_psi: float, depth_feet: float, time_seconds: flo
     ata = (depth_feet / 33) + 1
     time_minutes = time_seconds / 60
     return (pressure_drop_psi / time_minutes) / ata
+
+
 FrozenDiveInfo: TypeAlias = frozendict[str, Any]
 
 
@@ -193,8 +195,12 @@ def _parse_uddf(file: str) -> DiveInfo:
         depth1, time1, pressure1 = waypoint_data[i]
         depth2, time2, pressure2 = waypoint_data[i + 1]
 
-        # Skip if missing pressure data
+        # Skip if missing pressure data, shallows, or in first 3 minutes
         if pressure1 <= 0 or pressure2 <= 0:
+            continue
+        if depth1 < 10 or depth2 < 10:
+            continue
+        if time1 < 180:
             continue
 
         avg_depth = (depth1 + depth2) / 2
@@ -202,7 +208,7 @@ def _parse_uddf(file: str) -> DiveInfo:
         pressure_drop = pressure1 - pressure2
 
         sac = calculate_sac(pressure_drop, avg_depth, interval)
-        if sac > 0:
+        if 0 < sac < 75:
             sacs.append(sac)
 
     # Handle dives without transmitter (dives 0-2)

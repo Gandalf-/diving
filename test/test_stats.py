@@ -30,6 +30,7 @@ def make_dive(
         'directory': directory or f'{date} {site}',
         'tank_start': 3000,
         'tank_end': 1000,
+        'sacs': [],
     }
 
 
@@ -174,6 +175,7 @@ class TestBuildDistributions:
                 'directory': '2023-01-02 Test Site',
                 'tank_start': 0,  # Invalid
                 'tank_end': 0,
+                'sacs': [],
             },
         ]
         dists = build_distributions(dives)

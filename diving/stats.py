@@ -159,17 +159,21 @@ def build_distributions(dives: Sequence[DiveData]) -> dict[str, Distribution]:
     depths = [d['depth'] for d in dives]
     durations = [d['duration'] / 60 for d in dives]  # Convert to minutes
     temps = [d['temp_low'] for d in dives]
+
     air_consumption = [
         d['tank_start'] - d['tank_end']
         for d in dives
         if d['tank_start'] > 0 and d['tank_end'] > 0 and d['tank_start'] > d['tank_end']
     ]
+    sacs = [d['sacs'] for d in dives if d['sacs']]
+    sacs = [sac for sublist in sacs for sac in sublist]
 
     return {
         'depth': build_distribution(depths, 10),  # 10ft buckets
         'duration': build_distribution(durations, 10),  # 10min buckets
         'temperature': build_distribution(temps, 5),  # 5°F buckets
         'air': build_distribution(air_consumption, 250),  # 250 PSI buckets
+        'sac': build_distribution(sacs, 5),  # 5 PSI/min buckets
     }
 
 
@@ -285,27 +289,32 @@ def _html_builder(main_css: str, stats_css: str, stats_js: str, data_js: str) ->
             </div>
 
             <div class="stats-section" id="records-section">
-                <h2>Personal Records</h2>
+                <h2>Records</h2>
                 <div class="records-grid" id="records"></div>
             </div>
 
             <div class="stats-section" id="depth-section">
-                <h2>Depth Distribution (ft)</h2>
+                <h2>Max Depth (ft)</h2>
                 <div class="chart-container" id="depth-chart"></div>
             </div>
 
             <div class="stats-section" id="duration-section">
-                <h2>Duration Distribution (mins)</h2>
+                <h2>Duration (mins)</h2>
                 <div class="chart-container" id="duration-chart"></div>
             </div>
 
             <div class="stats-section" id="temp-section">
-                <h2>Temperature Distribution (&deg;F)</h2>
+                <h2>Temperature (&deg;F)</h2>
                 <div class="chart-container" id="temp-chart"></div>
             </div>
 
+            <div class="stats-section" id="sac-section">
+                <h2>Surface Air Consumption (PSI/min)</h2>
+                <div class="chart-container" id="sac-chart"></div>
+            </div>
+
             <div class="stats-section" id="air-section">
-                <h2>Air Consumption Distribution (PSI)</h2>
+                <h2>Total Air Consumption (PSI)</h2>
                 <div class="chart-container" id="air-chart"></div>
             </div>
 
