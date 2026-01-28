@@ -236,7 +236,7 @@ class TestBuildLocationStats:
 
 class TestBuildTotals:
     def test_empty(self) -> None:
-        totals = build_totals([])
+        totals = build_totals([], [])
         assert totals['logged_dives'] == 0
         assert totals['total_bottom_time_hours'] == 0.0
         assert totals['unique_sites'] == 0
@@ -247,7 +247,7 @@ class TestBuildTotals:
             make_dive(depth=100, duration=3600, directory='2023-01-02 Site B'),
             make_dive(depth=75, duration=3600, directory='2023-01-03 Site A'),
         ]
-        totals = build_totals(dives)
+        totals = build_totals(dives, dives)
 
         assert totals['logged_dives'] == 3
         assert totals['total_bottom_time_hours'] == 3.0

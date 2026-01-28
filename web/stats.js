@@ -18,7 +18,9 @@
   // Total labels for display
   const totalLabels = {
     total_dives: 'Total Dives',
+    photo_dives: 'Photo Dives',
     logged_dives: 'Logged Dives',
+    logged_photo_dives: 'Logged Photo Dives',
     total_bottom_time_hours: 'Bottom Time (hrs)',
     unique_sites: 'Dive Sites',
   };

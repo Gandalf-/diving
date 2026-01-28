@@ -11,7 +11,7 @@ import os
 from collections.abc import Iterator
 from datetime import datetime
 from functools import lru_cache
-from typing import Any, TypeAlias
+from typing import Any, TypeAlias, Sequence
 
 import lxml.etree
 from frozendict import frozendict
@@ -47,8 +47,12 @@ def calculate_sac(pressure_drop_psi: float, depth_feet: float, time_seconds: flo
 FrozenDiveInfo: TypeAlias = frozendict[str, Any]
 
 
-def all() -> frozendict[str, FrozenDiveInfo]:
-    return _matched_dives()
+def all_photo_dives() -> Sequence[FrozenDiveInfo]:
+    return list(_matched_dives().values())
+
+
+def all_dives() -> Sequence[FrozenDiveInfo]:
+    return list(_load_dive_info())
 
 
 def lookup(dive: str) -> FrozenDiveInfo | None:
@@ -276,22 +280,26 @@ def _parse_sml(file: str) -> DiveInfo:
     }
 
 
-def _load_dive_info() -> Iterator[FrozenDiveInfo]:
+def candidates() -> Iterator[str]:
     log_types = [('Perdix', '.uddf'), ('Suunto', '.sml')]
 
-    def candidates() -> Iterator[str]:
-        for directory, extension in log_types:
-            for candidate in os.listdir(os.path.join(_UDDF_ROOT, directory)):
-                assert candidate.endswith(extension)
-                yield candidate
+    for directory, extension in log_types:
+        for candidate in os.listdir(os.path.join(_UDDF_ROOT, directory)):
+            assert candidate.endswith(extension)
+            yield candidate
 
+
+def _load_dive_info() -> Iterator[FrozenDiveInfo]:
     for candidate in candidates():
         info = _parse(candidate)
         if info['duration'] <= 900:
+            metrics.counter('dive logs ignored')
             continue
         if info['depth'] <= 10:
+            metrics.counter('dive logs ignored')
             continue
         if info['number'] in static.dives_without_camera:
+            metrics.counter('dive logs ignored')
             continue
 
         yield info

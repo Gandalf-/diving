@@ -13,16 +13,15 @@ import json
 import os
 import shutil
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Sequence
 from typing import Any, TypeAlias
 
 from diving import locations
 from diving.hypertext import Where, navigation_carousel
-from diving.util import log
+from diving.util import log, static
 from diving.util.collection import dive_listing
 from diving.util.image import dive_to_location
 from diving.util.resource import VersionedResource
-from diving.util.static import source_root, stylesheet
 
 # Type aliases
 StatsBundle: TypeAlias = dict[str, Any]
@@ -37,11 +36,6 @@ def _make_sites_link(dive: DiveData) -> str:
     site = dive_to_location(dive['directory'])
     date = dive['date'].strftime('%Y-%m-%d')
     return locations.sites_link(date, site)
-
-
-def get_all_dives() -> Iterable[log.FrozenDiveInfo]:
-    """Retrieve all matched dives from the log module."""
-    return log.all().values()
 
 
 def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
@@ -205,14 +199,27 @@ def build_location_stats(dives: Sequence[DiveData]) -> LocationStats:
     return result
 
 
-def build_totals(dives: Sequence[DiveData]) -> dict[str, int | float]:
+def build_totals(
+    all_logged_dives: Sequence[DiveData], all_logged_photo_dives: Sequence[DiveData]
+) -> dict[str, int | float]:
     """Compute aggregate totals."""
-    total_time = sum(d['duration'] for d in dives)
-    sites = set(dive_to_location(d['directory']) for d in dives if d.get('directory'))
+    total_time = sum(d['duration'] for d in all_logged_dives)
+    sites = set(dive_to_location(d['directory']) for d in all_logged_photo_dives)
+
+    logged_dives = len(all_logged_dives)
+    photo_dives = len(dive_listing())
+    logged_photo_dives = len(all_logged_photo_dives)
+
+    total_dives = logged_dives
+    total_dives += 150  # pre Perdix
+    total_dives += len(static.dives_without_computer)
+    total_dives += len(static.dives_without_camera)
 
     return {
-        'total_dives': len(dive_listing()),
-        'logged_dives': len(dives),
+        'total_dives': total_dives,
+        'photo_dives': photo_dives,
+        'logged_dives': logged_dives,
+        'logged_photo_dives': logged_photo_dives,
         'total_bottom_time_hours': round(total_time / 3600, 1),
         'unique_sites': len(sites),
     }
@@ -220,13 +227,14 @@ def build_totals(dives: Sequence[DiveData]) -> dict[str, int | float]:
 
 def build_stats_bundle() -> StatsBundle:
     """Build the complete stats data bundle."""
-    dives = list(get_all_dives())
+    all_dives = log.all_dives()
+    all_photo_dives = log.all_photo_dives()
 
     return {
-        'records': build_records(dives),
-        'distributions': build_distributions(dives),
-        'locations': build_location_stats(dives),
-        'totals': build_totals(dives),
+        'records': build_records(all_photo_dives),
+        'distributions': build_distributions(all_photo_dives),
+        'locations': build_location_stats(all_photo_dives),
+        'totals': build_totals(all_dives, all_photo_dives),
     }
 
 
@@ -243,17 +251,17 @@ def writer() -> None:
 
     # Copy stats.js
     shutil.copy(
-        os.path.join(source_root, 'web', 'stats.js'),
+        os.path.join(static.source_root, 'web', 'stats.js'),
         'stats/stats.js',
     )
 
     data = VersionedResource('stats/data.js', 'stats')
     stats_js = VersionedResource('stats/stats.js', 'stats')
-    stats_css = VersionedResource(os.path.join(source_root, 'web/stats.css'), 'stats')
+    stats_css = VersionedResource(os.path.join(static.source_root, 'web/stats.css'), 'stats')
 
     # Write index.html
     with open('stats/index.html', 'w+') as fd:
-        html = _html_builder(stylesheet.path, stats_css.path, stats_js.path, data.path)
+        html = _html_builder(static.stylesheet.path, stats_css.path, stats_js.path, data.path)
         print(html, file=fd, end='')
 
 
