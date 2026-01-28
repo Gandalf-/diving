@@ -5,8 +5,10 @@ from diving.stats import (
     build_distributions,
     build_location_stats,
     build_records,
+    build_stats_bundle,
     build_totals,
 )
+from diving.util.image import dive_to_location
 
 
 def make_dive(
@@ -41,8 +43,11 @@ class TestBuildRecords:
 
         assert records['deepest']['value'] == 80
         assert records['deepest']['unit'] == 'ft'
+        assert records['shallowest']['value'] == 80
         assert records['longest']['value'] == 50  # 3000s / 60 = 50min
+        assert records['shortest']['value'] == 50
         assert records['coldest']['value'] == 48
+        assert records['warmest']['value'] == 48
         assert records['most_dives_day']['value'] == 1
 
     def test_multiple_dives(self) -> None:
@@ -55,8 +60,13 @@ class TestBuildRecords:
 
         assert records['deepest']['value'] == 100
         assert records['deepest']['date'] == '2023-01-02'
+        assert records['shallowest']['value'] == 50
+        assert records['shallowest']['date'] == '2023-01-01'
         assert records['longest']['value'] == 60  # 3600s / 60
+        assert records['shortest']['value'] == 30  # 1800s / 60
+        assert records['shortest']['date'] == '2023-01-02'
         assert records['coldest']['value'] == 45
+        assert records['warmest']['value'] == 60
         assert records['most_dives_day']['value'] == 2
         assert records['most_dives_day']['date'] == '2023-01-01'
 
@@ -115,11 +125,13 @@ class TestBuildDistribution:
         values = [10.0, 50.0]  # Gap in middle
         dist = build_distribution(values, 10)
 
-        # Only buckets with counts > 0 are included
-        assert len(dist) == 2
+        # All buckets from min to max are included, even empty ones
+        assert len(dist) == 5  # 10-20, 20-30, 30-40, 40-50, 50-60
         bucket_starts = [d[0] for d in dist]
-        assert 10 in bucket_starts
-        assert 50 in bucket_starts
+        assert bucket_starts == [10, 20, 30, 40, 50]
+        # Verify counts: only first and last have data
+        counts = [d[2] for d in dist]
+        assert counts == [1, 0, 0, 0, 1]
 
 
 class TestBuildDistributions:
@@ -133,16 +145,42 @@ class TestBuildDistributions:
         assert 'depth' in dists
         assert 'duration' in dists
         assert 'temperature' in dists
+        assert 'air' in dists
 
         # Depth: 50 and 80 -> buckets at 50-60 and 80-90
         depth_starts = [d[0] for d in dists['depth']]
         assert 50 in depth_starts
         assert 80 in depth_starts
 
-        # Temperature: 55 and 48 -> buckets at 50-60 and 40-50
+        # Temperature: 55 and 48 -> buckets at 55-60 and 45-50 (5°F buckets)
         temp_starts = [d[0] for d in dists['temperature']]
-        assert 50 in temp_starts
-        assert 40 in temp_starts
+        assert 55 in temp_starts
+        assert 45 in temp_starts
+
+        # Air: 3000 - 1000 = 2000 PSI consumption -> bucket at 2000-2250
+        air_starts = [d[0] for d in dists['air']]
+        assert 2000 in air_starts
+
+    def test_air_distribution_filters_invalid(self) -> None:
+        dives = [
+            make_dive(depth=50),  # tank_start=3000, tank_end=1000 (valid)
+            {
+                'depth': 60,
+                'duration': 2400,
+                'temp_low': 55,
+                'temp_high': 60,
+                'date': __import__('datetime').datetime.fromisoformat('2023-01-02'),
+                'site': 'Test Site',
+                'directory': '2023-01-02 Test Site',
+                'tank_start': 0,  # Invalid
+                'tank_end': 0,
+            },
+        ]
+        dists = build_distributions(dives)
+
+        # Only one dive has valid tank data
+        total_air_count = sum(d[2] for d in dists['air'])
+        assert total_air_count == 1
 
 
 class TestBuildLocationStats:
@@ -212,3 +250,28 @@ class TestBuildTotals:
         assert totals['logged_dives'] == 3
         assert totals['total_bottom_time_hours'] == 3.0
         assert totals['unique_sites'] == 2
+
+
+class TestDiveToLocation:
+    def test_simple(self) -> None:
+        assert dive_to_location('2023-01-01 Fort Ward') == 'Fort Ward'
+
+    def test_with_number_prefix(self) -> None:
+        assert dive_to_location('2023-01-01 1 Power Lines') == 'Power Lines'
+
+    def test_with_multi_digit_number(self) -> None:
+        assert dive_to_location('2024-10-31 5 Marys Place') == 'Marys Place'
+
+
+class TestBuildStatsBundle:
+    def test_bundle_structure(self) -> None:
+        bundle = build_stats_bundle()
+        assert 'records' in bundle
+        assert 'distributions' in bundle
+        assert 'locations' in bundle
+        assert 'totals' in bundle
+
+    def test_bundle_has_data(self) -> None:
+        bundle = build_stats_bundle()
+        assert bundle['totals']['logged_dives'] > 0
+        assert len(bundle['locations']) > 0

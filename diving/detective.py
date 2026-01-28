@@ -8,6 +8,7 @@ import os
 import shutil
 from collections.abc import Iterable, Sequence
 
+from diving.hypertext import Where, navigation_carousel
 from diving.util import collection, static, taxonomy
 from diving.util.common import titlecase
 from diving.util.image import Image, categorize, split, unqualify
@@ -182,6 +183,7 @@ def _similarity_table(names: list[str]) -> SimiliarityTable:
 def _html_builder(css: str, game: str, data: str) -> str:
     """Insert dynamic content into the HTML template"""
     desc = 'Scuba diving picture identification game, identify a picture or choose the image for a name'
+    nav = navigation_carousel(Where.Detective)
     return f"""
 <!DOCTYPE html>
 <html>
@@ -209,25 +211,7 @@ body {{
     <body>
         <div class="wrapper">
             <div class="title">
-                <a href="/timeline/">
-                    <h1 class="nav-pill active timeline">📅</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/gallery/">
-                    <h1 class="nav-pill active gallery">📸</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/detective/">
-                    <h1 class="nav-pill active detective">Detective</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/sites/">
-                    <h1 class="nav-pill active sites">🌎</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/taxonomy/">
-                    <h1 class="nav-pill active taxonomy">🔬</h1>
-                </a>
+{nav}
                 <p class="scientific"></p>
             </div>
             <div id="control">

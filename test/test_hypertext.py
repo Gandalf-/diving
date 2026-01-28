@@ -109,6 +109,45 @@ class TestHypertext:
             assert f'href="/{where.name.lower()}/"' in longer
             assert where.name in longer
 
+    def test_navigation_carousel(self) -> None:
+        """Verify navigation carousel contains correct pills centered on each page"""
+        import re
+
+        for where in Where:
+            html = hypertext.navigation_carousel(where)
+
+            # Current page should have long name
+            assert where.name in html
+
+            # Should have spacers between pills
+            assert 'nav-pill spacer' in html
+
+            # Should have exactly 5 nav-pill active elements (excluding spacers)
+            active_pills = re.findall(r'class="nav-pill active[^"]*"', html)
+            assert len(active_pills) == 5
+
+    def test_navigation_carousel_detective(self) -> None:
+        """Detective carousel should include Stats (not Taxonomy)"""
+        html = hypertext.navigation_carousel(Where.Detective)
+        # Detective is at index 2, so carousel shows:
+        # Timeline (0), Gallery (1), Detective (2), Sites (3), Stats (4)
+        assert 'Detective' in html  # long name
+        assert '/timeline/' in html
+        assert '/gallery/' in html
+        assert '/sites/' in html
+        assert '/stats/' in html
+
+    def test_navigation_carousel_stats(self) -> None:
+        """Stats carousel order verification"""
+        html = hypertext.navigation_carousel(Where.Stats)
+        # Stats is at index 4, so carousel shows:
+        # Detective (2), Sites (3), Stats (4), Taxonomy (5), Timeline (0)
+        assert 'Stats' in html  # long name
+        assert '/detective/' in html
+        assert '/sites/' in html
+        assert '/taxonomy/' in html
+        assert '/timeline/' in html
+
     def test_top_timeline_spacing(self) -> None:
         html, title = hypertext.title([], Where.Timeline, g_scientific)
         assert 'scientific' not in html

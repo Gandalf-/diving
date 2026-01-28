@@ -79,7 +79,8 @@ a.record-card {
 }
 
 .locations-table th {
-    background: var(--nav-pill-bg, #f0f0f0);
+    background: #333;
+    color: #fff;
 }
 
 .totals-grid {
@@ -88,6 +89,13 @@ a.record-card {
     gap: 1em;
     margin: 1em 0;
     text-align: center;
+}
+
+.total-item {
+    background: black;
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 1em;
 }
 
 .total-item .value {
@@ -104,4 +112,10 @@ a.record-card {
 
 .locations-table td {
     color: #fff;
+}
+
+@media (max-width: 500px) {
+    .records-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

@@ -7,8 +7,11 @@
     // Record labels for display
     const recordLabels = {
         deepest: 'Deepest Dive',
+        shallowest: 'Shallowest Dive',
         longest: 'Longest Dive',
+        shortest: 'Shortest Dive',
         coldest: 'Coldest Dive',
+        warmest: 'Warmest Dive',
         most_dives_day: 'Most Dives in a Day'
     };
 
@@ -195,6 +198,7 @@
         renderBarChart('depth-chart', stats_data.distributions.depth, 'Depth (ft)', '#4a90d9');
         renderBarChart('duration-chart', stats_data.distributions.duration, 'Duration (min)', '#5cb85c');
         renderBarChart('temp-chart', stats_data.distributions.temperature, 'Temp (°F)', '#d9534f');
+        renderBarChart('air-chart', stats_data.distributions.air, 'Air (PSI)', '#f0ad4e');
         renderLocations(stats_data.locations);
     }
 

@@ -24,6 +24,24 @@ from diving.util.metrics import metrics
 # PUBLIC
 
 DiveInfo: TypeAlias = dict[str, Any]
+
+
+def calculate_sac(pressure_drop_psi: float, depth_feet: float, time_seconds: float) -> float:
+    """Calculate SAC rate (PSI/min at surface equivalent).
+
+    Args:
+        pressure_drop_psi: Pressure consumed during interval (PSI)
+        depth_feet: Average depth during interval (feet)
+        time_seconds: Duration of interval (seconds)
+
+    Returns:
+        SAC rate in PSI/min normalized to surface pressure
+    """
+    if time_seconds <= 0 or pressure_drop_psi <= 0:
+        return 0.0
+    ata = (depth_feet / 33) + 1
+    time_minutes = time_seconds / 60
+    return (pressure_drop_psi / time_minutes) / ata
 FrozenDiveInfo: TypeAlias = frozendict[str, Any]
 
 
@@ -129,44 +147,76 @@ def _parse_uddf(file: str) -> DiveInfo:
     max_depth = _parse_number(tree, '//uddf:informationafterdive/uddf:greatestdepth')
     duration = _parse_number(tree, '//uddf:informationafterdive/uddf:diveduration')
 
+    # Extract waypoint data: depth, time, temperature, tank pressure
+    waypoints = tree.xpath('//uddf:waypoint', namespaces=_XML_NS)
+    depths: list[tuple[float, float]] = []
+    sacs: list[float] = []
     tank_start = float('nan')
     tank_end = float('nan')
-    for start in tree.xpath('//uddf:waypoint/uddf:tankpressure[@ref="T1"]', namespaces=_XML_NS):
-        value = float(start.text)
-        last = value
-        if value > 100 and math.isnan(tank_start):
-            tank_start = value
+    temp_high = 0.0
+    temp_low = 9999.0
 
-    if not math.isnan(tank_start):
-        tank_end = last
-    else:
-        # This accounts for dives 0-2 which didn't have a transmitter
+    # Collect per-waypoint data
+    waypoint_data: list[tuple[float, float, float]] = []  # (depth_feet, time_sec, pressure_psi)
+    for wp in waypoints:
+        depth_m = float(wp.xpath('uddf:depth/text()', namespaces=_XML_NS)[0])
+        depth_ft = meters_to_feet(depth_m)
+        time_sec = float(wp.xpath('uddf:divetime/text()', namespaces=_XML_NS)[0])
+
+        # Tank pressure (T1)
+        pressure_elements = wp.xpath('uddf:tankpressure[@ref="T1"]/text()', namespaces=_XML_NS)
+        pressure_pa = float(pressure_elements[0]) if pressure_elements else 0.0
+        pressure_psi = pascal_to_psi(pressure_pa) if pressure_pa > 100 else 0.0
+
+        # Track tank start/end
+        if pressure_pa > 100:
+            if math.isnan(tank_start):
+                tank_start = pressure_pa
+            tank_end = pressure_pa
+
+        # Temperature
+        temp_elements = wp.xpath('uddf:temperature/text()', namespaces=_XML_NS)
+        if temp_elements:
+            temp_k = float(temp_elements[0])
+            temp_high = max(temp_high, temp_k)
+            temp_low = min(temp_low, temp_k)
+
+        waypoint_data.append((depth_ft, time_sec, pressure_psi))
+
+    # Build depths list (normalized position)
+    for idx, (d_ft, _, _) in enumerate(waypoint_data):
+        position = (idx + 1) / len(waypoint_data)
+        depths.append((position, d_ft))
+
+    # Calculate SAC for each interval
+    for i in range(len(waypoint_data) - 1):
+        depth1, time1, pressure1 = waypoint_data[i]
+        depth2, time2, pressure2 = waypoint_data[i + 1]
+
+        # Skip if missing pressure data
+        if pressure1 <= 0 or pressure2 <= 0:
+            continue
+
+        avg_depth = (depth1 + depth2) / 2
+        interval = time2 - time1
+        pressure_drop = pressure1 - pressure2
+
+        sac = calculate_sac(pressure_drop, avg_depth, interval)
+        if sac > 0:
+            sacs.append(sac)
+
+    # Handle dives without transmitter (dives 0-2)
+    if math.isnan(tank_start):
         metrics.counter('dive logs without pressure')
         tank_start = 0
         tank_end = 0
-
-    temp_high = 0.0
-    temp_low = 9999.0
-    for temp in tree.xpath('//uddf:waypoint/uddf:temperature', namespaces=_XML_NS):
-        value = float(temp.text)
-        temp_high = max(temp_high, value)
-        temp_low = min(temp_low, value)
-
-    timeseries = tree.xpath('//uddf:waypoint/uddf:depth', namespaces=_XML_NS)
-    depths = []
-
-    # Iterate over each waypoint and extract depth data
-    for index, depth in enumerate(timeseries):
-        depth_meters = float(depth.text)
-        depth_feet = meters_to_feet(depth_meters)
-        position = (index + 1) / len(timeseries)
-        depths.append((position, depth_feet))
 
     return {
         'date': date,
         'number': 200 + int(number),
         'depth': meters_to_feet(max_depth),
         'depths': depths,
+        'sacs': sacs,
         'duration': int(duration),
         'tank_start': pascal_to_psi(tank_start),
         'tank_end': pascal_to_psi(tank_end),
@@ -211,6 +261,7 @@ def _parse_sml(file: str) -> DiveInfo:
         'number': suunto_counter.next(),
         'depth': meters_to_feet(float(depth)),
         'depths': [],
+        'sacs': [],
         'duration': int(duration),
         'tank_start': pascal_to_psi(int(tank_start)),
         'tank_end': pascal_to_psi(int(tank_end)),

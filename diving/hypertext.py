@@ -578,6 +578,31 @@ def short_name(where: Where) -> str:
     }[where]
 
 
+def navigation_carousel(where: Where) -> str:
+    """Build the 5-pill navigation carousel centered on the given page."""
+    carousel = [
+        Where.Timeline,
+        Where.Gallery,
+        Where.Detective,
+        Where.Sites,
+        Where.Stats,
+        Where.Taxonomy,
+    ]
+    start = carousel.index(where)
+    indices = [start - 2, start - 1, start, start + 1, start + 2]
+    indices = [i % len(carousel) for i in indices]
+
+    parts = [
+        switcher_button(carousel[indices[0]]),
+        switcher_button(carousel[indices[1]]),
+        switcher_button(carousel[indices[2]], long=True),
+        switcher_button(carousel[indices[3]]),
+        switcher_button(carousel[indices[4]]),
+    ]
+    spacer = '<div class="nav-pill spacer"></div>\n'
+    return spacer.join(parts)
+
+
 class TopTitle(Title):
     """
     HTML head and title section for top level pages. The most interesting
@@ -612,32 +637,10 @@ class TopTitle(Title):
         if self.where == Where.Gallery:
             display = titlecase(display)
 
-        carousel = [
-            Where.Timeline,
-            Where.Gallery,
-            Where.Detective,
-            Where.Sites,
-            Where.Stats,
-            Where.Taxonomy,
-        ]
-
-        start = carousel.index(self.where)
-        indicies = [start - 2, start - 1, start, start + 1, start + 2]
-        indicies = [i % len(carousel) for i in indicies]
-
-        parts = [
-            switcher_button(carousel[indicies[0]]),
-            switcher_button(carousel[indicies[1]]),
-            switcher_button(carousel[indicies[2]], long=True),
-            switcher_button(carousel[indicies[3]]),
-            switcher_button(carousel[indicies[4]]),
-        ]
-
-        spacer = '<div class="nav-pill spacer"></div>\n'
         path = sanitize_link(self.where.name.lower() + '/index')
 
         html = head(display, path, self.where)
-        html += spacer.join(parts)
+        html += navigation_carousel(self.where)
         html += self.sub_line()
 
         html += """

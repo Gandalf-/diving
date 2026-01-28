@@ -9,6 +9,7 @@ from diving.util.log import (
     _load_dive_info,
     _match_dive_info,
     _parse,
+    calculate_sac,
     search,
     suunto_counter,
 )
@@ -197,3 +198,36 @@ class TestUDDF:
     def test_search_bug_cover(self) -> None:
         info = search('2024-10-30', 'Morerat Wall')
         assert info
+
+    def test_calculate_sac(self) -> None:
+        # At surface (0 ft), ATA = 1, so SAC = consumption rate
+        assert calculate_sac(30, 0, 60) == 30.0  # 30 PSI over 1 min at surface
+
+        # At 33 ft, ATA = 2, so SAC = half the consumption rate
+        assert calculate_sac(60, 33, 60) == 30.0  # 60 PSI/min at depth = 30 SAC
+
+        # At 66 ft, ATA = 3
+        assert calculate_sac(90, 66, 60) == 30.0  # 90 PSI/min at depth = 30 SAC
+
+        # Edge cases
+        assert calculate_sac(0, 33, 60) == 0.0  # No consumption
+        assert calculate_sac(30, 33, 0) == 0.0  # Zero time
+        assert calculate_sac(-10, 33, 60) == 0.0  # Negative pressure (noise)
+
+    def test_parse_uddf_sacs(self) -> None:
+        fname = 'Perdix AI[385834A0]#99_2022-10-15.uddf'
+        parsed = _parse(fname)
+
+        # Should have SAC values
+        assert 'sacs' in parsed
+        sacs = parsed['sacs']
+        assert len(sacs) > 0
+
+        # All SAC values should be positive
+        assert all(sac > 0 for sac in sacs)
+
+        # Average and median SAC should be in typical range (10-50 PSI/min)
+        avg_sac = sum(sacs) / len(sacs)
+        median_sac = sorted(sacs)[len(sacs) // 2]
+        assert 10 < avg_sac < 50, f'Average SAC out of range: {avg_sac}'
+        assert 10 < median_sac < 50, f'Median SAC out of range: {median_sac}'

@@ -17,6 +17,7 @@ from collections.abc import Iterable, Sequence
 from typing import Any, TypeAlias
 
 from diving import locations
+from diving.hypertext import Where, navigation_carousel
 from diving.util import log
 from diving.util.collection import dive_listing
 from diving.util.image import dive_to_location
@@ -55,7 +56,7 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['deepest'] = {
         'value': deepest['depth'],
         'unit': 'ft',
-        'dive': deepest['site'],
+        'dive': dive_to_location(deepest['directory']),
         'date': deepest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(deepest),
     }
@@ -65,9 +66,29 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['longest'] = {
         'value': longest['duration'] // 60,
         'unit': 'min',
-        'dive': longest['site'],
+        'dive': dive_to_location(longest['directory']),
         'date': longest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(longest),
+    }
+
+    # Shallowest dive
+    shallowest = min(dives, key=lambda d: d['depth'])
+    records['shallowest'] = {
+        'value': shallowest['depth'],
+        'unit': 'ft',
+        'dive': dive_to_location(shallowest['directory']),
+        'date': shallowest['date'].strftime('%Y-%m-%d'),
+        'link': _make_sites_link(shallowest),
+    }
+
+    # Shortest dive
+    shortest = min(dives, key=lambda d: d['duration'])
+    records['shortest'] = {
+        'value': shortest['duration'] // 60,
+        'unit': 'min',
+        'dive': dive_to_location(shortest['directory']),
+        'date': shortest['date'].strftime('%Y-%m-%d'),
+        'link': _make_sites_link(shortest),
     }
 
     # Coldest dive
@@ -75,9 +96,19 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['coldest'] = {
         'value': coldest['temp_low'],
         'unit': '°F',
-        'dive': coldest['site'],
+        'dive': dive_to_location(coldest['directory']),
         'date': coldest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(coldest),
+    }
+
+    # Warmest dive
+    warmest = max(dives, key=lambda d: d['temp_low'])
+    records['warmest'] = {
+        'value': warmest['temp_low'],
+        'unit': '°F',
+        'dive': dive_to_location(warmest['directory']),
+        'date': warmest['date'].strftime('%Y-%m-%d'),
+        'link': _make_sites_link(warmest),
     }
 
     # Most dives in a single day
@@ -118,8 +149,7 @@ def build_distribution(values: list[float], bucket_size: int) -> Distribution:
     result: Distribution = []
     for start in range(min_val, max_val, bucket_size):
         count = buckets.get(start, 0)
-        if count > 0:
-            result.append([start, start + bucket_size, count])
+        result.append([start, start + bucket_size, count])
 
     return result
 
@@ -129,11 +159,17 @@ def build_distributions(dives: Sequence[DiveData]) -> dict[str, Distribution]:
     depths = [d['depth'] for d in dives]
     durations = [d['duration'] / 60 for d in dives]  # Convert to minutes
     temps = [d['temp_low'] for d in dives]
+    air_consumption = [
+        d['tank_start'] - d['tank_end']
+        for d in dives
+        if d['tank_start'] > 0 and d['tank_end'] > 0 and d['tank_start'] > d['tank_end']
+    ]
 
     return {
         'depth': build_distribution(depths, 10),  # 10ft buckets
-        'duration': build_distribution(durations, 15),  # 15min buckets
-        'temperature': build_distribution(temps, 10),  # 10°F buckets
+        'duration': build_distribution(durations, 10),  # 10min buckets
+        'temperature': build_distribution(temps, 5),  # 5°F buckets
+        'air': build_distribution(air_consumption, 250),  # 250 PSI buckets
     }
 
 
@@ -220,8 +256,7 @@ def writer() -> None:
 def _html_builder(main_css: str, stats_css: str, stats_js: str, data_js: str) -> str:
     """Build the stats page HTML."""
     desc = 'Scuba diving statistics: personal records, dive distributions, and location analytics'
-    # Carousel order: Timeline, Gallery, Detective, Sites, Stats, Taxonomy
-    # Stats is at index 4, so we show: Detective, Sites, Stats, Taxonomy, Timeline
+    nav = navigation_carousel(Where.Stats)
     return f"""\
 <!DOCTYPE html>
 <html lang="en">
@@ -240,25 +275,7 @@ def _html_builder(main_css: str, stats_css: str, stats_js: str, data_js: str) ->
     <body>
         <div class="wrapper">
             <div class="title">
-                <a href="/detective/">
-                    <h1 class="nav-pill active detective">🔍</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/sites/">
-                    <h1 class="nav-pill active sites">🌎</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/stats/">
-                    <h1 class="nav-pill active stats">Stats</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/taxonomy/">
-                    <h1 class="nav-pill active taxonomy">🔬</h1>
-                </a>
-                <div class="nav-pill spacer"></div>
-                <a href="/timeline/">
-                    <h1 class="nav-pill active timeline">📅</h1>
-                </a>
+{nav}
                 <p class="scientific"></p>
             </div>
 
@@ -273,18 +290,23 @@ def _html_builder(main_css: str, stats_css: str, stats_js: str, data_js: str) ->
             </div>
 
             <div class="stats-section" id="depth-section">
-                <h2>Depth Distribution</h2>
+                <h2>Depth Distribution (ft)</h2>
                 <div class="chart-container" id="depth-chart"></div>
             </div>
 
             <div class="stats-section" id="duration-section">
-                <h2>Duration Distribution</h2>
+                <h2>Duration Distribution (mins)</h2>
                 <div class="chart-container" id="duration-chart"></div>
             </div>
 
             <div class="stats-section" id="temp-section">
-                <h2>Temperature Distribution</h2>
+                <h2>Temperature Distribution (&deg;F)</h2>
                 <div class="chart-container" id="temp-chart"></div>
+            </div>
+
+            <div class="stats-section" id="air-section">
+                <h2>Air Consumption Distribution (PSI)</h2>
+                <div class="chart-container" id="air-chart"></div>
             </div>
 
             <div class="stats-section" id="locations-section">
