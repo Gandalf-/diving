@@ -38,6 +38,12 @@ def _make_sites_link(dive: DiveData) -> str:
     return locations.sites_link(date, site)
 
 
+def _make_site_name(dive: DiveData) -> str:
+    location = dive_to_location(dive['directory'])
+    region = locations.get_region(location)
+    return f'{location}, {region}'
+
+
 def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     """Compute personal records from dive data."""
     if not dives:
@@ -50,7 +56,7 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['deepest'] = {
         'value': deepest['depth'],
         'unit': 'ft',
-        'dive': dive_to_location(deepest['directory']),
+        'dive': _make_site_name(deepest),
         'date': deepest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(deepest),
     }
@@ -60,7 +66,7 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['longest'] = {
         'value': longest['duration'] // 60,
         'unit': 'min',
-        'dive': dive_to_location(longest['directory']),
+        'dive': _make_site_name(longest),
         'date': longest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(longest),
     }
@@ -70,7 +76,7 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['shallowest'] = {
         'value': shallowest['depth'],
         'unit': 'ft',
-        'dive': dive_to_location(shallowest['directory']),
+        'dive': _make_site_name(shallowest),
         'date': shallowest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(shallowest),
     }
@@ -80,7 +86,7 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['shortest'] = {
         'value': shortest['duration'] // 60,
         'unit': 'min',
-        'dive': dive_to_location(shortest['directory']),
+        'dive': _make_site_name(shortest),
         'date': shortest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(shortest),
     }
@@ -90,7 +96,7 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['coldest'] = {
         'value': coldest['temp_low'],
         'unit': '°F',
-        'dive': dive_to_location(coldest['directory']),
+        'dive': _make_site_name(coldest),
         'date': coldest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(coldest),
     }
@@ -100,7 +106,7 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     records['warmest'] = {
         'value': warmest['temp_low'],
         'unit': '°F',
-        'dive': dive_to_location(warmest['directory']),
+        'dive': _make_site_name(warmest),
         'date': warmest['date'].strftime('%Y-%m-%d'),
         'link': _make_sites_link(warmest),
     }
@@ -113,10 +119,12 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
         # Find first dive on that day (by directory order)
         day_dives = [d for d in dives if d['date'].strftime('%Y-%m-%d') == most_day]
         first_dive = min(day_dives, key=lambda d: d.get('directory', ''))
+        region = locations.get_region(dive_to_location(first_dive['directory']))
+
         records['most_dives_day'] = {
             'value': count,
             'unit': 'dives',
-            'dive': '',
+            'dive': region,
             'date': most_day,
             'link': _make_sites_link(first_dive),
         }

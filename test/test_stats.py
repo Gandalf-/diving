@@ -75,7 +75,7 @@ class TestBuildRecords:
         dives = [make_dive(site='Rockaway Beach Deep Reef')]
         records = build_records(dives)
 
-        assert records['deepest']['dive'] == 'Rockaway Beach Deep Reef'
+        assert records['deepest']['dive'] == 'Rockaway Beach Deep Reef, Washington'
         assert records['deepest']['date'] == '2023-01-01'
 
     def test_record_links(self) -> None:
