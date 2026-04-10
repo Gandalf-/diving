@@ -19,6 +19,7 @@ def make_dive(
     date: str = '2023-01-01',
     site: str = 'Rockaway Beach',
     directory: str = '',
+    sacs: list[float] | None = None,
 ) -> dict:
     return {
         'depth': depth,
@@ -30,26 +31,23 @@ def make_dive(
         'directory': directory or f'{date} {site}',
         'tank_start': 3000,
         'tank_end': 1000,
-        'sacs': [],
+        'sacs': sacs if sacs else [10, 10, 10],
     }
 
 
 class TestBuildRecords:
-    def test_empty(self) -> None:
-        assert build_records([]) == {}
-
     def test_single_dive(self) -> None:
         dives = [make_dive(depth=80, duration=3000, temp_low=48)]
         records = build_records(dives)
 
-        assert records['deepest']['value'] == 80
-        assert records['deepest']['unit'] == 'ft'
-        assert records['shallowest']['value'] == 80
-        assert records['longest']['value'] == 50  # 3000s / 60 = 50min
-        assert records['shortest']['value'] == 50
-        assert records['coldest']['value'] == 48
-        assert records['warmest']['value'] == 48
-        assert records['most_dives_day']['value'] == 1
+        assert records['Deepest Dive']['value'] == 80
+        assert records['Deepest Dive']['unit'] == 'ft'
+        assert records['Shallowest Dive']['value'] == 80
+        assert records['Longest Dive']['value'] == 50  # 3000s / 60 = 50min
+        assert records['Shortest Dive']['value'] == 50
+        assert records['Coldest Dive']['value'] == 48
+        assert records['Warmest Dive']['value'] == 48
+        assert records['Most Dives in a Day']['value'] == 1
 
     def test_multiple_dives(self) -> None:
         dives = [
@@ -59,33 +57,33 @@ class TestBuildRecords:
         ]
         records = build_records(dives)
 
-        assert records['deepest']['value'] == 100
-        assert records['deepest']['date'] == '2023-01-02'
-        assert records['shallowest']['value'] == 50
-        assert records['shallowest']['date'] == '2023-01-01'
-        assert records['longest']['value'] == 60  # 3600s / 60
-        assert records['shortest']['value'] == 30  # 1800s / 60
-        assert records['shortest']['date'] == '2023-01-02'
-        assert records['coldest']['value'] == 45
-        assert records['warmest']['value'] == 60
-        assert records['most_dives_day']['value'] == 2
-        assert records['most_dives_day']['date'] == '2023-01-01'
+        assert records['Deepest Dive']['value'] == 100
+        assert records['Deepest Dive']['date'] == '2023-01-02'
+        assert records['Shallowest Dive']['value'] == 50
+        assert records['Shallowest Dive']['date'] == '2023-01-01'
+        assert records['Longest Dive']['value'] == 60  # 3600s / 60
+        assert records['Shortest Dive']['value'] == 30  # 1800s / 60
+        assert records['Shortest Dive']['date'] == '2023-01-02'
+        assert records['Coldest Dive']['value'] == 45
+        assert records['Warmest Dive']['value'] == 60
+        assert records['Most Dives in a Day']['value'] == 2
+        assert records['Most Dives in a Day']['date'] == '2023-01-01'
 
     def test_record_context(self) -> None:
         dives = [make_dive(site='Rockaway Beach Deep Reef')]
         records = build_records(dives)
 
-        assert records['deepest']['dive'] == 'Rockaway Beach Deep Reef, Washington'
-        assert records['deepest']['date'] == '2023-01-01'
+        assert records['Deepest Dive']['dive'] == 'Rockaway Beach Deep Reef, Washington'
+        assert records['Deepest Dive']['date'] == '2023-01-01'
 
     def test_record_links(self) -> None:
         dives = [make_dive(site='Fort Ward', directory='2023-01-01 Fort Ward')]
         records = build_records(dives)
 
-        assert records['deepest']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
-        assert records['longest']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
-        assert records['coldest']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
-        assert records['most_dives_day']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
+        assert records['Deepest Dive']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
+        assert records['Longest Dive']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
+        assert records['Coldest Dive']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
+        assert records['Most Dives in a Day']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
 
     def test_most_dives_day_links_to_first_dive(self) -> None:
         dives = [
@@ -94,7 +92,7 @@ class TestBuildRecords:
         ]
         records = build_records(dives)
         # Should link to first dive (1 Fort Ward), not second (2 Rockaway)
-        assert records['most_dives_day']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
+        assert records['Most Dives in a Day']['link'] == '/sites/Washington-Fort-Ward-2023-01-01'
 
 
 class TestBuildDistribution:
@@ -192,8 +190,8 @@ class TestBuildLocationStats:
     def test_single_region(self) -> None:
         # Use a real site name from the locations config (Washington)
         dives = [
-            make_dive(site='Fort Ward', depth=60, temp_low=52),
-            make_dive(site='Rockaway', depth=80, temp_low=50),
+            make_dive(site='Fort Ward', depth=60, temp_low=52, sacs=[3, 3, 3]),
+            make_dive(site='Rockaway', depth=80, temp_low=50, sacs=[5, 5, 5]),
         ]
         stats = build_location_stats(dives)
 
@@ -201,18 +199,22 @@ class TestBuildLocationStats:
         assert stats['Washington']['dives'] == 2
         assert stats['Washington']['avg_depth'] == 70
         assert stats['Washington']['avg_temp'] == 51
+        assert stats['Washington']['avg_sac'] == 4
 
     def test_multiple_regions(self) -> None:
         dives = [
-            make_dive(site='Fort Ward', depth=60, temp_low=52),
-            make_dive(site='Darwin', depth=100, temp_low=78),
+            make_dive(site='Fort Ward', depth=60, temp_low=52, sacs=[3, 4, 5]),
+            make_dive(site='Darwin', depth=100, temp_low=78, sacs=[7, 8, 9]),
         ]
         stats = build_location_stats(dives)
 
         assert 'Washington' in stats
-        assert 'Galapagos' in stats
         assert stats['Washington']['dives'] == 1
+        assert stats['Washington']['avg_sac'] == 4
+
+        assert 'Galapagos' in stats
         assert stats['Galapagos']['dives'] == 1
+        assert stats['Galapagos']['avg_sac'] == 8
 
     def test_numbered_dive_sites(self) -> None:
         """Dive sites with number prefixes should match regions."""
@@ -237,9 +239,9 @@ class TestBuildLocationStats:
 class TestBuildTotals:
     def test_empty(self) -> None:
         totals = build_totals([], [])
-        assert totals['logged_dives'] == 0
-        assert totals['total_bottom_time_hours'] == 0.0
-        assert totals['unique_sites'] == 0
+        assert totals['Logged Dives'] == 0
+        assert totals['Bottom Time (hrs)'] == 0.0
+        assert totals['Unique Sites'] == 0
 
     def test_with_dives(self) -> None:
         dives = [
@@ -249,9 +251,9 @@ class TestBuildTotals:
         ]
         totals = build_totals(dives, dives)
 
-        assert totals['logged_dives'] == 3
-        assert totals['total_bottom_time_hours'] == 3.0
-        assert totals['unique_sites'] == 2
+        assert totals['Logged Dives'] == 3
+        assert totals['Bottom Time (hrs)'] == 3.0
+        assert totals['Unique Sites'] == 2
 
 
 class TestDiveToLocation:
@@ -275,5 +277,5 @@ class TestBuildStatsBundle:
 
     def test_bundle_has_data(self) -> None:
         bundle = build_stats_bundle()
-        assert bundle['totals']['logged_dives'] > 0
+        assert bundle['totals']['Logged Dives'] > 0
         assert len(bundle['locations']) > 0

@@ -14,6 +14,7 @@ import os
 import shutil
 from collections import Counter
 from collections.abc import Sequence
+from statistics import mean as average
 from typing import Any, TypeAlias
 
 from diving import locations
@@ -23,7 +24,6 @@ from diving.util.collection import dive_listing
 from diving.util.image import dive_to_location
 from diving.util.resource import VersionedResource
 
-# Type aliases
 StatsBundle: TypeAlias = dict[str, Any]
 Record: TypeAlias = dict[str, Any]
 Distribution: TypeAlias = list[list[int | float]]
@@ -44,16 +44,13 @@ def _make_site_name(dive: DiveData) -> str:
     return f'{location}, {region}'
 
 
-def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
+def build_records(logged_photo_dives: Sequence[DiveData]) -> dict[str, Record]:
     """Compute personal records from dive data."""
-    if not dives:
-        return {}
-
     records: dict[str, Record] = {}
 
     # Deepest dive
-    deepest = max(dives, key=lambda d: d['depth'])
-    records['deepest'] = {
+    deepest = max(logged_photo_dives, key=lambda d: d['depth'])
+    records['Deepest Dive'] = {
         'value': deepest['depth'],
         'unit': 'ft',
         'dive': _make_site_name(deepest),
@@ -62,8 +59,8 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     }
 
     # Longest dive
-    longest = max(dives, key=lambda d: d['duration'])
-    records['longest'] = {
+    longest = max(logged_photo_dives, key=lambda d: d['duration'])
+    records['Longest Dive'] = {
         'value': longest['duration'] // 60,
         'unit': 'min',
         'dive': _make_site_name(longest),
@@ -72,8 +69,8 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     }
 
     # Shallowest dive
-    shallowest = min(dives, key=lambda d: d['depth'])
-    records['shallowest'] = {
+    shallowest = min(logged_photo_dives, key=lambda d: d['depth'])
+    records['Shallowest Dive'] = {
         'value': shallowest['depth'],
         'unit': 'ft',
         'dive': _make_site_name(shallowest),
@@ -82,8 +79,8 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     }
 
     # Shortest dive
-    shortest = min(dives, key=lambda d: d['duration'])
-    records['shortest'] = {
+    shortest = min(logged_photo_dives, key=lambda d: d['duration'])
+    records['Shortest Dive'] = {
         'value': shortest['duration'] // 60,
         'unit': 'min',
         'dive': _make_site_name(shortest),
@@ -92,8 +89,8 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     }
 
     # Coldest dive
-    coldest = min(dives, key=lambda d: d['temp_low'])
-    records['coldest'] = {
+    coldest = min(logged_photo_dives, key=lambda d: d['temp_low'])
+    records['Coldest Dive'] = {
         'value': coldest['temp_low'],
         'unit': '°F',
         'dive': _make_site_name(coldest),
@@ -102,8 +99,8 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     }
 
     # Warmest dive
-    warmest = max(dives, key=lambda d: d['temp_low'])
-    records['warmest'] = {
+    warmest = max(logged_photo_dives, key=lambda d: d['temp_low'])
+    records['Warmest Dive'] = {
         'value': warmest['temp_low'],
         'unit': '°F',
         'dive': _make_site_name(warmest),
@@ -112,16 +109,16 @@ def build_records(dives: Sequence[DiveData]) -> dict[str, Record]:
     }
 
     # Most dives in a single day
-    dates = [d['date'].strftime('%Y-%m-%d') for d in dives]
+    dates = [d['date'].strftime('%Y-%m-%d') for d in logged_photo_dives]
     date_counts = Counter(dates)
     if date_counts:
         most_day, count = date_counts.most_common(1)[0]
         # Find first dive on that day (by directory order)
-        day_dives = [d for d in dives if d['date'].strftime('%Y-%m-%d') == most_day]
+        day_dives = [d for d in logged_photo_dives if d['date'].strftime('%Y-%m-%d') == most_day]
         first_dive = min(day_dives, key=lambda d: d.get('directory', ''))
         region = locations.get_region(dive_to_location(first_dive['directory']))
 
-        records['most_dives_day'] = {
+        records['Most Dives in a Day'] = {
             'value': count,
             'unit': 'dives',
             'dive': region,
@@ -156,52 +153,61 @@ def build_distribution(values: list[float], bucket_size: int) -> Distribution:
     return result
 
 
-def build_distributions(dives: Sequence[DiveData]) -> dict[str, Distribution]:
+def build_distributions(logged_photo_dives: Sequence[DiveData]) -> dict[str, Distribution]:
     """Build all distribution histograms."""
-    depths = [d['depth'] for d in dives]
-    durations = [d['duration'] / 60 for d in dives]  # Convert to minutes
-    temps = [d['temp_low'] for d in dives]
+    depths = [d['depth'] for d in logged_photo_dives]
+    durations = [d['duration'] / 60 for d in logged_photo_dives]  # Convert to minutes
+    temps = [d['temp_low'] for d in logged_photo_dives]
 
-    air_consumption = [
-        d['tank_start'] - d['tank_end']
-        for d in dives
+    dives_with_valid_tank_info = [
+        d
+        for d in logged_photo_dives
         if d['tank_start'] > 0 and d['tank_end'] > 0 and d['tank_start'] > d['tank_end']
     ]
-    sacs = [d['sacs'] for d in dives if d['sacs']]
+
+    air_consumption = [d['tank_start'] - d['tank_end'] for d in dives_with_valid_tank_info]
+    sacs = [d['sacs'] for d in logged_photo_dives if d['sacs']]
     sacs = [sac for sublist in sacs for sac in sublist]
+
+    ending_pressure = [d['tank_end'] for d in dives_with_valid_tank_info]
+    starting_pressure = [d['tank_start'] for d in dives_with_valid_tank_info]
 
     return {
         'depth': build_distribution(depths, 10),  # 10ft buckets
         'duration': build_distribution(durations, 10),  # 10min buckets
         'temperature': build_distribution(temps, 5),  # 5°F buckets
-        'air': build_distribution(air_consumption, 250),  # 250 PSI buckets
         'sac': build_distribution(sacs, 5),  # 5 PSI/min buckets
+        'air': build_distribution(air_consumption, 250),  # 250 PSI buckets
+        'end': build_distribution(ending_pressure, 250),  # 250 PSI buckets
+        'start': build_distribution(starting_pressure, 250),  # 250 PSI buckets
     }
 
 
-def build_location_stats(dives: Sequence[DiveData]) -> LocationStats:
+def build_location_stats(logged_photo_dives: Sequence[DiveData]) -> LocationStats:
     """Aggregate statistics by region."""
     region_data: dict[str, dict[str, list[float]]] = {}
 
-    for dive in dives:
-        directory = dive.get('directory', '')
-        if not directory:
-            continue
-
-        site = dive_to_location(directory)
+    for dive in logged_photo_dives:
+        site = dive_to_location(dive['directory'])
         region = locations.get_region(site)
+        region_data.setdefault(
+            region, {'depths': [], 'temps': [], 'count': [], 'sacs': [], 'time': []}
+        )
 
-        region_data.setdefault(region, {'depths': [], 'temps': [], 'count': []})
         region_data[region]['depths'].append(dive['depth'])
         region_data[region]['temps'].append(dive['temp_low'])
+        region_data[region]['sacs'].extend(dive['sacs'])
         region_data[region]['count'].append(1)
+        region_data[region]['time'].append(dive['duration'])
 
     result: LocationStats = {}
     for region, data in region_data.items():
         result[region] = {
             'dives': len(data['count']),
-            'avg_depth': round(sum(data['depths']) / len(data['depths'])) if data['depths'] else 0,
-            'avg_temp': round(sum(data['temps']) / len(data['temps'])) if data['temps'] else 0,
+            'avg_depth': round(average(data['depths'])),
+            'avg_temp': round(average(data['temps'])),
+            'avg_sac': average(data['sacs']),  # ~20 for everything, boring!
+            'bottom_time': round(sum(data['time']) / 3600, 1),
         }
 
     return result
@@ -224,12 +230,12 @@ def build_totals(
     total_dives += len(static.dives_without_camera)
 
     return {
-        'total_dives': total_dives,
-        'photo_dives': photo_dives,
-        'logged_dives': logged_dives,
-        'logged_photo_dives': logged_photo_dives,
-        'total_bottom_time_hours': round(total_time / 3600, 1),
-        'unique_sites': len(sites),
+        'Total Dives': total_dives,
+        'Photo Dives': photo_dives,
+        'Logged Dives': logged_dives,
+        'Logged Photo Dives': logged_photo_dives,
+        'Bottom Time (hrs)': round(total_time / 3600, 1),
+        'Unique Sites': len(sites),
     }
 
 
@@ -309,34 +315,44 @@ def _html_builder(main_css: str, stats_css: str, stats_js: str, data_js: str) ->
                 <div class="records-grid" id="records"></div>
             </div>
 
-            <div class="stats-section" id="depth-section">
+            <div class="stats-section" id="locations-section">
+                <h2>Locations</h2>
+                <table class="locations-table" id="locations"></table>
+            </div>
+
+            <div class="stats-section">
                 <h2>Max Depth (ft)</h2>
                 <div class="chart-container" id="depth-chart"></div>
             </div>
 
-            <div class="stats-section" id="duration-section">
+            <div class="stats-section">
                 <h2>Duration (mins)</h2>
                 <div class="chart-container" id="duration-chart"></div>
             </div>
 
-            <div class="stats-section" id="temp-section">
+            <div class="stats-section">
                 <h2>Temperature (&deg;F)</h2>
                 <div class="chart-container" id="temp-chart"></div>
             </div>
 
-            <div class="stats-section" id="sac-section">
+            <div class="stats-section">
                 <h2>Surface Air Consumption (PSI/min)</h2>
                 <div class="chart-container" id="sac-chart"></div>
             </div>
 
-            <div class="stats-section" id="air-section">
+            <div class="stats-section">
+                <h2>Starting Pressure (PSI)</h2>
+                <div class="chart-container" id="start-chart"></div>
+            </div>
+
+            <div class="stats-section">
                 <h2>Total Air Consumption (PSI)</h2>
                 <div class="chart-container" id="air-chart"></div>
             </div>
 
-            <div class="stats-section" id="locations-section">
-                <h2>Locations</h2>
-                <table class="locations-table" id="locations"></table>
+            <div class="stats-section">
+                <h2>Ending Pressure (PSI)</h2>
+                <div class="chart-container" id="end-chart"></div>
             </div>
         </div>
     </body>

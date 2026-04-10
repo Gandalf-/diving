@@ -1,29 +1,5 @@
-// Stats page rendering
-// Expects stats_data global variable from data.js
-
 (function () {
   'use strict';
-
-  // Record labels for display
-  const recordLabels = {
-    deepest: 'Deepest Dive',
-    shallowest: 'Shallowest Dive',
-    longest: 'Longest Dive',
-    shortest: 'Shortest Dive',
-    coldest: 'Coldest Dive',
-    warmest: 'Warmest Dive',
-    most_dives_day: 'Most Dives in a Day',
-  };
-
-  // Total labels for display
-  const totalLabels = {
-    total_dives: 'Total Dives',
-    photo_dives: 'Photo Dives',
-    logged_dives: 'Logged Dives',
-    logged_photo_dives: 'Logged Photo Dives',
-    total_bottom_time_hours: 'Bottom Time (hrs)',
-    unique_sites: 'Dive Sites',
-  };
 
   function formatDate(dateStr) {
     if (!dateStr) return '';
@@ -41,13 +17,12 @@
 
     let html = '';
     for (const [key, value] of Object.entries(totals)) {
-      const label = totalLabels[key] || key;
       html += `
-                <div class="total-item">
-                    <div class="value">${value}</div>
-                    <div class="label">${label}</div>
-                </div>
-            `;
+        <div class="total-item">
+            <div class="value">${value}</div>
+            <div class="label">${key}</div>
+        </div>
+        `;
     }
     container.innerHTML = html;
   }
@@ -58,17 +33,16 @@
 
     let html = '';
     for (const [key, record] of Object.entries(records)) {
-      const label = recordLabels[key] || key;
       const value = record.value + (record.unit ? ' ' + record.unit : '');
       const context = record.dive
         ? `${record.dive}<br>${formatDate(record.date)}`
         : formatDate(record.date);
 
       const cardContent = `
-                <div class="label">${label}</div>
-                <div class="value">${value}</div>
-                <div class="context">${context}</div>
-            `;
+        <div class="label">${key}</div>
+        <div class="value">${value}</div>
+        <div class="context">${context}</div>
+        `;
 
       if (record.link) {
         html += `<a href="${record.link}" class="record-card record-link">${cardContent}</a>`;
@@ -79,7 +53,7 @@
     container.innerHTML = html;
   }
 
-  function renderBarChart(containerId, data, xLabel, color) {
+  function renderBarChart(containerId, data, color) {
     const container = document.getElementById(containerId);
     if (!container || !data || data.length === 0) {
       if (container) container.innerHTML = '<p>No data available</p>';
@@ -96,60 +70,16 @@
       const pct = maxValue > 0 ? (values[i] / maxValue) * 100 : 0;
       const label = `${data[i][0]}–${data[i][1]}`;
       html += `
-                <div class="bar-row">
-                    <div class="bar-label">${label}</div>
-                    <div class="bar-container">
-                        <div class="bar" style="width: ${pct}%; background: ${color};"></div>
-                    </div>
-                    <div class="bar-value">${values[i]}</div>
-                </div>
-            `;
+        <div class="bar-row">
+            <div class="bar-label">${label}</div>
+            <div class="bar-container">
+                <div class="bar" style="width: ${pct}%; background: ${color};"></div>
+            </div>
+            <div class="bar-value">${values[i]}</div>
+        </div>
+        `;
     }
     html += '</div>';
-
-    // Add bar chart styles if not already present
-    if (!document.getElementById('bar-chart-styles')) {
-      const style = document.createElement('style');
-      style.id = 'bar-chart-styles';
-      style.textContent = `
-                .bar-chart {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 0.4em;
-                }
-                .bar-row {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75em;
-                }
-                .bar-label {
-                    width: 70px;
-                    text-align: right;
-                    font-size: 0.9em;
-                    flex-shrink: 0;
-                    color: #fff;
-                }
-                .bar-container {
-                    flex: 1;
-                    background: #333;
-                    border-radius: 4px;
-                    height: 22px;
-                    overflow: hidden;
-                }
-                .bar {
-                    height: 100%;
-                    border-radius: 4px;
-                    transition: width 0.3s ease;
-                }
-                .bar-value {
-                    width: 35px;
-                    font-size: 0.9em;
-                    flex-shrink: 0;
-                    color: #fff;
-                }
-            `;
-      document.head.appendChild(style);
-    }
 
     container.innerHTML = html;
   }
@@ -162,26 +92,28 @@
     const sorted = Object.entries(locations).sort((a, b) => b[1].dives - a[1].dives);
 
     let html = `
-            <thead>
-                <tr>
-                    <th>Region</th>
-                    <th>Dives</th>
-                    <th>Avg Depth (ft)</th>
-                    <th>Avg Temp (°F)</th>
-                </tr>
-            </thead>
-            <tbody>
-        `;
+      <thead>
+          <tr>
+              <th>Region</th>
+              <th>Dives</th>
+              <th>Avg Depth (ft)</th>
+              <th>Avg Temp (°F)</th>
+              <th>Bottom Time (hrs)</th>
+          </tr>
+      </thead>
+      <tbody>
+      `;
 
     for (const [region, stats] of sorted) {
       html += `
-                <tr>
-                    <td>${region}</td>
-                    <td>${stats.dives}</td>
-                    <td>${stats.avg_depth}</td>
-                    <td>${stats.avg_temp}</td>
-                </tr>
-            `;
+        <tr>
+            <td>${region}</td>
+            <td>${stats.dives}</td>
+            <td>${stats.avg_depth}</td>
+            <td>${stats.avg_temp}</td>
+            <td>${stats.bottom_time}</td>
+        </tr>
+        `;
     }
 
     html += '</tbody>';
@@ -196,16 +128,13 @@
 
     renderTotals(stats_data.totals);
     renderRecords(stats_data.records);
-    renderBarChart('depth-chart', stats_data.distributions.depth, 'Depth (ft)', '#4a90d9');
-    renderBarChart(
-      'duration-chart',
-      stats_data.distributions.duration,
-      'Duration (min)',
-      '#5cb85c'
-    );
-    renderBarChart('temp-chart', stats_data.distributions.temperature, 'Temp (°F)', '#d9534f');
-    renderBarChart('air-chart', stats_data.distributions.air, 'Air (PSI)', '#f0ad4e');
-    renderBarChart('sac-chart', stats_data.distributions.sac, 'Air (PSI)', '#bf46ca');
+    renderBarChart('depth-chart', stats_data.distributions.depth, '#4a90d9');
+    renderBarChart('duration-chart', stats_data.distributions.duration, '#5cb85c');
+    renderBarChart('temp-chart', stats_data.distributions.temperature, '#d9534f');
+    renderBarChart('air-chart', stats_data.distributions.air, '#f0ad4e');
+    renderBarChart('sac-chart', stats_data.distributions.sac, '#bf46ca');
+    renderBarChart('end-chart', stats_data.distributions.end, '#f0ad4e');
+    renderBarChart('start-chart', stats_data.distributions.start, '#f0ad4e');
     renderLocations(stats_data.locations);
   }
 
