@@ -12,6 +12,7 @@ from diving.util.image import dive_to_location
 
 
 def make_dive(
+    number: int = 1,
     depth: int = 50,
     duration: int = 2400,
     temp_low: int = 55,
@@ -22,6 +23,7 @@ def make_dive(
     sacs: list[float] | None = None,
 ) -> dict:
     return {
+        'number': number,
         'depth': depth,
         'duration': duration,
         'temp_low': temp_low,
@@ -51,9 +53,9 @@ class TestBuildRecords:
 
     def test_multiple_dives(self) -> None:
         dives = [
-            make_dive(depth=50, duration=2400, temp_low=55, date='2023-01-01'),
-            make_dive(depth=100, duration=1800, temp_low=45, date='2023-01-02'),
-            make_dive(depth=70, duration=3600, temp_low=60, date='2023-01-01'),
+            make_dive(1, depth=50, duration=2400, temp_low=55, date='2023-01-01'),
+            make_dive(2, depth=100, duration=1800, temp_low=45, date='2023-01-02'),
+            make_dive(3, depth=70, duration=3600, temp_low=60, date='2023-01-01'),
         ]
         records = build_records(dives)
 
@@ -87,8 +89,8 @@ class TestBuildRecords:
 
     def test_most_dives_day_links_to_first_dive(self) -> None:
         dives = [
-            make_dive(date='2023-01-01', directory='2023-01-01 2 Rockaway'),
-            make_dive(date='2023-01-01', directory='2023-01-01 1 Fort Ward'),
+            make_dive(1, date='2023-01-01', directory='2023-01-01 2 Rockaway'),
+            make_dive(2, date='2023-01-01', directory='2023-01-01 1 Fort Ward'),
         ]
         records = build_records(dives)
         # Should link to first dive (1 Fort Ward), not second (2 Rockaway)
@@ -136,8 +138,8 @@ class TestBuildDistribution:
 class TestBuildDistributions:
     def test_all_distributions(self) -> None:
         dives = [
-            make_dive(depth=50, duration=2400, temp_low=55),
-            make_dive(depth=80, duration=3000, temp_low=48),
+            make_dive(1, depth=50, duration=2400, temp_low=55),
+            make_dive(2, depth=80, duration=3000, temp_low=48),
         ]
         dists = build_distributions(dives)
 
@@ -185,15 +187,15 @@ class TestBuildDistributions:
 
 class TestBuildLocationStats:
     def test_empty(self) -> None:
-        assert build_location_stats([]) == {}
+        assert build_location_stats([], []) == {}
 
     def test_single_region(self) -> None:
         # Use a real site name from the locations config (Washington)
         dives = [
-            make_dive(site='Fort Ward', depth=60, temp_low=52, sacs=[3, 3, 3]),
-            make_dive(site='Rockaway', depth=80, temp_low=50, sacs=[5, 5, 5]),
+            make_dive(1, site='Fort Ward', depth=60, temp_low=52, sacs=[3, 3, 3]),
+            make_dive(2, site='Rockaway', depth=80, temp_low=50, sacs=[5, 5, 5]),
         ]
-        stats = build_location_stats(dives)
+        stats = build_location_stats(dives, [])
 
         assert 'Washington' in stats
         assert stats['Washington']['dives'] == 2
@@ -203,10 +205,10 @@ class TestBuildLocationStats:
 
     def test_multiple_regions(self) -> None:
         dives = [
-            make_dive(site='Fort Ward', depth=60, temp_low=52, sacs=[3, 4, 5]),
-            make_dive(site='Darwin', depth=100, temp_low=78, sacs=[7, 8, 9]),
+            make_dive(1, site='Fort Ward', depth=60, temp_low=52, sacs=[3, 4, 5]),
+            make_dive(2, site='Darwin', depth=100, temp_low=78, sacs=[7, 8, 9]),
         ]
-        stats = build_location_stats(dives)
+        stats = build_location_stats(dives, [])
 
         assert 'Washington' in stats
         assert stats['Washington']['dives'] == 1
@@ -220,20 +222,41 @@ class TestBuildLocationStats:
         """Dive sites with number prefixes should match regions."""
         dives = [
             make_dive(
+                1,
                 depth=60,
                 temp_low=52,
                 directory='2023-01-01 1 Sund Rock South Wall',
             ),
             make_dive(
+                2,
                 depth=70,
                 temp_low=50,
                 directory='2023-01-01 2 Sund Rock North Wall',
             ),
         ]
-        stats = build_location_stats(dives)
+        stats = build_location_stats(dives, [])
 
         assert 'Washington' in stats
         assert stats['Washington']['dives'] == 2
+
+    def test_default_to_washington(self) -> None:
+        photo_dives = [
+            make_dive(1, site='Darwin', depth=100, temp_low=78, sacs=[7, 8, 9]),
+        ]
+        logged_dives = [
+            make_dive(1, site='Darwin', depth=100, temp_low=78, sacs=[7, 8, 9]),
+            make_dive(2, depth=100, temp_low=78, sacs=[3, 4, 5]),
+        ]
+
+        stats = build_location_stats(photo_dives, logged_dives)
+
+        assert 'Washington' in stats
+        assert stats['Washington']['dives'] == 1
+        assert stats['Washington']['avg_sac'] == 4
+
+        assert 'Galapagos' in stats
+        assert stats['Galapagos']['dives'] == 1
+        assert stats['Galapagos']['avg_sac'] == 8
 
 
 class TestBuildTotals:
@@ -245,9 +268,9 @@ class TestBuildTotals:
 
     def test_with_dives(self) -> None:
         dives = [
-            make_dive(depth=50, duration=3600, directory='2023-01-01 Site A'),
-            make_dive(depth=100, duration=3600, directory='2023-01-02 Site B'),
-            make_dive(depth=75, duration=3600, directory='2023-01-03 Site A'),
+            make_dive(1, depth=50, duration=3600, directory='2023-01-01 Site A'),
+            make_dive(2, depth=100, duration=3600, directory='2023-01-02 Site B'),
+            make_dive(3, depth=75, duration=3600, directory='2023-01-03 Site A'),
         ]
         totals = build_totals(dives, dives)
 

@@ -15,7 +15,7 @@ import shutil
 from collections import Counter
 from collections.abc import Sequence
 from statistics import mean as average
-from typing import Any, TypeAlias
+from typing import Any, Dict, Set, TypeAlias
 
 from diving import locations
 from diving.hypertext import Where, navigation_carousel
@@ -183,22 +183,33 @@ def build_distributions(logged_photo_dives: Sequence[DiveData]) -> dict[str, Dis
     }
 
 
-def build_location_stats(logged_photo_dives: Sequence[DiveData]) -> LocationStats:
+def update_region_info(region_data: Dict[str, Any], region: str, dive: DiveData) -> None:
+    region_data.setdefault(region, {'depths': [], 'temps': [], 'count': [], 'sacs': [], 'time': []})
+    region_data[region]['depths'].append(dive['depth'])
+    region_data[region]['temps'].append(dive['temp_low'])
+    region_data[region]['sacs'].extend(dive['sacs'])
+    region_data[region]['count'].append(1)
+    region_data[region]['time'].append(dive['duration'])
+
+
+def build_location_stats(
+    logged_photo_dives: Sequence[DiveData], all_logged_dives: Sequence[DiveData]
+) -> LocationStats:
     """Aggregate statistics by region."""
     region_data: dict[str, dict[str, list[float]]] = {}
+    seen: Set[int] = set()
 
     for dive in logged_photo_dives:
+        seen.add(dive['number'])
         site = dive_to_location(dive['directory'])
         region = locations.get_region(site)
-        region_data.setdefault(
-            region, {'depths': [], 'temps': [], 'count': [], 'sacs': [], 'time': []}
-        )
+        update_region_info(region_data, region, dive)
 
-        region_data[region]['depths'].append(dive['depth'])
-        region_data[region]['temps'].append(dive['temp_low'])
-        region_data[region]['sacs'].extend(dive['sacs'])
-        region_data[region]['count'].append(1)
-        region_data[region]['time'].append(dive['duration'])
+    for dive in all_logged_dives:
+        # Dump all other non-photo dives into Washington
+        if dive['number'] in seen:
+            continue
+        update_region_info(region_data, 'Washington', dive)
 
     result: LocationStats = {}
     for region, data in region_data.items():
@@ -247,7 +258,7 @@ def build_stats_bundle() -> StatsBundle:
     return {
         'records': build_records(all_photo_dives),
         'distributions': build_distributions(all_photo_dives),
-        'locations': build_location_stats(all_photo_dives),
+        'locations': build_location_stats(all_photo_dives, all_dives),
         'totals': build_totals(all_dives, all_photo_dives),
     }
 
