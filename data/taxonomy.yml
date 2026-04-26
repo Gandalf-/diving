@@ -39,6 +39,7 @@ Animalia:
           polymorphus: orange ribbon worm
   Porifera:
     Hexactinellida:
+      sp.: glass sponge
       Lyssacinosida:
         Rossellidae:
           Rhabdocalyptus:
@@ -146,6 +147,7 @@ Animalia:
           Eunicidae:
             Leodice: bobbit worm
         Polynoidae:
+          sp.: scale worm
           Arctonoe:
             vittata: red banded commensal scale worm
           Harmothoe:
@@ -243,6 +245,7 @@ Animalia:
       sp.: brittle star
       Euryalida:
         Gorgonocephalidae:
+          sp.: basket star
           Astrophyton:
             muricatum: giant basket star
           Gorgonocephalus:
@@ -367,6 +370,7 @@ Animalia:
           Choriaster:
             granulatus: granulated sea star
         Solasteridae:
+          sp.: sun star
           Lophaster:
             furcilliger: crested star
           Crossaster:
@@ -620,6 +624,7 @@ Animalia:
               Aulostomus: trumpetfish
       Beryciformes:
         Holocentridae:
+          sp.: squirrelfish
           Holocentrus:
             rufus: longspine squirrelfish
           Myripristis:
@@ -666,6 +671,7 @@ Animalia:
           Platax:
             teira: longfish batfish
         Lutjanidae:
+          sp.: snapper
           Lutjanus:
             kasmira: bluestripe snapper
             viridis: blue gold snapper
@@ -687,6 +693,7 @@ Animalia:
             melampygus: bluefin trevally jack
             sexfasciatus: bigeye trevally jack
         Cirrhitidae:
+          sp.: hawkfish
           Paracirrhites:
             forsteri: freckled hawkfish
           Oxycirrhites:
@@ -696,6 +703,7 @@ Animalia:
           Cirrhitus:
             rivulatus: giant hawkfish
         Blenniidae:
+          sp.: blenny
           Aspidontus:
             dussumieri: lance blenny
           Ophioblennius:
@@ -715,6 +723,7 @@ Animalia:
             undulatus: napoleon fish
         Mullidae: goatfish
         Chaetodontidae:
+          sp.: butterflyfish
           Chaetodon:
             striatus: banded butterflyfish
           Heniochus:
@@ -724,6 +733,7 @@ Animalia:
           Paracanthurus:
             hepatus: blue tang
         Embiotocidae:
+          sp.: surfperch
           Embiotoca:
             lateralis: striped perch
           Brachyistius:
@@ -750,6 +760,7 @@ Animalia:
             nigripinnis: blackfin grouper
             miniata: coral grouper
         Pomacentridae:
+          sp.: damselfish
           Abudefduf:
             saxatilis: sergeant major
           Amphiprion:
@@ -759,6 +770,7 @@ Animalia:
           Stegastes:
             beebei: galapagos ringtail damselfish
         Pomacanthidae:
+          sp.: angelfish
           Pomacanthus:
             paru: french angel fish
           Holacanthus:
@@ -769,6 +781,7 @@ Animalia:
           Gramma:
             royal: royal fairy basslet
         Gobiidae:
+          sp.: goby
           Ctenogobiops:
             feroculus: fierce shrimp goby
           Rhinogobiops:
@@ -781,6 +794,7 @@ Animalia:
             flavolineatum: french grunt
             sciurus: bluestripe grunt
         Stichaeidae:
+          sp.: prickleback
           Lumpenus:
             sagitta: snake prickleback
           Chirolophis:
@@ -805,6 +819,7 @@ Animalia:
         Congridae:
           Heterocongrinae: garden eel
         Muraenidae:
+          sp.: moray eel
           Enchelycore:
             nigricans: viper moray eel
           Muraena:
@@ -825,6 +840,7 @@ Animalia:
           Eumicrotremus:
             orbis: spiny lumpsucker
         Agonidae:
+          sp.: poacher
           Agonopsis:
             vulsa: northern spearnose poacher
           Bathyagonus:
@@ -921,7 +937,7 @@ Animalia:
             hystrix: porcupine fish
         Tetraodontoidei:
           Tetraodontoidae:
-            # sp.: pufferfish
+            sp.: pufferfish
             Arothron:
               meleagris: guineafowl pufferfish
             Canthigaster:
@@ -1036,6 +1052,7 @@ Animalia:
         Cavernulina:
           darwini: cavernulina darwini coral
       Scleractinia:
+        sp.: stony coral
         Favuidae:
           Mussinae:
             Scolymia:
@@ -1652,6 +1669,7 @@ Animalia:
               hemphilli: maroon hermit crab
         Cancroidea:
           Cancridae:
+            sp.: rock crab
             Glebocarcinus:
               oregonesis: pygmy rock crab
             Metacarcinus:
@@ -1703,8 +1721,8 @@ Plantae:
 Chromista:
   sp.: algae
   Chlorophyta:
-    # sp.: green algae
     Ulvophyceae:
+      sp.: green algae
       Cladophorales:
         Valoniaceae:
           Valonia:
@@ -1742,8 +1760,8 @@ Chromista:
           Fucus:
             gardneri: rockweed
   Rhodophyta:
-    # sp.: red algae
     Florideophyceae:
+      sp.: red algae
       Gelidiales:
         Gelidiaceae:
           Gelidium:
