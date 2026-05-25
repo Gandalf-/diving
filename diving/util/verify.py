@@ -208,6 +208,8 @@ def _find_misspellings(names: AbstractSet[str]) -> Iterable[str]:
         'magenta spiky soft coral',
         'eggs sea lemon',
         'fan coral',
+        'barge wreck',
+        'bridge wreck',
     )
 
     for group in candidates:

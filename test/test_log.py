@@ -9,6 +9,7 @@ from diving.util.log import (
     _load_dive_info,
     _match_dive_info,
     _parse,
+    _perdix_offset,
     calculate_sac,
     search,
     suunto_counter,
@@ -64,6 +65,37 @@ class TestUDDF:
         for key, value in expected.items():
             assert parsed[key] == value, f'{key}: {parsed[key]} != {value}'
         assert parsed['depths'] != ()
+
+    def test_perdix_offset(self) -> None:
+        assert _perdix_offset('Perdix AI[385834A0]#43_2021-10-22.uddf') == 200
+        assert _perdix_offset('Perdix 2[A967FF45]#4_2026-05-24.uddf') == 524
+
+    def test_parse_uddf_perdix2(self) -> None:
+        fname = 'Perdix 2[A967FF45]#5_2026-05-24.uddf'
+        expected = {
+            'date': datetime.fromisoformat('2026-05-24T13:56:51Z'),
+            'number': 529,
+            'depth': 64,
+            'duration': 2190,
+            'tank_start': 3402,
+            'tank_end': 1708,
+            'temp_high': 60,
+            'temp_low': 48,
+        }
+        parsed = _parse(fname)
+        for key, value in expected.items():
+            assert parsed[key] == value, f'{key}: {parsed[key]} != {value}'
+        assert parsed['depths'] != ()
+        assert len(parsed['sacs']) > 0
+
+    def test_match_perdix2_les_davis(self) -> None:
+        f4 = 'Perdix 2[A967FF45]#4_2026-05-24.uddf'
+        f5 = 'Perdix 2[A967FF45]#5_2026-05-24.uddf'
+        e4, e5 = list(_match_dive_info(_parse(f) for f in [f4, f5]))
+        assert e4['number'] == 528
+        assert e5['number'] == 529
+        assert e4['directory'] == '2026-05-24 01 Les Davis Pier'
+        assert e5['directory'] == '2026-05-24 02 Les Davis Pier'
 
     def test_parse_uddf_zero_start_pressure(self) -> None:
         fname = 'Perdix AI[385834A0]#165_2023-09-22.uddf'

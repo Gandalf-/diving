@@ -108,8 +108,23 @@ def dive_info_html(info: DiveInfo | FrozenDiveInfo) -> str:
 _UDDF_ROOT = '/Users/leaf/working/diving/logs/'
 _XML_NS = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
 
+# Per-Perdix-model dive-number offset. Each Shearwater's internal counter starts
+# at 1, so to keep system dive numbers globally unique and monotonic we add an
+# offset equal to the last system dive number used by the previous computer.
+_PERDIX_OFFSETS = {
+    'Perdix AI': 200,
+    'Perdix 2': 524,
+}
+
 
 suunto_counter = Counter()
+
+
+def _perdix_offset(file: str) -> int:
+    for prefix, offset in _PERDIX_OFFSETS.items():
+        if file.startswith(prefix + '['):
+            return offset
+    raise ValueError(f'unknown Perdix model in filename: {file}')
 
 
 def _parse_number(tree: Any, path: str) -> float:  # type: ignore
@@ -223,7 +238,7 @@ def _parse_uddf(file: str) -> DiveInfo:
 
     return {
         'date': date,
-        'number': 200 + int(number),
+        'number': _perdix_offset(file) + int(number),
         'depth': meters_to_feet(max_depth),
         'depths': depths,
         'sacs': sacs,
